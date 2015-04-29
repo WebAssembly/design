@@ -1,4 +1,4 @@
-# WebAssembly High-Level Design Goals
+# WebAssembly High-Level Goals
 
 1. Define a portable, size- and load-time-efficient binary format to serve as a web compilation target.
 2. Define a human-editable text format that is isomorphic and convertible to/from the binary format.
