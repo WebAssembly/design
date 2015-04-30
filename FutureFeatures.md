@@ -3,7 +3,8 @@
 These are features that make sense in the context of the 
 [high-level goals](HighLevelGoals.md) of WebAssembly but are not considered part of the
 [Minimum Viable Product](V1.md) or the [essential post-v.1 feature set](EssentialPostV1Features.md)
-which are expected to be standardized immediately after v.1.
+which are expected to be standardized immediately after v.1. These will be
+prioritized based on developer feedback.
 
 ## Dynamic loading
  * Both load-time and run-time.
@@ -38,6 +39,10 @@ which are expected to be standardized immediately after v.1.
 ## Non-fixed-width SIMD
  * TODO
  
-## Operations which may not work the same on all platforms
+## Operations which may not be available or may not perform well on all platforms
  * FMA, reciprocal sqrt approximate, fp16
  * TODO
+
+## Platform-independent Just-in-Time compilatione
+* TODO
+* Potentially through dynamic loading.
