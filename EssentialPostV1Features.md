@@ -14,5 +14,8 @@ Minimum Viable Product that is [v.1](V1.md).
 ## 64-bit integers
 * TODO
 
+## Fixed-width SIMD a la SIMD.js
+* TODO
+
 ## Signature-restricted Proper Tail Calls
 * TODO
