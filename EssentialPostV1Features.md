@@ -22,6 +22,9 @@ Minimum Viable Product that is [v.1](V1.md).
 
 ## Zero-cost Exception Handling
 * Developer access to stack unwinding and inspection.
+* This will be used to implement `setjmp`/`longjmp` (instead of the usual
+  opposite approach).
 
 ## Signature-restricted Proper Tail Calls
+* This can also be used to support `goto` and irreducible control flow.
 * TODO
