@@ -43,7 +43,8 @@ developer feedback.
 ## Operations which may not be available or may not perform well on all platforms
  * Fused multiply-add.
  * Reciprocal square root approximate.
- * 16-bit flaoting point.
+ * 16-bit floating point.
+ * and more!
 
 ## Platform-independent Just-in-Time compilation
 * TODO
