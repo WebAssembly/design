@@ -1,8 +1,8 @@
 # WebAssembly High-Level Goals
 
 1. Define a portable, size- and load-time-efficient binary format to serve as a
-   web compilation target which can be compiled to execute at native speed and
-   take full advantage of a CPU's capabilities.
+   web compilation target which can be compiled to execute at native speed by
+   taking advantage of common hardware capabilities.
 2. Define a human-editable text format that is isomorphic and convertible
    to/from the binary format.
 3. Design to serve as a compilation target for a growing set of source languages
@@ -10,12 +10,10 @@
 4. Design to maintain the versionless, feature-testing and backwards-compatible
    evolution story of the web; engines should not need multiple, versioned
    decoders.
-5. Design and implement incrementally: the initial version will be a Minimum
-   Viable Product by being an effective [polyfill][] via client-side compilation
-   to [asm.js][], with a feature set similar to [asm.js][]'s current
-   features. Subsequent versions will be more
-   [featureful](EssentialPostV1Features.md).
-6. Design to integrate well with the existing web platform:
+5. Design and implement incrementally:
+    * the initial v.1 standard will be a Minimum Viable Product with a full, effective [polyfill][] via client-side compilation to [asm.js][] and thus run on existing browsers;
+    * subsequent versions will add more [features](EssentialPostV1Features.md) prioritized by feedback.
+6. Design to execute within and integrate well with the existing web platform:
     * execute in the same semantic universe as JavaScript;
     * allow synchronous calls to and from JavaScript;
     * enforce the same-origin and permissions security policies; and
