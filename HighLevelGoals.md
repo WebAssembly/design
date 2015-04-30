@@ -5,7 +5,8 @@
    take full advantage of a CPU's capabilities.
 2. Define a human-editable text format that is isomorphic and convertible
    to/from the binary format.
-3. Support compiling various programming languages to the WebAssembly format.
+3. Design to serve as a compilation target for a growing set of source languages
+   over time, starting with C/C++.
 4. Design to maintain the versionless, feature-testing and backwards-compatible
    evolution story of the web; engines should not need multiple, versioned
    decoders.
