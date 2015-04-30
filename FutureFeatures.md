@@ -42,3 +42,7 @@ prioritized based on developer feedback.
 ## Operations which may not be available or may not perform well on all platforms
  * FMA, reciprocal sqrt approximate, fp16
  * TODO
+
+## Platform-independent Just-in-Time compilatione
+* TODO
+* Potentially through dynamic loading.

@@ -20,10 +20,6 @@ Minimum Viable Product that is [v.1](V1.md).
 ## Fixed-width SIMD
 * TODO
 
-## Platform-independent Just-in-Time compilatione
-* TODO
-* Potentially through dynamic loading.
-
 ## Zero-cost Exception Handling
 * Developer access to stack unwinding and inspection.
 
