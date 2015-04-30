@@ -43,9 +43,3 @@ feedback.
 
 ## Irreducible control flow
 * TODO
-
-## Extra math
-The following features may not work the same on all platforms:
-* Fused multiply-add.
-* Reciprocal square-root approximate.
-* 16-bit floating-point values.

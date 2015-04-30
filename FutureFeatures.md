@@ -38,6 +38,6 @@ which are expected to be standardized immediately after v.1.
 ## Non-fixed-width SIMD
  * TODO
  
-## Operations which may not work the same on all platforms
+## Operations which may not be available or may not perform well on all platforms
  * FMA, reciprocal sqrt approximate, fp16
  * TODO
