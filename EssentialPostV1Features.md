@@ -25,6 +25,3 @@ Minimum Viable Product that is [v.1](V1.md).
 
 ## Signature-restricted Proper Tail Calls
 * TODO
-
-## Irreducible control flow
-* TODO
