@@ -10,6 +10,7 @@ Minimum Viable Product that is [v.1](V1.md).
 * TODO
 
 ## Threads
+* Shared memory
 * Atomics
 * Futex or [synchronic][]
 * Thread-local storage
@@ -19,22 +20,12 @@ Minimum Viable Product that is [v.1](V1.md).
 ## Fixed-width SIMD
 * TODO
 
-## Dynamic loading
-* TODO
-
 ## Platform-independent Just-in-Time compilatione
 * TODO
 * Potentially through dynamic loading.
 
-## Fine-grained memory management
-* Shared memory
-* `mmap`/`munmap`/`madvise`
-
 ## Zero-cost Exception Handling
 * Developer access to stack unwinding and inspection.
-
-## Garbage collection
-* TODO
 
 ## Signature-restricted Proper Tail Calls
 * TODO
