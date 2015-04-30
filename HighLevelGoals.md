@@ -18,7 +18,7 @@
       developer feedback, such as:
 	  - Concurrency and parallelism through threads and SIMD.
 	  - Dynamic loading.
-	  - Finer-grained control on memory managment.
+	  - Finer-grained control on memory management.
 	  - Zero-cost exception handling.
 	  - Garbage collection.
 7. Design to integrate well with the existing web platform:
