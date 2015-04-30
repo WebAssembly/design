@@ -3,7 +3,8 @@
 These are features that make sense in the context of the 
 [high-level goals](HighLevelGoals.md) of WebAssembly but are not considered part of the
 [Minimum Viable Product](V1.md) or the [essential post-v.1 feature set](EssentialPostV1Features.md)
-which are expected to be standardized immediately after v.1.
+which are expected to be standardized immediately after v.1. These will be
+prioritized based on developer feedback.
 
 ## Dynamic loading
  * Both load-time and run-time.
