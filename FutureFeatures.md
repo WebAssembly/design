@@ -32,6 +32,7 @@ developer feedback.
  * TODO
  
 ## Proper Tail Calls
+ * Expands upon Signature-restricted Proper Tail Calls.
  * TODO
  
 ## Asynchronous Signals
