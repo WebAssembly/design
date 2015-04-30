@@ -1,7 +1,8 @@
 # Essential Post-v.1 Features
 
 This is a list of essential features we *know* we need but were not part of the
-Minimum Viable Product that is [v.1](V1.md).
+Minimum Viable Product that is [v.1](V1.md). Longer-term features will be added
+in [future versions](FutureFeatures.md).
 
 
 *This is just a skeleton list to start a discussion*
