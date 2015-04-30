@@ -10,17 +10,10 @@
 4. Design to maintain the versionless, feature-testing and backwards-compatible
    evolution story of the web; engines should not need multiple, versioned
    decoders.
-5. Design and implement incrementally:
-    * v.1 will allow an effective (load-time and performance) [polyfill][] via
-      client-side compilation to [asm.js][]. It will be a Minimum Viable
-      Product: basically what you can do with [asm.js][].
-	* Subsequent versions will expose further features, prioritized based on
-      developer feedback, such as:
-	  - Concurrency and parallelism through threads and SIMD.
-	  - Dynamic loading.
-	  - Finer-grained control on memory management.
-	  - Zero-cost exception handling.
-	  - Garbage collection.
+5. Design and implement incrementally: the initial version will be a Minimum
+   Viable Product by being an effective [polyfill][] via client-side compilation
+   to [asm.js][], with a feature set similar to [asm.js][]'s current
+   features. Subsequent versions will be more [featureful][].
 6. Design to integrate well with the existing web platform:
     * execute in the same semantic universe as JavaScript;
     * allow synchronous calls to and from JavaScript;
@@ -31,3 +24,4 @@
 
   [polyfill]: https://github.com/WebAssembly/polyfill
   [asm.js]: http://asmjs.org
+  [featureful]: https://github.com/WebAssembly/spec/blob/master/UpcomingFeatures.md
