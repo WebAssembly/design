@@ -7,6 +7,9 @@ of the [Minimum Viable Product](V1.md) or the
 to be standardized immediately after v.1. These will be prioritized based on
 developer feedback.
 
+## Great tooling support
+This is covered in the [tooling](Tooling.md) section.
+
 ## Dynamic linking
  * [Dynamic loading](V1.md#code-loading-and-imports) is in [v.1](V1.md), but all loaded modules have
    their own [separate heaps](V1.md#heap) and cannot share [function pointers](V1.md#function-pointers).
@@ -16,7 +19,7 @@ developer feedback.
 ## Finer-grained control over memory
  * `mmap` of File, `madvise(MADV_DONTNEED)`, ...
  * TODO
- 
+
 ## GC/DOM Integration
  * Access to certain kinds of GC things from variables/arguments/expressions
  * Ability to GC-allocate certain kinds of GC things
@@ -52,3 +55,8 @@ developer feedback.
 ## Platform-independent Just-in-Time compilation
 * TODO
 * Potentially through dynamic loading.
+
+## Multiprocess support
+ * `vfork`.
+ * Inter-process communication.
+ * Inter-process `mmap`.
