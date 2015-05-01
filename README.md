@@ -11,6 +11,4 @@ We've mapped out features we expect to ship:
  2. Closely [after V1](EssentialPostV1Features.md);
  3. In [future versions](FutureFeatures.md).
 
-And have high aspirations for great [tooling](Tooling.md).
-
 Join us on IRC: `irc://irc.w3.org:6667/#webassembly`.
