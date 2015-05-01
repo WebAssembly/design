@@ -42,5 +42,17 @@ in [future versions](FutureFeatures.md).
   anyhow).
 
 ## Signature-restricted Proper Tail Calls
-* This can also be used to support `goto` and irreducible control flow.
-* TODO
+* The goal is to support irreducible control flow or cases where relooping isn't available 
+  without requiring the code generator to fall back on a big while+switch loop.
+* As described in the [asm.js RFC]
+  (http://discourse.specifiction.org/t/request-for-comments-add-a-restricted-subset-of-proper-tail-calls-to-asm-js),
+  restricted PTCs are useful for compiling both direct and indirect `goto`.
+  * In most cases, a PTC can be compiled to a single jump.
+  * An engine that wishes to perform aggresive optimization can fuse a graph of PTCs into a
+    single function.
+  * An engine that wishes to stick with structured, reducible control flow can easily compile each 
+    function separately.
+  * To reduce compile time, a compiler can use PTCs to break up ultra-large functions into smaller
+    functions at low overhead using PTCs.
+  * A compiler can exert some amount of control over register allocation via the ordering of
+    arguments in the PTC signature.
