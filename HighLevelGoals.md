@@ -20,7 +20,7 @@
     * access browser functionality through the same Web APIs that are accessible
       to JavaScript.
 7. Design to allow execution in non-browser environments.
-8. Create a format wich enables great [tooling](Tooling.md) people want to use.
+8. Create a format which enables great [tooling](Tooling.md) people want to use.
 
   [polyfill]: https://github.com/WebAssembly/polyfill
   [asm.js]: http://asmjs.org
