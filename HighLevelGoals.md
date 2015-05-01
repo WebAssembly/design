@@ -11,7 +11,7 @@
    evolution story of the web; engines should not need multiple, versioned
    decoders.
 5. Design and implement incrementally:
-    * the initial v.1 standard will be a Minimum Viable Product with a full, effective [polyfill][] via client-side compilation to [asm.js][] and thus run on existing browsers;
+    * [v.1](V1.md) of the standard will be a Minimum Viable Product with a full, effective [polyfill][] via client-side compilation to [asm.js][] and thus run on existing browsers;
     * subsequent versions will add more [features](EssentialPostV1Features.md) prioritized by feedback.
 6. Design to execute within and integrate well with the existing web platform:
     * execute in the same semantic universe as JavaScript;
