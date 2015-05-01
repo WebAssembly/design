@@ -16,7 +16,10 @@ in [future versions](FutureFeatures.md).
   [synchronic]: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4195.pdf
 
 ## Fixed-width SIMD
-* TODO
+* Essentially, import [SIMD.js](https://github.com/johnmccutchan/ecmascript_simd).
+  * Would be statically typed analogous to [SIMD.js-in-asm.js](discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js).
+  * The goal is to both reuse specification of op semantics (with TC39) and backend implementation (same IR nodes)
+* Track SIMD.js after v.1.
 
 ## Zero-cost Exception Handling
 * Developer access to stack unwinding and inspection.
