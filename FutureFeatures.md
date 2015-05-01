@@ -13,7 +13,9 @@ This is covered in the [tooling](Tooling.md) section.
 ## Dynamic linking
  * [Dynamic loading](V1.md#code-loading-and-imports) is in [v.1](V1.md), but all loaded modules have
    their own [separate heaps](V1.md#heap) and cannot share [function pointers](V1.md#function-pointers).
- * Support both load-time and run-time (`dlopen`) dynamic linking.
+ * Support both load-time and run-time (`dlopen`) dynamic linking of both
+   WebAssembly modules and non-WebAssembly modules (e.g., on the web, ES6
+   ones containing JS), sharing the heap as well as function pointers.
  * TODO
 
 ## Finer-grained control over memory
