@@ -20,11 +20,6 @@ This is covered in the [tooling](Tooling.md) section.
  * `mmap` of File, `madvise(MADV_DONTNEED)`, ...
  * TODO
 
-## Multiprocess support
- * `vfork`.
- * Inter-process communication.
- * Inter-process `mmap`.
-
 ## GC/DOM Integration
  * Access to certain kinds of GC things from variables/arguments/expressions
  * Ability to GC-allocate certain kinds of GC things
@@ -60,3 +55,8 @@ This is covered in the [tooling](Tooling.md) section.
 ## Platform-independent Just-in-Time compilation
 * TODO
 * Potentially through dynamic loading.
+
+## Multiprocess support
+ * `vfork`.
+ * Inter-process communication.
+ * Inter-process `mmap`.
