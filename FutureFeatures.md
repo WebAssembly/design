@@ -54,6 +54,12 @@ This is covered in the [tooling](Tooling.md) section.
       * Are there users who would want to ship a hybrid build instead of two 32- and 64-bit builds
         (conditionally loaded after a feature test)?
 
+## Source maps integration
+ * Add a new source maps [module section type](V1.md#module-structure).
+ * Either embed the source maps directly or just a URL from which source maps can be downloaded.
+ * Text source maps become intractably large for even moderate-sized compiled codes, so probably
+   need to define new binary format for source maps.
+
 ## Support for Just-in-Time Compilation
  * Finer-grained dynamic linking
  * Safe patching (of immediates, branch targets, ...)
