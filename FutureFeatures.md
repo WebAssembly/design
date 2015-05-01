@@ -26,6 +26,12 @@ developer feedback.
  * Perhaps a rooting API for safe reference from the linear address space
  * TODO
 
+## Source maps integration
+ * Add a new source maps [module section type](V1.md#module-structure).
+ * Either embed the source maps directly or just a URL from which source maps can be downloaded.
+ * Text source maps become intractably large for even moderate-sized compiled codes, so probably
+   need to define new binary format for source maps.
+
 ## Support for Just-in-Time Compilation
  * Finer-grained dynamic linking
  * Safe patching (of immediates, branch targets, ...)
