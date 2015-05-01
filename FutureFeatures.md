@@ -7,8 +7,10 @@ of the [Minimum Viable Product](V1.md) or the
 to be standardized immediately after v.1. These will be prioritized based on
 developer feedback.
 
-## Dynamic loading
- * Both load-time and run-time.
+## Dynamic linking
+ * [Dynamic loading](V1.md#code-loading-and-imports) is in [v.1](V1.md), but all loaded modules have
+   their own [separate heaps](V1.md#heap) and cannot share [function pointers](V1.md#function-pointers).
+ * Support both load-time and run-time (`dlopen`) dynamic linking.
  * TODO
 
 ## Finer-grained control over memory
