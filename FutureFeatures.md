@@ -31,6 +31,27 @@ This is covered in the [tooling](Tooling.md) section.
  * Perhaps a rooting API for safe reference from the linear address space
  * TODO
 
+## Heaps bigger than 4GiB
+* Allow heaps greater than 4GiB.
+* Provide load/store operations that take 64-bit address operands; `int64` becomes the
+  canonical pointer type.
+* On a 32-bit system, heaps must still be <4GiB so all the int64 arithmetic (which will be much
+  slower than 32-bit arithmetic) will be unnecessary.
+  * Show we provide a uintptr_t (only 64-bit on 64-bit systems)?
+    * This feature alone would not allow a C++ compiler to write size-polymorphic code since the word
+      size is also baked into the code in a hundred other ways (consider `offsetof`).
+    * The compiler *could* inflate all pointer types that are used in heap storage to 64-bit (so the
+      uintptr_t type was only used for local variable/expression types).
+      * This would imply an implicit truncation of any load of a pointer from the heap which could cause
+        subtle bugs if the pointer was storing a real int64-width value.
+      * This would still unnecessarily increase heap size on 32-bit; applications sensitive to OOM would
+        still want a separate 32-bit build.
+      * Now there are three compile targets: all-32, all-64, and this uintptr_t hybrid.
+    * More discussion and experimentation needed.
+      * Would the hybrid mostly Just Work?
+      * Are there users who would want to ship a hybrid build instead of two 32- and 64-bit builds
+        (conditionally loaded after a feature test)?
+
 ## Support for Just-in-Time Compilation
  * Finer-grained dynamic linking
  * Safe patching (of immediates, branch targets, ...)

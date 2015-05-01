@@ -5,7 +5,9 @@ Minimum Viable Product that is [v.1](V1.md). Longer-term features will be added
 in [future versions](FutureFeatures.md).
 
 ## 64-bit integers
-* TODO
+* Provide access to efficient 64-bit arithmetic.
+* Some code will want to only use 64-bit integers when running on a 64-bit system (for performance
+  reasons) so provide a "has native 64-bit integer" query.
 
 ## Threads
 * Provide low-level buildings blocks for pthreads-style shared memory: shared memory,
