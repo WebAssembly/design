@@ -6,20 +6,8 @@ in [future versions](FutureFeatures.md).
 
 ## 64-bit integers
 * Provide access to efficient 64-bit arithmetic.
-* Also allow heaps greater than 4gb and load/store op that take 64-bit operands.
-* Some code will want to only use 64-bit integers when running on a 64-bit system.
-  * For example, on a 32-bit system, a >4gb heap allocation will always OOM so there is no reason
-    to use slow 64-bit ints for pointers.
-  * Provide a "has native 64-bit integer" query.
-  * Show we provide a uintptr_t (only 64-bit when the "has native 64-bit integer" query is true)?
-    * This feature alone would not allow a C++ compiler to write size-polymorphic code since the word
-      size is also baked into the code in a hundred other ways (consider `offsetof`).
-    * The compiler *could* inflate all pointer types that are used in heap storage to 64-bit (so the
-      uintptr_t type was only used for local variable/expression types). This could mostly work,
-      though it would implicitly truncate on any load of a pointer from the heap which could cause
-      subtle semantic bugs if the pointer was storing a non-pointer real-int64 value. It would also
-      increase heap usage significantly (for pointer-heavy heaps).
-    * So tentatively 'no'.
+* Some code will want to only use 64-bit integers when running on a 64-bit system (for performance
+  reasons) so provide a "has native 64-bit integer" query.
 
 ## Threads
 * Shared memory
