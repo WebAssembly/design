@@ -35,8 +35,7 @@ are statements.
 
   * Block - a fixed-length sequence of statements
   * If - if statement
-  * While - while statement
-  * For - for statement
+  * Loop - unconditional loop statement
   * Continue - continue to start of nested loop
   * Break - break to end from nested loop or block
   * Return - return zero or more values from this function
