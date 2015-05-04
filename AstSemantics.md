@@ -74,6 +74,17 @@ semantics. Other possible semantics which are efficiently implementable
 include throwing an exception or allowing out-of-bound reads to return an
 unspecified value.
 
+To enable more aggresive hoisting of bounds checks, heap accesses may also include
+an offset:
+
+  * LoadHeapWithOffset - load a value from the heap at a given index plus a given immediate offset
+  * StoreHeapWithOffset - store a given value to the heap at a given index plus a given immediate offset
+
+The addition of the offset and index is specified to use infinite precision 
+such that an out-of-bounds access never wraps around to an in-bounds access.
+Bounds checking before the final offset addition allows the offset addition
+to easily be folded into the hardware load instruction *and* for groups of loads
+with the same base and different offsets to easily share a single bounds check.
 
 ## Accessing globals
 
