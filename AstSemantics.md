@@ -120,8 +120,8 @@ and 0 representing false.
   * Int32Mul - signed-less multiplication (lower 32-bits)
   * Int32SDiv - signed division
   * Int32UDiv - unsigned division
-  * Int32SMod - signed modulus
-  * Int32UMod - unsigned modulus
+  * Int32SRem - signed remainder
+  * Int32URem - unsigned remainder
   * Int32And - signed-less logical and
   * Int32Ior - signed-less inclusive or
   * Int32Xor - signed-less exclusive or
@@ -158,7 +158,6 @@ All 64-bit floating point operations conform to the IEEE-754 standard.
   * Float64Sub - subtraction
   * Float64Mul - multiplication
   * Float64Div - division
-  * Float64Mod - modulus
   * Float64Abs - absolute value
   * Float64Ceil - ceiling operation
   * Float64Floor - floor operation
@@ -188,7 +187,6 @@ All 32-bit floating point operations conform to the IEEE-754 standard.
   * Float32Sub - subtraction
   * Float32Mul - multiplication
   * Float32Div - division
-  * Float32Mod - modulus
   * Float32Eq - compare equal
   * Float32Lt - less than
   * Float32Le - less than or equal
