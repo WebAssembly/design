@@ -25,7 +25,7 @@ in [future versions](FutureFeatures.md).
 
 ## Fixed-width SIMD
 * Essentially, import [SIMD.js](https://github.com/johnmccutchan/ecmascript_simd).
-  * Would be statically typed analogous to [SIMD.js-in-asm.js](discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js).
+  * Would be statically typed analogous to [SIMD.js-in-asm.js](http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js).
   * The goal is to both reuse specification of op semantics (with TC39) and backend implementation (same IR nodes)
   * Track SIMD.js after v.1.
 * SIMD adds new primitive variable/expression types (e.g., `float32x4`) so it has to be part of
