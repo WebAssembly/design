@@ -82,8 +82,17 @@ This is covered in the [tooling](Tooling.md) section.
  * and more!
 
 ## Platform-independent Just-in-Time compilation
-* TODO
-* Potentially through dynamic loading.
+* Minimally, we need mechanisms to make this possible.
+  * Producing a dynamic library and loading it is very likely the first step, as
+    it will be easy to get working.
+
+  * After that, it may become desirable to define lighter-weight mechanisms, such
+    as the ability to add a function to an existing module, or even the ability to
+    define explicitly patchable constructs within functions to allow for very
+    fine-grained JITing.
+
+* Potential enhancements include:
+  * Provide JITs access to profile feedback for their JITed code.
 
 ## Multiprocess support
  * `vfork`.
