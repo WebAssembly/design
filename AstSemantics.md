@@ -48,31 +48,17 @@ algorithm.
 
 ## Accessing the heap
 
-Each heap access is annotated with the type of the location being accessed.
-The legal set of types for heap accesses is larger than that for local variables
-and AST nodes. In particular accesses to the heap may specify integer types
-smaller than 32 bits. Loads are either sign extended or zero extended to 32-bit
-integers, and stores of integers smaller than 32-bit include implicit truncations.
+Each heap access is annotated with the type of the location being accessed and
+the presumed alignment of the incoming pointer. The legal set of types for heap
+accesses is larger than that for local variables and AST nodes. In particular
+accesses to the heap may specify integer types smaller than 32 bits. Loads are
+either sign extended or zero extended to 32-bit integers, and stores of integers
+smaller than 32-bit include implicit truncations.
 
 Indexes into the heap are always byte indexes.
-Heap accesses can be unaligned.
 
-  * LoadHeap - load a value from the heap at a given index
-  * StoreHeap - store a given value to the heap at a given index
-
-These AST nodes index the heap with 32-bit unsigned integers with the assumption the
-specification will be extended with new AST nodes that allow 64-bit integers
-as indexes.
-
-The specification will add atomicity annotations in the future. Currently
-all heap accesses can be considered "non-atomic".
-
-The semantics of out-of-bounds heap accesses needs clarification. A polyfill
-to asm.js and typed arrays would suggest ignoring out-of-bounds-writes and
-returning an appropriate zero value for out-of-bounds reads as the default
-semantics. Other possible semantics which are efficiently implementable 
-include throwing an exception or allowing out-of-bound reads to return an
-unspecified value.
+  * LoadHeap - load a value from the heap at a given index with given alignment
+  * StoreHeap - store a given value to the heap at a given index with given alignment
 
 To enable more aggresive hoisting of bounds checks, heap accesses may also include
 an offset:
@@ -85,6 +71,76 @@ such that an out-of-bounds access never wraps around to an in-bounds access.
 Bounds checking before the final offset addition allows the offset addition
 to easily be folded into the hardware load instruction *and* for groups of loads
 with the same base and different offsets to easily share a single bounds check.
+
+In v.1, the indices are 32-bit unsigned integers. With 
+[64-bit integers](EssentialPostV1Features.md#64-bit-integers) and
+[>4GiB heaps](FutureFeatures.md#heaps-bigger-than-4gib), these nodes would also
+accept 64-bit unsigned integers.
+
+In v.1, heaps are not shared between threads. When
+[threads](EssentialPostV1Features.md#threads) are added as a feature, the basic
+`LoadHeap`/`StoreHeap` nodes will have the most relaxed semantics specified in
+the memory model and new heap-access nodes will be added with atomic and
+ordering guarantees.
+
+Two important semantic cases are **misaligned** and **out-of-bounds** accesses:
+
+### Alignment
+
+If the incoming index argument to a heap access is misaligned with respect to
+the alignment operand of the heap access, the heap access must still work
+correctly (as if the alignment operand was 1). However, on some platforms, such
+misaligned accesses may incur a *massive* performance penalty (due to trap
+handling). Thus, a WebAssembly code generator should *always* provide accurate
+alignment. Note: on platforms without unaligned accesses, smaller-than-natural
+alignment may result in slower code generation (due to the whole access being
+broken into smaller aligned accesses).
+
+Since misaligned loads/stores are guaranteed to produce correct results and
+heap accesses in asm.js force alignment (e.g., `HEAP32[i>>2]` masks off the
+low two bits), the asm.js polyfill would need to translate *all* loads/stores
+into byte accesses (regardless of specified alignment) to be correct. However,
+to achieve competitive performance, the polyfill defaults to incorrect behavior
+by emitting full-size accesses as if the index was never misaligned. This 
+follows from the [high-level goals](HighLevelGoals.md). Thus, code generators
+have *two* strong reasons to always emit accurate alignment.
+
+Either tooling or an explicit opt-in "debug mode" in the spec should allow
+execution of a module in a mode that threw exceptions on misaligned access.
+(This mode would incur some runtime cost for branching on most platforms which
+is why it isn't the specified default.)
+
+### Out of bounds
+
+The ideal semantics is for out-of-bounds accesses to throw. A module may
+optionally define that "out of bounds" includes low-memory accesses.
+
+There are several possible variations on this design being discussed and
+experimented with. More measurement is required to understand the optimization
+opportunities provided by each.
+
+  * After an out-of-bounds access, the module can no longer execute code and any
+    outstanding JS ArrayBuffers aliasing the heap are detached.
+    * This would primarily allow hoisting bounds checks above effectful
+      operations.
+    * This can be viewed as a mild security measure under the assumption that
+      while the sandbox is still ensuring safety, the module's internal state
+      is incoherent and further execution could lead to Bad Things (e.g., XSS
+      attacks).
+  * To allow for potentially more-efficient heap sandboxing, the semantics could
+    allow for a non-deterministic choice between one of the following when an
+    out-of-bounds access occurred.
+    * The ideal throw semantics.
+    * Loads return an unspecified value.
+    * Stores are either ignored or store to an unspecified location in the heap.
+    * Either tooling or an explicit opt-in "debug mode" in the spec should allow
+      execution of a module in a mode that threw exceptions on out-of-bounds
+      access.
+
+Lastly, regardless of the above semantics, the asm.js polyfill would be
+intentionally incorrect for performance reasons (see
+[high-level design goals](HighLevelDesignGoals.md)) and do what it does now,
+which is to ignore out-of-bound stores and return 0/NaN for out-of-bound load.
 
 ## Accessing globals
 
