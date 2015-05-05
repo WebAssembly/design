@@ -102,24 +102,37 @@ all global accesses can be considered "non-atomic".
 
 ## Calls
 
-Calls to functions can be direction (by index), or indirect. Each function
-has a signature in terms of local types, and calls must match the function
-signature exactly. Multiple return value calls will be possible.
-
-The details of indirect calls need clarification.
+Direct calls to a function specify the callee by index into a function table.
 
   * CallDirect - call function directly
+
+Each function has a signature in terms of local types, and calls must match the
+function signature exactly. [Imported functions](V1.md#code-loading-and-imports) 
+also have signatures and are added to the same function table and are thus also
+callable via `CallDirect`.
+
+Indirect calls may be made to a value of function-pointer type. A function-
+pointer value may be obtained for a given function as specified by its index
+in the function table.
+
   * CallIndirect - call function indirectly
+  * AddressOf - obtain a function pointer value for a given function
 
-The details of multiple-return-value calls needs clarification.
-Calling a function that returns multiple values will likely have to be a
-statement that specifies multiple local variables to which to assign the
-corresponding return values.
+Function-pointer values are comparable for equality and the `AddressOf` operator
+is monomorphic. Function-pointer values can be explicitly coerced to and from
+integers (which, in particular, is necessary when loading/storing to the heap
+since the heap only provides integer types). For security and safety reasons,
+the integer value of a coerced function-pointer value is an abstract index and
+does not reveal the actual machine code address of the target function.
 
-Calls to external (stdlib) functions can be expressed as direct calls to
-an "external" function in the function table. The linking of that function
-will be specified through the module system. A call to an unlinked function
-should be a runtime error.
+In v.1 function pointer values are
+local to a single module. The [dynamic linking](FutureFeatures.md#dynamic-linking)
+feature is necessary for two modules to pass function pointers back and forth.
+
+Multiple return value calls will be possible, though possibly not in v.1. The
+details of multiple-return-value calls needs clarification. Calling a function
+that returns multiple values will likely have to be a statement that specifies
+multiple local variables to which to assign the corresponding return values.
 
 ## Literals
 
