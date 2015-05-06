@@ -81,6 +81,40 @@ as a starting point for defining a real standard binary format.*
     * If `GetLoc::index` < 32, write a single byte as described [above](BinaryEncoding.md#fold-immediates-into-opcodes).
     * Otherwise, write the opcode of `GetLoc` and the variable length integer `GetLoc::index`.
 
+## Backwards Compatibility
+
+Restating the relevant [high-level goal](HighLevelGoals.md): "Design to maintain the versionless, 
+feature-testing and backwards-compatible evolution story of the web; engines should not need 
+multiple, versioned decoders".
+
+As explained above, for size- and decode-efficiency, the binary format will serialize AST nodes,
+their contents and children using dense integer indices and without any kind of embedded metadata 
+or tagging. This raises the question of how to reconcile the efficient encoding with the 
+backwards-compatibility goals.
+
+Specifically, we'd like to avoid the situation where a future version of WebAssembly has features 
+F1 and F2 and vendor V1 implements F1, assigning the next logical opcode indices to F1's new 
+opcodes, and V2 implements F2, assigning the same next logical opcode indices to F2's new opcodes 
+and now a single binary has ambiguous semantics if it tries to use either F1 or F2. This type of 
+non-linear feature addition is commonplace in JS and Web APIs and is guarded against by 
+having unique names for unique features (and associated [conventions](https://hsivonen.fi/vendor-prefixes)).
+
+The current proposal is to maintain both the efficiency of indices in the [serialized AST](BinaryEncoding.md#serialized-ast) and the established
+conflict-avoidance practices surrounding string names:
+  * The WebAssembly spec doesn't define any global index spaces
+    * So, as a general rule, no magic numbers in the spec (other than the literal [magic number](http://en.wikipedia.org/wiki/Magic_number_%28programming%29)).
+  * Instead, a module defines its *own* local index spaces of opcodes by providing tables *of names*. 
+    * So what the spec *would* define is a set of names and their associated semantics.
+  * To avoid (over time) large index-space declaration sections that are largely the same
+    between modules, finalized versions of standards would define named baseline index spaces
+    that modules could optionally use as a starting point to further refine.
+    * For example, to use all of [v.1](V1.md) plus [SIMD](EssentialPostV1Features.md#fixed-width-simd)
+      the declaration could be "v1" followed by the list of SIMD opcodes used.
+    * This feature would also be most useful for people handwriting the [text format](V1.md#text-format).
+    * However, such a version declaration does not establish a global "version" for the module
+      or affect anything outside of the initialization of the index spaces; decoders would
+      remain versionless and simply add cases for new *names* (as with current JS parsers).
+
 ## Further ideas
 * Macro layer on top of serialized AST (allow the logical equivalent of `#define ADD1(x) (x+1)`)
   * A simple variant would be just having nullary macros (`#define ADDX1 (x+1)`)
