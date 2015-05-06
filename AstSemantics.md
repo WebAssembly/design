@@ -40,6 +40,7 @@ are statements.
   * Continue - continue to start of nested loop
   * Break - break to end from nested loop or block
   * Return - return zero or more values from this function
+  * Switch - switch statement with fallthrough
 
 Break and continue statements can only target blocks or loops in which they are
 nested. This guarantees that all resulting control flow graphs are reducible
