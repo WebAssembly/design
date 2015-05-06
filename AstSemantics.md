@@ -118,6 +118,11 @@ an "external" function in the function table. The linking of that function
 will be specified through the module system. A call to an unlinked function
 should be a runtime error.
 
+## Literals
+
+All basic data types allow literal values of that data type. See the
+[binary encoding section](BinaryEncoding.md#constant-pool).
+
 ## 32-bit Integer operations
 
 Most operations available on 32-bit integers are sign-independent.
