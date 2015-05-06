@@ -151,6 +151,10 @@ and 0 representing false.
   * Int32Ult - unsigned less than
   * Int32Ule - unsigned less than or equal
 
+Note that greater-than and greater-than-or-equal operations are not required,
+since "a < b" == "b > a" and "a <= b" == "b >= a". Such equalities also hold for
+floating point comparisons, even considering NaN.
+
 Additional 32-bit integer Operations under consideration:
 
   * Int32SMulHigh - signed multiplication (upper 32-bits)
@@ -231,14 +235,11 @@ need further clarification.
   * Int32FromFloat32 - truncate a 32-bit float to a signed integer
   * Uint32FromFloat64 - truncate a 64-bit float to an unsigned integer
   * Uint32FromFloat32 - truncate a 32-bit float to an unsigned integer
+  * Int32FromFloat32Bits - reinterpret the bits of a 32-bit float as a 32-bit integer
   * Float64FromFloat32 - convert a 32-bit float to a 64-bit float
   * Float64FromInt32 - convert a signed integer to a 64-bit float
   * Float64FromUInt32 - convert an unsigned integer to a 64-bit float
   * Float32FromFloat32 - truncate a 32-bit float to a 32-bit float
   * Float32FromInt32 - convert a signed integer to a 32-bit float
   * Float32FromUInt32 - convert an unsigned integer to a 32-bit float
-
-Note that greater-than and greater-than-or-equal operations are not required,
-since "a < b" == "b > a" and "a <= b" == "b >= a". Such equalities also hold for
-floating point comparisons, even considering NaN.
-
+  * Float32FromInt32Bits - reinterpret the bits of a 32-bit integer as a 32-bit float
