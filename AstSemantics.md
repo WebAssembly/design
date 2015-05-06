@@ -156,16 +156,18 @@ Additional 32-bit integer Operations under consideration:
   * Int32SMulHigh - signed multiplication (upper 32-bits)
   * Int32UMulHigh - unsigned multiplication (upper 32-bits)
   * Int32Clz - count leading zeroes
+  * Int32Popcnt - count number of ones
   * Int32Not - signed-less one's complement
   * Int32SMin - signed minimum
   * Int32SMax - signed maximum
   * Int32UMin - unsigned minimum
   * Int32UMax - unsigned maximum
 
-The behavior of division-by-zero and other operations that cannot be represented
-in 32-bit integers needs clarification. An efficient polyfill to asm.js would
-suggest division-by-zero results in 0. Other options include throwing an
-exception or producing an unspecified 32-bit integer value.
+The behavior of division-by-zero and (INT32_MIN/-1) needs clarification. 
+An efficient polyfill to asm.js would suggest division-by-zero results in 
+0 although it's possible for the asm.js polyfill to simply be wrong in this 
+corner case. Other options include throwing an exception or producing an 
+unspecified 32-bit integer value.
 
 ## 64-bit Floating point operations
 
@@ -204,16 +206,27 @@ All 32-bit floating point operations conform to the IEEE-754 standard.
   * Float32Sub - subtraction
   * Float32Mul - multiplication
   * Float32Div - division
+  * Float32Abs - absolute value
+  * Float32Ceil - ceiling operation
+  * Float32Floor - floor operation
   * Float32Eq - compare equal
   * Float32Lt - less than
   * Float32Le - less than or equal
 
 Operations under consideration:
 
-  * Float32Abs - absolute value
-  * Float32Ceil - ceiling operation
-  * Float32Floor - floor operation
   * Float32Sqrt - square root
+  * Float32Sin - trigonometric sine
+  * Float32Cos - trigonometric cosine
+  * Float32Tan - trigonometric tangent
+  * Float32ASin - trigonometric arcsine
+  * Float32ACos - trigonometric arccosine
+  * Float32ATan - trigonometric  arctangent
+  * Float32ATan2 - trigonometric arctangent
+  * Float32Exp - exponentiate e
+  * Float32Ln - natural logarithm
+  * Float32Pow - exponentiate
+
 
 Note that the IEEE 754 standard does not require extended operations
 like transcendental functions to have a specified precision.
@@ -234,7 +247,7 @@ need further clarification.
   * Float64FromFloat32 - convert a 32-bit float to a 64-bit float
   * Float64FromInt32 - convert a signed integer to a 64-bit float
   * Float64FromUInt32 - convert an unsigned integer to a 64-bit float
-  * Float32FromFloat32 - truncate a 32-bit float to a 32-bit float
+  * Float32FromFloat64 - truncate a 64-bit float to a 32-bit float
   * Float32FromInt32 - convert a signed integer to a 32-bit float
   * Float32FromUInt32 - convert an unsigned integer to a 32-bit float
 
