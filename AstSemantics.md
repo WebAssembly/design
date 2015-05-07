@@ -209,16 +209,6 @@ All 64-bit floating point operations conform to the IEEE-754 standard.
 Operations under consideration:
 
   * Float64Sqrt - square root
-  * Float64Sin - trigonometric sine
-  * Float64Cos - trigonometric cosine
-  * Float64Tan - trigonometric tangent
-  * Float64ASin - trigonometric arcsine
-  * Float64ACos - trigonometric arccosine
-  * Float64ATan - trigonometric  arctangent
-  * Float64ATan2 - trigonometric arctangent
-  * Float64Exp - exponentiate e
-  * Float64Ln - natural logarithm
-  * Float64Pow - exponentiate
 
 ## 32-bit Floating point operations
 
@@ -238,16 +228,6 @@ All 32-bit floating point operations conform to the IEEE-754 standard.
 Operations under consideration:
 
   * Float32Sqrt - square root
-  * Float32Sin - trigonometric sine
-  * Float32Cos - trigonometric cosine
-  * Float32Tan - trigonometric tangent
-  * Float32ASin - trigonometric arcsine
-  * Float32ACos - trigonometric arccosine
-  * Float32ATan - trigonometric  arctangent
-  * Float32ATan2 - trigonometric arctangent
-  * Float32Exp - exponentiate e
-  * Float32Ln - natural logarithm
-  * Float32Pow - exponentiate
 
 
 Note that the IEEE 754 standard does not require extended operations
@@ -274,3 +254,36 @@ need further clarification.
   * Float32FromInt32 - convert a signed integer to a 32-bit float
   * Float32FromUInt32 - convert an unsigned integer to a 32-bit float
   * Float32FromInt32Bits - reinterpret the bits of a 32-bit integer as a 32-bit float
+
+## Post-v.1 intrinsics
+
+The following list of intrinsics is being considered for addition after v.1. The
+rationale is that, for v.1, these operations can be statically linked into the
+WebAssembly module by the code generator at small size cost and this avoids a
+non-trivial specification burden of their semantics/precision. Adding these
+intrinsics post-v.1 would allow for better high-level backend optimization of
+these intrinsics that require builtin knowledge of their semantics. On the other
+hand, a code generator may continue to statically link in its own implementation
+since this provides greater control over precision/performance tradeoffs.
+
+  * Float64Sin - trigonometric sine
+  * Float64Cos - trigonometric cosine
+  * Float64Tan - trigonometric tangent
+  * Float64ASin - trigonometric arcsine
+  * Float64ACos - trigonometric arccosine
+  * Float64ATan - trigonometric  arctangent
+  * Float64ATan2 - trigonometric arctangent with two arguments
+  * Float64Exp - exponentiate e
+  * Float64Ln - natural logarithm
+  * Float64Pow - exponentiate
+  * Float32Sin - trigonometric sine
+  * Float32Cos - trigonometric cosine
+  * Float32Tan - trigonometric tangent
+  * Float32ASin - trigonometric arcsine
+  * Float32ACos - trigonometric arccosine
+  * Float32ATan - trigonometric  arctangent
+  * Float32ATan2 - trigonometric arctangent with two arguments
+  * Float32Exp - exponentiate e
+  * Float32Ln - natural logarithm
+  * Float32Pow - exponentiate
+
