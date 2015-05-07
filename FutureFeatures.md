@@ -84,7 +84,7 @@ This is covered in the [tooling](Tooling.md) section.
   * Can be used as a compile target for languages with unrestricted PTCs;
     the code generator can use a stack in the heap to effectively implement a
     custom call ABI on top of signature-restricted PTCs.
-  * An engine that wishes to perform aggresive optimization can fuse a graph of PTCs into a
+  * An engine that wishes to perform aggressive optimization can fuse a graph of PTCs into a
     single function.
   * To reduce compile time, a code generator can use PTCs to break up
     ultra-large functions into smaller functions at low overhead using PTCs.

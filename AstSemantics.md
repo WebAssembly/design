@@ -63,7 +63,7 @@ Indexes into the heap are always byte indexes.
   * LoadHeap - load a value from the heap at a given index with given alignment
   * StoreHeap - store a given value to the heap at a given index with given alignment
 
-To enable more aggresive hoisting of bounds checks, heap accesses may also include
+To enable more aggressive hoisting of bounds checks, heap accesses may also include
 an offset:
 
   * LoadHeapWithOffset - load a value from the heap at a given index plus a given immediate offset
@@ -215,7 +215,7 @@ opportunities.
 
 Most operations available on 32-bit integers are sign-independent.
 Signed integers are always represented as two's complement and arithmetic
-that overflows comforms to the standard wrap-around semantics.
+that overflows conforms to the standard wrap-around semantics.
 All comparison operations yield 32-bit integer results with 1 representing true
 and 0 representing false.
 

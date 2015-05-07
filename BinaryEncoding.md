@@ -57,7 +57,7 @@ as a starting point for defining a real standard binary format.*
   * the section contents (specific to the section type)
 * A code section contains:
   * the generic section header
-  * a table containing, for each function, it's signature, offset (within the seciton), sorted by offset, followed by
+  * a table containing, for each function, it's signature, offset (within the section), sorted by offset, followed by
   * a sequence of functions
 * A function contains:
   * a table containing, for each type, how many locals are indexed by the function body of that type
