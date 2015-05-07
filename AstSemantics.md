@@ -126,6 +126,22 @@ should be a runtime error.
 All basic data types allow literal values of that data type. See the
 [binary encoding section](BinaryEncoding.md#constant-pool).
 
+## Expressions with control flow
+
+Expression trees offer significant size reduction by avoiding the need for
+`SetLocal`/`GetLocal` pairs in the common case of an expression with only one,
+immediate use.  The following primitives provide AST nodes that express
+control flow and thus allow more opportunities to build bigger expression trees
+and further reduce `SetLocal`/`GetLocal` usage (which constitute 30-40% of total 
+bytes in the polyfill prototype). Additionally, these primitives are useful 
+building blocks for WebAssembly-generators (including the asm.js polyfill).
+
+  * Comma - evaluate and ignore the result of the first operand, evaluate and return the second operand
+  * Conditional - basically ternary ?: operator
+
+New operands should be considered which allow measurably greater expression-tree-building
+opportunities.
+
 ## 32-bit Integer operations
 
 Most operations available on 32-bit integers are sign-independent.
