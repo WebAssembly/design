@@ -7,9 +7,9 @@
    to/from the binary format.
 3. Design to serve as a compilation target for a growing set of source languages
    over time, starting with C/C++.
-4. Design to maintain the versionless, feature-testing and backwards-compatible
-   evolution story of the web; engines should not need multiple, versioned
-   decoders.
+4. Design to maintain the versionless, feature-testing and 
+   [backwards-compatible](BinaryEncoding.md#backwards-compatibility) evolution story of the web; 
+   engines should not need multiple, versioned decoders.
 5. Design and implement incrementally:
     * [v.1](V1.md) of the standard will be a Minimum Viable Product with a [polyfill][] via client-side compilation to [asm.js][] and thus run on existing browsers.
       In semantic corner cases (such as out-of-bounds and alignment, which evoke Undefined Behavior in C and C++), where asm.js does not have ideal semantics,
