@@ -22,6 +22,17 @@ This is covered in the [tooling](Tooling.md) section.
  * `mmap` of File, `madvise(MADV_DONTNEED)`, ...
  * TODO
 
+## More expressive control flow
+ * Some types of control flow (esp. irreducible and indirect) cannot be
+   expressed with maximum efficiency in WebAssembly without patterned output by
+   the relooper and [jump-threading](http://en.wikipedia.org/wiki/Jump_threading)
+   optimizations in the engine.
+ * Options under consideration:
+   * No action, while+switch and jump-threading are enough.
+   * Just add goto (direct and indirect).
+   * Add [signature-restricted Proper Tail Calls](FutureFeatures.md#signature-restricted-proper-tail-calls).
+   * Add new control-flow primitives that address common patterns.
+
 ## GC/DOM Integration
  * Access to certain kinds of GC things from variables/arguments/expressions
  * Ability to GC-allocate certain kinds of GC things
@@ -64,6 +75,21 @@ This is covered in the [tooling](Tooling.md) section.
  * Finer-grained dynamic linking
  * Safe patching (of immediates, branch targets, ...)
  * TODO
+
+## Signature-restricted Proper Tail Calls
+* See the [asm.js RFC](http://discourse.specifiction.org/t/request-for-comments-add-a-restricted-subset-of-proper-tail-calls-to-asm-js).
+* Useful properties of signature-restricted PTCs:
+  * In most cases, can be compiled to a single jump.
+  * Can express indirect `goto` via function-pointer calls.
+  * Can be used as a compile target for languages with unrestricted PTCs;
+    the code generator can use a stack in the heap to effectively implement a
+    custom call ABI on top of signature-restricted PTCs.
+  * An engine that wishes to perform aggresive optimization can fuse a graph of PTCs into a
+    single function.
+  * To reduce compile time, a code generator can use PTCs to break up
+    ultra-large functions into smaller functions at low overhead using PTCs.
+  * A compiler can exert some amount of control over register allocation via the ordering of
+    arguments in the PTC signature.
  
 ## Proper Tail Calls
  * Expands upon Signature-restricted Proper Tail Calls.
