@@ -190,8 +190,12 @@ Additional 32-bit integer Operations under consideration:
 
   * Int32SMulHigh - signed multiplication (upper 32-bits)
   * Int32UMulHigh - unsigned multiplication (upper 32-bits)
-  * Int32Clz - count leading zeroes
+  * Int32Clz - count leading zeroes (defined for all values, including 0)
+  * Int32Ctz - count trailing zeroes (defined for all values, including 0)
   * Int32Popcnt - count number of ones
+  * Int32BSwap - reverse bytes (endian conversion)
+  * Int32Rotr - bitwise rotate right
+  * Int32Rotl - bitwise rotate left
   * Int32Not - signed-less one's complement
   * Int32SMin - signed minimum
   * Int32SMax - signed maximum
@@ -213,15 +217,17 @@ All 64-bit floating point operations conform to the IEEE-754 standard.
   * Float64Mul - multiplication
   * Float64Div - division
   * Float64Abs - absolute value
+  * Float64Neg - negation
+  * Float64Copysign - copysign
   * Float64Ceil - ceiling operation
   * Float64Floor - floor operation
   * Float64Eq - compare equal
   * Float64Lt - less than
   * Float64Le - less than or equal
+  * Float64Sqrt - square root
 
 Operations under consideration:
 
-  * Float64Sqrt - square root
 
 ## 32-bit Floating point operations
 
@@ -232,15 +238,16 @@ All 32-bit floating point operations conform to the IEEE-754 standard.
   * Float32Mul - multiplication
   * Float32Div - division
   * Float32Abs - absolute value
+  * Float32Neg - negation
+  * Float32Copysign - copysign
   * Float32Ceil - ceiling operation
   * Float32Floor - floor operation
   * Float32Eq - compare equal
   * Float32Lt - less than
   * Float32Le - less than or equal
+  * Float32Sqrt - square root
 
 Operations under consideration:
-
-  * Float32Sqrt - square root
 
 
 Note that the IEEE 754 standard does not require extended operations
