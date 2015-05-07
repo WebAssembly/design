@@ -359,6 +359,7 @@ results into the result type.
   * `int32.shr`: sign-agnostic logical shift right
   * `int32.sar`: sign-agnostic arithmetic shift right
   * `int32.eq`: sign-agnostic compare equal
+  * `int32.ne`: sign-agnostic compare unequal
   * `int32.slt`: signed less than
   * `int32.sle`: signed less than or equal
   * `int32.ult`: unsigned less than
@@ -426,6 +427,7 @@ implementations of the remaining required operations.
   * `float32.trunc`: round to nearest integer towards zero
   * `float32.nearestint`: round to nearest integer, ties to even
   * `float32.eq`: compare equal
+  * `float32.ne`: compare unequal
   * `float32.lt`: less than
   * `float32.le`: less than or equal
   * `float32.gt`: greater than
@@ -446,6 +448,7 @@ implementations of the remaining required operations.
   * `float64.trunc`: round to nearest integer towards zero
   * `float64.nearestint`: round to nearest integer, ties to even
   * `float64.eq`: compare equal
+  * `float64.ne`: compare unequal
   * `float64.lt`: less than
   * `float64.le`: less than or equal
   * `float64.gt`: greater than
