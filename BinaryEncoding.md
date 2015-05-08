@@ -83,10 +83,6 @@ as a starting point for defining a real standard binary format.*
 
 ## Backwards Compatibility
 
-Restating the relevant [high-level goal](HighLevelGoals.md): "Design to maintain the versionless, 
-feature-testing and backwards-compatible evolution story of the web; engines should not need 
-multiple, versioned decoders".
-
 As explained above, for size- and decode-efficiency, the binary format will serialize AST nodes,
 their contents and children using dense integer indices and without any kind of embedded metadata 
 or tagging. This raises the question of how to reconcile the efficient encoding with the 

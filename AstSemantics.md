@@ -104,9 +104,8 @@ heap accesses in asm.js force alignment (e.g., `HEAP32[i>>2]` masks off the
 low two bits), the asm.js polyfill would need to translate *all* loads/stores
 into byte accesses (regardless of specified alignment) to be correct. However,
 to achieve competitive performance, the polyfill defaults to incorrect behavior
-by emitting full-size accesses as if the index was never misaligned. This 
-follows from the [high-level goals](HighLevelGoals.md). Thus, code generators
-have *two* strong reasons to always emit accurate alignment.
+by emitting full-size accesses as if the index was never misaligned. Thus, code
+generators have *two* strong reasons to always emit accurate alignment.
 
 Either tooling or an explicit opt-in "debug mode" in the spec should allow
 execution of a module in a mode that threw exceptions on misaligned access.
