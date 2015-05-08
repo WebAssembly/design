@@ -1,30 +1,28 @@
 # WebAssembly High-Level Goals
 
 1. Define a portable, size- and load-time-efficient binary format to serve as a
-   web compilation target which can be compiled to execute at native speed by
-   taking advantage of common hardware capabilities.
-2. Define a human-editable text format that is isomorphic and convertible
-   to/from the binary format.
-3. Design to serve as a compilation target for a growing set of source languages
-   over time, starting with C/C++.
-4. Design to maintain the versionless, feature-testing and 
-   [backwards-compatible](BinaryEncoding.md#backwards-compatibility) evolution story of the web; 
-   engines should not need multiple, versioned decoders.
-5. Design and implement incrementally:
-    * [v.1](V1.md) of the standard will be a Minimum Viable Product with a [polyfill][] via client-side compilation to [asm.js][] and thus run on existing browsers.
-      In semantic corner cases (such as out-of-bounds and alignment, which evoke Undefined Behavior in C and C++), where asm.js does not have ideal semantics,
-      the default polyfill would diverge for performance reasons (it would also be possible to run a more precise but slower polyfill, but almost all
-      real-world applications are not expected to need to do so).
-    * subsequent versions will add more [features](EssentialPostV1Features.md) prioritized by feedback. Some of those features might not be polyfillable
-      to asm.js in a practical way.
-6. Design to execute within and integrate well with the existing web platform:
+   compilation target which can be compiled to execute at native speed by taking
+   advantage of common hardware capabilities.
+2. Define a human-editable text format that is convertible to and from the binary
+   format.
+3. Specify and implement incrementally:
+    * Design [v.1](V1.md) of the standard as a Minimum Viable Product with roughly
+      the same functionality as [asm.js](http://asmjs.org).
+    * Plan to iteratively specify [additional](EssentialPostV1Features.md)
+      [features](FutureFeatures.md) after v.1.
+    * Plan to iteratively improve support for compilation from languages other
+      than C/C++ (e.g., languages with [GC](FutureFeatures.md#gcdom-integration)).
+4. Ship an effective [polyfill](V1.md#polyfill) library for v.1 that translates
+   WebAssembly code into asm.js in the client so that WebAssembly can run on
+   existing browsers at high speeds.
+5. Design to execute within and integrate well with the *existing* web platform:
+    * maintain the versionless, feature-tested and 
+      [backwards-compatible](BinaryEncoding.md#backwards-compatibility) evolution
+      story of the web;
     * execute in the same semantic universe as JavaScript;
     * allow synchronous calls to and from JavaScript;
     * enforce the same-origin and permissions security policies; and
     * access browser functionality through the same Web APIs that are accessible
       to JavaScript.
-7. Design to allow execution in non-browser environments.
-8. Create a format which enables great [tooling](Tooling.md) people want to use.
-
-  [polyfill]: https://github.com/WebAssembly/polyfill
-  [asm.js]: http://asmjs.org
+6. Design to allow execution in non-browser environments.
+7. Enable great [tooling](Tooling.md).
