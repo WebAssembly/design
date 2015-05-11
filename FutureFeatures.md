@@ -71,11 +71,6 @@ This is covered in the [tooling](Tooling.md) section.
  * Text source maps become intractably large for even moderate-sized compiled codes, so probably
    need to define new binary format for source maps.
 
-## Support for Just-in-Time Compilation
- * Finer-grained dynamic linking
- * Safe patching (of immediates, branch targets, ...)
- * TODO
-
 ## Signature-restricted Proper Tail Calls
 * See the [asm.js RFC](http://discourse.specifiction.org/t/request-for-comments-add-a-restricted-subset-of-proper-tail-calls-to-asm-js).
 * Useful properties of signature-restricted PTCs:
