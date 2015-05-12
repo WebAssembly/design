@@ -237,6 +237,19 @@ and 0 representing false.
   * Int32Ult - unsigned less than
   * Int32Ule - unsigned less than or equal
 
+Division or remainder by zero throws.
+Signed division overflow (e.g. INT32_MIN/-1) throws.
+
+Shifts interpret their shift count operand as an unsigned value. When the
+shift count is at least the bitwidth of the shift, Shl and Shr return 0,
+and Sar returns 0 if the value being shifted is non-negative, and -1 otherwise.
+
+Lastly, regardless of the above semantics, the asm.js polyfill would be
+intentionally incorrect for performance reasons (see
+[high-level design goals](HighLevelDesignGoals.md)) and do what it does now,
+which is to let division by zero to return zero, and to implicitly mask shift
+counts.
+
 Note that greater-than and greater-than-or-equal operations are not required,
 since "a < b" == "b > a" and "a <= b" == "b >= a". Such equalities also hold for
 floating point comparisons, even considering NaN.
@@ -256,14 +269,6 @@ Additional 32-bit integer Operations under consideration:
   * Int32SMax - signed maximum
   * Int32UMin - unsigned minimum
   * Int32UMax - unsigned maximum
-
-The behavior of division-by-zero, remainder-by-zero, (INT32_MIN/-1), and shifts
-by negative or at least 32 needs clarification.
-
-An efficient polyfill to asm.js would suggest division-by-zero results in 
-0 although it's possible for the asm.js polyfill to simply be wrong in this 
-corner case. Other options include throwing an exception or producing an 
-unspecified 32-bit integer value.
 
 ## 64-bit Floating point operations
 
@@ -307,24 +312,39 @@ All 32-bit floating point operations conform to the IEEE-754 standard.
 Operations under consideration:
 
 
-## Datatype conversions and truncations
-
-Datatype conversions are mostly used to convert floating point numbers to
-integers and vice versa. The exact details for out-of-range values need
-further clarification.
+## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
   * Int32FromFloat64 - truncate a 64-bit float to a signed integer
   * Int32FromFloat32 - truncate a 32-bit float to a signed integer
   * Uint32FromFloat64 - truncate a 64-bit float to an unsigned integer
   * Uint32FromFloat32 - truncate a 32-bit float to an unsigned integer
   * Int32FromFloat32Bits - reinterpret the bits of a 32-bit float as a 32-bit integer
-  * Float64FromFloat32 - convert a 32-bit float to a 64-bit float
+  * Float64FromFloat32 - promote a 32-bit float to a 64-bit float
   * Float64FromInt32 - convert a signed integer to a 64-bit float
   * Float64FromUInt32 - convert an unsigned integer to a 64-bit float
-  * Float32FromFloat64 - truncate a 64-bit float to a 32-bit float
+  * Float32FromFloat64 - demote a 64-bit float to a 32-bit float
   * Float32FromInt32 - convert a signed integer to a 32-bit float
   * Float32FromUInt32 - convert an unsigned integer to a 32-bit float
   * Float32FromInt32Bits - reinterpret the bits of a 32-bit integer as a 32-bit float
+
+Promotion and demotion of floating-point values always succeeds.
+Demotion of floating-point values uses round-to-nearest ties-to-even rounding,
+and may overflow to infinity or negative infinity as specified by IEEE-754.
+
+Reinterpretations always succeed.
+
+Conversions from integer to floating-point always succeed, though they may
+overflow to infinity or negative infinity as specified by IEEE-754.
+
+Conversion from floating-point to integer where IEEE-754 would specify an
+invalid operation exception (e.g. when the floating-point value is NaN or
+outside the range which rounds to an integer in range) throws.
+
+Lastly, regardless of the above semantics, the asm.js polyfill would be
+intentionally incorrect for performance reasons (see
+[high-level design goals](HighLevelDesignGoals.md)) and do what it does now,
+which is to return zero when conversion from floating-point to integer fails,
+and to optionally canonicalize NaN values.
 
 ## Post-v.1 intrinsics
 
