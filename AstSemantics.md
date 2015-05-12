@@ -8,7 +8,7 @@ The operations available in the AST are defined here in language-independent
 way but closely match operations in many programming languages and are
 efficiently implementable on all modern computers.
 Floating point arithmetic follows the IEEE 754 standard and unless otherwise
-specified uses the round-to-nearest mode.
+specified uses the round-to-nearest ties-to-even mode.
 
 ## Addressing local variables
 
@@ -257,7 +257,9 @@ Additional 32-bit integer Operations under consideration:
   * Int32UMin - unsigned minimum
   * Int32UMax - unsigned maximum
 
-The behavior of division-by-zero and (INT32_MIN/-1) needs clarification. 
+The behavior of division-by-zero, remainder-by-zero, (INT32_MIN/-1), and shifts
+by negative or at least 32 needs clarification.
+
 An efficient polyfill to asm.js would suggest division-by-zero results in 
 0 although it's possible for the asm.js polyfill to simply be wrong in this 
 corner case. Other options include throwing an exception or producing an 
@@ -305,17 +307,11 @@ All 32-bit floating point operations conform to the IEEE-754 standard.
 Operations under consideration:
 
 
-Note that the IEEE 754 standard does not require extended operations
-like transcendental functions to have a specified precision.
-It does require them to define and use a consistent rounding quantum.
-
-The rounding behavior of the operations under consideration needs clarification.
-
 ## Datatype conversions and truncations
 
 Datatype conversions are mostly used to convert floating point numbers to
-integers and vice versa. The exact details for out-of-range values and rounding
-need further clarification.
+integers and vice versa. The exact details for out-of-range values need
+further clarification.
 
   * Int32FromFloat64 - truncate a 64-bit float to a signed integer
   * Int32FromFloat32 - truncate a 32-bit float to a signed integer
@@ -362,3 +358,8 @@ since this provides greater control over precision/performance tradeoffs.
   * Float32Ln - natural logarithm
   * Float32Pow - exponentiate
 
+Note that the IEEE 754 standard does not require extended operations
+like transcendental functions to have a specified precision.
+It does require them to define and use a consistent rounding quantum.
+
+The rounding behavior of the operations under consideration needs clarification.
