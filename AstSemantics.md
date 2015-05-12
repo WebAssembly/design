@@ -10,6 +10,13 @@ efficiently implementable on all modern computers.
 Floating point arithmetic follows the IEEE 754 standard and unless otherwise
 specified uses the round-to-nearest ties-to-even mode.
 
+Some operations may *trap* under some conditions, as noted below. In v.1,
+trapping means that execution in the WebAssembly module is terminated and
+abnormal termination is reported to the outside environment. In a browser
+environment, this would translate into a JS exception being thrown. If
+developer tools are active, attaching a debugger before the termination
+would be sensible.
+
 ## Addressing local variables
 
 All local variables occupy a single index space local to the function.
@@ -114,7 +121,7 @@ is why it isn't the specified default.)
 
 ### Out of bounds
 
-The ideal semantics is for out-of-bounds accesses to throw. A module may
+The ideal semantics is for out-of-bounds accesses to trap. A module may
 optionally define that "out of bounds" includes low-memory accesses.
 
 There are several possible variations on this design being discussed and
@@ -132,7 +139,7 @@ opportunities provided by each.
   * To allow for potentially more-efficient heap sandboxing, the semantics could
     allow for a non-deterministic choice between one of the following when an
     out-of-bounds access occurred.
-    * The ideal throw semantics.
+    * The ideal trap semantics.
     * Loads return an unspecified value.
     * Stores are either ignored or store to an unspecified location in the heap.
     * Either tooling or an explicit opt-in "debug mode" in the spec should allow
@@ -237,8 +244,8 @@ and 0 representing false.
   * Int32Ult - unsigned less than
   * Int32Ule - unsigned less than or equal
 
-Division or remainder by zero throws.
-Signed division overflow (e.g. INT32_MIN/-1) throws.
+Division or remainder by zero traps.
+Signed division overflow (e.g. INT32_MIN/-1) traps.
 
 Shifts interpret their shift count operand as an unsigned value. When the
 shift count is at least the bitwidth of the shift, Shl and Shr return 0,
@@ -338,7 +345,7 @@ overflow to infinity or negative infinity as specified by IEEE-754.
 
 Conversion from floating-point to integer where IEEE-754 would specify an
 invalid operation exception (e.g. when the floating-point value is NaN or
-outside the range which rounds to an integer in range) throws.
+outside the range which rounds to an integer in range) traps.
 
 Lastly, regardless of the above semantics, the asm.js polyfill would be
 intentionally incorrect for performance reasons (see
