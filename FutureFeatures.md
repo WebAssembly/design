@@ -119,3 +119,28 @@ This is covered in the [tooling](Tooling.md) section.
  * `vfork`.
  * Inter-process communication.
  * Inter-process `mmap`.
+
+## Trapping or non-trapping strategies.
+* Presently, when an instruction traps, the program is immediately terminated.
+  This suits C/C++ code, where trapping conditions indicate Undefined Behavior
+  at the source level, and it's also nice for handwritten code, where trapping
+  conditions typically indicate an instruction being asked to perform outside
+  its supported range. However, the current facilities do not cover some
+  interesting use cases:
+
+  * Not all likely-bug conditions are covered. For example, it would be very
+    nice to have a signed-integer add which traps on overflow. Such a construct
+    would add too much overhead on today's popular hardware architectures to be
+    used in general, however it may still be useful in some contexts.
+
+  * Some higher-level languages define their own semantics for conditions like
+    division by zero and so on. It's possible for compilers to add explicit
+    checks and handle such cases manually, though more direct support from the
+    platform could have advantages:
+    * Non-trapping verisons of some opcodes, such as an integer division
+      instruction that returns zero instead of trapping on division by zero,
+      could potentially run faster on some platforms.
+    * The ability to recover gracefully from traps in some way could make many
+      things possible. Possibly this could involve throwing or possibly by
+      resuming execution at the trapping instruction with the execution state
+      altered, if there can be a reasonable way to specify how that should work.
