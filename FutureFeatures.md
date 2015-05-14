@@ -93,8 +93,28 @@ This is covered in the [tooling](Tooling.md) section.
 ## Asynchronous Signals
  * TODO
 
-## Non-fixed-width SIMD
- * TODO
+## "Long SIMD"
+* The initial SIMD API will be a "short SIMD" API, centered around fixed-width
+  128-bit types and explicit SIMD operations. This is quite portable and useful,
+  but it won't be able to deliver the full performance capabilities of some of
+  today's popular hardware. There is an opportunity for someone to propose a
+  "long SIMD" model which will generalize to wider hardware vector lengths make
+  more natural use of advanced features like vector lane predication,
+  gather/scatter, and so on. Interesting questions to ask of such an model will
+  include:
+    * How will this model map onto popular modern SIMD hardware architectures?
+    * What is this model's relationship to other hardware parallelism features,
+      such as GPUs and threads with shared memory?
+    * How will this model be used from higher-level programming languages?
+      For example, the C++ committee is considering a wide variety of possible
+      approaches; which of them might be supported by the model?
+    * What is the relationship to the "short SIMD" API? "None" may be an
+      acceptable answer, but it's something to think about.
+    * What non-determinism does this model introduce into the overall platform?
+    * What happens when code uses long SIMD on a hardware platform which doesn't
+      support it? Reasonable options may include emulating it without the
+      benefit of hardware acceleration, or indicating a lack of support through
+      feature tests.
  
 ## Operations which may not be available or may not perform well on all platforms
  * Fused multiply-add.
