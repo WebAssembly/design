@@ -39,7 +39,7 @@ This is covered in the [tooling](Tooling.md) section.
  * Initially, things with fixed structure:
    * JS strings
    * JS functions (as callable closures)
-   * [ES6 typed objects](https://github.com/nikomatsakis/typed-objects-explainer/)
+   * [Typed objects](https://github.com/nikomatsakis/typed-objects-explainer/)
    * DOM objects via WebIDL
  * Perhaps a rooting API for safe reference from the linear address space
  * TODO
