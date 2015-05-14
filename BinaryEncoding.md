@@ -3,48 +3,41 @@
 This document describes the binary encoding of the AST nodes defined in the [AST semantics](AstSemantics.md). 
 For the context of this document, see the [Binary format](V1.md#binary-format) section of the [v.1 doc](V1.md).
 
-*The current [polyfill](https://github.com/WebAssembly/polyfill) is a prototype and thus incomplete and not 
-representative of an actual WebAssembly binary format. However, there are a few key design choices in the 
-prototype format that significantly and demonstrably impact size and decode speed that are described below 
-as a starting point for defining a real standard binary format.*
+The binary encoding is designed to allow fast startup, which includes reducing download size
+and allow for quick decoding. Considering the matter of reducing download size, we can see
+it as having three layers:
+
+ * The **raw** binary encoding itself, natively decoded by the browser, and to be standardized in
+   v.1 of the spec.
+ * **Specific** compression to the binary encoding, that is unreasonable to expect a generic
+   compression algorithm like gzip to achieve.
+   * This is not meant to be standardized, at least not initially, as it can be done with a
+     downloaded decompressor that runs as web content on the client, and in particular
+     can be implemented in the polyfill. Not standardizing it leaves the binary
+     encoding as the only thing a WebAssembly implementation is required to implement,
+     which is nice. However, if the benefits are shown to be substantial, this will be
+     reconsidered in the future.
+   * We can do better than generic compression because we are aware of the AST structure
+     and other details:
+     * For example, macro compression that [deduplicates AST trees](https://github.com/WebAssembly/spec/issues/58#issuecomment-101863032)
+       can focus on AST nodes + their children, thus having `O(nodes)` entities to worry about, compared
+       to generic compression which in principle would need to look at `O(bytes*bytes)` entities.
+       Such macros would allow the logical equivalent of `#define ADD1(x) (x+1)`, i.e.,
+       to be parametrized. Simpler macros (`#define ADDX1 (x+1)`) can implement useful
+       features like constant pools.
+     * Another example is reordering of functions and some internal nodes, which we know
+       does not change semantics, but
+       [can improve general compression](http://www.rfk.id.au/blog/entry/cromulate-improve-compressibility/).
+ * **Generic** compression, such as gzip, already supported in browsers, or LZMA and other
+   compression algorithms, which might be standardized as well.
+
+Each of the three layers work to find compression opportunities to the best of its abilities, without encroaching upon the subsequent layer's compression opportunities.
 
 ## Building blocks
 
 ### Variable-length integers
- * 31% size reduction before compression, 7% size reduction after compression.  
+ * 31% size reduction before compression, 7% size reduction after compression.
  * [LEB128](http://en.wikipedia.org/wiki/LEB128) except limited to uint32_t payloads.
-
-### Constant pool
- * 7% size reduction before compression, 2% size reduction after compression.
- * Use a module-level constant pool for i32, f32, f64 literals.
- * Still want to allow literals as immediates if:
-   * there is only one use of the literal
-   * the variable-length-encoded literal pool index is bigger than the variable-length-encoded literal.
-   * otherwise, the constant pool is only 5.6% win uncompressed / 0% win compressed.
-
-### Context-dependent index spaces
- * With a pre-order encoding, a node is always encountered in a *context*: statement, i32-producing
-   expression, f32-producing expression, etc.
- * Different contexts can reuse the same indices since there is never an ambiguity.
-   * For example, I32::Add can have the same index as F32::Add.
-   * This avoids opcodes spilling over into requiring >1 bytes.
-   * When SIMD is added, new opcodes would mostly be in new type contexts, so still fit in a single byte.
- * This also enables the next technique:
-
-### Fold immediates into the opcodes
- * 26% size reduction before compression, 5% size reduction after compression.
- * In the opcode byte:
-   * High bit determines whether it is a normal op or an op-with-immediate.
-     * If normal op: the remaining 7 bits are the opcode
-     * If op-with-immediate: the next 2 bits are the opcode, the remaining 5 are the immediate
- * Current set of ops-with-immediate: Stmt::{SetLoc,SetGlo}, {I32,F32,F64}::{GetLoc,LitPool,LitImm}
-   * How more than 4?  Context-dependent index spaces lets, e.g., I32WithImm overlap F32WithImm.
- * Just GetLoc+SetLoc accounts for 30-40% of total bytes in a module, and each has an immediate.
-   * Isn't this high?  No, it's actually lower than a normal register-based bytecode which has to
-     spend bytes on input/output operands for *every* instruction.
-   * 98% of functions have < 32 variables so 5 bits of immediate is a good fit.
- * Literals (pool and immediate) account for ~10% of bytes.
-   * Sorting constant pool by use count allows 50% of LitPool ops to use a folded immediate.
 
 ## Global structure
 
@@ -64,6 +57,7 @@ as a starting point for defining a real standard binary format.*
   * the serialized AST
 
 ## Serialized AST
+
 * Use a preorder encoding of the AST
   * Efficient single-pass validation+compilation and polyfill
   * Allows context-dependent index spaces (described above)
@@ -77,9 +71,6 @@ as a starting point for defining a real standard binary format.*
     * First write the opcode of `Call` (1 byte)
     * Then write the (variable-length) integer `Call::callee` (1-5 bytes)
     * Then recursively write each arg node (arity is determined by looking up `callee` in table of signatures)
-  * Given an AST node with foldable immediate: `struct GetLoc { uint32_t index; }`
-    * If `GetLoc::index` < 32, write a single byte as described [above](BinaryEncoding.md#fold-immediates-into-opcodes).
-    * Otherwise, write the opcode of `GetLoc` and the variable length integer `GetLoc::index`.
 
 ## Backwards Compatibility
 
@@ -115,6 +106,3 @@ conflict-avoidance practices surrounding string names:
       or affect anything outside of the initialization of the index spaces; decoders would
       remain versionless and simply add cases for new *names* (as with current JS parsers).
 
-## Further ideas
-* Macro layer on top of serialized AST (allow the logical equivalent of `#define ADD1(x) (x+1)`)
-  * A simple variant would be just having nullary macros (`#define ADDX1 (x+1)`)
