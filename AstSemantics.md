@@ -384,8 +384,8 @@ Min, Max, MinNum, and MaxNum operations would treat -0 as being effectively less
   * Float32FromUInt32 - convert an unsigned integer to a 32-bit float
   * Float32FromInt32Bits - reinterpret the bits of a 32-bit integer as a 32-bit float
 
-Promotion and demotion of floating-point values always succeeds.
-Demotion of floating-point values uses round-to-nearest ties-to-even rounding,
+Promotion and demotion of floating point values always succeeds.
+Demotion of floating point values uses round-to-nearest ties-to-even rounding,
 and may overflow to infinity or negative infinity as specified by IEEE-754.
 If the operand of promotion or demotion is NaN, the sign bit and significand
 of the result are computed from an unspecified function of the implementation,
@@ -393,11 +393,11 @@ the opcode, and the operand.
 
 Reinterpretations always succeed.
 
-Conversions from integer to floating-point always succeed, though they may
+Conversions from integer to floating point always succeed, though they may
 overflow to infinity or negative infinity as specified by IEEE-754.
 
-Conversion from floating-point to integer where IEEE-754 would specify an
-invalid operation exception (e.g. when the floating-point value is NaN or
+Conversion from floating point to integer where IEEE-754 would specify an
+invalid operation exception (e.g. when the floating point value is NaN or
 outside the range which rounds to an integer in range) traps.
 
 ## Post-v.1 intrinsics
