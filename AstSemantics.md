@@ -7,8 +7,12 @@ Each function body consists of exactly one statement.
 The operations available in the AST are defined here in language-independent
 way but closely match operations in many programming languages and are
 efficiently implementable on all modern computers.
-Floating point arithmetic follows the IEEE 754 standard and unless otherwise
-specified uses the round-to-nearest ties-to-even mode.
+Floating point arithmetic follows the IEEE 754 standard, except that when any
+operation other than Neg, Abs, Copysign, reinterpret casts, or any of the Load
+or Set operations which returns a floating point value returns a NaN, the
+contents of the NaN's sign bit and significand are entirely unspecified. Except
+where otherwise specified, floating point operations use the
+round-to-nearest ties-to-even rounding mode.
 
 Some operations may *trap* under some conditions, as noted below. In v.1,
 trapping means that execution in the WebAssembly module is terminated and
