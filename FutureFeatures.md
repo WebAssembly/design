@@ -51,7 +51,7 @@ This is covered in the [tooling](Tooling.md) section.
   canonical pointer type.
 * On a 32-bit system, heaps must still be <4GiB so all the int64 arithmetic (which will be much
   slower than 32-bit arithmetic) will be unnecessary.
-  * Show we provide a uintptr_t (only 64-bit on 64-bit systems)?
+  * Should we provide a uintptr_t (only 64-bit on 64-bit systems)?
     * This feature alone would not allow a C++ compiler to write size-polymorphic code since the word
       size is also baked into the code in a hundred other ways (consider `offsetof`).
     * The compiler *could* inflate all pointer types that are used in heap storage to 64-bit (so the
