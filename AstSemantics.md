@@ -418,8 +418,4 @@ since this provides greater control over precision/performance tradeoffs.
   * Float32Ln - natural logarithm
   * Float32Pow - exponentiate
 
-Note that the IEEE 754 standard does not require extended operations
-like transcendental functions to have a specified precision.
-It does require them to define and use a consistent rounding quantum.
-
-The rounding behavior of the operations under consideration needs clarification.
+The rounding behavior of these operations would need clarification.
