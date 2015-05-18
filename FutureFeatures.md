@@ -157,7 +157,7 @@ This is covered in the [tooling](Tooling.md) section.
     division by zero and so on. It's possible for compilers to add explicit
     checks and handle such cases manually, though more direct support from the
     platform could have advantages:
-    * Non-trapping verisons of some opcodes, such as an integer division
+    * Non-trapping versions of some opcodes, such as an integer division
       instruction that returns zero instead of trapping on division by zero,
       could potentially run faster on some platforms.
     * The ability to recover gracefully from traps in some way could make many
