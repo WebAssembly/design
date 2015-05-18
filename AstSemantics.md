@@ -219,43 +219,43 @@ opportunities.
 
 ## 32-bit Integer operations
 
-Most operations available on 32-bit integers are sign-independent.
-Signed integers are always represented as two's complement and arithmetic
-that overflows conforms to the standard wrap-around semantics.
+Signed integers are always represented in the standard binary two's complement format.
+Most operations available on 32-bit integers are sign-independent, meaning that the
+interpretation of the sign bit doesn't alter the output bits for a given operation.
+Such operations are named with the Word32 prefix.
+Integer arithmetic overflow conforms to the standard wrap-around semantics.
 All comparison operations yield 32-bit integer results with 1 representing true
 and 0 representing false.
 
-  * Int32Add - signed-less addition
-  * Int32Sub - signed-less subtraction
-  * Int32Mul - signed-less multiplication (lower 32-bits)
+  * Word32Add - signed-less addition
+  * Word32Sub - signed-less subtraction
+  * Word32Mul - signed-less multiplication (lower 32-bits)
+  * Word32And - signed-less logical and
+  * Word32Ior - signed-less inclusive or
+  * Word32Xor - signed-less exclusive or
+  * Word32Shl - signed-less shift left
+  * Word32Eq  - signed-less compare equal
   * Int32SDiv - signed division
   * Int32UDiv - unsigned division
   * Int32SRem - signed remainder
   * Int32URem - unsigned remainder
-  * Int32And - signed-less logical and
-  * Int32Ior - signed-less inclusive or
-  * Int32Xor - signed-less exclusive or
-  * Int32Shl - signed-less shift left
   * Int32Shr - unsigned shift right
   * Int32Sar - signed arithmetic shift right
-  * Int32Eq  - signed-less compare equal
   * Int32Slt - signed less than
   * Int32Sle - signed less than or equal
   * Int32Ult - unsigned less than
   * Int32Ule - unsigned less than or equal
 
-Division or remainder by zero traps.
+Division or remainder with 0 as the divisor traps.
 Signed division overflow (e.g. INT32_MIN/-1) traps.
 
 Shifts interpret their shift count operand as an unsigned value. When the
 shift count is at least the bitwidth of the shift, Shl and Shr return 0,
 and Sar returns 0 if the value being shifted is non-negative, and -1 otherwise.
 
-Lastly, regardless of the above semantics, the asm.js polyfill would be
-intentionally incorrect for performance reasons (see
-[high-level design goals](HighLevelDesignGoals.md)) and do what it does now,
-which is to let division by zero to return zero, and to implicitly mask shift
-counts.
+For performance reasons the asm.js polyfill will intentionally differ from the above semantics.
+(see [high-level design goals](HighLevelDesignGoals.md)); division and remainder with 0 divisor result in 0,
+and shift counts are masked with 0x1f.
 
 Note that greater-than and greater-than-or-equal operations are not required,
 since "a < b" == "b > a" and "a <= b" == "b >= a". Such equalities also hold for
@@ -265,13 +265,13 @@ Additional 32-bit integer Operations under consideration:
 
   * Int32SMulHigh - signed multiplication (upper 32-bits)
   * Int32UMulHigh - unsigned multiplication (upper 32-bits)
-  * Int32Clz - count leading zeroes (defined for all values, including 0)
-  * Int32Ctz - count trailing zeroes (defined for all values, including 0)
-  * Int32Popcnt - count number of ones
-  * Int32BSwap - reverse bytes (endian conversion)
-  * Int32Rotr - bitwise rotate right
-  * Int32Rotl - bitwise rotate left
-  * Int32Not - signed-less one's complement
+  * Word32Clz - count leading zeroes (defined for all values, including 0)
+  * Word32Ctz - count trailing zeroes (defined for all values, including 0)
+  * Word32Popcnt - count number of ones
+  * Word32BSwap - reverse bytes (endian conversion)
+  * Word32Rotr - bitwise rotate right
+  * Word32Rotl - bitwise rotate left
+  * Word32Not - signed-less one's complement
   * Int32SMin - signed minimum
   * Int32SMax - signed maximum
   * Int32UMin - unsigned minimum
@@ -318,7 +318,6 @@ All 32-bit floating point operations conform to the IEEE-754 standard.
 
 Operations under consideration:
 
-
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
   * Int32FromFloat64 - truncate a 64-bit float to a signed integer
@@ -347,11 +346,9 @@ Conversion from floating-point to integer where IEEE-754 would specify an
 invalid operation exception (e.g. when the floating-point value is NaN or
 outside the range which rounds to an integer in range) traps.
 
-Lastly, regardless of the above semantics, the asm.js polyfill would be
-intentionally incorrect for performance reasons (see
-[high-level design goals](HighLevelDesignGoals.md)) and do what it does now,
-which is to return zero when conversion from floating-point to integer fails,
-and to optionally canonicalize NaN values.
+For performance reasons the asm.js polyfill will intentionally differ from the above semantics.
+(see [high-level design goals](HighLevelDesignGoals.md)); conversion from floating-point to integer returns 0
+in exceptional cases, and the bitpattern of NaN values may be canonicalized.
 
 ## Post-v.1 intrinsics
 
