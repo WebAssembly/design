@@ -336,6 +336,14 @@ All 64-bit floating point operations conform to the IEEE-754 standard.
 
 Operations under consideration:
 
+  * Float64Min - minimum; if either operand is NaN, returns NaN
+  * Float64Max - maximum; if either operand is NaN, returns NaN
+  * Float64MinNum - minimum; if exactly one operand is NaN, returns the other operand
+  * Float64MaxNum - maximum; if exactly one operand is NaN, returns the other operand
+  * Float64Trunc - round to nearest integer towards zero
+  * Float64NearestInt - round to nearest integer, ties to even
+
+Min, Max, MinNum, and MaxNum operations would treat -0 as being effectively less than 0.
 
 ## 32-bit Floating point operations
 
@@ -357,6 +365,14 @@ All 32-bit floating point operations conform to the IEEE-754 standard.
 
 Operations under consideration:
 
+  * Float32Min - minimum; if either operand is NaN, returns NaN
+  * Float32Max - maximum; if either operand is NaN, returns NaN
+  * Float32MinNum - minimum; if exactly one operand is NaN, returns the other operand
+  * Float32MaxNum - maximum; if exactly one operand is NaN, returns the other operand
+  * Float32Trunc - round to nearest integer towards zero
+  * Float32NearestInt - round to nearest integer, ties to even
+
+Min, Max, MinNum, and MaxNum operations would treat -0 as being effectively less than 0.
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
