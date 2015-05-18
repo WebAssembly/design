@@ -15,10 +15,10 @@
 4. Ship an effective [polyfill](V1.md#polyfill) library for v.1 that translates
    WebAssembly code into asm.js in the client so that WebAssembly can run on
    existing browsers at high speeds.
-5. Design to execute within and integrate well with the *existing* web platform:
+5. Design to execute within and integrate well with the *existing* Web platform:
     * maintain the versionless, feature-tested and 
       [backwards-compatible](BinaryEncoding.md#backwards-compatibility) evolution
-      story of the web;
+      story of the Web;
     * execute in the same semantic universe as JavaScript;
     * allow synchronous calls to and from JavaScript;
     * enforce the same-origin and permissions security policies; and
