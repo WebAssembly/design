@@ -1,13 +1,9 @@
 # Essential Post-v.1 Features
 
-This is a list of essential features we *know* we need but were not part of the
-Minimum Viable Product that is [v.1](V1.md). Longer-term features will be added
-in [future versions](FutureFeatures.md).
-
-## 64-bit integers
-* Provide access to efficient 64-bit arithmetic.
-* Some code will want to only use 64-bit integers when running on a 64-bit system (for performance
-  reasons) so provide a "has native 64-bit integer" query.
+This is a list of essential features that are known to be needed ASAP, but were removed from
+[v.1](V1.md) since there was not (yet) a portably-efficient polyfill via asm.js. There is a much bigger
+[list of features](FutureFeatures.md) that will be added after this list, prioritized by feedback and
+experience.
 
 ## Threads
 * Provide low-level buildings blocks for pthreads-style shared memory: shared memory,
@@ -32,6 +28,11 @@ in [future versions](FutureFeatures.md).
   the core semantics.
 * SIMD operations (e.g., `float32x4.add`) could be either builtin ops (no different than int32 add) or
   exports of a builtin SIMD module.
+
+## 64-bit integers
+* Provide access to efficient 64-bit arithmetic.
+* Some code will want to only use 64-bit integers when running on a 64-bit system (for performance
+  reasons) so provide a "has native 64-bit integer" query.
 
 ## Zero-cost Exception Handling
 * Developer access to stack unwinding and inspection.
