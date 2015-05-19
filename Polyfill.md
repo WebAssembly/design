@@ -24,23 +24,25 @@ diverge from the specified WebAssembly semantics in the following cases:
     loads/stores into byte accesses (regardless of specified alignment) to be
     correct. To achieve competitive performance, the polyfill defaults
     to incorrect behavior by emitting full-size accesses as if the index was
-    never misaligned.
+    never misaligned. Proving correct alignment information is important for
+    portable WebAssembly performance in general; that information also
+    guarantees that the polyfill is both correct and fast.
 * [Out of bounds heap access](AstSemantics.md#out-of-bounds)
   * Regardless of semantics chosen for out of bounds access in WebAssembly, the
     polyfill will follow standard asm.js behavior:
-    * Out of bound stores are ignored (treated as no-op)
+    * Out of bound stores are ignored (treated as no-op).
     * Out of bound loads return 0 for integer loads or NaN for floating point.
 * [32-bit Integer operations](AstSemantics.md#32-bit-integer-operations)
   * Regardless of WebAssembly behavior, the asm.js polyfill will follow its
     standard behavior:
-    * Division by zero returns zero
-    * INT32_MIN/-1 returns INT32_MIN
-    * shift counts are implicitly masked
+    * Division by zero returns zero.
+    * INT32_MIN/-1 returns INT32_MIN.
+    * Shift counts are implicitly masked.
 * [Datatype Conversions](AstSemantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions)
   * Regardless of WebAssembly behavior, the asm.js polyfill will follow its
     standard behavior:
-    * return zero when conversion from floating-point to integer fails
-    * optionally canonicalize NaN values.
+    * Return zero when conversion from floating-point to integer fails.
+    * Optionally canonicalize NaN values.
 
 If needed, the polyfill could provide an option to ensure full correctness
 at the expense of performance, though this is not expected to be necessary
