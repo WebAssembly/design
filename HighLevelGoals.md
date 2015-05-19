@@ -25,7 +25,7 @@
       to JavaScript; and
     * define a human-editable text format that is convertible to and from the
       binary format, supporting View Source functionality.
-4. Design to support (non-browser environments)[V1.md#non-browser-embedding]
+4. Design to support [non-browser environments](V1.md#non-browser-embedding)
    as well.
 5. Make a great platform:
     * build an [LLVM backend](https://github.com/WebAssembly/llvm) and
