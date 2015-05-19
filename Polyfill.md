@@ -34,7 +34,7 @@ diverge from the specified WebAssembly semantics in the following cases:
   * Regardless of WebAssembly behavior, the asm.js polyfill will follow its
     standard behavior:
     * Division by zero returns zero
-    * MIN_INT/-1 returns MIN_INT
+    * INT32_MIN/-1 returns INT32_MIN
     * shift counts are implicitly masked
 * [Datatype Conversions](AstSemantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions)
   * Regardless of WebAssembly behavior, the asm.js polyfill will follow its
