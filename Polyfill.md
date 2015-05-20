@@ -26,7 +26,7 @@ diverge from the specified WebAssembly semantics in the following cases:
     loads/stores into byte accesses (regardless of specified alignment) to be
     correct. To achieve competitive performance, the polyfill defaults
     to incorrect behavior by emitting full-size accesses as if the index was
-    never misaligned. Proving correct alignment information is important for
+    never misaligned. Providing correct alignment information is important for
     portable WebAssembly performance in general; that information also
     guarantees that the polyfill is both correct and fast.
 * [Out of bounds heap access](AstSemantics.md#out-of-bounds)
