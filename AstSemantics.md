@@ -17,6 +17,10 @@ environment, this would translate into a JS exception being thrown. If
 developer tools are active, attaching a debugger before the termination
 would be sensible.
 
+Callstack space is limited by unspecified and dynamically varying constraints.
+If program callstack usage exceeds the available callstack space at any time,
+a trap occurs.
+
 ## Addressing local variables
 
 All local variables occupy a single index space local to the function.
