@@ -3,6 +3,8 @@
 Even before browsers ship native support for WebAssembly, users can derive
 value from a polyfill to asm.js due to the decreased download size of the
 [binary encoding](BinaryEncoding.md) and minimal impact on startup performance.
+This also allows us to experiment on the early binary encoding and get
+developer feedback before finalizing the format and supporting it natively.
 
 A working prototype to unpack the WebAssembly binary format into asm.js is in
 the [polyfill repo](https://github.com/WebAssembly/polyfill).
