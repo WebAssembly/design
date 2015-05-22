@@ -160,14 +160,6 @@ accurate alignment. Note: on platforms without unaligned accesses, smaller-than-
 alignment may result in slower code generation (due to the whole access being
 broken into smaller aligned accesses).
 
-Since misaligned loads/stores are guaranteed to produce correct results and
-heap accesses in asm.js force alignment (e.g., `HEAP32[i>>2]` masks off the
-low two bits), the asm.js polyfill would need to translate *all* loads/stores
-into byte accesses (regardless of specified alignment) to be correct. However,
-to achieve competitive performance, the polyfill defaults to incorrect behavior
-by emitting full-size accesses as if the index was never misaligned. Thus, code
-generators have *two* strong reasons to always emit accurate alignment.
-
 Either tooling or an explicit opt-in "debug mode" in the spec should allow
 execution of a module in a mode that threw exceptions on misaligned access.
 (This mode would incur some runtime cost for branching on most platforms which
@@ -199,11 +191,6 @@ opportunities provided by each.
     * Either tooling or an explicit opt-in "debug mode" in the spec should allow
       execution of a module in a mode that threw exceptions on out-of-bounds
       access.
-
-Lastly, regardless of the above semantics, the asm.js polyfill would be
-intentionally incorrect for performance reasons (see
-[high-level design goals](HighLevelDesignGoals.md)) and do what it does now,
-which is to ignore out-of-bound stores and return 0/NaN for out-of-bound load.
 
 ## Accessing globals
 
@@ -305,12 +292,6 @@ Shifts interpret their shift count operand as an unsigned value. When the
 shift count is at least the bitwidth of the shift, Shl and Shr return 0,
 and Sar returns 0 if the value being shifted is non-negative, and -1 otherwise.
 
-Lastly, regardless of the above semantics, the asm.js polyfill would be
-intentionally incorrect for performance reasons (see
-[high-level design goals](HighLevelDesignGoals.md)) and do what it does now,
-which is to let division by zero to return zero, and to implicitly mask shift
-counts.
-
 Note that greater-than and greater-than-or-equal operations are not required,
 since "a < b" == "b > a" and "a <= b" == "b >= a". Such equalities also hold for
 floating point comparisons, even considering NaN.
@@ -400,12 +381,6 @@ overflow to infinity or negative infinity as specified by IEEE-754.
 Conversion from floating-point to integer where IEEE-754 would specify an
 invalid operation exception (e.g. when the floating-point value is NaN or
 outside the range which rounds to an integer in range) traps.
-
-Lastly, regardless of the above semantics, the asm.js polyfill would be
-intentionally incorrect for performance reasons (see
-[high-level design goals](HighLevelDesignGoals.md)) and do what it does now,
-which is to return zero when conversion from floating-point to integer fails,
-and to optionally canonicalize NaN values.
 
 ## Post-v.1 intrinsics
 
