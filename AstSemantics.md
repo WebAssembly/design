@@ -115,7 +115,7 @@ algorithm.
 
 ## Accessing the heap
 
-Each heap access is annotated with the *Memory type* of the location being accessed and
+Each heap access is annotated with a *Memory type* and
 the presumed alignment of the incoming pointer. As discussed previously, loads may
 include implicit zero- or sign-extension and stores may include implicit truncation.
 
