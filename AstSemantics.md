@@ -23,9 +23,10 @@ a trap occurs.
 
 ## Local and Memory types
 
-All storage locations in WebAssembly are typed, including global
-variables, the heap, local variables, or parameters. The set of types legal for
-global variables and the heap, called *Memory types*,  are:
+Individual storage locations in WebAssembly are typed, including global
+variables, local variables, and parameters. The heap itself is not typed, but
+all accesses to the heap are annotated with a type. The legal types for
+global variables and heap accesses are called *Memory types*.
 
   * Int8 - signed 8-bit integer
   * Int16 - signed 16-bit integer
@@ -36,14 +37,14 @@ global variables and the heap, called *Memory types*,  are:
   * Float32 - 32-bit floating point
   * Float64 - 64-bit floating point
 
-The set of legal types for parameters and local variables, called *Local types*
-is a subset of the Memory types:
+The legal types for parameters and local variables, called *Local types*
+are a subset of the Memory types:
 
   * Int32 - 32-bit integer
   * Float32 - 32-bit floating point
   * Float64 - 64-bit floating point
 
-All AST operations except loads and stores deal with local types. Loads implicitly
+All IR operations except loads and stores deal with local types. Loads implicitly
 convert Memory types to Local types according to the follow rules:
 
   * Load[Int8] - sign-extend to Int32
@@ -70,7 +71,7 @@ following rules:
   * Store[Float32] - (no truncation)
   * Store[Float64] - (no truncation)
 
-Truncation of integers simply discards any upper bits; i.e. it does not perform saturation,
+Truncation of integers simply discards any upper bits; i.e. truncation does not perform saturation,
 trap on overflow, etc.
 
 ## Addressing local variables
