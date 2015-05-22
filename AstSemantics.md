@@ -21,6 +21,58 @@ Callstack space is limited by unspecified and dynamically varying constraints.
 If program callstack usage exceeds the available callstack space at any time,
 a trap occurs.
 
+## Local and Memory types
+
+All storage locations in WebAssembly are typed, including global
+variables, the heap, local variables, or parameters. The set of types legal for
+global variables and the heap, called *Memory types*,  are:
+
+  * Int8 - signed 8-bit integer
+  * Int16 - signed 16-bit integer
+  * Int32 - signed 32-bit integer
+  * Uint8 - unsigned 8-bit integer
+  * Uint16 - unsigned 16-bit integer
+  * Uint32 - unsigned 32-bit integer
+  * Float32 - 32-bit floating point
+  * Float64 - 64-bit floating point
+
+The set of legal types for parameters and local variables, called *Local types*
+is a subset of the Memory types:
+
+  * Int32 - 32-bit integer
+  * Float32 - 32-bit floating point
+  * Float64 - 64-bit floating point
+
+All AST operations except loads and stores deal with local types. Loads implicitly
+convert Memory types to Local types according to the follow rules:
+
+  * Load[Int8] - sign-extend to Int32
+  * Load[Int16] - sign-extend to Int32
+  * Load[Int32] - (no conversion)
+  * Load[Uint8] - zero-extend to Int32
+  * Load[Uint16] - zero-extend to Int32
+  * Load[Uint32] - reinterpret as Int32
+  * Load[Float32] - (no conversion)
+  * Load[Float64] - (no conversion)
+
+Note that the local type Int32 does not technically have a sign; the sign bit
+is interpreted differently by the operations below.
+
+Similar to loads, stores implicitly truncate Local types to Memory types according to the
+following rules:
+
+  * Store[Int8] - truncate Int32 to Int8
+  * Store[Int16] - truncate Int32 to Int16
+  * Store[Int32] - (no truncation)
+  * Store[Uint8] - truncate Int32 to Uint8
+  * Store[Uint16] - truncate Int32 to Uint16
+  * Store[Uint32] - reinterpret Int32 as Uint32
+  * Store[Float32] - (no truncation)
+  * Store[Float64] - (no truncation)
+
+Truncation of integers simply discards any upper bits; i.e. it does not perform saturation,
+trap on overflow, etc.
+
 ## Addressing local variables
 
 All local variables occupy a single index space local to the function.
@@ -28,7 +80,7 @@ Parameters are addressed as local variables.
 Local variables do not have addresses and are not aliased in the globals
 or the heap.
 Each function has a fixed, pre-declared number of local variables.
-Local variables are typed and initialized to the appropriate zero value for
+Local variables have *Local types* and are initialized to the appropriate zero value for
 their type at the beginning of the function, except parameters which are
 initialized to the values of the arguments passed to the function.
 
@@ -62,12 +114,9 @@ algorithm.
 
 ## Accessing the heap
 
-Each heap access is annotated with the type of the location being accessed and
-the presumed alignment of the incoming pointer. The legal set of types for heap
-accesses is larger than that for local variables and AST nodes. In particular
-accesses to the heap may specify integer types smaller than 32 bits. Loads are
-either sign extended or zero extended to 32-bit integers, and stores of integers
-smaller than 32-bit include implicit truncations.
+Each heap access is annotated with the *Memory type* of the location being accessed and
+the presumed alignment of the incoming pointer. As discussed previously, loads may
+include implicit zero- or sign-extension and stores may include implicit truncation.
 
 Indexes into the heap are always byte indexes.
 
@@ -105,8 +154,8 @@ If the incoming index argument to a heap access is misaligned with respect to
 the alignment operand of the heap access, the heap access must still work
 correctly (as if the alignment operand was 1). However, on some platforms, such
 misaligned accesses may incur a *massive* performance penalty (due to trap
-handling). Thus, a WebAssembly code generator should *always* provide accurate
-alignment. Note: on platforms without unaligned accesses, smaller-than-natural
+handling). Thus, it is highly recommend that every WebAssembly producer provide
+accurate alignment. Note: on platforms without unaligned accesses, smaller-than-natural
 alignment may result in slower code generation (due to the whole access being
 broken into smaller aligned accesses).
 
