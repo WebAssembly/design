@@ -371,17 +371,17 @@ Min, Max, MinNum, and MaxNum operations would treat -0 as being effectively less
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
-  * Int32FromFloat64 - truncate a 64-bit float to a signed integer
-  * Int32FromFloat32 - truncate a 32-bit float to a signed integer
+  * Sint32FromFloat64 - truncate a 64-bit float to a signed integer
+  * Sint32FromFloat32 - truncate a 32-bit float to a signed integer
   * Uint32FromFloat64 - truncate a 64-bit float to an unsigned integer
   * Uint32FromFloat32 - truncate a 32-bit float to an unsigned integer
   * Int32FromFloat32Bits - reinterpret the bits of a 32-bit float as a 32-bit integer
   * Float64FromFloat32 - promote a 32-bit float to a 64-bit float
-  * Float64FromInt32 - convert a signed integer to a 64-bit float
-  * Float64FromUInt32 - convert an unsigned integer to a 64-bit float
+  * Float64FromSint32 - convert a signed integer to a 64-bit float
+  * Float64FromUint32 - convert an unsigned integer to a 64-bit float
   * Float32FromFloat64 - demote a 64-bit float to a 32-bit float
-  * Float32FromInt32 - convert a signed integer to a 32-bit float
-  * Float32FromUInt32 - convert an unsigned integer to a 32-bit float
+  * Float32FromSint32 - convert a signed integer to a 32-bit float
+  * Float32FromUint32 - convert an unsigned integer to a 32-bit float
   * Float32FromInt32Bits - reinterpret the bits of a 32-bit integer as a 32-bit float
 
 Promotion and demotion of floating point values always succeeds.
