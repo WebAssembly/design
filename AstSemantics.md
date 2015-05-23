@@ -26,9 +26,9 @@ variables, local variables, and parameters. The heap itself is not typed, but
 all accesses to the heap are annotated with a type. The legal types for
 global variables and heap accesses are called *Memory types*.
 
-  * Int8 - signed 8-bit integer
-  * Int16 - signed 16-bit integer
-  * Int32 - signed 32-bit integer
+  * Sint8 - signed 8-bit integer
+  * Sint16 - signed 16-bit integer
+  * Sint32 - signed 32-bit integer
   * Uint8 - unsigned 8-bit integer
   * Uint16 - unsigned 16-bit integer
   * Uint32 - unsigned 32-bit integer
@@ -45,9 +45,9 @@ are a subset of the Memory types:
 All IR operations except loads and stores deal with local types. Loads implicitly
 convert Memory types to Local types according to the follow rules:
 
-  * Load[Int8] - sign-extend to Int32
-  * Load[Int16] - sign-extend to Int32
-  * Load[Int32] - (no conversion)
+  * Load[Sint8] - sign-extend to Int32
+  * Load[Sint16] - sign-extend to Int32
+  * Load[Sint32] - (no conversion)
   * Load[Uint8] - zero-extend to Int32
   * Load[Uint16] - zero-extend to Int32
   * Load[Uint32] - reinterpret as Int32
@@ -60,9 +60,9 @@ is interpreted differently by the operations below.
 Similar to loads, stores implicitly truncate Local types to Memory types according to the
 following rules:
 
-  * Store[Int8] - truncate Int32 to Int8
-  * Store[Int16] - truncate Int32 to Int16
-  * Store[Int32] - (no truncation)
+  * Store[Sint8] - truncate Int32 to Int8
+  * Store[Sint16] - truncate Int32 to Int16
+  * Store[Sint32] - (no truncation)
   * Store[Uint8] - truncate Int32 to Uint8
   * Store[Uint16] - truncate Int32 to Uint16
   * Store[Uint32] - reinterpret Int32 as Uint32
