@@ -7,8 +7,6 @@ Each function body consists of exactly one statement.
 The operations available in the AST are defined here in language-independent
 way but closely match operations in many programming languages and are
 efficiently implementable on all modern computers.
-Floating point arithmetic follows the IEEE 754 standard and unless otherwise
-specified uses the round-to-nearest ties-to-even mode.
 
 Some operations may *trap* under some conditions, as noted below. In v.1,
 trapping means that execution in the WebAssembly module is terminated and
@@ -312,9 +310,32 @@ Additional 32-bit integer Operations under consideration:
   * Int32UMin - unsigned minimum
   * Int32UMax - unsigned maximum
 
-## 64-bit Floating point operations
+## Floating point operations
 
-All 64-bit floating point operations conform to the IEEE-754 standard.
+Floating point arithmetic follows the IEEE-754 standard, except that:
+ - The sign bit and significand of any NaN value returned from a floating point
+   arithmetic operation other than Neg, Abs, and Copysign are computed from an
+   unspecified function of the implementation, the opcode, and the operands.
+ - Except where otherwise specified, floating point operations use the
+   round-to-nearest ties-to-even rounding attribute.
+ - Floating point exceptions are not reported (and consequently, no distinction
+   is made between quiet and signalling NaN). However, infinity, -infinity, and
+   NaN are still produced as result values to indicate overflow, invalid, and
+   divide-by-zero conditions, as specified by IEEE-754.
+
+  * Float32Add - addition
+  * Float32Sub - subtraction
+  * Float32Mul - multiplication
+  * Float32Div - division
+  * Float32Abs - absolute value
+  * Float32Neg - negation
+  * Float32Copysign - copysign
+  * Float32Ceil - ceiling operation
+  * Float32Floor - floor operation
+  * Float32Eq - compare equal
+  * Float32Lt - less than
+  * Float32Le - less than or equal
+  * Float32Sqrt - square root
 
   * Float64Add - addition
   * Float64Sub - subtraction
@@ -332,27 +353,21 @@ All 64-bit floating point operations conform to the IEEE-754 standard.
 
 Operations under consideration:
 
+  * Float32Min - minimum; if either operand is NaN, returns NaN
+  * Float32Max - maximum; if either operand is NaN, returns NaN
+  * Float32MinNum - minimum; if exactly one operand is NaN, returns the other operand
+  * Float32MaxNum - maximum; if exactly one operand is NaN, returns the other operand
+  * Float32Trunc - round to nearest integer towards zero
+  * Float32NearestInt - round to nearest integer, ties to even
 
-## 32-bit Floating point operations
+  * Float64Min - minimum; if either operand is NaN, returns NaN
+  * Float64Max - maximum; if either operand is NaN, returns NaN
+  * Float64MinNum - minimum; if exactly one operand is NaN, returns the other operand
+  * Float64MaxNum - maximum; if exactly one operand is NaN, returns the other operand
+  * Float64Trunc - round to nearest integer towards zero
+  * Float64NearestInt - round to nearest integer, ties to even
 
-All 32-bit floating point operations conform to the IEEE-754 standard.
-
-  * Float32Add - addition
-  * Float32Sub - subtraction
-  * Float32Mul - multiplication
-  * Float32Div - division
-  * Float32Abs - absolute value
-  * Float32Neg - negation
-  * Float32Copysign - copysign
-  * Float32Ceil - ceiling operation
-  * Float32Floor - floor operation
-  * Float32Eq - compare equal
-  * Float32Lt - less than
-  * Float32Le - less than or equal
-  * Float32Sqrt - square root
-
-Operations under consideration:
-
+Min, Max, MinNum, and MaxNum operations would treat -0 as being effectively less than 0.
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
@@ -369,17 +384,20 @@ Operations under consideration:
   * Float32FromUInt32 - convert an unsigned integer to a 32-bit float
   * Float32FromInt32Bits - reinterpret the bits of a 32-bit integer as a 32-bit float
 
-Promotion and demotion of floating-point values always succeeds.
-Demotion of floating-point values uses round-to-nearest ties-to-even rounding,
+Promotion and demotion of floating point values always succeeds.
+Demotion of floating point values uses round-to-nearest ties-to-even rounding,
 and may overflow to infinity or negative infinity as specified by IEEE-754.
+If the operand of promotion or demotion is NaN, the sign bit and significand
+of the result are computed from an unspecified function of the implementation,
+the opcode, and the operand.
 
 Reinterpretations always succeed.
 
-Conversions from integer to floating-point always succeed, though they may
+Conversions from integer to floating point always succeed, though they may
 overflow to infinity or negative infinity as specified by IEEE-754.
 
-Conversion from floating-point to integer where IEEE-754 would specify an
-invalid operation exception (e.g. when the floating-point value is NaN or
+Conversion from floating point to integer where IEEE-754 would specify an
+invalid operation exception (e.g. when the floating point value is NaN or
 outside the range which rounds to an integer in range) traps.
 
 ## Post-v.1 intrinsics
@@ -414,8 +432,4 @@ since this provides greater control over precision/performance tradeoffs.
   * Float32Ln - natural logarithm
   * Float32Pow - exponentiate
 
-Note that the IEEE 754 standard does not require extended operations
-like transcendental functions to have a specified precision.
-It does require them to define and use a consistent rounding quantum.
-
-The rounding behavior of the operations under consideration needs clarification.
+The rounding behavior of these operations would need clarification.

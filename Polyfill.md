@@ -43,7 +43,7 @@ diverge from the specified WebAssembly semantics in the following cases:
 * [Datatype Conversions](AstSemantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions)
   * Regardless of WebAssembly behavior, the asm.js polyfill will follow its
     standard behavior:
-    * Return zero when conversion from floating-point to integer fails.
+    * Return zero when conversion from floating point to integer fails.
     * Optionally canonicalize NaN values.
 
 If needed, the polyfill could provide an option to ensure full correctness
