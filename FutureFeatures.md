@@ -98,9 +98,9 @@ This is covered in the [tooling](Tooling.md) section.
 * The initial SIMD API will be a "short SIMD" API, centered around fixed-width
   128-bit types and explicit SIMD operations. This is quite portable and useful,
   but it won't be able to deliver the full performance capabilities of some of
-  today's popular hardware. There is an opportunity for someone to propose a
-  "long SIMD" model which will generalize to wider hardware vector lengths make
-  more natural use of advanced features like vector lane predication,
+  today's popular hardware. There is [a proposal in the SIMD.js repository][]
+  for a "long SIMD" model which generalizes to wider hardware vector lengths,
+  making more natural use of advanced features like vector lane predication,
   gather/scatter, and so on. Interesting questions to ask of such an model will
   include:
     * How will this model map onto popular modern SIMD hardware architectures?
@@ -116,7 +116,9 @@ This is covered in the [tooling](Tooling.md) section.
       support it? Reasonable options may include emulating it without the
       benefit of hardware acceleration, or indicating a lack of support through
       feature tests.
- 
+
+  [a proposal in the SIMD.js repository]: https://github.com/johnmccutchan/ecmascript_simd/issues/180
+
 ## Operations which may not be available or may not perform well on all platforms
  * Fused multiply-add.
  * Reciprocal square root approximate.
