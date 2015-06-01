@@ -267,10 +267,10 @@ and 0 representing false.
   * Int32Add - signed-less addition
   * Int32Sub - signed-less subtraction
   * Int32Mul - signed-less multiplication (lower 32-bits)
-  * Int32SDiv - signed division
-  * Int32UDiv - unsigned division
-  * Int32SRem - signed remainder
-  * Int32URem - unsigned remainder
+  * Int32Sdiv - signed division
+  * Int32Udiv - unsigned division
+  * Int32Srem - signed remainder
+  * Int32Urem - unsigned remainder
   * Int32And - signed-less logical and
   * Int32Ior - signed-less inclusive or
   * Int32Xor - signed-less exclusive or
@@ -296,8 +296,8 @@ floating point comparisons, even considering NaN.
 
 Additional 32-bit integer Operations under consideration:
 
-  * Int32SMulHigh - signed multiplication (upper 32-bits)
-  * Int32UMulHigh - unsigned multiplication (upper 32-bits)
+  * Int32Smulh - signed multiplication (upper 32-bits)
+  * Int32Umulh - unsigned multiplication (upper 32-bits)
   * Int32Clz - count leading zeroes (defined for all values, including 0)
   * Int32Ctz - count trailing zeroes (defined for all values, including 0)
   * Int32Popcnt - count number of ones
@@ -305,10 +305,10 @@ Additional 32-bit integer Operations under consideration:
   * Int32Rotr - bitwise rotate right
   * Int32Rotl - bitwise rotate left
   * Int32Not - signed-less one's complement
-  * Int32SMin - signed minimum
-  * Int32SMax - signed maximum
-  * Int32UMin - unsigned minimum
-  * Int32UMax - unsigned maximum
+  * Int32Smin - signed minimum
+  * Int32Smax - signed maximum
+  * Int32Umin - unsigned minimum
+  * Int32Umax - unsigned maximum
 
 ## Floating point operations
 
