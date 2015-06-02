@@ -2,6 +2,8 @@
 
 WebAssembly is a sandboxed platform. Applications can't access data outside the sandbox without going through appropriate APIs, or otherwise escape the sandbox, even if the behavior inside the sandbox should ever be unspecified in any way.
 
+WebAssembly always maintains valid callstacks. Return addresses are stored on the trusted stack and can't be clobbered by the application. And, WebAssembly ensures that calls and branches always have valid destinations.
+
 Beyond that, WebAssembly minimizes observable differences between implementations, to reduce the risk of applications becoming dependent on any particular implementation's behavior. However, occasionally compromises are made due to performance concerns, listed below.
 
 In particular, WebAssembly has no [nasal demons](https://en.wikipedia.org/w/index.php?title=Nasal_demons), since they are an extreme on the spectrum of observable differences, and since they make it difficult to reason about what state an application might be in. WebAssembly prefers to [trap](AstSemantics.md) when feasible, and otherwise it permits a specific set of possible conforming behaviors.
