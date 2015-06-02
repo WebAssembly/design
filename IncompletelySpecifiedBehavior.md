@@ -19,7 +19,7 @@ The following is a list of the places where the WebAssembly specification curren
  - [Races between threads](EssentialPostMVPFeatures.md#threads)
 
  - [Fixed-width SIMD may want some flexibility](EssentialPostMVPFeatures.md#fixed-width-simd)
-   - In SIMD.js, floating-point values may or may not have subnormals flushed to zero.
+   - In SIMD.js, floating point values may or may not have subnormals flushed to zero.
    - In SIMD.js, operations ending in "Approximation" return approximations that may vary between platforms.
 
 ## Note for users of C, C++, and similar languages
