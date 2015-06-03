@@ -14,8 +14,8 @@ The following is a list of the places where the WebAssembly specification curren
 
  - [NaN bit patterns](AstSemantics.md#floating-point-operations)
 
- - [Races between threads](EssentialPostV1Features.md#threads)
+ - [Races between threads](EssentialPostMVPFeatures.md#threads)
 
- - [Fixed-width SIMD may want some flexibility](EssentialPostV1Features.md#fixed-width-simd)
+ - [Fixed-width SIMD may want some flexibility](EssentialPostMVPFeatures.md#fixed-width-simd)
    - In SIMD.js, floating-point values may or may not have subnormals flushed to zero.
    - In SIMD.js, operations ending in "Approximation" return approximations that may vary between platforms.

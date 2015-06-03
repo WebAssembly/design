@@ -8,7 +8,7 @@ The operations available in the AST are defined here in language-independent
 way but closely match operations in many programming languages and are
 efficiently implementable on all modern computers.
 
-Some operations may *trap* under some conditions, as noted below. In v.1,
+Some operations may *trap* under some conditions, as noted below. In the MVP,
 trapping means that execution in the WebAssembly module is terminated and
 abnormal termination is reported to the outside environment. In a browser
 environment, this would translate into a JS exception being thrown. If
@@ -134,13 +134,13 @@ Bounds checking before the final offset addition allows the offset addition
 to easily be folded into the hardware load instruction *and* for groups of loads
 with the same base and different offsets to easily share a single bounds check.
 
-In v.1, the indices are 32-bit unsigned integers. With 
-[64-bit integers](EssentialPostV1Features.md#64-bit-integers) and
+In the MVP, the indices are 32-bit unsigned integers. With
+[64-bit integers](EssentialPostMVPFeatures.md#64-bit-integers) and
 [>4GiB heaps](FutureFeatures.md#heaps-bigger-than-4gib), these nodes would also
 accept 64-bit unsigned integers.
 
-In v.1, heaps are not shared between threads. When
-[threads](EssentialPostV1Features.md#threads) are added as a feature, the basic
+In the MVP, heaps are not shared between threads. When
+[threads](EssentialPostMVPFeatures.md#threads) are added as a feature, the basic
 `LoadHeap`/`StoreHeap` nodes will have the most relaxed semantics specified in
 the memory model and new heap-access nodes will be added with atomic and
 ordering guarantees.
@@ -208,7 +208,7 @@ Direct calls to a function specify the callee by index into a function table.
   * CallDirect - call function directly
 
 Each function has a signature in terms of local types, and calls must match the
-function signature exactly. [Imported functions](V1.md#code-loading-and-imports) 
+function signature exactly. [Imported functions](MVP.md#code-loading-and-imports)
 also have signatures and are added to the same function table and are thus also
 callable via `CallDirect`.
 
@@ -226,11 +226,11 @@ since the heap only provides integer types). For security and safety reasons,
 the integer value of a coerced function-pointer value is an abstract index and
 does not reveal the actual machine code address of the target function.
 
-In v.1 function pointer values are
+In the MVP, function pointer values are
 local to a single module. The [dynamic linking](FutureFeatures.md#dynamic-linking)
 feature is necessary for two modules to pass function pointers back and forth.
 
-Multiple return value calls will be possible, though possibly not in v.1. The
+Multiple return value calls will be possible, though possibly not in the MVP. The
 details of multiple-return-value calls needs clarification. Calling a function
 that returns multiple values will likely have to be a statement that specifies
 multiple local variables to which to assign the corresponding return values.
@@ -400,13 +400,13 @@ Conversion from floating point to integer where IEEE-754 would specify an
 invalid operation exception (e.g. when the floating point value is NaN or
 outside the range which rounds to an integer in range) traps.
 
-## Post-v.1 intrinsics
+## Post-MVP intrinsics
 
-The following list of intrinsics is being considered for addition after v.1. The
-rationale is that, for v.1, these operations can be statically linked into the
+The following list of intrinsics is being considered for addition after the MVP. The
+rationale is that, for the MVP, these operations can be statically linked into the
 WebAssembly module by the code generator at small size cost and this avoids a
 non-trivial specification burden of their semantics/precision. Adding these
-intrinsics post-v.1 would allow for better high-level backend optimization of
+intrinsics post-MVP would allow for better high-level backend optimization of
 these intrinsics that require builtin knowledge of their semantics. On the other
 hand, a code generator may continue to statically link in its own implementation
 since this provides greater control over precision/performance tradeoffs.
