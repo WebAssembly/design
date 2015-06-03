@@ -1,18 +1,18 @@
-# Feature to add after v.1
+# Feature to add after the MVP
 
 These are features that make sense in the context of the
 [high-level goals](HighLevelGoals.md) of WebAssembly but are not considered part
-of the [Minimum Viable Product](V1.md) or the
-[essential post-v.1 feature set](EssentialPostV1Features.md) which are expected
-to be standardized immediately after v.1. These will be prioritized based on
+of the [Minimum Viable Product](MVP.md) or the
+[essential post-MVP feature set](EssentialPostMVPFeatures.md) which are expected
+to be standardized immediately after the MVP. These will be prioritized based on
 developer feedback.
 
 ## Great tooling support
 This is covered in the [tooling](Tooling.md) section.
 
 ## Dynamic linking
- * [Dynamic loading](V1.md#code-loading-and-imports) is in [v.1](V1.md), but all loaded modules have
-   their own [separate heaps](V1.md#heap) and cannot share [function pointers](V1.md#function-pointers).
+ * [Dynamic loading](MVP.md#code-loading-and-imports) is in [the MVP](MVP.md), but all loaded modules have
+   their own [separate heaps](MVP.md#heap) and cannot share [function pointers](MVP.md#function-pointers).
  * Support both load-time and run-time (`dlopen`) dynamic linking of both
    WebAssembly modules and non-WebAssembly modules (e.g., on the web, ES6
    ones containing JS), sharing the heap as well as function pointers.
@@ -67,7 +67,7 @@ This is covered in the [tooling](Tooling.md) section.
         (conditionally loaded after a feature test)?
 
 ## Source maps integration
- * Add a new source maps [module section type](V1.md#module-structure).
+ * Add a new source maps [module section type](MVP.md#module-structure).
  * Either embed the source maps directly or just a URL from which source maps can be downloaded.
  * Text source maps become intractably large for even moderate-sized compiled codes, so probably
    need to define new binary format for source maps.

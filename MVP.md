@@ -1,11 +1,11 @@
-# v.1
+# MVP
 
-As stated in the [high-level goals](HighLevelGoals.md), v.1 is designed to be a 
+As stated in the [high-level goals](HighLevelGoals.md), MVP is designed to be a
 Minimum Viable Product, basically on par with [asm.js](http://asmjs.org/) in terms
 of functionality. This means that there are important features we *know* we want 
-and need, but are post-v.1; these are in a separate [essential post-v.1 features doc](EssentialPostV1Features.md).
+and need, but are post-MVP; these are in a separate [essential post-MVP features doc](EssentialPostMVPFeatures.md).
 
-This document explains the contents of v.1 at a high-level.  There are also separate docs with more 
+This document explains the contents of the MVP at a high-level.  There are also separate docs with more
 precise descriptions of:
  * the [AST semantics](AstSemantics.md) 
  * the [binary encoding](BinaryEncoding.md)
@@ -37,12 +37,12 @@ precise descriptions of:
   *single* module. The meaning of a call to an import is defined by
   the host environment.
   * In an environment with ES6 modules, there is no special case for when one
-    WebAssembly module imports another: they have separate [heaps](V1.md#heap)
+    WebAssembly module imports another: they have separate [heaps](MVP.md#heap)
     and pointers cannot be passed between the two. Module imports encapsulate
     the importer and importee.
   * In a minimal shell environment, imports could be limited to 
     builtin modules (implemented by the shell) and/or shell scripts.
-  * The [dynamic linking](FutureFeatures.md#dynamic-linking) post-v.1 feature 
+  * The [dynamic linking](FutureFeatures.md#dynamic-linking) post-MVP feature
     would extend the semantics to include multiple modules and thus allow heap
     and pointer sharing. Dynamic linking would be semantically distinct from
     importing, though.
@@ -58,10 +58,10 @@ precise descriptions of:
  * At the top level, a module is ELF-like: a sequence of sections which declare their type and byte-length.
  * Sections with unknown types would be skipped without error. 
  * Standardized section types:
-  * module import section (see [Module imports](V1.md#module-imports) below)
+  * module import section (see [Module imports](MVP.md#module-imports) below)
   * globals section (constants, signatures, variables)
-  * code section (see [Code section](V1.md#code-section) below)
-  * heap initialization section (see [Heap](V1.md#heap) below)
+  * code section (see [Code section](MVP.md#code-section) below)
+  * heap initialization section (see [Heap](MVP.md#heap) below)
 
 ## Code section
  * The code section begins with a table of functions containing the signatures and 
@@ -84,7 +84,7 @@ precise descriptions of:
     pathological cases of irreducible control flow). Alternative approaches can generate reducible
     control flow via node splitting, which can reduce throughput overhead, at the cost of
     increasing code size (potentially very significantly in pathological cases).
-  * The [signature-restricted proper tail-call](https://github.com/WebAssembly/spec/blob/master/EssentialPostV1Features.md#signature-restricted-proper-tail-calls) 
+  * The [signature-restricted proper tail-call](https://github.com/WebAssembly/spec/blob/master/EssentialPostMVPFeatures.md#signature-restricted-proper-tail-calls)
     feature would allow efficient compilation of arbitrary irreducible control flow.
  * See the [AST Semantics](AstSemantics.md) for descriptions of individual AST nodes.
 
@@ -92,7 +92,7 @@ precise descriptions of:
 * The reason we chose a binary format is efficiency: to reduce download size and accelerate
   decoding, thus enabling even very large codebases to have quick startup times.
   * Towards that goal, the binary format will be natively decoded by the browser.
-* The binary format has an equivalent and isomorphic [text format](V1.md#text-format).
+* The binary format has an equivalent and isomorphic [text format](MVP.md#text-format).
   Conversion from one format to the other is both straightforward and causes
   no loss of information in either direction.
 * Do not try to compete with a generic compression algorithm by trying to suck out every last bit;
@@ -114,11 +114,11 @@ precise descriptions of:
 * The purpose of this format is to support:
   * View Source on a WebAssembly module, thus fitting into the Web (where every source can
     be viewed) in a natural way.
-  * Presentation in browser devtools when source maps aren't present (which is necessarily the case with v.1).
+  * Presentation in browser devtools when source maps aren't present (which is necessarily the case with the MVP).
   * Writing WebAssembly code directly for reasons including pedagogical, experimental, debugging, or
     optimization.
 * The text format is equivalent and isomorphic to the
-  [binary format](V1.md#binary-format), see notes there.
+  [binary format](MVP.md#binary-format), see notes there.
 * The text format will be standardized, but only for tooling purposes:
   * Compilers will support this format for `.S` and inline assembly.
   * Debuggers and profilers will present binary code using this textual format.
@@ -131,11 +131,11 @@ precise descriptions of:
 * TODO: there is no real proposal yet
 
 ## Heap
- * In v.1, when a WebAssembly module is loaded, it creates a new heap.
+ * In the MVP, when a WebAssembly module is loaded, it creates a new heap.
    * The [dynamic linking](FutureFeatures.md#dynamic-linking) feature will be necessary for two
-     WebAssembly modules to share the same heap (but sharing with JS is possible in v.1, see below).
+     WebAssembly modules to share the same heap (but sharing with JS is possible in the MVP, see below).
  * Modules can specify heap size and initialization data (data, rodata, bss) in the 
-   [heap-initialization section](V1.md#module-structure).
+   [heap-initialization section](MVP.md#module-structure).
  * Modules can specify whether the heap is growable (via `sbrk`).
  * Modules can optionally export the heap, allowing it to be aliased by JS.
    * JS sees the exported heap as an ArrayBuffer.
@@ -153,7 +153,7 @@ precise descriptions of:
  
 ## Non-browser embedding
  * Host environments can define builtin modules that are implemented natively but can otherwise
-   be imported like [other modules](V1.md#code-loading-and-imports).
+   be imported like [other modules](MVP.md#code-loading-and-imports).
   * For example, a WebAssembly shell might define a builtin `stdio` library with an export `puts`.
   * Another example, in the browser, would be the WebIDL support mentioned in [future features](FutureFeatures.md).
  * Where there is overlap between the browser and popular non-browser environments, a shared spec could be 

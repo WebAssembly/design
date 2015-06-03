@@ -1,14 +1,14 @@
 # Binary Encoding
 
 This document describes the binary encoding of the AST nodes defined in the [AST semantics](AstSemantics.md). 
-For the context of this document, see the [Binary format](V1.md#binary-format) section of the [v.1 doc](V1.md).
+For the context of this document, see the [Binary format](MVP.md#binary-format) section of the [MVP doc](MVP.md).
 
 The binary encoding is designed to allow fast startup, which includes reducing download size
 and allow for quick decoding. Considering the matter of reducing download size, we can see
 it as having three layers:
 
  * The **raw** binary encoding itself, natively decoded by the browser, and to be standardized in
-   v.1 of the spec.
+   the MVP of the spec.
  * **Specific** compression to the binary encoding, that is unreasonable to expect a generic
    compression algorithm like gzip to achieve.
    * This is not meant to be standardized, at least not initially, as it can be done with a
@@ -80,7 +80,7 @@ or tagging. This raises the question of how to reconcile the efficient encoding 
 backwards-compatibility goals.
 
 Specifically, we'd like to avoid the situation where a future version of WebAssembly has features 
-F1 and F2 and vendor V1 implements F1, assigning the next logical opcode indices to F1's new 
+F1 and F2 and vendor V1 implements F1, assigning the next logical opcode indices to F1's new
 opcodes, and V2 implements F2, assigning the same next logical opcode indices to F2's new opcodes 
 and now a single binary has ambiguous semantics if it tries to use either F1 or F2. This type of 
 non-linear feature addition is commonplace in JS and Web APIs and is guarded against by 
@@ -99,9 +99,9 @@ conflict-avoidance practices surrounding string names:
   * To avoid (over time) large index-space declaration sections that are largely the same
     between modules, finalized versions of standards would define named baseline index spaces
     that modules could optionally use as a starting point to further refine.
-    * For example, to use all of [v.1](V1.md) plus [SIMD](EssentialPostV1Features.md#fixed-width-simd)
-      the declaration could be "v1" followed by the list of SIMD opcodes used.
-    * This feature would also be most useful for people handwriting the [text format](V1.md#text-format).
+    * For example, to use all of [the MVP](MVP.md) plus [SIMD](EssentialPostMVPFeatures.md#fixed-width-simd)
+      the declaration could be "base" followed by the list of SIMD opcodes used.
+    * This feature would also be most useful for people handwriting the [text format](MVP.md#text-format).
     * However, such a version declaration does not establish a global "version" for the module
       or affect anything outside of the initialization of the index spaces; decoders would
       remain versionless and simply add cases for new *names* (as with current JS parsers).
