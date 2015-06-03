@@ -39,3 +39,9 @@ The tooling we expect to support includes:
 * Profilers:
   - Sample-based.
   - Instrumentation-based.
+* Process dump: local variables, call stack, heap, global variables, list of
+  threads.
+
+In many cases, the tooling will be pure WebAssembly without any tool-specific
+support from WebAssembly. This won't be possible for debugging, but should be
+entirely possible for sanitizers.
