@@ -4,11 +4,10 @@
    to serve as a compilation target which can be compiled to execute at native
    speed by taking advantage of common hardware capabilities.
 2. Specify and implement incrementally:
-    * design [v.1](V1.md) of the standard as a Minimum Viable Product with roughly
-      the same functionality as [asm.js](http://asmjs.org);
+    * design [v.1](V1.md) of the standard as a Minimum Viable Product;
     * ship an effective [polyfill](V1.md#polyfill) library for v.1 that translates
-      WebAssembly code into asm.js in the client so that WebAssembly v.1 can run on
-      existing browsers at high speeds;
+      WebAssembly code into JavaScript in the client so that WebAssembly v.1 can run
+      on existing browsers at high speeds;
     * ship a follow-up to v.1 which adds several more
       [essential features](EssentialPostV1Features.md); and
     * continue to iteratively specify [additional features](FutureFeatures.md),
