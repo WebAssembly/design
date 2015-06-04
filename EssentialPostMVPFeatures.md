@@ -1,9 +1,10 @@
 # Essential Post-MVP Features
 
-This is a list of essential features that are known to be needed ASAP, but were removed from
-[the MVP](MVP.md) since there was not (yet) a portably-efficient polyfill via asm.js. There is a much bigger
-[list of features](FutureFeatures.md) that will be added after this list, prioritized by feedback and
-experience.
+This is a list of essential features that are known to be needed ASAP, but were
+removed from [the MVP](MVP.md) since there was not (yet) a portably-efficient
+polyfill via JavaScript. There is a much bigger
+[list of features](FutureFeatures.md) that will be added after this list,
+prioritized by feedback and experience.
 
 ## Threads
 * Provide low-level buildings blocks for pthreads-style shared memory: shared memory,

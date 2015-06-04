@@ -6,7 +6,7 @@
 2. Specify and implement incrementally:
     * design [the MVP](MVP.md) of the standard as a Minimum Viable Product with
       roughly the same functionality as [asm.js](http://asmjs.org);
-    * ship an effective [polyfill](MVP.md#polyfill) library for the MVP that
+    * ship an effective [polyfill](Polyfill.md) library for the MVP that
       translates WebAssembly code into JavaScript in the client so that
       WebAssembly MVP can run on existing browsers;
     * ship a follow-up to the MVP which adds several more

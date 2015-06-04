@@ -1,19 +1,28 @@
-# Polyfill to asm.js
+# Polyfill to JavaScript
 
-Even before browsers ship native support for WebAssembly, users can derive
-value from a polyfill to asm.js due to the decreased download size of the
-[binary encoding](BinaryEncoding.md) and minimal impact on startup performance.
-This also allows us to experiment on the early binary encoding and get
-developer feedback before finalizing the format and supporting it natively.
+Even before browsers ship native support for WebAssembly, users can derive value
+from a [polyfill](https://remysharp.com/2010/10/08/what-is-a-polyfill) to
+JavaScript due to:
 
-A working prototype to unpack the WebAssembly binary format into asm.js is in
-the [polyfill repo](https://github.com/WebAssembly/polyfill).
+* Decreased download size of the [binary encoding](BinaryEncoding.md);
+* Minimal impact on startup performance;
+* Building on existing proven approaches of running compiled C++ on the web with
+  good performance, such as through [asm.js](http://asmjs.org).
+
+This polyfill further allows us to experiment on the early binary encoding and
+get developer feedback before finalizing the format and supporting it natively
+as part of [MVP](MVP.md).
+
+A working prototype to unpack the WebAssembly binary format into JavaScript is
+in the [polyfill repo](https://github.com/WebAssembly/polyfill). We leave open
+the possibility of multiple polyfills existing to meet different developers'
+needs.
 
 ## Polyfill Deviations
 
 A polyfill doesn't need to be 100% correct with respect to the WebAssembly
-specification to be useful in practice. There are corner cases (which
-generally fall into undefined behavior in C/C++) where asm.js does not have
+specification to be useful in practice. There are corner cases (which generally
+fall into undefined behavior in C/C++) where JavaScript and asm.js don't have
 ideal semantics to maintain correctness.
 
 To maintain good polyfill performance, the polyfill library will purposely
