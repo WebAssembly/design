@@ -5,7 +5,7 @@ These are features that make sense in the context of the
 of the [Minimum Viable Product](MVP.md) or the
 [essential post-MVP feature set](EssentialPostMVPFeatures.md) which are expected
 to be standardized immediately after the MVP. These will be prioritized based on
-developer feedback.
+developer feedback, and will be available under [feature tests](FeatureTest.md).
 
 ## Great tooling support
 This is covered in the [tooling](Tooling.md) section.

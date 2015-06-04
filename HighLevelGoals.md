@@ -4,20 +4,20 @@
    to serve as a compilation target which can be compiled to execute at native
    speed by taking advantage of common hardware capabilities.
 2. Specify and implement incrementally:
-    * design [the MVP](MVP.md) of the standard as a Minimum Viable Product with
-      roughly the same functionality as [asm.js](http://asmjs.org);
+    * design [a Minimum Viable Product](MVP.md) for the standard with roughly
+      the same functionality as [asm.js](http://asmjs.org);
     * ship an effective and efficient [polyfill](Polyfill.md) library for the
       MVP that translates WebAssembly code into JavaScript in the client so that
       WebAssembly MVP can run on existing browsers;
     * ship a follow-up to the MVP which adds several more
       [essential features](EssentialPostMVPFeatures.md); and
     * continue to iteratively specify [additional features](FutureFeatures.md),
-      prioritized by feedback and experience, including support for languages other
-      than C/C++.
+      prioritized by feedback and experience, including support for languages
+      other than C/C++.
 3. Design to execute within and integrate well with the *existing* Web platform:
-    * maintain the versionless, feature-tested and 
-      [backwards-compatible](BinaryEncoding.md#backwards-compatibility) evolution
-      story of the Web;
+    * maintain the versionless, [feature-tested](FeatureTest.md) and
+      [backwards-compatible](BinaryEncoding.md#backwards-compatibility)
+      evolution story of the Web;
     * execute in the same semantic universe as JavaScript;
     * allow synchronous calls to and from JavaScript;
     * enforce the same-origin and permissions security policies;
