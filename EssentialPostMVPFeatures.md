@@ -1,7 +1,7 @@
-# Essential Post-v.1 Features
+# Essential Post-MVP Features
 
 This is a list of essential features that are known to be needed ASAP, but were removed from
-[v.1](V1.md) since there was not (yet) a portably-efficient polyfill via asm.js. There is a much bigger
+[the MVP](MVP.md) since there was not (yet) a portably-efficient polyfill via asm.js. There is a much bigger
 [list of features](FutureFeatures.md) that will be added after this list, prioritized by feedback and
 experience.
 
@@ -23,7 +23,7 @@ experience.
 * Essentially, import [SIMD.js](https://github.com/johnmccutchan/ecmascript_simd).
   * Would be statically typed analogous to [SIMD.js-in-asm.js](http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js).
   * The goal is to both reuse specification of op semantics (with TC39) and backend implementation (same IR nodes)
-  * Track SIMD.js after v.1.
+  * Track SIMD.js after the MVP.
 * SIMD adds new primitive variable/expression types (e.g., `float32x4`) so it has to be part of
   the core semantics.
 * SIMD operations (e.g., `float32x4.add`) could be either builtin ops (no different than int32 add) or
