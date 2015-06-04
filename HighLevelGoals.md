@@ -8,7 +8,7 @@
       roughly the same functionality as [asm.js](http://asmjs.org);
     * ship an effective [polyfill](MVP.md#polyfill) library for the MVP that
       translates WebAssembly code into JavaScript in the client so that
-      WebAssembly MVP can run on existing browsers at high speeds;
+      WebAssembly MVP can run on existing browsers;
     * ship a follow-up to the MVP which adds several more
       [essential features](EssentialPostMVPFeatures.md); and
     * continue to iteratively specify [additional features](FutureFeatures.md),
