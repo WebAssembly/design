@@ -13,7 +13,7 @@ it as having three layers:
    compression algorithm like gzip to achieve.
    * This is not meant to be standardized, at least not initially, as it can be done with a
      downloaded decompressor that runs as web content on the client, and in particular
-     can be implemented in the polyfill. Not standardizing it leaves the binary
+     can be implemented in a polyfill. Not standardizing it leaves the binary
      encoding as the only thing a WebAssembly implementation is required to implement,
      which is nice. However, if the benefits are shown to be substantial, this will be
      reconsidered in the future.

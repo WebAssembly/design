@@ -7,9 +7,10 @@ and need, but are post-MVP; these are in a separate [essential post-MVP features
 
 This document explains the contents of the MVP at a high-level.  There are also separate docs with more
 precise descriptions of:
+ * the [polyfill to JavaScript](Polyfill.md)
  * the [AST semantics](AstSemantics.md) 
  * the [binary encoding](BinaryEncoding.md)
- 
+
 ## Modules
 * The primary unit of loadable, executable code is a *module*.
   * In a host environment with ES6 modules (browser, node.js), a WebAssembly
@@ -142,14 +143,6 @@ precise descriptions of:
    * To keep an ArrayBuffer's length immutable, resizing a module's heap detaches any existent ArrayBuffers.
  * See the [AST Semantics heap section](AstSemantics.md#accessing-the-heap) for
    more details.
-
-## Polyfill
- * A working prototype is in the [polyfill repo](https://github.com/WebAssembly/polyfill).
- * Even before browsers ship native support for WebAssembly, users can derive
-   value from the polyfill due to the decreased download size of the
-   [binary encoding](BinaryEncoding.md) and minimal impact on startup performance.
- * To maintain good polyfill performance, the [polyfill library will diverge](Polyfill.md#polyfill-deviations)
-   from the specified WebAssembly semantics in certain corner case scenarios.
  
 ## Non-browser embedding
  * Host environments can define builtin modules that are implemented natively but can otherwise
