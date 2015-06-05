@@ -11,7 +11,7 @@ JavaScript due to:
 
 This polyfill further allows us to experiment on the early binary encoding and
 get developer feedback before finalizing the format and supporting it natively
-as part of [MVP](MVP.md).
+as part of [the MVP](MVP.md).
 
 A working prototype to unpack the WebAssembly binary format into JavaScript is
 in the [polyfill repo](https://github.com/WebAssembly/polyfill). We leave open
