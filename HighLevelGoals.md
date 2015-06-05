@@ -4,8 +4,8 @@
    to serve as a compilation target which can be compiled to execute at native
    speed by taking advantage of common hardware capabilities.
 2. Specify and implement incrementally:
-    * design [a Minimum Viable Product](MVP.md) for the standard with roughly
-      the same functionality as [asm.js](http://asmjs.org);
+    * design [a Minimum Viable Product (MVP)](MVP.md) for the standard with
+      roughly the same functionality as [asm.js](http://asmjs.org);
     * ship an effective and efficient [polyfill](Polyfill.md) library for the
       MVP that translates WebAssembly code into JavaScript in the client so that
       WebAssembly MVP can run on existing browsers;

@@ -1,6 +1,6 @@
 # Feature Test
 
-Any feature not present in [MVP](MVP.md) will have a corresponding feature
+Any feature not present in [the MVP](MVP.md) will have a corresponding feature
 test. This allows polyfills to elegantly emulate a feature, and allows
 developers to fallback to another implementation if they so desire.
 
