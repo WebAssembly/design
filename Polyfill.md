@@ -65,6 +65,7 @@ Some divergences that we've identified as potentially desirable:
   standard behavior:
   - Division by zero returns zero;
   - `INT32_MIN / -1` returns `INT32_MIN`;
+  - `INT32_MIN % -1` returns `0`;
   - Shift counts are implicitly masked.
 * **[Datatype conversions](AstSemantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions)**:
   Regardless of WebAssembly behavior, an asm.js polyfill will follow its
