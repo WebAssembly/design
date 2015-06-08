@@ -74,24 +74,9 @@ separate docs with more precise descriptions of:
   both straightforward and causes no loss of information in either direction.
 
 ## Text format
-* The purpose of this format is to support:
-  * View Source on a WebAssembly module, thus fitting into the Web (where every source can
-    be viewed) in a natural way.
-  * Presentation in browser devtools when source maps aren't present (which is necessarily the case with the MVP).
-  * Writing WebAssembly code directly for reasons including pedagogical, experimental, debugging, or
-    optimization.
-* The text format is equivalent and isomorphic to the
-  [binary format](MVP.md#binary-format), see notes there.
-* The text format will be standardized, but only for tooling purposes:
-  * Compilers will support this format for `.S` and inline assembly.
-  * Debuggers and profilers will present binary code using this textual format.
-  * Browsers will not parse the textual format on regular web content in order
-    to implement WebAssembly semantics.
-* Given that the code representation is actually an AST, the syntax would contain nested
-  statements and expressions (instead of the linear list of instructions most assembly languages have).
-* There is no requirement to use JS syntax; this format is not intended to be evaluated or translated 
-  directly into JS.
-* TODO: there is no real proposal yet
+
+The [text format](TextFormat.md) provides readability to developers, and is
+isomorphic to the [binary format](BinaryEncoding.md).
 
 ## Heap
  * In the MVP, when a WebAssembly module is loaded, it creates a new heap.

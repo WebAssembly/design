@@ -125,7 +125,7 @@ conflict-avoidance practices surrounding string names:
     that modules could optionally use as a starting point to further refine.
     * For example, to use all of [the MVP](MVP.md) plus [SIMD](EssentialPostMVPFeatures.md#fixed-width-simd)
       the declaration could be "base" followed by the list of SIMD opcodes used.
-    * This feature would also be most useful for people handwriting the [text format](MVP.md#text-format).
+    * This feature would also be most useful for people handwriting the [text format](TextFormat.md).
     * However, such a version declaration does not establish a global "version" for the module
       or affect anything outside of the initialization of the index spaces; decoders would
       remain versionless and simply add cases for new *names* (as with current JS parsers).
