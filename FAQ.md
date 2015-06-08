@@ -80,3 +80,17 @@ should be as simple as setting the flag. This painless transition is enabled by 
 [high-level goal](HighLevelGoals.md) that WebAssembly integrate well with the Web platform (including 
 allowing synchronous calls into and out of JS) which makes WebAssembly compatible with Emscripten's 
 current asm.js compilation model.
+
+## Is WebAssembly trying to kill JavaScript?
+
+No, WebAssembly is designed to be a complement to, not replacement of, JavaScript (JS). While WebAssembly 
+will, over time, allow many languages to be compiled to the Web, JS has an inconceivable amount of
+momentum and will remain the single, privileged (as described [above](FAQ.md#is-webassembly-only-for-cc-programmers)) 
+dynamic language of the Web. Furthermore, it is expected that JS and WebAssembly will be used 
+together in a number of configurations:
+  * Whole, compiled C++ apps that leverage JS to glue things together.
+  * HTML/CSS/JS UI around a main WebAssembly-controlled center canvas, allowing developers to 
+    leverage the power of web frameworks to build accessible, web-native-feeling experiences.
+  * Mostly HTML/CSS/JS app with a few high-performance WebAssembly modules (e.g., graphing, 
+    simulation, image/sound/video processing, visualization, animation, compression, ...)
+    allowing developers to reuse popular WebAssembly libraries just like JS libraries today.
