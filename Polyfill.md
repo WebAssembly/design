@@ -1,22 +1,25 @@
 # Polyfill to JavaScript
 
-Even before browsers ship native support for WebAssembly, users can derive value
-from a [polyfill](https://remysharp.com/2010/10/08/what-is-a-polyfill) to
-JavaScript due to:
+Even before browsers ship native support for WebAssembly, developers can
+ship applications on the Web using
+a [polyfill](https://remysharp.com/2010/10/08/what-is-a-polyfill) which
+converts WebAssembly to JavaScript. Aside from packaging the application in
+a forward-looking way — so that when browsers do support WebAssembly natively,
+the application will immediately benefit — this can provide additional
+value in other ways:
 
-* Decreased download size of the [binary encoding](BinaryEncoding.md);
-* Minimal impact on startup performance;
-* Building on existing proven approaches of running compiled C++ on the web with
-  good performance, such as through [asm.js](http://asmjs.org).
+* Small download size due to the [binary encoding](BinaryEncoding.md);
+* Minor impact on startup performance (decoding the binary into JavaScript is fast);
+* The same high throughput as in existing approaches of compiling C and C++ to JavaScript such as [Emscripten](http://emscripten.org) and [asm.js](http://asmjs.org).
 
 This polyfill further allows us to experiment on the early binary encoding and
 get developer feedback before finalizing the format and supporting it natively
 as part of [the MVP](MVP.md).
 
-A working prototype to unpack the WebAssembly binary format into JavaScript is
-in the [polyfill repo](https://github.com/WebAssembly/polyfill). We leave open
-the possibility of multiple polyfills existing to meet different developers'
-needs.
+A working prototype to unpack the WebAssembly binary format into JavaScript,
+as well as to convert [asm.js](http://asmjs.org) into WebAssembly (useful
+for existing applications), is in the [polyfill repo](https://github.com/WebAssembly/polyfill).
+We also leave open the possibility of multiple polyfills existing to meet different developers' needs.
 
 ## Polyfill Deviations
 
