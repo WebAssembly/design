@@ -234,8 +234,10 @@ use cases:
 
   * Float32MinNum - minimum; if exactly one operand is NaN, returns the other operand
   * Float32MaxNum - maximum; if exactly one operand is NaN, returns the other operand
+  * Float32FMA - fused multiply-add
   * Float64MinNum - minimum; if exactly one operand is NaN, returns the other operand
   * Float64MaxNum - maximum; if exactly one operand is NaN, returns the other operand
+  * Float64FMA - fused multiply-add
 
 MinNum, and MaxNum operations would treat -0 as being effectively less than 0.
 
