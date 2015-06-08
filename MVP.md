@@ -20,10 +20,8 @@ separate docs with more precise descriptions of:
 * The primary unit of loadable, executable code is a **module**.
 * A module can declare a subset of its functions and global variables to be
   **exports**. The meaning of exports (how and when they are called) is defined
-  by the host environment.
-  * `_start` can be the only meaningful export.
-  * An `init` method could always be called after loading a module and before
-    any other exports are called.
+  by the host environment. For example, `_start` and `init` can be the only
+  meaningful exports.
 * A module can declare a set of **imports**. An import is a tuple containing a
   module name, export name, and the type to use for the import within the
   module. The host environment controls the mapping from module name to which
