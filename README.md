@@ -4,7 +4,7 @@ This repository is for early discussion, drafting and strawman around
 WebAssembly and, later, draft specification work.  Expect the contents to be in
 flux.
 
-A good starting point is the [high-level design goals](HighLevelGoals.md).
+A good starting point is the [high-level design goals](HighLevelGoals.md) followed by the [FAQ](FAQ.md).
 
 We've mapped out features we expect to ship:
  1. In [the MVP](MVP.md);
