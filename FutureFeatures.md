@@ -224,3 +224,12 @@ use cases:
   * Int32SMax - signed maximum
   * Int32UMin - unsigned minimum
   * Int32UMax - unsigned maximum
+
+## Additional floating point operations
+
+  * Float32MinNum - minimum; if exactly one operand is NaN, returns the other operand
+  * Float32MaxNum - maximum; if exactly one operand is NaN, returns the other operand
+  * Float64MinNum - minimum; if exactly one operand is NaN, returns the other operand
+  * Float64MaxNum - maximum; if exactly one operand is NaN, returns the other operand
+
+MinNum, and MaxNum operations would treat -0 as being effectively less than 0.

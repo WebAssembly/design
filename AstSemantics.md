@@ -360,6 +360,8 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
   * Float32Lt - less than
   * Float32Le - less than or equal
   * Float32Sqrt - square root
+  * Float32Min - minimum; if either operand is NaN, returns NaN
+  * Float32Max - maximum; if either operand is NaN, returns NaN
 
   * Float64Add - addition
   * Float64Sub - subtraction
@@ -374,24 +376,10 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
   * Float64Lt - less than
   * Float64Le - less than or equal
   * Float64Sqrt - square root
-
-Operations under consideration:
-
-  * Float32Min - minimum; if either operand is NaN, returns NaN
-  * Float32Max - maximum; if either operand is NaN, returns NaN
-  * Float32MinNum - minimum; if exactly one operand is NaN, returns the other operand
-  * Float32MaxNum - maximum; if exactly one operand is NaN, returns the other operand
-  * Float32Trunc - round to nearest integer towards zero
-  * Float32NearestInt - round to nearest integer, ties to even
-
   * Float64Min - minimum; if either operand is NaN, returns NaN
   * Float64Max - maximum; if either operand is NaN, returns NaN
-  * Float64MinNum - minimum; if exactly one operand is NaN, returns the other operand
-  * Float64MaxNum - maximum; if exactly one operand is NaN, returns the other operand
-  * Float64Trunc - round to nearest integer towards zero
-  * Float64NearestInt - round to nearest integer, ties to even
 
-Min, Max, MinNum, and MaxNum operations would treat -0 as being effectively less than 0.
+Min and Max operations treat -0 as being effectively less than 0.
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
