@@ -301,10 +301,15 @@ Additional 32-bit integer Operations under consideration:
   * Int32Clz - count leading zeroes (defined for all values, including 0)
   * Int32Ctz - count trailing zeroes (defined for all values, including 0)
   * Int32Popcnt - count number of ones
+  * Int32Clrs - count leading redundant sign bits (defined for all values, including 0)
+  * Int32Abs - absolute value (`abs(INT32_MIN)` is `INT32_MIN`)
   * Int32BSwap - reverse bytes (endian conversion)
   * Int32Rotr - bitwise rotate right
   * Int32Rotl - bitwise rotate left
+  * Int32SExt - `sext(x, y)` is `x<<y>>y`
   * Int32Not - signed-less one's complement
+  * Int32Neg - signed-less two's complement
+  * Int32Bang - logical negation
   * Int32SMin - signed minimum
   * Int32SMax - signed maximum
   * Int32UMin - unsigned minimum
