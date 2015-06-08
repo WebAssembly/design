@@ -212,41 +212,41 @@ use cases:
 * The following operations can be built from other operators already present,
   however in doing so they read at least one non-constant input multiple times,
   breaking single-use expression tree formation.
-  * Int32Rotr - bitwise rotate right
-  * Int32Rotl - bitwise rotate left
-  * Int32SMin - signed minimum
-  * Int32SMax - signed maximum
-  * Int32UMin - unsigned minimum
-  * Int32UMax - unsigned maximum
-  * Int32SExt - `sext(x, y)` is `x<<y>>y`
-  * Int32Abs - absolute value (is `abs(INT32_MIN)` `INT32_MIN` or should it trap?)
-  * Int32BSwap - reverse bytes (endian conversion)
-  * Int32BSwap16 - `bswap16(x)` is `((x>>8)&255)|((x&255)<<8)`
+  * int32.rotr - bitwise rotate right
+  * int32.rotl - bitwise rotate left
+  * int32.smin - signed minimum
+  * int32.smax - signed maximum
+  * int32.umin - unsigned minimum
+  * int32.umax - unsigned maximum
+  * int32.sext - `sext(x, y)` is `x<<y>>y`
+  * int32.abs - absolute value (is `abs(INT32_MIN)` `INT32_MIN` or should it trap?)
+  * int32.bswap - reverse bytes (endian conversion)
+  * int32.bswap16 - `bswap16(x)` is `((x>>8)&255)|((x&255)<<8)`
 
 * The following operations are just potentially interesting.
-  * Int32Clrs - count leading redundant sign bits (defined for all values, including 0)
+  * int32.clrs - count leading redundant sign bits (defined for all values, including 0)
 
 ## Additional floating point operations
 
-  * Float32MinNum - minimum; if exactly one operand is NaN, returns the other operand
-  * Float32MaxNum - maximum; if exactly one operand is NaN, returns the other operand
-  * Float32FMA - fused multiply-add (results always conforming to IEEE-754)
-  * Float64MinNum - minimum; if exactly one operand is NaN, returns the other operand
-  * Float64MaxNum - maximum; if exactly one operand is NaN, returns the other operand
-  * Float64FMA - fused multiply-add (results always conforming to IEEE-754)
+  * float32.minnum - minimum; if exactly one operand is NaN, returns the other operand
+  * float32.maxnum - maximum; if exactly one operand is NaN, returns the other operand
+  * float32.fma - fused multiply-add (results always conforming to IEEE-754)
+  * float64.minnum - minimum; if exactly one operand is NaN, returns the other operand
+  * float64.maxnum - maximum; if exactly one operand is NaN, returns the other operand
+  * float64.fma - fused multiply-add (results always conforming to IEEE-754)
 
 MinNum, and MaxNum operations would treat -0 as being effectively less than 0.
 
-Note that some operations, like FMA, may not be available or may not perform
+Note that some operations, like fma, may not be available or may not perform
 well on all platforms. These should be guarded by
 [feature tests](FeatureTest.md) so that if available, they behave consistently.
 
 ## Floating point approximation operations
 
-  * Float32ReciprocalApproximation - reciprocal approximation
-  * Float64ReciprocalApproximation - reciprocal approximation
-  * Float32ReciprocalSqrtApproximation - reciprocal sqrt approximation
-  * Float64ReciprocalSqrtApproximation - reciprocal sqrt approximation
+  * float32.reciprocal_approximation - reciprocal approximation
+  * float64.reciprocal_approximation - reciprocal approximation
+  * float32.reciprocal_sqrt_approximation - reciprocal sqrt approximation
+  * float64.reciprocal_sqrt_approximation - reciprocal sqrt approximation
 
 These operations would not required to be fully precise, but the specifics
 would need clarification.
@@ -278,25 +278,25 @@ hand, a code generator may continue to statically link in its own
 implementation since this provides greater control over precision/performance
 tradeoffs.
 
-  * Float64Sin - trigonometric sine
-  * Float64Cos - trigonometric cosine
-  * Float64Tan - trigonometric tangent
-  * Float64ASin - trigonometric arcsine
-  * Float64ACos - trigonometric arccosine
-  * Float64ATan - trigonometric  arctangent
-  * Float64ATan2 - trigonometric arctangent with two arguments
-  * Float64Exp - exponentiate e
-  * Float64Ln - natural logarithm
-  * Float64Pow - exponentiate
-  * Float32Sin - trigonometric sine
-  * Float32Cos - trigonometric cosine
-  * Float32Tan - trigonometric tangent
-  * Float32ASin - trigonometric arcsine
-  * Float32ACos - trigonometric arccosine
-  * Float32ATan - trigonometric  arctangent
-  * Float32ATan2 - trigonometric arctangent with two arguments
-  * Float32Exp - exponentiate e
-  * Float32Ln - natural logarithm
-  * Float32Pow - exponentiate
+  * float64.sin - trigonometric sine
+  * float64.cos - trigonometric cosine
+  * float64.tan - trigonometric tangent
+  * float64.asin - trigonometric arcsine
+  * float64.acos - trigonometric arccosine
+  * float64.atan - trigonometric  arctangent
+  * float64.atan2 - trigonometric arctangent with two arguments
+  * float64.exp - exponentiate e
+  * float64.ln - natural logarithm
+  * float64.pow - exponentiate
+  * float32.sin - trigonometric sine
+  * float32.cos - trigonometric cosine
+  * float32.tan - trigonometric tangent
+  * float32.asin - trigonometric arcsine
+  * float32.acos - trigonometric arccosine
+  * float32.atan - trigonometric  arctangent
+  * float32.atan2 - trigonometric arctangent with two arguments
+  * float32.exp - exponentiate e
+  * float32.ln - natural logarithm
+  * float32.pow - exponentiate
 
 The rounding behavior of these operations would need clarification.
