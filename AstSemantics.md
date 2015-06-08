@@ -1,6 +1,15 @@
-# AST Semantics
+# Abstract Syntax Tree Semantics
 
-The AST has a basic division between statements and expressions.
+The Abstract Syntax Tree (AST) has a basic division between statements and
+expressions. Expressions are typed; validation consists of simple, bottom-up,
+`O(1)` type checking.
+
+Why not a stack-, register- or SSA-based bytecode?
+* Smaller binary encoding:
+  [JSZap](http://research.microsoft.com/en-us/projects/jszap),
+  [Slim Binaries](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.108.1711)
+* [Polyfill prototype](https://github.com/WebAssembly/polyfill) shows simple and
+  efficient translation to asm.js.
 
 Each function body consists of exactly one statement.
 
@@ -107,9 +116,23 @@ are statements.
   * Switch - switch statement with fallthrough
 
 Break and continue statements can only target blocks or loops in which they are
-nested. This guarantees that all resulting control flow graphs are reducible
-and that producing asm.js from WebAssembly does not require running the relooper
-algorithm.
+nested. This guarantees that all resulting control flow graphs are reducible,
+which leads to the following advantages:
+
+  * Simple and size-efficient binary encoding and compilation.
+  * Any control flow—even irreducible—can be transformed into structured control
+    flow with the
+    [Relooper](https://github.com/kripken/emscripten/raw/master/docs/paper.pdf)
+    [algorithm](http://dl.acm.org/citation.cfm?id=2048224&CFID=670868333&CFTOKEN=46181900),
+    with guaranteed low code size overhead, and typically minimal throughput
+    overhead (except for pathological cases of irreducible control
+    flow). Alternative approaches can generate reducible control flow via node
+    splitting, which can reduce throughput overhead, at the cost of increasing
+    code size (potentially very significantly in pathological cases).
+  * The
+    [signature-restricted proper tail-call](https://github.com/WebAssembly/spec/blob/master/EssentialPostMVPFeatures.md#signature-restricted-proper-tail-calls)
+    feature would allow efficient compilation of arbitrary irreducible control
+    flow.
 
 ## Accessing the heap
 

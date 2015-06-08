@@ -18,15 +18,44 @@ in the [polyfill repo](https://github.com/WebAssembly/polyfill). We leave open
 the possibility of multiple polyfills existing to meet different developers'
 needs.
 
+## Implementation Details
+
+An **effective** polyfill should reuse much of the Web platform's existing
+capabilities.
+
+We've identified interesting polyfill implementation approaches which help
+convince us that the design, especially that of the MVP, are sensible:
+
+* A [module](MVP.md#Modules) can be loaded in the same way as an ES6 module
+  (`import` statements, `Reflect` API, `Worker` constructor, etc) and the result
+  is reflected to JS as an ES6 module object.
+  * Exports are the ES6 module object exports.
+  * An import first passes the module name to the
+    [module loader pipeline](http://whatwg.github.io/loader) and resulting ES6
+    module (which could be implemented in JS or WebAssembly) is queried for the
+    export name.
+  * There is no special case for when one WebAssembly module imports another:
+    they have separate [heaps](MVP.md#heap) and pointers cannot be passed
+    between the two. Module imports encapsulate the importer and importee.
+  * To synchronously call into JavaScript from C++, the C++ code would declare
+    and call an undefined `extern` function and the target JavaScript function
+    would be given the (mangled) name of the `extern` and put inside the
+    imported ES6 module.
+
+
 ## Polyfill Deviations
 
-A polyfill doesn't need to be 100% correct with respect to the WebAssembly
-specification to be useful in practice. There are corner cases (which generally
-fall into undefined behavior in C/C++) where JavaScript and asm.js don't have
-ideal semantics to maintain correctness.
+An **efficient** polyfill may purposely diverge from the specified WebAssembly
+semantics: a polyfill doesn't need to be 100% correct with respect to the
+WebAssembly specification to be useful in practice. There are corner cases
+(often undefined behavior in C/C++) where JavaScript and asm.js don't have ideal
+semantics to maintain correctness efficiently.
 
-To maintain good polyfill performance, the polyfill library will purposely
-diverge from the specified WebAssembly semantics in the following cases:
+If needed, a polyfill could provide an option to ensure full correctness at the
+expense of performance, though this is not expected to be necessary for portable
+C/C++ code.
+
+Some divergences that we've identified as potentially desirable:
 
 * [Misaligned heap access](AstSemantics.md#alignment)
   * Since misaligned loads/stores are guaranteed to produce correct results and
@@ -54,7 +83,3 @@ diverge from the specified WebAssembly semantics in the following cases:
     standard behavior:
     * Return zero when conversion from floating point to integer fails.
     * Optionally canonicalize NaN values.
-
-If needed, the polyfill could provide an option to ensure full correctness
-at the expense of performance, though this is not expected to be necessary
-for portable C/C++ code.

@@ -1,93 +1,67 @@
-# MVP
+# Minimum Viable Product
 
-As stated in the [high-level goals](HighLevelGoals.md), MVP is designed to be a
-Minimum Viable Product, basically on par with [asm.js](http://asmjs.org/) in terms
-of functionality. This means that there are important features we *know* we want 
-and need, but are post-MVP; these are in a separate [essential post-MVP features doc](EssentialPostMVPFeatures.md).
+As stated in the [high-level goals](HighLevelGoals.md), the first release aims
+at being a Minimum Viable Product (MVP), with roughly the same functionality as
+[asm.js](http://asmjs.org). This means that there are important features we
+*know* we want and need, but are post-MVP; these are in a separate [essential
+post-MVP features doc](EssentialPostMVPFeatures.md).
 
-This document explains the contents of the MVP at a high-level.  There are also separate docs with more
-precise descriptions of:
+This document explains the contents of the MVP at a high-level. There are also
+separate docs with more precise descriptions of:
+
  * the [polyfill to JavaScript](Polyfill.md)
  * the [AST semantics](AstSemantics.md) 
  * the [binary encoding](BinaryEncoding.md)
 
+**Note**: This content is still in flux and open for discussion.
+
 ## Modules
-* The primary unit of loadable, executable code is a *module*.
-  * In a host environment with ES6 modules (browser, node.js), a WebAssembly
-    module is loaded in the same way as an ES6 module (`import` statements,
-    `Reflect` API, `Worker` constructor, etc) and the result is reflected to
-    JS as an ES6 module object.
+
+* The primary unit of loadable, executable code is a **module**.
 * A module can declare a subset of its functions and global variables to be
-  *exports*. The meaning of exports (how and when they are called) is defined by
-  the host environment.
-  * In an environment with ES6 modules, the WebAssembly exports would be the
-    ES6 module object exports.
-  * A minimal shell environment might define `main` to be the only
-    meaningful export.
-  * We may want to define an `init` method in the spec that is always called
-    after loading a module and before any other exports are called.
-* A module can declare a set of *imports*. An import is a tuple containing a 
+  **exports**. The meaning of exports (how and when they are called) is defined
+  by the host environment.
+  * `_start` can be the only meaningful export.
+  * An `init` method could always be called after loading a module and before
+    any other exports are called.
+* A module can declare a set of **imports**. An import is a tuple containing a
   module name, export name, and the type to use for the import within the
-  module. The host environment controls the mapping from module name to which module
-  is loaded.
-  * In an environment with ES6 modules, an import first passes the
-    module name to the [module loader pipeline](http://whatwg.github.io/loader)
-    and resulting ES6 module (which could be implemented in JS or WebAssembly)
-    is queried for the export name.
-* The spec defines the semantics of loading and calling exports of a
-  *single* module. The meaning of a call to an import is defined by
-  the host environment.
-  * In an environment with ES6 modules, there is no special case for when one
-    WebAssembly module imports another: they have separate [heaps](MVP.md#heap)
-    and pointers cannot be passed between the two. Module imports encapsulate
-    the importer and importee.
-  * In a minimal shell environment, imports could be limited to 
-    builtin modules (implemented by the shell) and/or shell scripts.
+  module. The host environment controls the mapping from module name to which
+  module is loaded.
+* The spec defines the semantics of loading and calling exports of a *single*
+  module. The meaning of a call to an import is defined by the host environment.
+  * In a minimal shell environment, imports could be limited to builtin modules
+    (implemented by the shell) and/or shell scripts.
   * The [dynamic linking](FutureFeatures.md#dynamic-linking) post-MVP feature
     would extend the semantics to include multiple modules and thus allow heap
     and pointer sharing. Dynamic linking would be semantically distinct from
     importing, though.
-* When compiling from C++, imports would be generated for unresolved
- `extern` functions and calls to those `extern` functions would call the import.
-  * Thus, in an environment with ES6 modules, to synchronously call into JS from
-    C++, the C++ code would declare and call an undefined `extern` function and
-    the target JS function would be given the (mangled) name of the `extern` and
-    put inside the imported ES6 module.
-* TODO: there is more to discuss here concerning APIs.
+* When compiling from C++, imports would be generated for unresolved `extern`
+ functions and calls to those `extern` functions would call the import.
+* **TODO**: there is more to discuss here concerning APIs.
 
 ## Module structure
- * At the top level, a module is ELF-like: a sequence of sections which declare their type and byte-length.
+
+* At the top level, a module is ELF-like: a sequence of sections which declare
+  their type and byte-length.
  * Sections with unknown types would be skipped without error. 
  * Standardized section types:
-  * module import section (see [Module imports](MVP.md#module-imports) below)
-  * globals section (constants, signatures, variables)
-  * code section (see [Code section](MVP.md#code-section) below)
-  * heap initialization section (see [Heap](MVP.md#heap) below)
+  * module import section (see [Module imports](MVP.md#module-imports) below);
+  * globals section (constants, signatures, variables);
+  * code section (see [Code section](MVP.md#code-section) below);
+  * heap initialization section (see [Heap](MVP.md#heap) below).
 
 ## Code section
- * The code section begins with a table of functions containing the signatures and 
-   offsets of each function followed by the list of function bodies.
-  * This allows parallel and streaming decoding, validation and compilation.
- * A function body consists of a set of typed variable bindings and an AST closed under these bindings.
-  * The AST is composed of two primary kinds of nodes: statements and expressions.
-  * Expressions are typed; validation consists of simple, bottom-up, O(1) type checking.
-  * Why not a stack-, register- or SSA-based bytecode?
-    * Smaller binary encoding: [JSZap](http://research.microsoft.com/en-us/projects/jszap), 
-      [Slim Binaries](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.108.1711)
-    * [Polyfill prototype](https://github.com/WebAssembly/polyfill) shows simple and efficient translation 
-      to asm.js.
- * Control flow is structured (no goto)
-  * Simple and size-efficient binary encoding and compilation.
-  * Any control flow - even irreducible - can be transformed into structured control flow with the 
-    [Relooper](https://github.com/kripken/emscripten/raw/master/docs/paper.pdf)
-    [algorithm](http://dl.acm.org/citation.cfm?id=2048224&CFID=670868333&CFTOKEN=46181900), with
-    guaranteed low code size overhead, and typically minimal throughput overhead (except for
-    pathological cases of irreducible control flow). Alternative approaches can generate reducible
-    control flow via node splitting, which can reduce throughput overhead, at the cost of
-    increasing code size (potentially very significantly in pathological cases).
-  * The [signature-restricted proper tail-call](https://github.com/WebAssembly/spec/blob/master/EssentialPostMVPFeatures.md#signature-restricted-proper-tail-calls)
-    feature would allow efficient compilation of arbitrary irreducible control flow.
- * See the [AST Semantics](AstSemantics.md) for descriptions of individual AST nodes.
+
+* The code section begins with a table of functions containing the signatures
+   and offsets of each function followed by the list of function bodies. This
+   allows parallel and streaming decoding, validation and compilation.
+ * A function body consists of a set of typed variable bindings and an AST
+   closed under these bindings.
+  * The [Abstract Syntax Tree](AstSemantics.md) is composed of two primary kinds
+    of nodes: statements and expressions.
+ * [Control flow](AstSemantics.md#Control_flow_structures) is structured (no
+   `goto`).
 
 ## Binary format
 * The reason we chose a binary format is efficiency: to reduce download size and accelerate
