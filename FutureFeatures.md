@@ -224,6 +224,11 @@ use cases:
   * Int32SMax - signed maximum
   * Int32UMin - unsigned minimum
   * Int32UMax - unsigned maximum
+  * Int32SExt - `sext(x, y)` is `x<<y>>y`
+  * Int32Abs - absolute value (`abs(INT32_MIN)` is `INT32_MIN`)
+
+* The following operations are just potentially interesting.
+  * Int32Clrs - count leading redundant sign bits (defined for all values, including 0)
 
 ## Additional floating point operations
 
