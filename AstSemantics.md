@@ -322,6 +322,8 @@ floating point comparisons, even considering NaN.
 
 Additional 32-bit integer Operations under consideration:
   * Int32Not - signed-less one's complement
+  * Int32Neg - two's complement negation
+  * Int32Bang - test equality with zero
 
 ## Floating point operations
 
