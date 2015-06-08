@@ -68,3 +68,9 @@ coroutines. Coroutine support is being
 
   [caveats]: https://blog.mozilla.org/nnethercote/2011/01/18/the-dangers-of-fno-exceptions
   [low-level capabilities]: https://extensiblewebmanifesto.org
+
+## Additional integer operations
+  * Int32Clz - count leading zeroes (defined for all values, including 0)
+  * Int32Ctz - count trailing zeroes (defined for all values, including 0)
+  * Int32Popcnt - count number of ones
+  * Int32BSwap - reverse bytes (endian conversion)

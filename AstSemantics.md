@@ -321,20 +321,9 @@ since "a < b" == "b > a" and "a <= b" == "b >= a". Such equalities also hold for
 floating point comparisons, even considering NaN.
 
 Additional 32-bit integer Operations under consideration:
-
   * Int32SMulHigh - signed multiplication (upper 32-bits)
   * Int32UMulHigh - unsigned multiplication (upper 32-bits)
-  * Int32Clz - count leading zeroes (defined for all values, including 0)
-  * Int32Ctz - count trailing zeroes (defined for all values, including 0)
-  * Int32Popcnt - count number of ones
-  * Int32BSwap - reverse bytes (endian conversion)
-  * Int32Rotr - bitwise rotate right
-  * Int32Rotl - bitwise rotate left
   * Int32Not - signed-less one's complement
-  * Int32SMin - signed minimum
-  * Int32SMax - signed maximum
-  * Int32UMin - unsigned minimum
-  * Int32UMax - unsigned maximum
 
 ## Floating point operations
 

@@ -213,3 +213,14 @@ use cases:
     things possible. Possibly this could involve throwing or possibly by
     resuming execution at the trapping instruction with the execution state
     altered, if there can be a reasonable way to specify how that should work.
+
+## Additional integer operations
+* The following operations can be built from other operators already present,
+  however in doing so they read at least one non-constant input multiple times,
+  breaking single-use expression tree formation.
+  * Int32Rotr - bitwise rotate right
+  * Int32Rotl - bitwise rotate left
+  * Int32SMin - signed minimum
+  * Int32SMax - signed maximum
+  * Int32UMin - unsigned minimum
+  * Int32UMax - unsigned maximum
