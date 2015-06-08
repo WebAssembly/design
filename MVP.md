@@ -64,26 +64,14 @@ separate docs with more precise descriptions of:
    `goto`).
 
 ## Binary format
-* The reason we chose a binary format is efficiency: to reduce download size and accelerate
-  decoding, thus enabling even very large codebases to have quick startup times.
-  * Towards that goal, the binary format will be natively decoded by the browser.
-* The binary format has an equivalent and isomorphic [text format](MVP.md#text-format).
-  Conversion from one format to the other is both straightforward and causes
-  no loss of information in either direction.
-* Do not try to compete with a generic compression algorithm by trying to suck out every last bit;
-  assume a generic compression algorithm is applied on top of the binary encoding.
-* "Given that text is so compressible and it is well known that it is hard to beat gzipped source,
-  is there any win from having a binary format over a text format?"
-   * Large reductions in payload size can still significantly decrease the compressed file size.
-     * Experimental results from the [polyfill prototype](https://github.com/WebAssembly/polyfill) show 
-       the gzipped binary format to be about 20-30% smaller than the corresponding gzipped asm.js.
-   * A binary format that represents the names of variables and functions with raw indices instead of strings
-     is much faster to decode: array indexing vs. dictionary lookup.
-      * Experimental results from the [polyfill prototype](https://github.com/WebAssembly/polyfill) show that
-        decoding the binary format is about 23x faster than parsing the corresponding asm.js source
-        (using [this demo](https://github.com/lukewagner/AngryBotsPacked), comparing *just* parsing
-         in SpiderMonkey (no validation, IR generation) to *just* decoding in the polyfill (no asm.js code generation).
-* See the [Binary Encoding](BinaryEncoding.md) for more precise description.
+
+* A [binary format](BinaryEncoding.md) provides efficiency: it reduces download
+  size and accelerates decoding, thus enabling even very large codebases to have
+  quick startup times. Towards that goal, the binary format will be natively
+  decoded by browsers.
+* The binary format has an equivalent and isomorphic
+  [text format](MVP.md#text-format).  Conversion from one format to the other is
+  both straightforward and causes no loss of information in either direction.
 
 ## Text format
 * The purpose of this format is to support:
