@@ -103,7 +103,7 @@ isomorphic to the [binary format](BinaryEncoding.md).
    [other modules](MVP.md#code-loading-and-imports). As examples:
   * A WebAssembly shell might define a builtin `stdio` library with an export
     `puts`.
-  * In the browser, would be the WebIDL support mentioned in
+  * In the browser, the WebIDL support mentioned in
     [future features](FutureFeatures.md).
  * Where there is overlap between the browser and popular non-browser
    environments, a shared spec could be proposed, but this would be separate
