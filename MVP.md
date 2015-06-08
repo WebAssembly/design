@@ -79,38 +79,56 @@ The [text format](TextFormat.md) provides readability to developers, and is
 isomorphic to the [binary format](BinaryEncoding.md).
 
 ## Heap
- * In the MVP, when a WebAssembly module is loaded, it creates a new heap.
-   * The [dynamic linking](FutureFeatures.md#dynamic-linking) feature will be necessary for two
-     WebAssembly modules to share the same heap (but sharing with JS is possible in the MVP, see below).
- * Modules can specify heap size and initialization data (data, rodata, bss) in the 
-   [heap-initialization section](MVP.md#module-structure).
+
+* In the MVP, when a WebAssembly module is loaded, it creates a new heap which
+  isn't directly accessible from other modules.
+   * The [dynamic linking](FutureFeatures.md#dynamic-linking) feature will be
+     necessary for two WebAssembly modules to share the same heap (but sharing
+     with the embedder is possible in the MVP, see below).
+ * Modules can specify heap size and initialization data (`data`, `rodata`,
+   `bss`) in the [heap-initialization section](MVP.md#module-structure).
  * Modules can specify whether the heap is growable (via `sbrk`).
- * Modules can optionally export the heap, allowing it to be aliased by JS.
-   * JS sees the exported heap as an ArrayBuffer.
-   * To keep an ArrayBuffer's length immutable, resizing a module's heap detaches any existent ArrayBuffers.
+ * Modules can optionally export the heap, allowing it to be aliased by
+   the embedder, such as JavaScript.
+   * JavaScript sees the exported heap as an `ArrayBuffer`.
+   * To keep an `ArrayBuffer`'s length immutable, resizing a module's heap
+     detaches any existent `ArrayBuffer`.
  * See the [AST Semantics heap section](AstSemantics.md#accessing-the-heap) for
    more details.
  
 ## Non-browser embedding
- * Host environments can define builtin modules that are implemented natively but can otherwise
-   be imported like [other modules](MVP.md#code-loading-and-imports).
-  * For example, a WebAssembly shell might define a builtin `stdio` library with an export `puts`.
-  * Another example, in the browser, would be the WebIDL support mentioned in [future features](FutureFeatures.md).
- * Where there is overlap between the browser and popular non-browser environments, a shared spec could be 
-   proposed, but this would be separate from the WebAssembly spec.
-  * A symmetric example in JS would be the [Loader](http://whatwg.github.io/loader) spec, intended to be
-    implemented by both browsers and node.js.
- * However, one might find a fair amount of variance between the browser and other environments
-   on core APIs like network and file I/O.
- * To allow writing portable POSIX-like code (that ran in both browser and other environments), the
-   WebAssembly community would develop a shared repository of WebAssembly code that mapped between a 
-   POSIX-like interface and the host's builtin modules using compile-time #ifdefs or, after
-   [dynamic linking](FutureFeatures.md#dynamic-linking) was added, client-side dynamic feature testing.
-  * A symmetric example in JS would be the [ES6 Module Loader polyfill](https://github.com/ModuleLoader/es6-module-loader) library.
- * The WebAssembly spec would thus not try to define any large portable libc-like library.
-  * However, certain features that are core to WebAssembly semantics that are found in native libc 
-    *would* be part of the core WebAssembly spec as either primitive opcodes or a special builtin 
-    module (e.g., `sbrk`, `mmap`).
+
+* Host environments can define builtin modules that are implemented natively but
+   can otherwise be imported like
+   [other modules](MVP.md#code-loading-and-imports). As examples:
+  * A WebAssembly shell might define a builtin `stdio` library with an export
+    `puts`.
+  * In the browser, would be the WebIDL support mentioned in
+    [future features](FutureFeatures.md).
+ * Where there is overlap between the browser and popular non-browser
+   environments, a shared spec could be proposed, but this would be separate
+   from the WebAssembly spec.
+  * A symmetric example in JavaScript would be the
+    [Loader](http://whatwg.github.io/loader) spec, intended to be implemented by
+    both browsers and node.js.
+ * However, one might find a fair amount of variance between the browser and
+   other environments on core APIs like network and file I/O.
+ * To allow writing portable POSIX-like code (that ran in both browser and other
+   environments), the WebAssembly community would develop a shared repository of
+   WebAssembly code that mapped between a POSIX-like interface and the host's
+   builtin modules using compile-time `#ifdef`s or, after
+   [dynamic linking](FutureFeatures.md#dynamic-linking) was added, client-side
+   dynamic feature testing.
+  * A symmetric example in JavaScript would be the
+    [ES6 Module Loader polyfill](https://github.com/ModuleLoader/es6-module-loader)
+    library.
+ * The WebAssembly spec would thus not try to define any large portable
+   libc-like library.
+  * However, certain features that are core to WebAssembly semantics that are
+    found in native libc *would* be part of the core WebAssembly spec as either
+    primitive opcodes or a special builtin module (e.g., `sbrk`, `mmap`).
 
 ## Security
- * No different from a security pov than if the WebAssembly module was asm.js.
+
+WebAssembly MVP will be no looser from a security point-of-view than if the
+module was JavaScript or asm.js.
