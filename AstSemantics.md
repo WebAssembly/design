@@ -321,8 +321,6 @@ since "a < b" == "b > a" and "a <= b" == "b >= a". Such equalities also hold for
 floating point comparisons, even considering NaN.
 
 Additional 32-bit integer Operations under consideration:
-  * Int32SMulHigh - signed multiplication (upper 32-bits)
-  * Int32UMulHigh - unsigned multiplication (upper 32-bits)
   * Int32Not - signed-less one's complement
 
 ## Floating point operations
