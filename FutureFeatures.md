@@ -238,3 +238,37 @@ use cases:
   * Float64MaxNum - maximum; if exactly one operand is NaN, returns the other operand
 
 MinNum, and MaxNum operations would treat -0 as being effectively less than 0.
+
+## Floating-point library intrinsics
+
+These operations aren't needed because they can be implemented in WebAssembly
+code and linked into WebAssembly modules as at small size cost, and this avoids
+a non-trivial specification burden of their semantics/precision. Adding these
+intrinsics would allow for better high-level backend optimization of these
+intrinsics that require builtin knowledge of their semantics. On the other
+hand, a code generator may continue to statically link in its own
+implementation since this provides greater control over precision/performance
+tradeoffs.
+
+  * Float64Sin - trigonometric sine
+  * Float64Cos - trigonometric cosine
+  * Float64Tan - trigonometric tangent
+  * Float64ASin - trigonometric arcsine
+  * Float64ACos - trigonometric arccosine
+  * Float64ATan - trigonometric  arctangent
+  * Float64ATan2 - trigonometric arctangent with two arguments
+  * Float64Exp - exponentiate e
+  * Float64Ln - natural logarithm
+  * Float64Pow - exponentiate
+  * Float32Sin - trigonometric sine
+  * Float32Cos - trigonometric cosine
+  * Float32Tan - trigonometric tangent
+  * Float32ASin - trigonometric arcsine
+  * Float32ACos - trigonometric arccosine
+  * Float32ATan - trigonometric  arctangent
+  * Float32ATan2 - trigonometric arctangent with two arguments
+  * Float32Exp - exponentiate e
+  * Float32Ln - natural logarithm
+  * Float32Pow - exponentiate
+
+The rounding behavior of these operations would need clarification.
