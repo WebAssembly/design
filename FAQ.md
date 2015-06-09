@@ -58,9 +58,9 @@ to WebAssembly (assuming it's written in portable C/C++) and this has already be
 increase the size of distributed code, lose browser devtools integration, can have cross-language
 cycle-collection problems and miss optimizations that require integration with the browser.
 
-## Will WebAssembly break View Source on the Web?
+## Will WebAssembly support View Source on the Web?
 
-No, WebAssembly defines a [text format](MVP.md#text-format) to be rendered when developers view 
+Yes! WebAssembly defines a [text format](TextFormat.md) to be rendered when developers view
 the source of a WebAssembly module in any developer tool. Also, a specific goal of the text format 
 is to allow developers to write WebAssembly modules by hand for testing, experimenting, optimizing, 
 learning and teaching purposes. In fact, by dropping all the [coercions required by asm.js 
@@ -72,19 +72,20 @@ source maps is also being considered as part of the WebAssembly [tooling story]
 
 ## What's the story for Emscripten users?
 
-The [WebAssembly LLVM backend](https://github.com/WebAssembly/llvm) project aims to create a clean, new
-WebAssembly backend for LLVM (the open source compiler that powers Emscripten) with the
-intention of submitting to upstream. Once ready, [Emscripten](http://emscripten.org) will gain a
-compiler flag to emit WebAssembly so that switching to WebAssembly for existing Emscripten users 
-should be as simple as setting the flag. This painless transition is enabled by the
+Existing Emscripten users will get the option to build their projects to WebAssembly, by
+flipping a flag. Initially this will be using a [polyfill](Polyfill.md), converting
+Emscripten's asm.js output to WebAssembly, and eventually Emscripten will utilize
+the [WebAssembly LLVM backend](https://github.com/WebAssembly/llvm) project, which aims to
+create a clean, new WebAssembly backend for LLVM (the open source compiler that powers Emscripten) with the
+intention of submitting to upstream. This painless transition is enabled by the
 [high-level goal](HighLevelGoals.md) that WebAssembly integrate well with the Web platform (including 
 allowing synchronous calls into and out of JS) which makes WebAssembly compatible with Emscripten's 
 current asm.js compilation model.
 
-## Is WebAssembly trying to kill JavaScript?
+## Is WebAssembly trying to replace JavaScript?
 
-No, WebAssembly is designed to be a complement to, not replacement of, JavaScript (JS). While WebAssembly 
-will, over time, allow many languages to be compiled to the Web, JS has an inconceivable amount of
+No! WebAssembly is designed to be a complement to, not replacement of, JavaScript (JS). While WebAssembly
+will, over time, allow many languages to be compiled to the Web, JS has an incredible amount of
 momentum and will remain the single, privileged (as described [above](FAQ.md#is-webassembly-only-for-cc-programmers)) 
 dynamic language of the Web. Furthermore, it is expected that JS and WebAssembly will be used 
 together in a number of configurations:
@@ -92,5 +93,9 @@ together in a number of configurations:
   * HTML/CSS/JS UI around a main WebAssembly-controlled center canvas, allowing developers to 
     leverage the power of web frameworks to build accessible, web-native-feeling experiences.
   * Mostly HTML/CSS/JS app with a few high-performance WebAssembly modules (e.g., graphing, 
-    simulation, image/sound/video processing, visualization, animation, compression, ...)
+    simulation, image/sound/video processing, visualization, animation, compression, etc.,
+    examples which we can already see in asm.js today)
     allowing developers to reuse popular WebAssembly libraries just like JS libraries today.
+  * When WebAssembly [gains the ability to access garbage-collected objects](FutureFeatures.md#gcdom-integration),
+    those objects will be shared with JS, and not live in a walled-off world of their own.
+
