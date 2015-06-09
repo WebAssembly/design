@@ -16,8 +16,7 @@ This is covered in the [tooling](Tooling.md) section.
 [Dynamic loading](MVP.md#code-loading-and-imports) is in [the MVP](MVP.md), but
 all loaded modules have their own [separate heaps](MVP.md#heap) and cannot share
 [function pointers](MVP.md#function-pointers). Dynamic linking will allow
-developers to share heaps and function pointers between WebAssembly modules, but
-requires an implementation which properly handle ABI compatibility.
+developers to share heaps and function pointers between WebAssembly modules.
 
 WebAssembly will support both load-time and run-time (`dlopen`) dynamic linking
 of both WebAssembly modules and non-WebAssembly modules (e.g., on the web, ES6
