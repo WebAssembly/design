@@ -1,37 +1,61 @@
 # Binary Encoding
 
-This document describes the binary encoding of the AST nodes defined in the [AST semantics](AstSemantics.md). 
-For the context of this document, see the [Binary format](MVP.md#binary-format) section of the [MVP doc](MVP.md).
+This document describes the binary encoding of the
+[Abstract Syntax Tree](AstSemantics.md) nodes.
 
-The binary encoding is designed to allow fast startup, which includes reducing download size
-and allow for quick decoding. Considering the matter of reducing download size, we can see
-it as having three layers:
+The binary encoding is designed to allow fast startup, which includes reducing
+download size and allow for quick decoding.
 
- * The **raw** binary encoding itself, natively decoded by the browser, and to be standardized in
-   the MVP of the spec.
- * **Specific** compression to the binary encoding, that is unreasonable to expect a generic
-   compression algorithm like gzip to achieve.
-   * This is not meant to be standardized, at least not initially, as it can be done with a
-     downloaded decompressor that runs as web content on the client, and in particular
-     can be implemented in a polyfill. Not standardizing it leaves the binary
-     encoding as the only thing a WebAssembly implementation is required to implement,
-     which is nice. However, if the benefits are shown to be substantial, this will be
-     reconsidered in the future.
-   * We can do better than generic compression because we are aware of the AST structure
-     and other details:
-     * For example, macro compression that [deduplicates AST trees](https://github.com/WebAssembly/spec/issues/58#issuecomment-101863032)
-       can focus on AST nodes + their children, thus having `O(nodes)` entities to worry about, compared
-       to generic compression which in principle would need to look at `O(bytes*bytes)` entities.
-       Such macros would allow the logical equivalent of `#define ADD1(x) (x+1)`, i.e.,
-       to be parametrized. Simpler macros (`#define ADDX1 (x+1)`) can implement useful
+Reducing download size, is achieved through three layers:
+
+ * The **raw** binary encoding itself, natively decoded by the browser, and to
+   be standardized in the [MVP](MVP.md).
+ * **Specific** compression to the binary encoding, that is unreasonable to
+   expect a generic compression algorithm like gzip to achieve.
+   * This is not meant to be standardized, at least not initially, as it can be
+     done with a downloaded decompressor that runs as web content on the client,
+     and in particular can be implemented in a [polyfill](Polyfill.md).
+   * We can do better than generic compression because we are aware of the AST
+     structure and other details:
+     * For example, macro compression that
+       [deduplicates AST trees](https://github.com/WebAssembly/spec/issues/58#issuecomment-101863032)
+       can focus on AST nodes + their children, thus having `O(nodes)` entities
+       to worry about, compared to generic compression which in principle would
+       need to look at `O(bytes*bytes)` entities.  Such macros would allow the
+       logical equivalent of `#define ADD1(x) (x+1)`, i.e., to be
+       parametrized. Simpler macros (`#define ADDX1 (x+1)`) can implement useful
        features like constant pools.
-     * Another example is reordering of functions and some internal nodes, which we know
-       does not change semantics, but
+     * Another example is reordering of functions and some internal nodes, which
+       we know does not change semantics, but
        [can improve general compression](http://www.rfk.id.au/blog/entry/cromulate-improve-compressibility/).
- * **Generic** compression, such as gzip, already supported in browsers, or LZMA and other
-   compression algorithms, which might be standardized as well.
+ * **Generic** compression, such as gzip, already supported in browsers, or LZMA
+   and other compression algorithms, which might be standardized as well.
 
-Each of the three layers work to find compression opportunities to the best of its abilities, without encroaching upon the subsequent layer's compression opportunities.
+Each of the three layers work to find compression opportunities to the best of
+its abilities, without encroaching upon the subsequent layer's compression
+opportunities.
+
+## Why a binary encoding instead of a text-only representation
+
+Given that text is so compressible and it is well known that it is hard to beat
+gzipped source, is there any win from having a binary format over a text format?
+Yes:
+* Large reductions in payload size can still significantly decrease the
+  compressed file size.
+  * Experimental results from a
+    [polyfill prototype](https://github.com/WebAssembly/polyfill) show the
+    gzipped binary format to be about 20-30% smaller than the corresponding
+    gzipped asm.js.
+* A binary format that represents the names of variables and functions with raw
+  indices instead of strings is much faster to decode: array indexing
+  vs. dictionary lookup.
+   * Experimental results from a
+     [polyfill prototype](https://github.com/WebAssembly/polyfill) show that
+     decoding the binary format is about 23× faster than parsing the
+     corresponding asm.js source (using
+     [this demo](https://github.com/lukewagner/AngryBotsPacked), comparing
+     *just* parsing in SpiderMonkey (no validation, IR generation) to *just*
+     decoding in the polyfill (no asm.js code generation).
 
 ## Building blocks
 
@@ -101,7 +125,7 @@ conflict-avoidance practices surrounding string names:
     that modules could optionally use as a starting point to further refine.
     * For example, to use all of [the MVP](MVP.md) plus [SIMD](EssentialPostMVPFeatures.md#fixed-width-simd)
       the declaration could be "base" followed by the list of SIMD opcodes used.
-    * This feature would also be most useful for people handwriting the [text format](MVP.md#text-format).
+    * This feature would also be most useful for people handwriting the [text format](TextFormat.md).
     * However, such a version declaration does not establish a global "version" for the module
       or affect anything outside of the initialization of the index spaces; decoders would
       remain versionless and simply add cases for new *names* (as with current JS parsers).
