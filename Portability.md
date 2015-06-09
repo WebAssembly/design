@@ -18,8 +18,6 @@ WebAssembly portability assumes:
   no-execute support for code pages.
 * An execution environment which offers forward progress guarantees to all
   threads of execution (even when executing in a non-parallel manner).
-* When running in a browser, modern browser features are expected to be
-  available.
 
 In all of the above cases, an implementation may opt to emulate behavior that
 the host hardware or operating system doesn't offer.
