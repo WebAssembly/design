@@ -34,4 +34,5 @@ source-code level through WebAssembly libraries which will use
 standardized: WebAssembly will follow the
 [extensible web manifesto](https://extensiblewebmanifesto.org)'s lead and expose
 low-level capabilities that expose the possibilities of the underlying platform
-as closely as possible.
+as closely as possible. WebAssembly therefore standardizes a lower-level
+abstraction layer, and expects libraries to offer portable APIs.
