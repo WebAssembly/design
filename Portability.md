@@ -11,8 +11,9 @@ WebAssembly portability assumes:
 
 * 8-bit bytes.
 * Little-endian byte ordering.
-* 32-bit address space (often called ILP32 data model). 64-bit heaps may be
-  added later, and application would need to explicitly opt-in.
+* Up to 4GiB of addressable memory in a 32-bit address space.  Heaps bigger than
+  4GiB in a 64-bit address space
+  [may be added later](FutureFeatures.md#Heaps-bigger-than-4GiB).
 * Hardware and operating system with process isolation, memory protection, and
   no-execute support for code pages.
 * An execution environment which offers forward progress guarantees to all
