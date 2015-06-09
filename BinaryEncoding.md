@@ -1,7 +1,9 @@
 # Binary Encoding
 
-This document describes the binary encoding of the AST nodes defined in the [AST semantics](AstSemantics.md). 
-For the context of this document, see the [Binary format](MVP.md#binary-format) section of the [MVP doc](MVP.md).
+This document describes the [portable](Portability.md) binary encoding of the
+AST nodes defined in the [AST semantics](AstSemantics.md). For the context of
+this document, see the [Binary format](MVP.md#binary-format) section of the
+[MVP doc](MVP.md).
 
 The binary encoding is designed to allow fast startup, which includes reducing download size
 and allow for quick decoding. Considering the matter of reducing download size, we can see
