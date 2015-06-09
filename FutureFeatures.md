@@ -16,10 +16,12 @@ This is covered in the [tooling](Tooling.md) section.
  * Support both load-time and run-time (`dlopen`) dynamic linking of both
    WebAssembly modules and non-WebAssembly modules (e.g., on the web, ES6
    ones containing JS), sharing the heap as well as function pointers.
- * Standardize an [ABI](http://en.wikipedia.org/wiki/Application_binary_interface),
-   allowing for WebAssembly modules to interface with each other regardless of
-   source language or compiler. We may also decide to standardize ABI for
-   static libraries to allow for more efficient linking.
+ * Standardize a single [ABI](http://en.wikipedia.org/wiki/Application_binary_interface)
+   per source language, allowing for WebAssembly modules to interface with
+   each other regardless of compiler. While it is highly recommended for
+   compilers targeting WebAssembly to adhere to the specified ABI for
+   interoperability, WebAssembly runtimes will be ABI agnostic, so it will be
+   possible to use a non-standard ABI for specialized purposes.
  * TODO
 
 ## Finer-grained control over memory

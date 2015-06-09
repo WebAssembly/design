@@ -54,8 +54,8 @@ precise descriptions of:
     the target JS function would be given the (mangled) name of the `extern` and
     put inside the imported ES6 module.
 * Any [ABI](http://en.wikipedia.org/wiki/Application_binary_interface) for
-  statically linked libraries will be implementation defined in the MVP, but
-  may be standardized post-MVP.
+  statically linked libraries will defined by your source language compiler in
+  the MVP, but may be standardized post-MVP.
 * TODO: there is more to discuss here concerning APIs.
 
 ## Module structure
