@@ -9,9 +9,10 @@ post-MVP features doc](EssentialPostMVPFeatures.md).
 This document explains the contents of the MVP at a high-level. There are also
 separate docs with more precise descriptions of:
 
- * the [polyfill to JavaScript](Polyfill.md)
- * the [AST semantics](AstSemantics.md) 
- * the [binary encoding](BinaryEncoding.md)
+ * [Polyfill to JavaScript](Polyfill.md);
+ * [AST semantics](AstSemantics.md);
+ * [Binary encoding](BinaryEncoding.md);
+ * Implementation [in the browser](Web.md) and [outside the browser](NonWeb.md).
 
 **Note**: This content is still in flux and open for discussion.
 
@@ -36,6 +37,12 @@ separate docs with more precise descriptions of:
     importing, though.
 * When compiling from C++, imports would be generated for unresolved `extern`
  functions and calls to those `extern` functions would call the import.
+* Host environments can define builtin modules that are implemented natively but
+  can otherwise be imported like [other modules](MVP.md#Modules). As examples:
+  * A WebAssembly shell might define a builtin `stdio` library with an export
+    `puts`.
+  * In the browser, the WebIDL support mentioned in
+    [future features](FutureFeatures.md).
 * **TODO**: there is more to discuss here concerning APIs.
 
 ## Module structure
@@ -44,10 +51,10 @@ separate docs with more precise descriptions of:
   their type and byte-length.
  * Sections with unknown types would be skipped without error. 
  * Standardized section types:
-  * module import section (see [Module imports](MVP.md#module-imports) below);
+  * module import section;
   * globals section (constants, signatures, variables);
-  * code section (see [Code section](MVP.md#code-section) below);
-  * heap initialization section (see [Heap](MVP.md#heap) below).
+  * code section;
+  * heap initialization section.
 
 ## Code section
 
@@ -93,38 +100,6 @@ isomorphic to the [binary format](BinaryEncoding.md).
  * See the [AST Semantics heap section](AstSemantics.md#accessing-the-heap) for
    more details.
  
-## Non-browser embedding
-
-* Host environments can define builtin modules that are implemented natively but
-   can otherwise be imported like
-   [other modules](MVP.md#code-loading-and-imports). As examples:
-  * A WebAssembly shell might define a builtin `stdio` library with an export
-    `puts`.
-  * In the browser, the WebIDL support mentioned in
-    [future features](FutureFeatures.md).
- * Where there is overlap between the browser and popular non-browser
-   environments, a shared spec could be proposed, but this would be separate
-   from the WebAssembly spec.
-  * A symmetric example in JavaScript would be the
-    [Loader](http://whatwg.github.io/loader) spec, intended to be implemented by
-    both browsers and node.js.
- * However, one might find a fair amount of variance between the browser and
-   other environments on core APIs like network and file I/O.
- * To allow writing portable POSIX-like code (that ran in both browser and other
-   environments), the WebAssembly community would develop a shared repository of
-   WebAssembly code that mapped between a POSIX-like interface and the host's
-   builtin modules using compile-time `#ifdef`s or, after
-   [dynamic linking](FutureFeatures.md#dynamic-linking) was added, client-side
-   dynamic feature testing.
-  * A symmetric example in JavaScript would be the
-    [ES6 Module Loader polyfill](https://github.com/ModuleLoader/es6-module-loader)
-    library.
- * The WebAssembly spec would thus not try to define any large portable
-   libc-like library.
-  * However, certain features that are core to WebAssembly semantics that are
-    found in native libc *would* be part of the core WebAssembly spec as either
-    primitive opcodes or a special builtin module (e.g., `sbrk`, `mmap`).
-
 ## Security
 
 WebAssembly MVP will be no looser from a security point-of-view than if the
