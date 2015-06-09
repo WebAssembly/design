@@ -5,8 +5,8 @@ efficiently on a variety of operating systems and instruction set architectures,
 [on the web](Web.md) and [off the web](NonWeb.md).
 
 We've identified *tier 1* platforms (hardware, operating system, and embedder
-combinations) on which WebAssembly is expected to be implementable efficiently
-in a fully conformant manner, taking into account
+combinations) on which WebAssembly is implementable efficiently in a fully
+conformant manner, taking into account
 [allowed implementation variants](IncompletelySpecifiedBehavior.md). These tier
 1 platforms guide WebAssembly's definition of portability.
 
