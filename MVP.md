@@ -36,7 +36,7 @@ separate docs with more precise descriptions of:
     and pointer sharing. Dynamic linking would be semantically distinct from
     importing, though.
 * When compiling from C++, imports would be generated for unresolved `extern`
- functions and calls to those `extern` functions would call the import.
+  functions and calls to those `extern` functions would call the import.
 * Host environments can define builtin modules that are implemented natively but
   can otherwise be imported like [other modules](MVP.md#Modules). As examples:
   * A WebAssembly shell might define a builtin `stdio` library with an export
