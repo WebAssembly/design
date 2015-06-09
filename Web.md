@@ -1,7 +1,7 @@
 # Browser Embedding
 
-WebAssembly is [originally](MVP.md) targetted at being embedded in browsers as
-an integral part of the Web platform.
+WebAssembly's [Minimum Viable Product](MVP.md) explicitly targets browser
+embeddings, and treats WebAssembly as an integral part of the Web platform.
 
 A key part of operating on the web is supporting
 [feature testing](FeatureTest.md).
