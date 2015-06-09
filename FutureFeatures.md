@@ -28,13 +28,8 @@ downloaded and compiled once per user device. It can also allow for smaller
 differential updates, which could be implemented in collaboration with
 [service workers][].
 
-Security-wise, dynamic linking and CDNs should be combine with [CORS][] and
-[subresource integrity][].
-
   [hosted libraries]: https://developers.google.com/speed/libraries/
   [service workers]: http://www.w3.org/TR/service-workers/
-  [CORS]: http://www.w3.org/TR/cors/
-  [subresource integrity]: http://www.w3.org/TR/SRI/
 
 ## Finer-grained control over memory
 
