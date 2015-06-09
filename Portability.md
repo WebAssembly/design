@@ -24,7 +24,8 @@ characteristics:
 
 * 8-bit bytes.
 * Addressable at a byte memory granularity.
-* Support unaligned memory accesses.
+* Support unaligned memory accesses or reliable trapping that allows software
+  emulation thereof.
 * Little-endian byte ordering.
 * Up to 4GiB of addressable memory in a 32-bit address space.  Heaps bigger than
   4GiB in a 64-bit address space
