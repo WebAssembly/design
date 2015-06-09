@@ -7,7 +7,8 @@ will identify *tier 1* platforms on which WebAssembly is expected to be
 implementable efficiently in a fully conformant manner, taking into account
 [allowed implementation variants](IncompletelySpecifiedBehavior.md).
 
-WebAssembly portability assumes:
+WebAssembly portability assumes that execution environments offer the following
+characteristics:
 
 * 8-bit bytes.
 * Little-endian byte ordering.
@@ -19,8 +20,11 @@ WebAssembly portability assumes:
 * An execution environment which offers forward progress guarantees to all
   threads of execution (even when executing in a non-parallel manner).
 
-In all of the above cases, an implementation may opt to emulate behavior that
-the host hardware or operating system doesn't offer.
+Execution environments which don't offer these characteristics may be able to
+execute WebAssembly modules nonetheless. In some cases they may have to emulate
+behavior that the host hardware or operating system don't offer so that
+WebAssembly modules execute *as-if* the behavior were supported. This will lead
+to poor performance, and shouldn't be necessary for tier 1 platforms.
 
 Developer-exposed APIs (such as POSIX) are expected to be portable at a
 source-code level through WebAssembly libraries which will use
