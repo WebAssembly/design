@@ -21,15 +21,23 @@ as well as to convert [asm.js](http://asmjs.org) into WebAssembly (useful
 for existing applications), is in the [polyfill repo](https://github.com/WebAssembly/polyfill).
 We also leave open the possibility of multiple polyfills existing to meet different developers' needs.
 
+An **effective** polyfill should reuse much of the Web platform's existing
+capabilities, as detailed in the browser embedding
+[implementation details](Web.md#Implementation-Details).
+
 ## Polyfill Deviations
 
-A polyfill doesn't need to be 100% correct with respect to the WebAssembly
-specification to be useful in practice. There are corner cases (which generally
-fall into undefined behavior in C/C++) where JavaScript and asm.js don't have
-ideal semantics to maintain correctness.
+An **efficient** polyfill may purposely diverge from the specified WebAssembly
+semantics: a polyfill doesn't need to be 100% correct with respect to the
+WebAssembly specification to be useful in practice. There are corner cases
+(often undefined behavior in C/C++) where JavaScript and asm.js don't have ideal
+semantics to maintain correctness efficiently.
 
-To maintain good polyfill performance, the polyfill library will purposely
-diverge from the specified WebAssembly semantics in the following cases:
+If needed, a polyfill could provide an option to ensure full correctness at the
+expense of performance, though this is not expected to be necessary for portable
+C/C++ code.
+
+Some divergences that we've identified as potentially desirable:
 
 * [Misaligned heap access](AstSemantics.md#alignment)
   * Since misaligned loads/stores are guaranteed to produce correct results and
@@ -57,7 +65,3 @@ diverge from the specified WebAssembly semantics in the following cases:
     standard behavior:
     * Return zero when conversion from floating point to integer fails.
     * Optionally canonicalize NaN values.
-
-If needed, the polyfill could provide an option to ensure full correctness
-at the expense of performance, though this is not expected to be necessary
-for portable C/C++ code.
