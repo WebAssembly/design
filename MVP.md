@@ -87,18 +87,18 @@ isomorphic to the [binary format](BinaryEncoding.md).
 
 * In the MVP, when a WebAssembly module is loaded, it creates a new heap which
   isn't directly accessible from other modules.
-   * The [dynamic linking](FutureFeatures.md#dynamic-linking) feature will be
-     necessary for two WebAssembly modules to share the same heap.
- * Modules can specify heap size and initialization data (`data`, `rodata`,
-   `bss`) in the [heap-initialization section](MVP.md#module-structure).
- * Modules can specify whether the heap is growable (via `sbrk`).
- * Modules can optionally export the heap, allowing it to be aliased by
-   the embedder, such as JavaScript.
-   * JavaScript sees the exported heap as an `ArrayBuffer`.
-   * To keep an `ArrayBuffer`'s length immutable, resizing a module's heap
-     detaches any existent `ArrayBuffer`.
- * See the [AST Semantics heap section](AstSemantics.md#accessing-the-heap) for
-   more details.
+* The [dynamic linking](FutureFeatures.md#dynamic-linking) feature will be
+  necessary for two WebAssembly modules to share the same heap.
+* Modules can specify heap size and initialization data (`data`, `rodata`,
+  `bss`) in the [heap-initialization section](MVP.md#module-structure).
+* Modules can specify whether the heap is growable (via `sbrk`).
+* Modules can optionally export the heap, allowing it to be aliased by the
+  embedder, such as JavaScript:
+  * JavaScript sees the exported heap as an `ArrayBuffer`.
+  * To keep an `ArrayBuffer`'s length immutable, resizing a module's heap
+    detaches any existent `ArrayBuffer`.
+* See the [AST Semantics heap section](AstSemantics.md#accessing-the-heap) for
+  more details.
  
 ## Security
 
