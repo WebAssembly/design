@@ -2,10 +2,13 @@
 
 WebAssembly's [binary format](BinaryEncoding.md) is designed to be executable
 efficiently on a variety of operating systems and instruction set architectures,
-[on the web](Web.md) and [off the web](NonWeb.md). The standardization process
-will identify *tier 1* platforms on which WebAssembly is expected to be
-implementable efficiently in a fully conformant manner, taking into account
-[allowed implementation variants](IncompletelySpecifiedBehavior.md).
+[on the web](Web.md) and [off the web](NonWeb.md).
+
+The standardization process will identify *tier 1* platforms on which
+WebAssembly is expected to be implementable efficiently in a fully conformant
+manner, taking into account
+[allowed implementation variants](IncompletelySpecifiedBehavior.md). These tier
+1 platforms will guide WebAssembly's definition of portability.
 
 WebAssembly portability assumes that execution environments offer the following
 characteristics:
