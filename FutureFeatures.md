@@ -72,9 +72,9 @@ WebAssembly will eventually allow heaps greater than 4GiB by providing
 load/store operations that take 64-bit address operands. Modules which opt-in to
 this feature have `int64` as the canonical pointer type.
 
-On a 32-bit system, heaps must still be smaller than 4GiB. All 64-bit pointer
-arithmetic arithmetic (which will be much slower than 32-bit arithmetic) will be
-therefore unnecessary.
+On a 32-bit system, heaps must still be smaller than 4GiB. A WebAssembly
+implementation running on such a platform may restrict allocations to the lower
+4GiB, and leave the two 32-bits untouched.
 
 ## Source maps integration
 
