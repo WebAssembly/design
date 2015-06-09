@@ -34,8 +34,6 @@ differential updates, which could be implemented in collaboration with
 ## Finer-grained control over memory
 
 * `mmap` of files.
-* `mmap` with `MAP_FIXED`, which is often used as a performance optimization for
-  tools such as address sanitizer for its shadow memory.
 * `madvise(MADV_DONTNEED)`.
 * Shared memory, where a physical address range is mapped to multiple physical
   pages in a single WebAssembly module as well as across modules.
