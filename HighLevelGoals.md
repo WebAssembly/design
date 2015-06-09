@@ -15,7 +15,8 @@
     * continue to iteratively specify [additional features](FutureFeatures.md),
       prioritized by feedback and experience, including support for languages
       other than C/C++.
-3. Design to execute within and integrate well with the *existing* Web platform:
+3. Design to execute within and integrate well with the *existing*
+   [Web platform](Web.md):
     * maintain the versionless, [feature-tested](FeatureTest.md) and
       [backwards-compatible](BinaryEncoding.md#backwards-compatibility)
       evolution story of the Web;
@@ -26,8 +27,7 @@
       to JavaScript; and
     * define a human-editable text format that is convertible to and from the
       binary format, supporting View Source functionality.
-4. Design to support [non-browser environments](MVP.md#non-browser-embedding)
-   as well.
+4. Design to support [non-browser embeddings](NonWeb.md) as well.
 5. Make a great platform:
     * build an [LLVM backend](https://github.com/WebAssembly/llvm) and
       accompanying [clang port](https://github.com/WebAssembly/clang);
