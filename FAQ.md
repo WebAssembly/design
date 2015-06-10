@@ -89,8 +89,7 @@ learning and teaching purposes. In fact, by dropping all the [coercions required
 validation](http://asmjs.org/spec/latest/#introduction), the WebAssembly text format should be much 
 more natural to read and write than asm.js. Outside the browser, command-line and online tools that 
 convert between text and binary will also be made readily available.  Lastly, a scalable form of 
-source maps is also being considered as part of the WebAssembly [tooling story]
-(https://github.com/WebAssembly/spec/blob/master/Tooling.md).
+source maps is also being considered as part of the WebAssembly [tooling story](Tooling.md).
 
 ## What's the story for Emscripten users?
 

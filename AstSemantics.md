@@ -130,7 +130,7 @@ which leads to the following advantages:
     splitting, which can reduce throughput overhead, at the cost of increasing
     code size (potentially very significantly in pathological cases).
   * The
-    [signature-restricted proper tail-call](https://github.com/WebAssembly/spec/blob/master/EssentialPostMVPFeatures.md#signature-restricted-proper-tail-calls)
+    [signature-restricted proper tail-call](EssentialPostMVPFeatures.md#signature-restricted-proper-tail-calls)
     feature would allow efficient compilation of arbitrary irreducible control
     flow.
 

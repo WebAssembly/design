@@ -18,7 +18,7 @@ Reducing download size, is achieved through three layers:
    * We can do better than generic compression because we are aware of the AST
      structure and other details:
      * For example, macro compression that
-       [deduplicates AST trees](https://github.com/WebAssembly/spec/issues/58#issuecomment-101863032)
+       [deduplicates AST trees](https://github.com/WebAssembly/design/issues/58#issuecomment-101863032)
        can focus on AST nodes + their children, thus having `O(nodes)` entities
        to worry about, compared to generic compression which in principle would
        need to look at `O(bytes*bytes)` entities.  Such macros would allow the

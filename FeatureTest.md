@@ -8,4 +8,4 @@ Feature tests will be available from WebAssembly itself, as well as from
 JavaScript.
 
 Details
-[are still be hashed out](https://github.com/WebAssembly/spec/issues/90).
+[are still be hashed out](https://github.com/WebAssembly/design/issues/90).
