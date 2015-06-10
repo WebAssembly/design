@@ -1,10 +1,12 @@
 # Minimum Viable Product
 
 As stated in the [high-level goals](HighLevelGoals.md), the first release aims
-at being a Minimum Viable Product (MVP), with roughly the same functionality as
-[asm.js](http://asmjs.org). This means that there are important features we
-*know* we want and need, but are post-MVP; these are in a separate [essential
-post-MVP features doc](EssentialPostMVPFeatures.md).
+at being a Minimum Viable Product (MVP). This means that there are important
+features we *know* we want and need, but are post-MVP; these are in a separate
+[essential post-MVP features doc](EssentialPostMVPFeatures.md). The MVP will
+contain features which are available today in modern web browsers and which
+perform well even on mobile devices, which leads to roughly the same
+functionality as [asm.js](http://asmjs.org).
 
 This document explains the contents of the MVP at a high-level. There are also
 separate docs with more precise descriptions of:
