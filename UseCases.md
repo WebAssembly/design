@@ -8,7 +8,6 @@ designers think WebAssembly will *enable*.
 
 ## Inside the browser
 
-* Common NPAPI users, within the web's security model and APIs.
 * Better execution for languages that are currently cross-compiled (GWT, Dart,
   C/C++).
 * Image / video editing.
@@ -33,6 +32,7 @@ designers think WebAssembly will *enable*.
 * VPN.
 * Encryption.
 * Local web server.
+* Common NPAPI users, within the web's security model and APIs.
 * Fat client for enterprise applications (e.g. databases).
 
 # Outside the browser
