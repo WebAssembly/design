@@ -4,20 +4,17 @@ WebAssembly's [binary format](BinaryEncoding.md) is designed to be executable
 efficiently on a variety of operating systems and instruction set architectures,
 [on the web](Web.md) and [off the web](NonWeb.md).
 
-We've identified *tier 1* platforms (hardware, operating system, and embedder
-combinations) on which WebAssembly is implementable efficiently in a fully
-conformant manner, taking into account
-[allowed implementation variants](IncompletelySpecifiedBehavior.md). These tier
-1 platforms guide WebAssembly's definition of portability.
-
-Non-tier 1 execution environments which don't offer these characteristics may be
-able to execute WebAssembly modules nonetheless. In some cases they may have to
-emulate behavior that the host hardware or operating system don't offer so that
-WebAssembly modules execute *as-if* the behavior were supported. This will lead
-to poor performance, and shouldn't be necessary for tier 1 platforms.
+Execution environments which, despite
+[allowed implementation variants](IncompletelySpecifiedBehavior.md), don't offer
+the following characteristics may be able to execute WebAssembly modules
+nonetheless. In some cases they may have to emulate behavior that the host
+hardware or operating system don't offer so that WebAssembly modules execute
+*as-if* the behavior were supported. This sometimes will lead to poor
+performance.
 
 As WebAssembly's standardization goes forward we expect to formalize these
-requirements, and how WebAssembly will adapt to new platforms.
+requirements, and how WebAssembly will adapt to new platforms that didn't
+necessarily exist when WebAssembly was first designed.
 
 WebAssembly portability assumes that execution environments offer the following
 characteristics:
@@ -27,7 +24,7 @@ characteristics:
 * Support unaligned memory accesses or reliable trapping that allows software
   emulation thereof.
 * Little-endian byte ordering.
-* Up to 4GiB of addressable memory in a 32-bit address space.  Heaps bigger than
+* Up to 4GiB of addressable memory in a 32-bit address space. Heaps bigger than
   4GiB in a 64-bit address space
   [may be added later](FutureFeatures.md#Heaps-bigger-than-4GiB).
 * Enforce secure isolation between WebAssembly modules and other modules or
