@@ -8,7 +8,7 @@ designers think WebAssembly will *enable*.
 
 ## Inside the browser
 
-* Common NPAPI users, within the web’s security model.
+* Common NPAPI users, within the web's security model and APIs.
 * Better execution for languages that are currently cross-compiled (GWT, Dart,
   C/C++).
 * Image / video editing.
@@ -26,7 +26,7 @@ designers think WebAssembly will *enable*.
 * Scientific visualization and simulation.
 * Interactive educational software, and news articles.
 * Platform simulation / emulation (ARC, DOSBox, QEMU, MAME, …).
-* Language interpreters and virtual machines.
+* Language interpreters virtual machines.
 * Entire UNIX user-space environment, with existing UNIX applications.
 * Developer tooling (editors, compilers, debuggers, …).
 * Remote desktop.
