@@ -59,17 +59,17 @@ to WebAssembly (assuming it's written in portable C/C++) and this has already be
 increase the size of distributed code, lose browser devtools integration, can have cross-language
 cycle-collection problems and miss optimizations that require integration with the browser.
 
-## Can I target WebAssembly with non-LLVM compilers?
+## What compilers can I use to build WebAssembly programs?
 
-Eventually, yes.
-
-WebAssembly initially supports C/C++, but as it evolves it will support more
+WebAssembly initially focuses on C/C++, and an experimental backend is being
+built using [LLVM](http://llvm.org). As it evolves it will support more
 languages which often use non-LLVM compilers.
 
-Even for C/C++ language support we hope that other compilers, such as GCC, gain
-support for WebAssembly. The WebAssembly working group found it easier to start
-with LLVM support because they had more experience with that toolchain from
-their [Emscripten](http://emscripten.org) and [PNaCl](http://gonacl.com) work.
+Even for C/C++ language support we hope that other compilers, such as
+[GCC](https://gcc.gnu.org), gain support for WebAssembly. The WebAssembly
+working group found it easier to start with LLVM support because they had more
+experience with that toolchain from their [Emscripten](http://emscripten.org)
+and [PNaCl](http://gonacl.com) work.
 
 We hope that proprietary compilers also gain WebAssembly support, but we'll let
 vendors speak about their own platform.
