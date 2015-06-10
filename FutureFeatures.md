@@ -218,7 +218,7 @@ use cases:
   * Int32UMin - unsigned minimum
   * Int32UMax - unsigned maximum
   * Int32SExt - `sext(x, y)` is `x<<y>>y`
-  * Int32Abs - absolute value (`abs(INT32_MIN)` is `INT32_MIN`)
+  * Int32Abs - absolute value (is `abs(INT32_MIN)` `INT32_MIN` or should it trap?)
 
 * The following operations are just potentially interesting.
   * Int32Clrs - count leading redundant sign bits (defined for all values, including 0)
