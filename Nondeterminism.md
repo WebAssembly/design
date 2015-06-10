@@ -2,10 +2,10 @@
 
 WebAssembly is a [portable](Portability.md) sandboxed platform with limited,
 local, nondeterminism. 
-  * *limited* : non-deterministic execution can only occur in a small number of
+  * *limited*: non-deterministic execution can only occur in a small number of
     well-defined cases (described below) and, in those cases, the implementation
     may select from a limited set of possible behaviors.
-  * *local* : when non-deterministic execution occurs, the effect is local,
+  * *local*: when non-deterministic execution occurs, the effect is local,
     there is no "spooky action at a distance".
 
 The limited, local, non-deterministic model implies:
