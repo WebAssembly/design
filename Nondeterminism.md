@@ -1,25 +1,36 @@
-# Incompletely Specified Behavior
+# Nondeterminism in WebAssembly
 
-WebAssembly is a [portable](Portability.md) sandboxed platform. Applications
-can't access data outside the sandbox without going through appropriate APIs, or
-otherwise escape the sandbox, even if the behavior inside the sandbox should
-ever be unspecified in any way.
+WebAssembly is a [portable](Portability.md) sandboxed platform with limited,
+local, nondeterminism. 
+  * *limited* : non-deterministic execution can only occur in a small number of
+    well-defined cases (described below) and, in those cases, the implementation
+    may select from a limited set of possible behaviors.
+  * *local* : when non-deterministic execution occurs, the effect is local,
+    there is no "spooky action at a distance".
 
-WebAssembly always maintains valid callstacks. Return addresses are stored on the trusted stack and can't be clobbered by the application. And, WebAssembly ensures that calls and branches always have valid destinations.
+The limited, local, non-deterministic model implies:
+  * Applications can't access data outside the sandbox without going through
+    appropriate APIs, or otherwise escape the sandbox.
+  * WebAssembly always maintains valid, trusted callstacks; stray pointer writes
+    cannot corrupt return addresses or spilled variables on the stack.
+  * Calls and branches always have valid destinations ensuring 
+    [Control Flow Integrity](http://research.microsoft.com/apps/pubs/default.aspx?id=64250).
+  * WebAssembly has no [nasal demons](https://en.wikipedia.org/w/index.php?title=Nasal_demons).
 
-Beyond that, WebAssembly minimizes observable differences between implementations, to reduce the risk of applications becoming dependent on any particular implementation's behavior. However, occasionally compromises are made due to performance concerns, listed below.
+Ideally, WebAssembly would be fully deterministic. Nondeterminism is only
+specified as a compromise when there is no other practical way to achieve
+[portable](Portability.md), near-native performance.
 
-In particular, WebAssembly has no [nasal demons](https://en.wikipedia.org/w/index.php?title=Nasal_demons), since they are an extreme on the spectrum of observable differences, and since they make it difficult to reason about what state an application might be in. WebAssembly prefers to [trap](AstSemantics.md) when feasible, and otherwise it permits a specific set of possible conforming behaviors.
+The following is a list of the places where the WebAssembly specification
+currently admits nondeterminism:
 
-The following is a list of the places where the WebAssembly specification currently admits or is expected to admit multiple possible behaviors.
+ - [Races between threads](EssentialPostMVPFeatures.md#threads)
 
- - [Out of bounds heap accesses](AstSemantics.md#accessing-the-heap)
+ - [Out of bounds heap accesses may want some flexibility](AstSemantics.md#accessing-the-heap)
 
  - [Environment-dependent resource limits may be exhausted](AstSemantics.md)
 
  - [NaN bit patterns](AstSemantics.md#floating-point-operations)
-
- - [Races between threads](EssentialPostMVPFeatures.md#threads)
 
  - [Fixed-width SIMD may want some flexibility](EssentialPostMVPFeatures.md#fixed-width-simd)
    - In SIMD.js, floating point values may or may not have subnormals flushed to zero.
