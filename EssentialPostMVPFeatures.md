@@ -31,11 +31,6 @@ prioritized by feedback and experience. These features will be available under
 * SIMD operations (e.g., `float32x4.add`) could be either builtin ops (no different than int32 add) or
   exports of a builtin SIMD module.
 
-## 64-bit integers
-* Provide access to efficient 64-bit arithmetic.
-* Some code will want to only use 64-bit integers when running on a 64-bit system (for performance
-  reasons) so provide a "has native 64-bit integer" query.
-
 ## Zero-cost Exception Handling
 * Developer access to stack unwinding and inspection.
 * This may be used to implement `setjmp`/`longjmp` (instead of the usual

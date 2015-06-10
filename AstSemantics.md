@@ -38,9 +38,11 @@ global variables and heap accesses are called *Memory types*.
   * Int8 - signed 8-bit integer
   * Int16 - signed 16-bit integer
   * Int32 - signed 32-bit integer
+  * Int64 - signed 64-bit integer
   * Uint8 - unsigned 8-bit integer
   * Uint16 - unsigned 16-bit integer
   * Uint32 - unsigned 32-bit integer
+  * Uint64 - unsigned 64-bit integer
   * Float32 - 32-bit floating point
   * Float64 - 64-bit floating point
 
@@ -48,6 +50,7 @@ The legal types for parameters and local variables, called *Local types*
 are a subset of the Memory types:
 
   * Int32 - 32-bit integer
+  * Int64 - 64-bit integer
   * Float32 - 32-bit floating point
   * Float64 - 64-bit floating point
 
@@ -57,29 +60,33 @@ convert Memory types to Local types according to the follow rules:
   * Load[Int8] - sign-extend to Int32
   * Load[Int16] - sign-extend to Int32
   * Load[Int32] - (no conversion)
+  * Load[Int64] - (no conversion)
   * Load[Uint8] - zero-extend to Int32
   * Load[Uint16] - zero-extend to Int32
   * Load[Uint32] - reinterpret as Int32
+  * Load[Uint64] - reinterpret as Int64
   * Load[Float32] - (no conversion)
   * Load[Float64] - (no conversion)
 
-Note that the local type Int32 does not technically have a sign; the sign bit
-is interpreted differently by the operations below.
+Note that the local types Int32 and Int64 don't technically have a sign; the
+sign bit is interpreted differently by the operations below.
 
-Similar to loads, stores implicitly truncate Local types to Memory types according to the
-following rules:
+Similar to loads, stores implicitly truncate Local types to Memory types
+according to the following rules:
 
-  * Store[Int8] - truncate Int32 to Int8
-  * Store[Int16] - truncate Int32 to Int16
+  * Store[Int8] - truncate Int32 to Int8; Int64 to Int8
+  * Store[Int16] - truncate Int32 to Int16; Int64 to Int16
   * Store[Int32] - (no truncation)
-  * Store[Uint8] - truncate Int32 to Uint8
-  * Store[Uint16] - truncate Int32 to Uint16
+  * Store[Int64] - (no truncation)
+  * Store[Uint8] - truncate Int32 to Uint8; Int64 to Int8
+  * Store[Uint16] - truncate Int32 to Uint16; Int64 to Int16
   * Store[Uint32] - reinterpret Int32 as Uint32
+  * Store[Uint64] - reinterpret Int64 as Uint64
   * Store[Float32] - (no truncation)
   * Store[Float64] - (no truncation)
 
-Truncation of integers simply discards any upper bits; i.e. truncation does not perform saturation,
-trap on overflow, etc.
+Truncation of integers simply discards any upper bits; i.e. truncation does not
+perform saturation, trap on overflow, etc.
 
 ## Addressing local variables
 
@@ -95,9 +102,9 @@ initialized to the values of the arguments passed to the function.
   * GetLocal - read the current value of a local variable
   * SetLocal - set the current value of a local variable
 
-The details of index space for local variables and their types needs clarification,
-e.g. whether locals with type int32 must be contiguous and separate from others,
-etc.
+The details of index space for local variables and their types needs
+clarification, e.g. whether locals with type Int32 and Int64 must be contiguous
+and separate from others, etc.
 
 ## Control flow structures
 
@@ -158,7 +165,6 @@ to easily be folded into the hardware load instruction *and* for groups of loads
 with the same base and different offsets to easily share a single bounds check.
 
 In the MVP, the indices are 32-bit unsigned integers. With
-[64-bit integers](EssentialPostMVPFeatures.md#64-bit-integers) and
 [>4GiB heaps](FutureFeatures.md#heaps-bigger-than-4gib), these nodes would also
 accept 64-bit unsigned integers.
 
@@ -333,6 +339,11 @@ Additional 32-bit integer Operations under consideration:
   * Int32UMin - unsigned minimum
   * Int32UMax - unsigned maximum
 
+## 64-bit Integer operations
+
+The same operations as for 32-bit integer operations are available for 64-bit
+integers.
+
 ## Floating point operations
 
 Floating point arithmetic follows the IEEE-754 standard, except that:
@@ -394,18 +405,28 @@ Min, Max, MinNum, and MaxNum operations would treat -0 as being effectively less
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
-  * Int32FromFloat64 - truncate a 64-bit float to a signed integer
-  * Int32FromFloat32 - truncate a 32-bit float to a signed integer
-  * Uint32FromFloat64 - truncate a 64-bit float to an unsigned integer
-  * Uint32FromFloat32 - truncate a 32-bit float to an unsigned integer
+  * Int32FromFloat64 - truncate a 64-bit float to a 32-bit signed integer
+  * Int32FromFloat32 - truncate a 32-bit float to a 32-bit signed integer
+  * Int64FromFloat64 - truncate a 64-bit float to a 64-bit signed integer
+  * Int64FromFloat32 - truncate a 32-bit float to a 64-bit signed integer
+  * Uint32FromFloat64 - truncate a 64-bit float to a 32-bit unsigned integer
+  * Uint32FromFloat32 - truncate a 32-bit float to a 32-bit unsigned integer
+  * Uint64FromFloat64 - truncate a 64-bit float to a 64-bit unsigned integer
+  * Uint64FromFloat32 - truncate a 32-bit float to a 64-bit unsigned integer
   * Int32FromFloat32Bits - reinterpret the bits of a 32-bit float as a 32-bit integer
+  * Int64FromFloat64Bits - reinterpret the bits of a 64-bit float as a 64-bit integer
   * Float64FromFloat32 - promote a 32-bit float to a 64-bit float
-  * Float64FromInt32 - convert a signed integer to a 64-bit float
-  * Float64FromUInt32 - convert an unsigned integer to a 64-bit float
+  * Float64FromInt32 - convert a 32-bit signed integer to a 64-bit float
+  * Float64FromInt64 - convert a 64-bit signed integer to a 64-bit float
+  * Float64FromUInt32 - convert a 32-bit unsigned integer to a 64-bit float
+  * Float64FromUInt64 - convert a 64-bit unsigned integer to a 64-bit float
   * Float32FromFloat64 - demote a 64-bit float to a 32-bit float
-  * Float32FromInt32 - convert a signed integer to a 32-bit float
-  * Float32FromUInt32 - convert an unsigned integer to a 32-bit float
+  * Float32FromInt32 - convert a 32-bit signed integer to a 32-bit float
+  * Float32FromInt64 - convert a 64-bit signed integer to a 32-bit float
+  * Float32FromUInt32 - convert a 32-bit unsigned integer to a 32-bit float
+  * Float32FromUInt64 - convert a 64-bit unsigned integer to a 32-bit float
   * Float32FromInt32Bits - reinterpret the bits of a 32-bit integer as a 32-bit float
+  * Float64FromInt64Bits - reinterpret the bits of a 64-bit integer as a 64-bit float
 
 Promotion and demotion of floating point values always succeeds.
 Demotion of floating point values uses round-to-nearest ties-to-even rounding,
