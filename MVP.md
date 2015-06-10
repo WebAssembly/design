@@ -46,8 +46,9 @@ separate docs with more precise descriptions of:
   * In the browser, the WebIDL support mentioned in
     [future features](FutureFeatures.md).
 * Any [ABI](http://en.wikipedia.org/wiki/Application_binary_interface) for
-  statically linked libraries will defined by your source language compiler in
-  the MVP, but may be standardized post-MVP.
+  statically linked libraries will specific to your source language compiler.
+  In the future, [standard ABIs may be defined](FutureFeatures.md#dynamic-linking)
+  to allow for compatibility between compilers and versions of compilers.
 * **TODO**: there is more to discuss here concerning APIs.
 
 ## Module structure
