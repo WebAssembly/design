@@ -1,6 +1,6 @@
 # Binary Encoding
 
-This document describes the binary encoding of the
+This document describes the [portable](Portability.md) binary encoding of the
 [Abstract Syntax Tree](AstSemantics.md) nodes.
 
 The binary encoding is designed to allow fast startup, which includes reducing

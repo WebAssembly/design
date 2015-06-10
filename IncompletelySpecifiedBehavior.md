@@ -1,6 +1,9 @@
 # Incompletely Specified Behavior
 
-WebAssembly is a sandboxed platform. Applications can't access data outside the sandbox without going through appropriate APIs, or otherwise escape the sandbox, even if the behavior inside the sandbox should ever be unspecified in any way.
+WebAssembly is a [portable](Portability.md) sandboxed platform. Applications
+can't access data outside the sandbox without going through appropriate APIs, or
+otherwise escape the sandbox, even if the behavior inside the sandbox should
+ever be unspecified in any way.
 
 WebAssembly always maintains valid callstacks. Return addresses are stored on the trusted stack and can't be clobbered by the application. And, WebAssembly ensures that calls and branches always have valid destinations.
 
