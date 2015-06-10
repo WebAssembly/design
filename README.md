@@ -9,7 +9,7 @@ A good starting point is the [high-level design goals](HighLevelGoals.md),
 followed by the [FAQ](FAQ.md).
 
 We've mapped out features we expect to ship:
- 1. In [the Minimum VIable Product](MVP.md) (MVP);
+ 1. In [the Minimum Viable Product](MVP.md) (MVP);
  2. Closely [after the MVP](EssentialPostMVPFeatures.md);
  3. In [future versions](FutureFeatures.md).
 
