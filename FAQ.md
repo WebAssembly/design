@@ -4,7 +4,8 @@
 
 Yes, this is a [high-level goal](HighLevelGoals.md) and there is a 
 [prototype](https://github.com/WebAssembly/polyfill) with demos 
-[[1](http://lukewagner.github.io/AngryBotsPacked), [2](TODO)].  Although the 
+[[1](http://lukewagner.github.io/AngryBotsPacked), 
+[2](http://lukewagner.github.io/PlatformerGamePacked)].  Although the 
 [binary format](BinaryEncoding.md) is not yet specified in any detail, the format used 
 by the prototype has promising initial experimental results. To allow direct comparison with asm.js, 
 the prototype has a tool to [pack asm.js](https://github.com/WebAssembly/polyfill/blob/master/src/pack-asmjs.cpp#L3117)
@@ -14,7 +15,7 @@ after <code>gzip</code> compression:
 | Demo | asm.js | binary | `gzip` asm.js | `gzip` binary |
 |------|--------|--------|---------------|---------------|
 | [AngryBots](http://lukewagner.github.io/AngryBotsPacked) | 19MiB | 6.3MiB | 4.1MiB | 3.0MiB |
-| TODO |
+| [PlatformerGame](http://lukewagner.github.io/PlatformerGamePacked) | 49MiB | 18MiB | 11MiB | 7.3MiB |
 
 By writing the [decoder prototype in C++](https://github.com/WebAssembly/polyfill/blob/611ec5c8c41b08b112cf064ec49b13bf87e400cd/src/unpack.cpp#L2306) 
 and Emscripten-compiling to asm.js, the polyfill is able to perform the translation to asm.js
@@ -23,8 +24,8 @@ on an Intel® Xeon® E5-2665 @ 2.40GHz):
 
 | Demo  | binary | time to decode into asm.js |
 |-------|--------|----------------------------|
-| Unity | 6.3MiB | 240ms |
-| TODO  |
+| [AngryBots](http://lukewagner.github.io/AngryBotsPacked) | 6.3MiB | 240ms |
+| [PlatformerGame](http://lukewagner.github.io/PlatformerGamePacked)  | 18MiB  | 550ms |
 
 Since the polyfill algorithm (at least in the prototype) is simple and single-pass, 
 memory usage is basically the size of the input plus the size of the decoded text.
