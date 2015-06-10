@@ -251,9 +251,9 @@ would need clarification.
 ## 16-bit and 128-bit floating-point support
 
 For 16-bit floating-point support, it may make sense to split the feature
-into two parts: support for just converting between 16-bit and 32-bit
-formats possibly folded into load and store operations, and full support
-for actual 16-bit arithmetic.
+into two parts: support for just converting between 16-bit and 32-bit or
+64-bit formats possibly folded into load and store operations, and full
+support for actual 16-bit arithmetic.
 
 128-bit is an interesting question because hardware support for it is very
 rare, so it's usually going to be implemented with software emulation anyway,
