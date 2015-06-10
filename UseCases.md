@@ -26,8 +26,7 @@ designers think WebAssembly will *enable*.
 * Scientific visualization and simulation.
 * Interactive educational software, and news articles.
 * Platform simulation / emulation (ARC, DOSBox, QEMU, MAME, …).
-* Language interpreters.
-* Language virtual machines.
+* Language interpreters and virtual machines.
 * Entire UNIX user-space environment, with existing UNIX applications.
 * Developer tooling (editors, compilers, debuggers, …).
 * Remote desktop.
