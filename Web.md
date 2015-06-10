@@ -3,7 +3,7 @@
 WebAssembly's [Minimum Viable Product](MVP.md) explicitly targets browser
 embeddings, and treats WebAssembly as an integral part of the Web platform.
 
-A key part of operating on the web is supporting
+A key part of operating on the Web is supporting
 [feature testing](FeatureTest.md).
 
 # Implementation Details

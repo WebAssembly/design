@@ -19,7 +19,7 @@ all loaded modules have their own [separate heaps](MVP.md#heap) and cannot share
 developers to share heaps and function pointers between WebAssembly modules.
 
 WebAssembly will support both load-time and run-time (`dlopen`) dynamic linking
-of both WebAssembly modules and non-WebAssembly modules (e.g., on the web, ES6
+of both WebAssembly modules and non-WebAssembly modules (e.g., on the Web, ES6
 ones containing JavaScript).
 
 Dynamic linking is especially useful when combined with a Content Distribution

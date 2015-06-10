@@ -2,7 +2,7 @@
 
 WebAssembly's [binary format](BinaryEncoding.md) is designed to be executable
 efficiently on a variety of operating systems and instruction set architectures,
-[on the web](Web.md) and [off the web](NonWeb.md).
+[on the Web](Web.md) and [off the Web](NonWeb.md).
 
 Execution environments which, despite
 [allowed implementation variants](IncompletelySpecifiedBehavior.md), don't offer
