@@ -1,8 +1,10 @@
 # WebAssembly High-Level Goals
 
-1. Define a portable, size- and load-time-efficient [binary format](MVP.md#binary-format)
-   to serve as a compilation target which can be compiled to execute at native
-   speed by taking advantage of common hardware capabilities.
+1. Define a [portable](Portability.md), size- and load-time-efficient
+   [binary format](MVP.md#binary-format) to serve as a compilation target which
+   can be compiled to execute at native speed by taking advantage of common
+   hardware capabilities available on a wide range of platforms, including
+   mobile and IoT.
 2. Specify and implement incrementally:
     * design [a Minimum Viable Product (MVP)](MVP.md) for the standard with
       roughly the same functionality as [asm.js](http://asmjs.org);
@@ -14,7 +16,8 @@
     * continue to iteratively specify [additional features](FutureFeatures.md),
       prioritized by feedback and experience, including support for languages
       other than C/C++.
-3. Design to execute within and integrate well with the *existing* Web platform:
+3. Design to execute within and integrate well with the *existing*
+   [Web platform](Web.md):
     * maintain the versionless, [feature-tested](FeatureTest.md) and
       [backwards-compatible](BinaryEncoding.md#backwards-compatibility)
       evolution story of the Web;
@@ -25,8 +28,7 @@
       to JavaScript; and
     * define a human-editable text format that is convertible to and from the
       binary format, supporting View Source functionality.
-4. Design to support [non-browser environments](MVP.md#non-browser-embedding)
-   as well.
+4. Design to support [non-browser embeddings](NonWeb.md) as well.
 5. Make a great platform:
     * build an [LLVM backend](https://github.com/WebAssembly/llvm) and
       accompanying [clang port](https://github.com/WebAssembly/clang);

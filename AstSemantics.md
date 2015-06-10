@@ -1,6 +1,15 @@
-# AST Semantics
+# Abstract Syntax Tree Semantics
 
-The AST has a basic division between statements and expressions.
+The Abstract Syntax Tree (AST) has a basic division between statements and
+expressions. Expressions are typed; validation consists of simple, bottom-up,
+`O(1)` type checking.
+
+Why not a stack-, register- or SSA-based bytecode?
+* Smaller binary encoding:
+  [JSZap](http://research.microsoft.com/en-us/projects/jszap),
+  [Slim Binaries](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.108.1711)
+* [Polyfill prototype](https://github.com/WebAssembly/polyfill) shows simple and
+  efficient translation to asm.js.
 
 Each function body consists of exactly one statement.
 
@@ -95,21 +104,35 @@ etc.
 WebAssembly offers basic structured control flow. All control flow structures
 are statements.
 
-  * Block - a fixed-length sequence of statements
-  * If - if statement
-  * Do-While - do while statement, basically a loop with a
-    conditional branch (back to the top of the loop)
-  * Forever - infinite loop statement (like while(1)), basically an
+  * **Block**: a fixed-length sequence of statements
+  * **If**: if statement
+  * **Do-While**: do while statement, basically a loop with a conditional branch
+    (back to the top of the loop)
+  * **Forever**: infinite loop statement (like `while (1)`), basically an
     unconditional branch (back to the top of the loop)
-  * Continue - continue to start of nested loop
-  * Break - break to end from nested loop or block
-  * Return - return zero or more values from this function
-  * Switch - switch statement with fallthrough
+  * **Continue**: continue to start of nested loop
+  * **Break**: break to end from nested loop or block
+  * **Return**: return zero or more values from this function
+  * **Switch**: switch statement with fallthrough
 
 Break and continue statements can only target blocks or loops in which they are
-nested. This guarantees that all resulting control flow graphs are reducible
-and that producing asm.js from WebAssembly does not require running the relooper
-algorithm.
+nested. This guarantees that all resulting control flow graphs are reducible,
+which leads to the following advantages:
+
+  * Simple and size-efficient binary encoding and compilation.
+  * Any control flow—even irreducible—can be transformed into structured control
+    flow with the
+    [Relooper](https://github.com/kripken/emscripten/raw/master/docs/paper.pdf)
+    [algorithm](http://dl.acm.org/citation.cfm?id=2048224&CFID=670868333&CFTOKEN=46181900),
+    with guaranteed low code size overhead, and typically minimal throughput
+    overhead (except for pathological cases of irreducible control
+    flow). Alternative approaches can generate reducible control flow via node
+    splitting, which can reduce throughput overhead, at the cost of increasing
+    code size (potentially very significantly in pathological cases).
+  * The
+    [signature-restricted proper tail-call](https://github.com/WebAssembly/spec/blob/master/EssentialPostMVPFeatures.md#signature-restricted-proper-tail-calls)
+    feature would allow efficient compilation of arbitrary irreducible control
+    flow.
 
 ## Accessing the heap
 
@@ -284,7 +307,8 @@ and 0 representing false.
   * Int32Ule - unsigned less than or equal
 
 Division or remainder by zero traps.
-Signed division overflow (e.g. INT32_MIN/-1) traps.
+Signed division overflow (`INT32_MIN / -1`) and the corresponding signed
+remainder operation (`INT32_MIN % -1`) trap.
 
 Shifts interpret their shift count operand as an unsigned value. When the
 shift count is at least the bitwidth of the shift, Shl and Shr return 0,
