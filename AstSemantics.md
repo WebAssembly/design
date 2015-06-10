@@ -35,9 +35,9 @@ variables, local variables, and parameters. The heap itself is not typed, but
 all accesses to the heap are annotated with a type. The legal types for
 global variables and heap accesses are called *Memory types*.
 
-  * Int8 - signed 8-bit integer
-  * Int16 - signed 16-bit integer
-  * Int32 - signed 32-bit integer
+  * Sint8 - signed 8-bit integer
+  * Sint16 - signed 16-bit integer
+  * Sint32 - signed 32-bit integer
   * Uint8 - unsigned 8-bit integer
   * Uint16 - unsigned 16-bit integer
   * Uint32 - unsigned 32-bit integer
@@ -54,9 +54,9 @@ are a subset of the Memory types:
 All IR operations except loads and stores deal with local types. Loads implicitly
 convert Memory types to Local types according to the follow rules:
 
-  * Load[Int8] - sign-extend to Int32
-  * Load[Int16] - sign-extend to Int32
-  * Load[Int32] - (no conversion)
+  * Load[Sint8] - sign-extend to Int32
+  * Load[Sint16] - sign-extend to Int32
+  * Load[Sint32] - (no conversion)
   * Load[Uint8] - zero-extend to Int32
   * Load[Uint16] - zero-extend to Int32
   * Load[Uint32] - reinterpret as Int32
@@ -69,9 +69,9 @@ is interpreted differently by the operations below.
 Similar to loads, stores implicitly truncate Local types to Memory types according to the
 following rules:
 
-  * Store[Int8] - truncate Int32 to Int8
-  * Store[Int16] - truncate Int32 to Int16
-  * Store[Int32] - (no truncation)
+  * Store[Sint8] - truncate Int32 to Int8
+  * Store[Sint16] - truncate Int32 to Int16
+  * Store[Sint32] - (no truncation)
   * Store[Uint8] - truncate Int32 to Uint8
   * Store[Uint16] - truncate Int32 to Uint16
   * Store[Uint32] - reinterpret Int32 as Uint32
@@ -290,10 +290,10 @@ and 0 representing false.
   * Int32Add - signed-less addition
   * Int32Sub - signed-less subtraction
   * Int32Mul - signed-less multiplication (lower 32-bits)
-  * Int32SDiv - signed division
-  * Int32UDiv - unsigned division
-  * Int32SRem - signed remainder
-  * Int32URem - unsigned remainder
+  * Int32Sdiv - signed division
+  * Int32Udiv - unsigned division
+  * Int32Srem - signed remainder
+  * Int32Urem - unsigned remainder
   * Int32And - signed-less logical and
   * Int32Ior - signed-less inclusive or
   * Int32Xor - signed-less exclusive or
@@ -320,8 +320,8 @@ floating point comparisons, even considering NaN.
 
 Additional 32-bit integer Operations under consideration:
 
-  * Int32SMulHigh - signed multiplication (upper 32-bits)
-  * Int32UMulHigh - unsigned multiplication (upper 32-bits)
+  * Int32Smulh - signed multiplication (upper 32-bits)
+  * Int32Umulh - unsigned multiplication (upper 32-bits)
   * Int32Clz - count leading zeroes (defined for all values, including 0)
   * Int32Ctz - count trailing zeroes (defined for all values, including 0)
   * Int32Popcnt - count number of ones
@@ -329,10 +329,10 @@ Additional 32-bit integer Operations under consideration:
   * Int32Rotr - bitwise rotate right
   * Int32Rotl - bitwise rotate left
   * Int32Not - signed-less one's complement
-  * Int32SMin - signed minimum
-  * Int32SMax - signed maximum
-  * Int32UMin - unsigned minimum
-  * Int32UMax - unsigned maximum
+  * Int32Smin - signed minimum
+  * Int32Smax - signed maximum
+  * Int32Umin - unsigned minimum
+  * Int32Umax - unsigned maximum
 
 ## Floating point operations
 
@@ -395,17 +395,17 @@ Min, Max, MinNum, and MaxNum operations would treat -0 as being effectively less
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
-  * Int32FromFloat64 - truncate a 64-bit float to a signed integer
-  * Int32FromFloat32 - truncate a 32-bit float to a signed integer
+  * Sint32FromFloat64 - truncate a 64-bit float to a signed integer
+  * Sint32FromFloat32 - truncate a 32-bit float to a signed integer
   * Uint32FromFloat64 - truncate a 64-bit float to an unsigned integer
   * Uint32FromFloat32 - truncate a 32-bit float to an unsigned integer
   * Int32FromFloat32Bits - reinterpret the bits of a 32-bit float as a 32-bit integer
   * Float64FromFloat32 - promote a 32-bit float to a 64-bit float
-  * Float64FromInt32 - convert a signed integer to a 64-bit float
-  * Float64FromUInt32 - convert an unsigned integer to a 64-bit float
+  * Float64FromSint32 - convert a signed integer to a 64-bit float
+  * Float64FromUint32 - convert an unsigned integer to a 64-bit float
   * Float32FromFloat64 - demote a 64-bit float to a 32-bit float
-  * Float32FromInt32 - convert a signed integer to a 32-bit float
-  * Float32FromUInt32 - convert an unsigned integer to a 32-bit float
+  * Float32FromSint32 - convert a signed integer to a 32-bit float
+  * Float32FromUint32 - convert an unsigned integer to a 32-bit float
   * Float32FromInt32Bits - reinterpret the bits of a 32-bit integer as a 32-bit float
 
 Promotion and demotion of floating point values always succeeds.
