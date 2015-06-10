@@ -219,6 +219,8 @@ use cases:
   * Int32UMax - unsigned maximum
   * Int32SExt - `sext(x, y)` is `x<<y>>y`
   * Int32Abs - absolute value (is `abs(INT32_MIN)` `INT32_MIN` or should it trap?)
+  * Int32BSwap - reverse bytes (endian conversion)
+  * Int32BSwap16 - `bswap16(x)` is `((x>>8)&255)|((x&255)<<8)`
 
 * The following operations are just potentially interesting.
   * Int32Clrs - count leading redundant sign bits (defined for all values, including 0)

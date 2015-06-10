@@ -306,6 +306,9 @@ and 0 representing false.
   * Int32Sle - signed less than or equal
   * Int32Ult - unsigned less than
   * Int32Ule - unsigned less than or equal
+  * Int32Clz - count leading zeroes (defined for all values, including 0)
+  * Int32Ctz - count trailing zeroes (defined for all values, including 0)
+  * Int32Popcnt - count number of ones
 
 Division or remainder by zero traps.
 Signed division overflow (`INT32_MIN / -1`) traps. Signed remainder with a
@@ -358,6 +361,8 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
   * Float32Copysign - copysign
   * Float32Ceil - ceiling operation
   * Float32Floor - floor operation
+  * Float32Trunc - round to nearest integer towards zero
+  * Float32NearestInt - round to nearest integer, ties to even
   * Float32Eq - compare equal
   * Float32Lt - less than
   * Float32Le - less than or equal
@@ -374,6 +379,8 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
   * Float64Copysign - copysign
   * Float64Ceil - ceiling operation
   * Float64Floor - floor operation
+  * Float64Trunc - round to nearest integer towards zero
+  * Float64NearestInt - round to nearest integer, ties to even
   * Float64Eq - compare equal
   * Float64Lt - less than
   * Float64Le - less than or equal
