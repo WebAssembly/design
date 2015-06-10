@@ -1,17 +1,19 @@
 # Non-Browser Embeddings
 
-WebAssembly is designed to run primarily [within a browser](Web.md). It is
-nonetheless desirable to be able to execute it inside standalone shells for
-testing and as a host environment for untrusted code (e.g. in a datacenter). It
-may even be desirable to execute WebAssembly embedded within larger programs.
+While WebAssembly is designed to run [within a browser](Web.md), it is
+also desirable for it to be able to execute well in other environments,
+including everything from minimal shells for testing to full-blown
+application environments e.g. on servers in datacenters. It may even be
+desirable to execute WebAssembly embedded within larger programs.
 
-Non-browser environments may have access to different APIs, which
+Non-browser environments may provide different APIs than Web
+environments, which
 [feature testing](FeatureTest.md) and
 [dynamic linking](FutureFeatures.md#dynamic-linking) will make discoverable and
 usable.
   
 Where there is overlap between the browser and popular non-browser environments,
-a shared spec could be proposed, but this would be separate from the WebAssembly
+shared specs could be proposed, but this would be separate from the WebAssembly
 spec. A symmetric example in JavaScript would be the
 [Loader](http://whatwg.github.io/loader) spec, intended to be implemented by
 both browsers and node.js. This situation is expected to be first encountered

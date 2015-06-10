@@ -1,10 +1,12 @@
 # Browser Embedding
 
-WebAssembly's [Minimum Viable Product](MVP.md) explicitly targets browser
-embeddings, and treats WebAssembly as an integral part of the Web platform.
+Unsurprisingly, one of WebAssembly's primary purposes is to run on the Web,
+embedded in Web browsers (though this is [not its only purpose](NonWeb.md)).
 
-A key part of operating on the Web is supporting
-[feature testing](FeatureTest.md).
+This means integrating with the Web ecosystem, leveraging Web APIs, supporting
+the Web's security model, preserving the Web's portability, and designing in
+room for evolutionary development. Many of these goals are clearly
+reflected in WebAssembly's [high level goals](HighLevelGoals.md).
 
 # Implementation Details
 
