@@ -12,7 +12,7 @@ We've identified interesting implementation approaches which help convince us
 that the design, especially that of the [MVP](MVP.md), are sensible:
 
 * WebAssembly's security model should depend on [CORS][] and
-  [subresource integrity][] to enable distribution, especially though content
+  [subresource integrity][] to enable distribution, especially through content
   distribution networks and to implement
   [dynamic linking](FutureFeatures.md#dynamic-linking).
 * A [module](MVP.md#Modules) can be loaded in the same way as an ES6 module
