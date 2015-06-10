@@ -152,13 +152,6 @@ include:
 
   [a proposal in the SIMD.js repository]: https://github.com/johnmccutchan/ecmascript_simd/issues/180
 
-## Operations which may not be available or may not perform well on all platforms
-
-* Fused multiply-add.
-* Reciprocal square root approximate.
-* 16-bit floating point.
-* and more!
-
 ## Platform-independent Just-in-Time compilation
 
 WebAssembly is a new virtual ISA, and as such applications won't be able to
@@ -234,12 +227,42 @@ use cases:
 
   * Float32MinNum - minimum; if exactly one operand is NaN, returns the other operand
   * Float32MaxNum - maximum; if exactly one operand is NaN, returns the other operand
-  * Float32FMA - fused multiply-add
+  * Float32FMA - fused multiply-add (results always conforming to IEEE-754)
   * Float64MinNum - minimum; if exactly one operand is NaN, returns the other operand
   * Float64MaxNum - maximum; if exactly one operand is NaN, returns the other operand
-  * Float64FMA - fused multiply-add
+  * Float64FMA - fused multiply-add (results always conforming to IEEE-754)
 
 MinNum, and MaxNum operations would treat -0 as being effectively less than 0.
+
+Note that some operations, like FMA, may not be available or may not perform
+well on all platforms. These should be guarded by
+[feature tests](FeatureTest.md) so that if available, they behave consistently.
+
+## Floating point approximation operations
+
+  * Float32ReciprocalApproximation - reciprocal approximation
+  * Float64ReciprocalApproximation - reciprocal approximation
+  * Float32ReciprocalSqrtApproximation - reciprocal sqrt approximation
+  * Float64ReciprocalSqrtApproximation - reciprocal sqrt approximation
+
+These operations would not required to be fully precise, but the specifics
+would need clarification.
+
+## 16-bit and 128-bit floating-point support
+
+For 16-bit floating-point support, it may make sense to split the feature
+into two parts: support for just converting between 16-bit and 32-bit
+formats possibly folded into load and store operations, and full support
+for actual 16-bit arithmetic.
+
+128-bit is an interesting question because hardware support for it is very
+rare, so it's usually going to be implemented with software emulation anyway,
+so there's nothing preventing WebAssembly applications from linking to an
+appropriate emulation library and getting similarly performant results.
+Emulation libraries would have more flexibility to offer approximation
+techniques such as double-double arithmetic. If we standardize 128-bit
+floating point in WebAssembly, it will probably be standard IEEE-754
+quadruple precision.
 
 ## Floating-point library intrinsics
 
