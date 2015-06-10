@@ -8,7 +8,7 @@ Why not a stack-, register- or SSA-based bytecode?
 * Smaller binary encoding:
   [JSZap](http://research.microsoft.com/en-us/projects/jszap),
   [Slim Binaries](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.108.1711)
-* [Polyfill prototype](https://github.com/WebAssembly/polyfill) shows simple and
+* [Polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1) shows simple and
   efficient translation to asm.js.
 
 Each function body consists of exactly one statement.
@@ -270,8 +270,9 @@ Expression trees offer significant size reduction by avoiding the need for
 immediate use.  The following primitives provide AST nodes that express
 control flow and thus allow more opportunities to build bigger expression trees
 and further reduce `SetLocal`/`GetLocal` usage (which constitute 30-40% of total 
-bytes in the polyfill prototype). Additionally, these primitives are useful 
-building blocks for WebAssembly-generators (including the JavaScript polyfill).
+bytes in the [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1)).
+Additionally, these primitives are useful building blocks for
+WebAssembly-generators (including the JavaScript polyfill).
 
   * Comma - evaluate and ignore the result of the first operand, evaluate and return the second operand
   * Conditional - basically ternary ?: operator

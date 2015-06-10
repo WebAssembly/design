@@ -29,7 +29,7 @@ capabilities, as detailed in the browser embedding
   [Emscripten]: http://emscripten.org
   [asm.js]: http://asmjs.org
   [PNaCl]: http://gonacl.com
-  [polyfill repo]: https://github.com/WebAssembly/polyfill
+  [polyfill repo]: https://github.com/WebAssembly/polyfill-prototype-1
 
 ## Polyfill Deviations
 
