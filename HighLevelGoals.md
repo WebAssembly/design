@@ -4,7 +4,8 @@
    [binary format](MVP.md#binary-format) to serve as a compilation target which
    can be compiled to execute at native speed by taking advantage of common
    hardware capabilities available on a wide range of platforms, including
-   mobile and IoT.
+   [mobile](http://en.wikipedia.org/wiki/Mobile_device) and
+   [IoT](http://en.wikipedia.org/wiki/Internet_of_Things).
 2. Specify and implement incrementally:
     * design [a Minimum Viable Product (MVP)](MVP.md) for the standard with
       roughly the same functionality as [asm.js](http://asmjs.org);
