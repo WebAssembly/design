@@ -74,6 +74,12 @@ and [PNaCl](http://gonacl.com) work.
 We hope that proprietary compilers also gain WebAssembly support, but we'll let
 vendors speak about their own platform.
 
+The [WebAssembly Community Group][] would be delighted to collaborate with more
+compiler vendors, take their input into consideration in WebAssembly itself, and
+work with them on ABI matters.
+
+  [WebAssembly Community Group]: https://www.w3.org/community/webassembly
+
 ## Will WebAssembly support View Source on the Web?
 
 Yes! WebAssembly defines a [text format](TextFormat.md) to be rendered when developers view
