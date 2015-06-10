@@ -35,12 +35,12 @@ variables, local variables, and parameters. The heap itself is not typed, but
 all accesses to the heap are annotated with a type. The legal types for
 global variables and heap accesses are called *Memory types*.
 
-  * Int8 - signed 8-bit integer
-  * Int16 - signed 16-bit integer
-  * Int32 - signed 32-bit integer
-  * Uint8 - unsigned 8-bit integer
-  * Uint16 - unsigned 16-bit integer
-  * Uint32 - unsigned 32-bit integer
+  * SInt8 - signed 8-bit integer
+  * SInt16 - signed 16-bit integer
+  * SInt32 - signed 32-bit integer
+  * UInt8 - unsigned 8-bit integer
+  * UInt16 - unsigned 16-bit integer
+  * UInt32 - unsigned 32-bit integer
   * Float32 - 32-bit floating point
   * Float64 - 64-bit floating point
 
@@ -54,12 +54,12 @@ are a subset of the Memory types:
 All IR operations except loads and stores deal with local types. Loads implicitly
 convert Memory types to Local types according to the follow rules:
 
-  * Load[Int8] - sign-extend to Int32
-  * Load[Int16] - sign-extend to Int32
-  * Load[Int32] - (no conversion)
-  * Load[Uint8] - zero-extend to Int32
-  * Load[Uint16] - zero-extend to Int32
-  * Load[Uint32] - reinterpret as Int32
+  * Load[SInt8] - sign-extend to Int32
+  * Load[SInt16] - sign-extend to Int32
+  * Load[SInt32] - (no conversion)
+  * Load[UInt8] - zero-extend to Int32
+  * Load[UInt16] - zero-extend to Int32
+  * Load[UInt32] - (no conversion)
   * Load[Float32] - (no conversion)
   * Load[Float64] - (no conversion)
 
@@ -69,12 +69,12 @@ is interpreted differently by the operations below.
 Similar to loads, stores implicitly truncate Local types to Memory types according to the
 following rules:
 
-  * Store[Int8] - truncate Int32 to Int8
-  * Store[Int16] - truncate Int32 to Int16
-  * Store[Int32] - (no truncation)
-  * Store[Uint8] - truncate Int32 to Uint8
-  * Store[Uint16] - truncate Int32 to Uint16
-  * Store[Uint32] - reinterpret Int32 as Uint32
+  * Store[SInt8] - truncate Int32 to Int8
+  * Store[SInt16] - truncate Int32 to Int16
+  * Store[SInt32] - (no truncation)
+  * Store[UInt8] - truncate Int32 to UInt8
+  * Store[UInt16] - truncate Int32 to UInt16
+  * Store[UInt32] - (no truncation)
   * Store[Float32] - (no truncation)
   * Store[Float64] - (no truncation)
 
@@ -301,10 +301,10 @@ and 0 representing false.
   * Int32Shr - unsigned shift right
   * Int32Sar - signed arithmetic shift right
   * Int32Eq  - signed-less compare equal
-  * Int32Slt - signed less than
-  * Int32Sle - signed less than or equal
-  * Int32Ult - unsigned less than
-  * Int32Ule - unsigned less than or equal
+  * Int32SLt - signed less than
+  * Int32SLe - signed less than or equal
+  * Int32ULt - unsigned less than
+  * Int32ULe - unsigned less than or equal
 
 Division or remainder by zero traps.
 Signed division overflow (`INT32_MIN / -1`) and the corresponding signed
@@ -395,16 +395,16 @@ Min, Max, MinNum, and MaxNum operations would treat -0 as being effectively less
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
-  * Int32FromFloat64 - truncate a 64-bit float to a signed integer
-  * Int32FromFloat32 - truncate a 32-bit float to a signed integer
-  * Uint32FromFloat64 - truncate a 64-bit float to an unsigned integer
-  * Uint32FromFloat32 - truncate a 32-bit float to an unsigned integer
+  * SInt32FromFloat64 - truncate a 64-bit float to a signed integer
+  * SInt32FromFloat32 - truncate a 32-bit float to a signed integer
+  * UInt32FromFloat64 - truncate a 64-bit float to an unsigned integer
+  * UInt32FromFloat32 - truncate a 32-bit float to an unsigned integer
   * Int32FromFloat32Bits - reinterpret the bits of a 32-bit float as a 32-bit integer
   * Float64FromFloat32 - promote a 32-bit float to a 64-bit float
-  * Float64FromInt32 - convert a signed integer to a 64-bit float
+  * Float64FromSInt32 - convert a signed integer to a 64-bit float
   * Float64FromUInt32 - convert an unsigned integer to a 64-bit float
   * Float32FromFloat64 - demote a 64-bit float to a 32-bit float
-  * Float32FromInt32 - convert a signed integer to a 32-bit float
+  * Float32FromSInt32 - convert a signed integer to a 32-bit float
   * Float32FromUInt32 - convert an unsigned integer to a 32-bit float
   * Float32FromInt32Bits - reinterpret the bits of a 32-bit integer as a 32-bit float
 
