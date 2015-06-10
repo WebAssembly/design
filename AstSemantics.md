@@ -405,6 +405,9 @@ Min, Max, MinNum, and MaxNum operations would treat -0 as being effectively less
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
+  * Int32FromInt64 - truncate a 64-bit signed integer to a 32-bit signed integer
+  * Int64FromInt32 - sign-extend a 32-bit signed integer to a 64-bit signed integer
+  * Uint64FromuInt32 - zero-extend a 32-bit unsigned integer to a 64-bit unsigned integer
   * Int32FromFloat64 - truncate a 64-bit float to a 32-bit signed integer
   * Int32FromFloat32 - truncate a 32-bit float to a 32-bit signed integer
   * Int64FromFloat64 - truncate a 64-bit float to a 64-bit signed integer
