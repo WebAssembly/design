@@ -3,12 +3,12 @@
 ## Can the polyfill really be efficient?
 
 Yes, this is a [high-level goal](HighLevelGoals.md) and there is a 
-[prototype](https://github.com/WebAssembly/polyfill) with demos 
+[prototype](https://github.com/WebAssembly/polyfill-prototype-1) with demos 
 [[1](http://lukewagner.github.io/AngryBotsPacked), 
 [2](http://lukewagner.github.io/PlatformerGamePacked)].  Although the 
 [binary format](BinaryEncoding.md) is not yet specified in any detail, the format used 
 by the prototype has promising initial experimental results. To allow direct comparison with asm.js, 
-the prototype has a tool to [pack asm.js](https://github.com/WebAssembly/polyfill/blob/master/src/pack-asmjs.cpp#L3117)
+the prototype has a tool to [pack asm.js](https://github.com/WebAssembly/polyfill-prototype-1/blob/master/src/pack-asmjs.cpp#L3117)
 into the prototype's binary format. Using this tool, we can see significant size savings before and 
 after <code>gzip</code> compression:
 
@@ -17,7 +17,7 @@ after <code>gzip</code> compression:
 | [AngryBots](http://lukewagner.github.io/AngryBotsPacked) | 19MiB | 6.3MiB | 4.1MiB | 3.0MiB |
 | [PlatformerGame](http://lukewagner.github.io/PlatformerGamePacked) | 49MiB | 18MiB | 11MiB | 7.3MiB |
 
-By writing the [decoder prototype in C++](https://github.com/WebAssembly/polyfill/blob/611ec5c8c41b08b112cf064ec49b13bf87e400cd/src/unpack.cpp#L2306) 
+By writing the [decoder prototype in C++](https://github.com/WebAssembly/polyfill-prototype-1/blob/611ec5c8c41b08b112cf064ec49b13bf87e400cd/src/unpack.cpp#L2306) 
 and Emscripten-compiling to asm.js, the polyfill is able to perform the translation to asm.js
 faster than a native JS parser can parse the result (results measured in Firefox 41 
 on an Intel® Xeon® E5-2665 @ 2.40GHz):
