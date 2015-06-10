@@ -45,6 +45,9 @@ separate docs with more precise descriptions of:
     `puts`.
   * In the browser, the WebIDL support mentioned in
     [future features](FutureFeatures.md).
+* Any [ABI](http://en.wikipedia.org/wiki/Application_binary_interface) for
+  statically linked libraries will defined by your source language compiler in
+  the MVP, but may be standardized post-MVP.
 * **TODO**: there is more to discuss here concerning APIs.
 
 ## Module structure

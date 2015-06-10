@@ -28,8 +28,15 @@ downloaded and compiled once per user device. It can also allow for smaller
 differential updates, which could be implemented in collaboration with
 [service workers][].
 
+Standardize a single [ABI][] per source language, allowing for WebAssembly
+modules to interface with each other regardless of compiler. While it is highly
+recommended for compilers targeting WebAssembly to adhere to the specified ABI
+for interoperability, WebAssembly runtimes will be ABI agnostic, so it will be
+possible to use a non-standard ABI for specialized purposes.
+
   [hosted libraries]: https://developers.google.com/speed/libraries/
   [service workers]: http://www.w3.org/TR/service-workers/
+  [ABI]: http://en.wikipedia.org/wiki/Application_binary_interface
 
 ## Finer-grained control over memory
 
