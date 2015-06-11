@@ -48,11 +48,11 @@ modes for C++:
 * In a Web environment exception handling can be emulated using JavaScript
   exception handling, which can provide correct semantics but isn't fast.
 
-These modes are unfortunate for code bases which rely on C++ exception handling,
+These modes are suboptimal for code bases which rely on C++ exception handling,
 but are perfectly acceptable for C code, or for C++ code which avoids
 exceptions. This doesn't prevent developers from using the C++ standard library:
-their code will function correctly as long as it doesn't encounter exceptional
-cases.
+their code will function correctly (albeit slower at times) as long as it
+doesn't encounter exceptional cases.
 
 Post-MVP, WebAssembly will gain support for developer access to stack unwinding,
 inspection, and limited manipulation. These are critical to supporting zero-cost
