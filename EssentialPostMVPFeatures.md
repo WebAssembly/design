@@ -40,7 +40,7 @@ a builtin SIMD module.
 
 ## Zero-cost Exception Handling
 
-The initial release of WebAssembly will support two no-exception modes for C++:
+The WebAssembly MVP will support two no-exception modes for C++:
 * Compiler transforms `throw` to `abort()`.
 * Compiler-enforced `-fno-exceptions` mode (note [caveats][]).
 
