@@ -1,5 +1,9 @@
 # FAQ
 
+## Who was WebAssembly designed for?
+
+WebAssembly was designed with [a variety of use cases in mind](UseCases.md).
+
 ## Can the polyfill really be efficient?
 
 Yes, this is a [high-level goal](HighLevelGoals.md) and there is a 
