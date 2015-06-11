@@ -47,4 +47,5 @@ designers think WebAssembly will *enable*.
 * Entire code base in Web Assembly.
 * Main frame in Web Assembly, but the UI is in JavaScript / HTML.
 * Re-use existing code by targeting Web Assembly, embedded in a larger
-  JavaScript / HTML application.
+  JavaScript / HTML application. This could be anything from simple helper
+  libraries, to compute-oriented task offload.
