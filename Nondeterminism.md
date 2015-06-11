@@ -2,10 +2,10 @@
 
 WebAssembly is a [portable](Portability.md) sandboxed platform with limited,
 local, nondeterminism. 
-  * *limited*: non-deterministic execution can only occur in a small number of
+  * *Limited*: non-deterministic execution can only occur in a small number of
     well-defined cases (described below) and, in those cases, the implementation
     may select from a limited set of possible behaviors.
-  * *local*: when non-deterministic execution occurs, the effect is local,
+  * *Local*: when non-deterministic execution occurs, the effect is local,
     there is no "spooky action at a distance".
 
 The limited, local, non-deterministic model implies:
@@ -18,24 +18,24 @@ The limited, local, non-deterministic model implies:
   * WebAssembly has no [nasal demons](https://en.wikipedia.org/w/index.php?title=Nasal_demons).
 
 Ideally, WebAssembly would be fully deterministic (except where nondeterminism
-was introduced by the API, like `random` or input events). Nondeterminism is only
-specified as a compromise when there is no other practical way to achieve
-[portable](Portability.md), near-native performance.
+was essential to the API, like random number generators, date/time functions or
+input events). Nondeterminism is only specified as a compromise when there is no
+other practical way to achieve [portable](Portability.md) native performance.
 
 The following is a list of the places where the WebAssembly specification
 currently admits nondeterminism:
 
- - [Races between threads](EssentialPostMVPFeatures.md#threads)
+ - [No sequential consistency guarantee for programs which contain races](EssentialPostMVPFeatures.md#threads)
 
- - [Out of bounds heap accesses may want some flexibility](AstSemantics.md#accessing-the-heap)
-
- - [Environment-dependent resource limits may be exhausted](AstSemantics.md)
+ - [Out of bounds heap accesses may want some flexibility](AstSemantics.md#out-of-bounds)
 
  - [NaN bit patterns](AstSemantics.md#floating-point-operations)
 
  - [Fixed-width SIMD may want some flexibility](EssentialPostMVPFeatures.md#fixed-width-simd)
    - In SIMD.js, floating point values may or may not have subnormals flushed to zero.
    - In SIMD.js, operations ending in "Approximation" return approximations that may vary between platforms.
+
+ - Environment-dependent resource limits may be exhausted
 
 ## Note for users of C, C++, and similar languages
 
