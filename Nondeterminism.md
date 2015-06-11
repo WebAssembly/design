@@ -25,9 +25,14 @@ other practical way to achieve [portable](Portability.md) native performance.
 The following is a list of the places where the WebAssembly specification
 currently admits nondeterminism:
 
- - [No sequential consistency guarantee for programs which contain races](EssentialPostMVPFeatures.md#threads)
+ - [When threads are added as a feature](EssentialPostMVPFeatures.md#threads),
+   even without shared memory, nondeterminism will be visible through the
+   ordering of API calls. Shared memory will allow further nondeterminism via
+   load/store operations which,
+   [following the C++ definition](http://www.hboehm.info/c++mm/sc_proof.html),
+   only provide sequentially consistent views of memory in the absence of races.
 
- - [Out of bounds heap accesses may want some flexibility](AstSemantics.md#out-of-bounds)
+ - [Out of bounds heap accesses *may* want some flexibility](AstSemantics.md#out-of-bounds)
 
  - [NaN bit patterns](AstSemantics.md#floating-point-operations)
 
