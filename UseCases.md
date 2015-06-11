@@ -9,8 +9,8 @@ design of WebAssembly.
 
 ## Inside the browser
 
-* Better execution for languages that are currently cross-compiled to the Web
-  (C/C++, GWT, …).
+* Better execution for languages and toolkits that are currently cross-compiled
+  to the Web (C/C++, GWT, …).
 * Image / video editing.
 * Games:
   - Casual games that need to start quickly.
