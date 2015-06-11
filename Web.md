@@ -6,7 +6,7 @@ embedded in Web browsers (though this is [not its only purpose](NonWeb.md)).
 This means integrating with the Web ecosystem, leveraging Web APIs, supporting
 the Web's security model, preserving the Web's portability, and designing in
 room for evolutionary development. Many of these goals are clearly
-reflected in WebAssembly's [high level goals](HighLevelGoals.md).
+reflected in WebAssembly's [high-level goals](HighLevelGoals.md).
 
 # Implementation Details
 
