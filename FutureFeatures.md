@@ -89,6 +89,13 @@ implementation running on such a platform may restrict allocations to the lower
 * Text source maps become intractably large for even moderate-sized compiled
   codes, so probably need to define new binary format for source maps.
 
+## Coroutines
+
+Coroutines will [eventually be part of C++][] and is already popular in other
+programming languages that WebAssembly will support.
+
+  [eventually be part of C++]: http://wg21.link/n4499
+
 ## Signature-restricted Proper Tail Calls
 
 See the [asm.js RFC][] for a full description of signature-restricted Proper

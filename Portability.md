@@ -23,6 +23,9 @@ characteristics:
 * Addressable at a byte memory granularity.
 * Support unaligned memory accesses or reliable trapping that allows software
   emulation thereof.
+* Two's complement signed integers in 32 bits and optionally 64 bits.
+* IEEE-754 32-bit and 64-bit floating point, except for
+  [a few exceptions](AstSemantics.md#floating-point-operations).
 * Little-endian byte ordering.
 * Memory regions which can be efficiently addressed with 32-bit
   pointers or indices.
