@@ -35,7 +35,7 @@ currently admits nondeterminism:
    - In SIMD.js, floating point values may or may not have subnormals flushed to zero.
    - In SIMD.js, operations ending in "Approximation" return approximations that may vary between platforms.
 
- - Environment-dependent resource limits may be exhausted
+ - Environment-dependent resource limits may be exhausted.
 
 ## Note for users of C, C++, and similar languages
 
