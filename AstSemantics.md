@@ -338,22 +338,23 @@ Additional 32-bit integer Operations under consideration:
 ## Floating point operations
 
 Floating point arithmetic follows the IEEE-754 standard, except that:
- - The sign bit and significand bit pattern of any NaN value returned from a
-   floating point arithmetic operation other than Neg, Abs, and Copysign are
-   computed non-deterministically. In particular, the "NaN propagation" section
-   of IEEE-754 is not required. NaNs do propagate through arithmetic operations
-   according to IEEE-754 rules, the difference here is that they do so without
-   necessarily preserving the specific bit patterns of the original NaNs.
+ - The sign bit and significand bit pattern of any `NaN` value returned from a
+   floating point arithmetic operation other than `Neg`, `Abs`, and `Copysign`
+   are computed non-deterministically. In particular, the "`NaN` propagation"
+   section of IEEE-754 is not required. `NaN`s do propagate through arithmetic
+   operations according to IEEE-754 rules, the difference here is that they do
+   so without necessarily preserving the specific bit patterns of the original
+   `NaN`s.
  - WebAssembly uses "non-stop" mode, and floating point exceptions are not
    otherwise observable. In particular, neither alternate floating point
    exception handling attributes nor the non-computational operations on status
    flags are supported. There is no observable difference between quiet and
-   signalling NaN. However, infinity, -infinity, and NaN are still always
-   produced as result values to indicate overflow, invalid, and divide-by-zero
-   conditions, as specified by IEEE-754.
- - WebAssembly uses the round-to-nearest ties-to-even rounding attribute,
-   except where otherwise specified. Non-default directed rounding attributes
-   are not supported.
+   signalling `NaN`. However, `infinity`, `-infinity`, and `NaN` are still
+   always produced as result values to indicate overflow, invalid, and
+   divide-by-zero conditions, as specified by IEEE-754.
+ - WebAssembly uses the round-to-nearest ties-to-even rounding attribute, except
+   where otherwise specified. Non-default directed rounding attributes are not
+   supported.
  - Not all operations required by IEEE-754 are provided directly. However,
    WebAssembly includes enough functionality to support reasonable library
    implementations of the remaining required operations.
