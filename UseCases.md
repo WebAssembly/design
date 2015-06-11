@@ -3,8 +3,9 @@
 WebAssembly's [high-level goals](HighLevelGoals.md) define *what* WebAssembly
 aims to achieve, and in *which order*. *How* WebAssembly achieves its goals is
 documented for [Web](Web.md) and [non-Web](NonWeb.md) platforms. The following
-list of use cases is an unordered and incomplete list of what WebAssembly's
-designers think WebAssembly will *enable*.
+is an unordered and incomplete list of applications/domains/computations that
+would benefit from WebAssembly and are being considered as use cases during the
+design of WebAssembly.
 
 ## Inside the browser
 
