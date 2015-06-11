@@ -8,8 +8,8 @@ designers think WebAssembly will *enable*.
 
 ## Inside the browser
 
-* Better execution for languages that are currently cross-compiled (GWT, Dart,
-  C/C++).
+* Better execution for languages that are currently cross-compiled to the Web
+  (C/C++, GWT, …).
 * Image / video editing.
 * Games:
   - Casual games that need to start quickly.
