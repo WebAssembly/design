@@ -2,7 +2,7 @@
 
 WebAssembly's [binary format](BinaryEncoding.md) is designed to be executable
 efficiently on a variety of operating systems and instruction set architectures,
-[on the web](Web.md) and [off the web](NonWeb.md).
+[on the Web](Web.md) and [off the Web](NonWeb.md).
 
 Execution environments which, despite
 [allowed implementation variants](IncompletelySpecifiedBehavior.md), don't offer
@@ -24,9 +24,12 @@ characteristics:
 * Support unaligned memory accesses or reliable trapping that allows software
   emulation thereof.
 * Little-endian byte ordering.
-* Up to 4GiB of addressable memory in a 32-bit address space. Heaps bigger than
-  4GiB in a 64-bit address space
-  [may be added later](FutureFeatures.md#Heaps-bigger-than-4GiB).
+* Memory regions which can be efficiently addressed with 32-bit
+  pointers or indices.
+* Heaps bigger than 4GiB with 64-bit addressing
+  [may be added later](FutureFeatures.md#Heaps-bigger-than-4GiB), though it will
+  be done under a [feature test](FeatureTest.md) so it won't be required for all
+  WebAssembly implementations.
 * Enforce secure isolation between WebAssembly modules and other modules or
   processes executing on the same machine.
 * An execution environment which offers forward progress guarantees to all

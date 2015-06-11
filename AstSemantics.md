@@ -8,7 +8,7 @@ Why not a stack-, register- or SSA-based bytecode?
 * Smaller binary encoding:
   [JSZap](http://research.microsoft.com/en-us/projects/jszap),
   [Slim Binaries](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.108.1711)
-* [Polyfill prototype](https://github.com/WebAssembly/polyfill) shows simple and
+* [Polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1) shows simple and
   efficient translation to asm.js.
 
 Each function body consists of exactly one statement.
@@ -130,7 +130,7 @@ which leads to the following advantages:
     splitting, which can reduce throughput overhead, at the cost of increasing
     code size (potentially very significantly in pathological cases).
   * The
-    [signature-restricted proper tail-call](https://github.com/WebAssembly/spec/blob/master/EssentialPostMVPFeatures.md#signature-restricted-proper-tail-calls)
+    [signature-restricted proper tail-call](EssentialPostMVPFeatures.md#signature-restricted-proper-tail-calls)
     feature would allow efficient compilation of arbitrary irreducible control
     flow.
 
@@ -270,8 +270,9 @@ Expression trees offer significant size reduction by avoiding the need for
 immediate use.  The following primitives provide AST nodes that express
 control flow and thus allow more opportunities to build bigger expression trees
 and further reduce `SetLocal`/`GetLocal` usage (which constitute 30-40% of total 
-bytes in the polyfill prototype). Additionally, these primitives are useful 
-building blocks for WebAssembly-generators (including the JavaScript polyfill).
+bytes in the [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1)).
+Additionally, these primitives are useful building blocks for
+WebAssembly-generators (including the JavaScript polyfill).
 
   * Comma - evaluate and ignore the result of the first operand, evaluate and return the second operand
   * Conditional - basically ternary ?: operator
@@ -307,7 +308,9 @@ and 0 representing false.
   * Int32Ule - unsigned less than or equal
 
 Division or remainder by zero traps.
-Signed division overflow (e.g. INT32_MIN/-1) traps.
+Signed division overflow (`INT32_MIN / -1`) traps. Signed remainder with a
+non-zero denominator always returns the correct value, even when the
+corresponding division would trap.
 
 Shifts interpret their shift count operand as an unsigned value. When the
 shift count is at least the bitwidth of the shift, Shl and Shr return 0,

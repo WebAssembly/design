@@ -18,7 +18,7 @@ Reducing download size, is achieved through three layers:
    * We can do better than generic compression because we are aware of the AST
      structure and other details:
      * For example, macro compression that
-       [deduplicates AST trees](https://github.com/WebAssembly/spec/issues/58#issuecomment-101863032)
+       [deduplicates AST trees](https://github.com/WebAssembly/design/issues/58#issuecomment-101863032)
        can focus on AST nodes + their children, thus having `O(nodes)` entities
        to worry about, compared to generic compression which in principle would
        need to look at `O(bytes*bytes)` entities.  Such macros would allow the
@@ -43,14 +43,14 @@ Yes:
 * Large reductions in payload size can still significantly decrease the
   compressed file size.
   * Experimental results from a
-    [polyfill prototype](https://github.com/WebAssembly/polyfill) show the
+    [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1) show the
     gzipped binary format to be about 20-30% smaller than the corresponding
     gzipped asm.js.
 * A binary format that represents the names of variables and functions with raw
   indices instead of strings is much faster to decode: array indexing
   vs. dictionary lookup.
    * Experimental results from a
-     [polyfill prototype](https://github.com/WebAssembly/polyfill) show that
+     [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1) show that
      decoding the binary format is about 23× faster than parsing the
      corresponding asm.js source (using
      [this demo](https://github.com/lukewagner/AngryBotsPacked), comparing
