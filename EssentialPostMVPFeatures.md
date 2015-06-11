@@ -45,8 +45,8 @@ The WebAssembly MVP will support three no-exception modes for C++:
 * Compiler-enforced `-fno-exceptions` mode (note [caveats][]).
 * Compiler conversion of exceptions to branching at all callsites.
 
-These modes are very unfortunate for code bases which rely on C++ exception
-handling, but are perfectly acceptable for C code, or for C++ code which avoids
+These modes are unfortunate for code bases which rely on C++ exception handling,
+but are perfectly acceptable for C code, or for C++ code which avoids
 exceptions. This doesn't prevent developers from using the STL: their code will
 function correctly as long as it doesn't encounter exceptional cases.
 
