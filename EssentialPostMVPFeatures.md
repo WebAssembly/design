@@ -44,6 +44,8 @@ The WebAssembly MVP will support three no-exception modes for C++:
 * Compiler transforms `throw` to `abort()`.
 * Compiler-enforced `-fno-exceptions` mode (note [caveats][]).
 * Compiler conversion of exceptions to branching at all callsites.
+* In a Web environment, exception handling can be emulated using JavaScript
+  exception handling.
 
 These modes are unfortunate for code bases which rely on C++ exception handling,
 but are perfectly acceptable for C code, or for C++ code which avoids
