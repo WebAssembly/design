@@ -27,7 +27,7 @@ design of WebAssembly.
 * Interactive educational software, and news articles.
 * Platform simulation / emulation (ARC, DOSBox, QEMU, MAME, …).
 * Language interpreters and virtual machines.
-* Entire UNIX user-space environment, with existing UNIX applications.
+* POSIX user-space environment, allowing porting of existing POSIX applications.
 * Developer tooling (editors, compilers, debuggers, …).
 * Remote desktop.
 * VPN.
