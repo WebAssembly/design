@@ -308,8 +308,9 @@ and 0 representing false.
   * Int32Ule - unsigned less than or equal
 
 Division or remainder by zero traps.
-Signed division overflow (`INT32_MIN / -1`) and the corresponding signed
-remainder operation (`INT32_MIN % -1`) trap.
+Signed division overflow (`INT32_MIN / -1`) traps. Signed remainder with a
+non-zero denominator always returns the correct value, even when the
+corresponding division would trap.
 
 Shifts interpret their shift count operand as an unsigned value. When the
 shift count is at least the bitwidth of the shift, Shl and Shr return 0,
