@@ -27,7 +27,7 @@ currently admits nondeterminism:
 
  - [When threads are added as a feature](EssentialPostMVPFeatures.md#threads),
    even without shared memory, nondeterminism will be visible through the
-   global ordering of API calls. With shared memory, the result of load
+   global sequence of API calls. With shared memory, the result of load
    operations is nondeterministic.
 
  - [Out of bounds heap accesses *may* want some flexibility](AstSemantics.md#out-of-bounds)
