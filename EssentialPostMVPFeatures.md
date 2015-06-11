@@ -40,7 +40,8 @@ a builtin SIMD module.
 
 ## Zero-cost Exception Handling
 
-The WebAssembly MVP will support three no-exception modes for C++:
+The WebAssembly MVP (compilers and polyfills) may support four no-exception
+modes for C++:
 * Compiler transforms `throw` to `abort()`.
 * Compiler-enforced `-fno-exceptions` mode (note [caveats][]).
 * Compiler conversion of exceptions to branching at all callsites.
