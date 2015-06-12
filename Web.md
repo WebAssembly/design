@@ -33,14 +33,13 @@ that the design, especially that of the [MVP](MVP.md), are sensible:
     and call an undefined `extern` function and the target JavaScript function
     would be given the (mangled) name of the `extern` and put inside the
     imported ES6 module.
-* Once [threads are supported](EssentialPostMVPFeatures.md#Threads), a
-  WebAssembly module would initially be distributed between workers via
-  `postMessage()`.
+* Once [threads are supported](PostMVP.md#Threads), a WebAssembly module would
+  initially be distributed between workers via `postMessage()`.
   - This also has the effect of explicitly sharing code so that engines don't
     perform N fetches and compile N copies.
   - May later standardize a more direct way to create a thread from WebAssembly.
-* Once [SIMD is supported](EssentialPostMVPFeatures.md#Fixed-width-SIMD), a Web
-  implementation of WebAssembly would:
+* Once [SIMD is supported](PostMVP.md#Fixed-width-SIMD), a Web implementation of
+  WebAssembly would:
   - Be statically typed analogous to [SIMD.js-in-asm.js][];
   - Reuse specification of operation semantics (with TC39);
   - Reuse backend implementation (same IR nodes).

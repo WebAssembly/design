@@ -130,7 +130,7 @@ which leads to the following advantages:
     splitting, which can reduce throughput overhead, at the cost of increasing
     code size (potentially very significantly in pathological cases).
   * The
-    [signature-restricted proper tail-call](EssentialPostMVPFeatures.md#signature-restricted-proper-tail-calls)
+    [signature-restricted proper tail-call](PostMVP.md#signature-restricted-proper-tail-calls)
     feature would allow efficient compilation of arbitrary irreducible control
     flow.
 
@@ -158,12 +158,12 @@ to easily be folded into the hardware load instruction *and* for groups of loads
 with the same base and different offsets to easily share a single bounds check.
 
 In the MVP, the indices are 32-bit unsigned integers. With
-[64-bit integers](EssentialPostMVPFeatures.md#64-bit-integers) and
+[64-bit integers](PostMVP.md#64-bit-integers) and
 [>4GiB heaps](FutureFeatures.md#heaps-bigger-than-4gib), these nodes would also
 accept 64-bit unsigned integers.
 
 In the MVP, heaps are not shared between threads. When
-[threads](EssentialPostMVPFeatures.md#threads) are added as a feature, the basic
+[threads](PostMVP.md#threads) are added as a feature, the basic
 `LoadHeap`/`StoreHeap` nodes will have the most relaxed semantics specified in
 the memory model and new heap-access nodes will be added with atomic and
 ordering guarantees.

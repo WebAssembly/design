@@ -123,8 +123,9 @@ conflict-avoidance practices surrounding string names:
   * To avoid (over time) large index-space declaration sections that are largely the same
     between modules, finalized versions of standards would define named baseline index spaces
     that modules could optionally use as a starting point to further refine.
-    * For example, to use all of [the MVP](MVP.md) plus [SIMD](EssentialPostMVPFeatures.md#fixed-width-simd)
-      the declaration could be "base" followed by the list of SIMD opcodes used.
+    * For example, to use all of [the MVP](MVP.md) plus
+      [SIMD](PostMVP.md#fixed-width-simd) the declaration could be "base"
+      followed by the list of SIMD opcodes used.
     * This feature would also be most useful for people handwriting the [text format](TextFormat.md).
     * However, such a version declaration does not establish a global "version" for the module
       or affect anything outside of the initialization of the index spaces; decoders would
