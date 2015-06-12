@@ -19,10 +19,10 @@ efficiently implementable on all modern computers.
 
 Some operations may *trap* under some conditions, as noted below. In the MVP,
 trapping means that execution in the WebAssembly module is terminated and
-abnormal termination is reported to the outside environment. In a browser
-environment, this would translate into a JS exception being thrown. If
-developer tools are active, attaching a debugger before the termination
-would be sensible.
+abnormal termination is reported to the outside environment. In a JS
+environment, such as a browser, this would translate into a JS exception being
+thrown. If developer tools are active, attaching a debugger before the
+termination would be sensible.
 
 Callstack space is limited by unspecified and dynamically varying constraints.
 If program callstack usage exceeds the available callstack space at any time,
