@@ -22,7 +22,7 @@
     * maintain the versionless, [feature-tested](FeatureTest.md) and
       [backwards-compatible](BinaryEncoding.md#backwards-compatibility)
       evolution story of the Web;
-    * mxecute in the same semantic universe as JavaScript;
+    * execute in the same semantic universe as JavaScript;
     * allow synchronous calls to and from JavaScript;
     * enforce the same-origin and permissions security policies;
     * access browser functionality through the same Web APIs that are accessible
@@ -31,7 +31,7 @@
       binary format, supporting View Source functionality.
 4. Design to support [non-browser embeddings](NonWeb.md) as well.
 5. Make a great platform:
-    * Build an [LLVM backend](https://github.com/WebAssembly/llvm) and
+    * build an [LLVM backend](https://github.com/WebAssembly/llvm) and
       accompanying [clang port](https://github.com/WebAssembly/clang);
-    * Promote other compilers and tools targeting WebAssembly; and
-    * Enable other useful [tooling](Tooling.md).
+    * promote other compilers and tools targeting WebAssembly; and
+    * enable other useful [tooling](Tooling.md).
