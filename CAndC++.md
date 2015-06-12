@@ -1,4 +1,4 @@
-# Guide for C/C++ developers.
+# Guide for C/C++ developers
 
 WebAssembly is being designed to support C and C++ code well, right from
 the start in [the MVP](MVP.md). The following explains the outlook for
@@ -58,10 +58,10 @@ and fix such bugs in their code.
 
 #### Implementation-Defined Behavior
 
-Most implementation-defined behavior is dependent on the compiler, rather
-than on the underlying platform, but for those details that are dependent on
-the platform, they follow naturally from WebAssembly's 8-bit bytes, 32-bit and
-64-bit two's complement integers, and
+Most implementation-defined behavior in C and C++ is dependent on the compiler
+rather than on the underlying platform. For those details that are dependent
+on the platform, on WebAssembly they follow naturally from having 8-bit bytes,
+32-bit and 64-bit two's complement integers, and
 [32-bit and 64-bit IEEE-754-style floating point support]
 (AstSemantics.md#floating-point-operations).
 
