@@ -8,6 +8,7 @@ directory, and check that their links are valid.
 """
 
 import BaseHTTPServer
+import argparse
 import itertools
 import os
 import re
@@ -17,14 +18,35 @@ import subprocess
 import sys
 import urllib2
 
-socket.setdefaulttimeout(30) # seconds
+class check_dir(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        d = values
+        if not os.path.isdir(d):
+            raise argparse.ArgumentTypeError('Invalid directory "%s"' % d)
+        if os.access(d, os.R_OK):
+            setattr(namespace, self.dest, d)
+        else:
+            raise argparse.ArgumentTypeError('Cannot read directory "%s"' % d)
 
-cwd = os.getcwd()
-outdir = 'out'
-markdown_program = 'markdown'
-markdown_extension = '.md'
-html_extension = '.html'
-href = re.compile('href="([^"]+)"')
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--socket-timeout', type=int, default=30,
+                    help='timeout for URL fetch (seconds)')
+parser.add_argument('--dir', type=str, action=check_dir, default=os.getcwd(),
+                    help='Markdown file location (default: current)')
+parser.add_argument('--out', type=str, default='out',
+                    help='subdirectory for output HTML files')
+parser.add_argument('--markdown', type=str, default='markdown',
+                    help='Markdown generator program')
+parser.add_argument('--extension', type=str, default='.md',
+                    help='Markdown file extension')
+parser.add_argument('--html', type=str, default='.html',
+                    help='HTML file extension')
+parser.add_argument('--link_regex', type=str, default='href="([^"]+)"',
+                    help='Regular expression used to find links in HTML')
+args = parser.parse_args()
+
+socket.setdefaulttimeout(args.socket_timeout)
+href = re.compile(args.link_regex)
 
 template = """<!DOCTYPE html>
 <html>
@@ -38,25 +60,31 @@ $content
 </html>
 """
 
+def trunc_extension(filename, extension):
+    return filename[:-len(extension)]
+
 def find_markdown_sources():
-    return sorted([f[:-len(markdown_extension)] for f in os.listdir(cwd)
-                   if f.endswith(markdown_extension)])
+    return sorted([trunc_extension(f, args.extension) for f in
+                   os.listdir(args.dir) if f.endswith(args.extension)])
 
 def start_threadpool():
     from multiprocessing import Pool
     return Pool()
 
+def path_to_markdown(name):
+    return os.path.join(args.dir, name + args.extension)
+
 def create_outdir():
-    path = os.path.join(cwd, outdir)
+    path = os.path.join(args.dir, args.out)
     if not os.path.exists(path):
         os.makedirs(path)
 
 def path_to_html(name):
-    return os.path.join(cwd, outdir, name + html_extension)
+    return os.path.join(args.dir, args.out, name + args.html)
 
 def generate_html(name):
     md_sp = subprocess.Popen(
-        [markdown_program, name + markdown_extension],
+        [args.markdown, path_to_markdown(name)],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     md_out, md_err = md_sp.communicate()
     md_code = md_sp.returncode
@@ -86,15 +114,17 @@ def flatten_and_deduplicate(list_of_lists):
 
 def check_inner_link(link):
     parts = link.split('#')
-    if not parts[0].endswith(markdown_extension):
+    if not parts[0].endswith(args.extension):
         return (link, 'Not a link to an internal markdown file')
-    if not os.path.isfile(parts[0]):
+    name = trunc_extension(parts[0], args.extension)
+    md = path_to_markdown(name)
+    if not os.path.isfile(md):
         return (link, 'No such markdown file')
     if len(parts) == 1:
         return (link, None)
     if len(parts) > 2:
         return (link, 'Too many hashes in link')
-    with open(path_to_html(parts[0][:-len(markdown_extension)]), 'r') as html:
+    with open(path_to_html(name), 'r') as html:
         # TODO: The current Markdown generator doesn't output link IDs, whereas
         #       github's Markdown generator does output the IDs.
         return (link, None)
