@@ -299,8 +299,8 @@ and 0 representing false.
   * int32.ior - signed-less inclusive or
   * int32.xor - signed-less exclusive or
   * int32.shl - signed-less shift left
-  * int32.shr - unsigned shift right
-  * int32.sar - signed arithmetic shift right
+  * int32.shr - signed-less logical shift right
+  * int32.sar - signed-less arithmetic shift right
   * int32.eq  - signed-less compare equal
   * int32.slt - signed less than
   * int32.sle - signed less than or equal
@@ -310,10 +310,11 @@ and 0 representing false.
   * int32.ctz - count trailing zeroes (defined for all values, including 0)
   * int32.popcnt - count number of ones
 
-Division or remainder by zero traps.
-Signed division overflow (`INT32_MIN / -1`) traps. Signed remainder with a
+Explicitly signed and unsigned operations trap whenever the result cannot be
+represented in the result type. This includes division and remainder by zero,
+and signed division overflow (`INT32_MIN / -1`). Signed remainder with a
 non-zero denominator always returns the correct value, even when the
-corresponding division would trap.
+corresponding division would trap. Signed-less operations never trap.
 
 Shifts interpret their shift count operand as an unsigned value. When the
 shift count is at least the bitwidth of the shift, shl and shr return 0,
