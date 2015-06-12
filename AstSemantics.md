@@ -306,6 +306,9 @@ and 0 representing false.
   * Int32Sle - signed less than or equal
   * Int32Ult - unsigned less than
   * Int32Ule - unsigned less than or equal
+  * Int32Clz - count leading zeroes (defined for all values, including 0)
+  * Int32Ctz - count trailing zeroes (defined for all values, including 0)
+  * Int32Popcnt - count number of ones
 
 Division or remainder by zero traps.
 Signed division overflow (`INT32_MIN / -1`) traps. Signed remainder with a
@@ -319,22 +322,6 @@ and Sar returns 0 if the value being shifted is non-negative, and -1 otherwise.
 Note that greater-than and greater-than-or-equal operations are not required,
 since "a < b" == "b > a" and "a <= b" == "b >= a". Such equalities also hold for
 floating point comparisons, even considering NaN.
-
-Additional 32-bit integer Operations under consideration:
-
-  * Int32SMulHigh - signed multiplication (upper 32-bits)
-  * Int32UMulHigh - unsigned multiplication (upper 32-bits)
-  * Int32Clz - count leading zeroes (defined for all values, including 0)
-  * Int32Ctz - count trailing zeroes (defined for all values, including 0)
-  * Int32Popcnt - count number of ones
-  * Int32BSwap - reverse bytes (endian conversion)
-  * Int32Rotr - bitwise rotate right
-  * Int32Rotl - bitwise rotate left
-  * Int32Not - signed-less one's complement
-  * Int32SMin - signed minimum
-  * Int32SMax - signed maximum
-  * Int32UMin - unsigned minimum
-  * Int32UMax - unsigned maximum
 
 ## Floating point operations
 
@@ -369,10 +356,14 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
   * Float32Copysign - copysign
   * Float32Ceil - ceiling operation
   * Float32Floor - floor operation
+  * Float32Trunc - round to nearest integer towards zero
+  * Float32NearestInt - round to nearest integer, ties to even
   * Float32Eq - compare equal
   * Float32Lt - less than
   * Float32Le - less than or equal
   * Float32Sqrt - square root
+  * Float32Min - minimum (binary operator); if either operand is NaN, returns NaN
+  * Float32Max - maximum (binary operator); if either operand is NaN, returns NaN
 
   * Float64Add - addition
   * Float64Sub - subtraction
@@ -383,28 +374,16 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
   * Float64Copysign - copysign
   * Float64Ceil - ceiling operation
   * Float64Floor - floor operation
+  * Float64Trunc - round to nearest integer towards zero
+  * Float64NearestInt - round to nearest integer, ties to even
   * Float64Eq - compare equal
   * Float64Lt - less than
   * Float64Le - less than or equal
   * Float64Sqrt - square root
+  * Float64Min - minimum (binary operator); if either operand is NaN, returns NaN
+  * Float64Max - maximum (binary operator); if either operand is NaN, returns NaN
 
-Operations under consideration:
-
-  * Float32Min - minimum; if either operand is NaN, returns NaN
-  * Float32Max - maximum; if either operand is NaN, returns NaN
-  * Float32MinNum - minimum; if exactly one operand is NaN, returns the other operand
-  * Float32MaxNum - maximum; if exactly one operand is NaN, returns the other operand
-  * Float32Trunc - round to nearest integer towards zero
-  * Float32NearestInt - round to nearest integer, ties to even
-
-  * Float64Min - minimum; if either operand is NaN, returns NaN
-  * Float64Max - maximum; if either operand is NaN, returns NaN
-  * Float64MinNum - minimum; if exactly one operand is NaN, returns the other operand
-  * Float64MaxNum - maximum; if exactly one operand is NaN, returns the other operand
-  * Float64Trunc - round to nearest integer towards zero
-  * Float64NearestInt - round to nearest integer, ties to even
-
-Min, Max, MinNum, and MaxNum operations would treat -0 as being effectively less than 0.
+Min and Max operations treat -0 as being effectively less than 0.
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
@@ -436,37 +415,3 @@ overflow to infinity or negative infinity as specified by IEEE-754.
 Conversion from floating point to integer where IEEE-754 would specify an
 invalid operation exception (e.g. when the floating point value is NaN or
 outside the range which rounds to an integer in range) traps.
-
-## Post-MVP intrinsics
-
-The following list of intrinsics is being considered for addition after the MVP. The
-rationale is that, for the MVP, these operations can be statically linked into the
-WebAssembly module by the code generator at small size cost and this avoids a
-non-trivial specification burden of their semantics/precision. Adding these
-intrinsics post-MVP would allow for better high-level backend optimization of
-these intrinsics that require builtin knowledge of their semantics. On the other
-hand, a code generator may continue to statically link in its own implementation
-since this provides greater control over precision/performance tradeoffs.
-
-  * Float64Sin - trigonometric sine
-  * Float64Cos - trigonometric cosine
-  * Float64Tan - trigonometric tangent
-  * Float64ASin - trigonometric arcsine
-  * Float64ACos - trigonometric arccosine
-  * Float64ATan - trigonometric  arctangent
-  * Float64ATan2 - trigonometric arctangent with two arguments
-  * Float64Exp - exponentiate e
-  * Float64Ln - natural logarithm
-  * Float64Pow - exponentiate
-  * Float32Sin - trigonometric sine
-  * Float32Cos - trigonometric cosine
-  * Float32Tan - trigonometric tangent
-  * Float32ASin - trigonometric arcsine
-  * Float32ACos - trigonometric arccosine
-  * Float32ATan - trigonometric  arctangent
-  * Float32ATan2 - trigonometric arctangent with two arguments
-  * Float32Exp - exponentiate e
-  * Float32Ln - natural logarithm
-  * Float32Pow - exponentiate
-
-The rounding behavior of these operations would need clarification.
