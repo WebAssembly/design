@@ -2,10 +2,10 @@
 
 These are features that make sense in the context of the
 [high-level goals](HighLevelGoals.md) of WebAssembly but are not considered part
-of the [Minimum Viable Product](MVP.md) or the
-[essential post-MVP feature set](EssentialPostMVPFeatures.md) which are expected
-to be standardized immediately after the MVP. These will be prioritized based on
-developer feedback, and will be available under [feature tests](FeatureTest.md).
+of the [Minimum Viable Product](MVP.md) or the essential [post-MVP](PostMVP.md)
+feature set which are expected to be standardized immediately after the
+MVP. These will be prioritized based on developer feedback, and will be
+available under [feature tests](FeatureTest.md).
 
 ## Great tooling support
 

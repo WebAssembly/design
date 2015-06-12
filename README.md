@@ -10,7 +10,7 @@ followed by the [FAQ](FAQ.md).
 
 We've mapped out features we expect to ship:
  1. In [the Minimum Viable Product (MVP)](MVP.md);
- 2. Closely [after the MVP](EssentialPostMVPFeatures.md);
+ 2. Closely [after the MVP](PostMVP.md);
  3. In [future versions](FutureFeatures.md).
 
 Join us:

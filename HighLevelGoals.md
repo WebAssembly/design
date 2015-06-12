@@ -12,8 +12,8 @@
     * ship an effective and efficient [polyfill](Polyfill.md) library for the
       MVP that translates WebAssembly code into JavaScript in the client so that
       WebAssembly MVP can run on existing browsers;
-    * ship a follow-up to the MVP which adds several more
-      [essential features](EssentialPostMVPFeatures.md); and
+    * ship a [follow-up to the MVP](PostMVP.md) which adds several more
+      essential features; and
     * continue to iteratively specify [additional features](FutureFeatures.md),
       prioritized by feedback and experience, including support for languages
       other than C/C++.

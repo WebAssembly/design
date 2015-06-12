@@ -25,16 +25,16 @@ other practical way to achieve [portable](Portability.md) native performance.
 The following is a list of the places where the WebAssembly specification
 currently admits nondeterminism:
 
- - [When threads are added as a feature](EssentialPostMVPFeatures.md#threads),
-   even without shared memory, nondeterminism will be visible through the
-   global sequence of API calls. With shared memory, the result of load
-   operations is nondeterministic.
+ - [When threads are added as a feature](PostMVP.md#threads), even without
+   shared memory, nondeterminism will be visible through the global sequence of
+   API calls. With shared memory, the result of load operations is
+   nondeterministic.
 
  - [Out of bounds heap accesses *may* want some flexibility](AstSemantics.md#out-of-bounds)
 
  - [NaN bit patterns](AstSemantics.md#floating-point-operations)
 
- - [Fixed-width SIMD may want some flexibility](EssentialPostMVPFeatures.md#fixed-width-simd)
+ - [Fixed-width SIMD may want some flexibility](PostMVP.md#fixed-width-simd)
    - In SIMD.js, floating point values may or may not have subnormals flushed to zero.
    - In SIMD.js, operations ending in "Approximation" return approximations that may vary between platforms.
 
