@@ -145,7 +145,7 @@ include:
   approaches; which of them might be supported by the model?
 * What is the relationship to the "short SIMD" API? "None" may be an acceptable
   answer, but it's something to think about.
-* What non-determinism does this model introduce into the overall platform?
+* What nondeterminism does this model introduce into the overall platform?
 * What happens when code uses long SIMD on a hardware platform which doesn't
   support it? Reasonable options may include emulating it without the benefit of
   hardware acceleration, or indicating a lack of support through feature tests.

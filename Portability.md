@@ -7,7 +7,7 @@ efficiently on a variety of operating systems and instruction set architectures,
 ## Assumptions for Efficient Execution
 
 Execution environments which, despite
-[limited, local, non-determinism](Nondeterminism.md), don't offer
+[limited, local, nondeterminism](Nondeterminism.md), don't offer
 the following characteristics may be able to execute WebAssembly modules
 nonetheless. In some cases they may have to emulate behavior that the host
 hardware or operating system don't offer so that WebAssembly modules execute
