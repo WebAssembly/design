@@ -8,7 +8,7 @@ C and C++ developers.
 
 ### Platform features
 
-WebAssembly has a pretty conventional ISA. 8-bit bytes, two's complement
+WebAssembly has a pretty conventional ISA: 8-bit bytes, two's complement
 integers, little-endian, and a lot of other normal properties. Reasonably
 portable C/C++ code should port to WebAssembly without difficultly.
 
