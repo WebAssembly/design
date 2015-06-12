@@ -33,7 +33,7 @@ The tooling we expect to support includes:
   - Debug information is better delivered on-demand instead of built-in to a
     WebAssembly module.
 * Sanitizers for non-memory-safe languages: asan, tsan, msan, ubsan. Efficient
-  support of sanitizers may require inproving:
+  support of sanitizers may require improving:
   - Trapping support;
   - Shadow stack techniques (often implemented through `mmap`'s `MAP_FIXED`).
 * Opt-in security enhancements for developers' own code: developers targeting
