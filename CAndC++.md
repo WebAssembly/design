@@ -12,12 +12,15 @@ WebAssembly has a pretty conventional ISA. 8-bit bytes, two's complement
 integers, little-endian, and a lot of other normal properties. Reasonably
 portable C/C++ code should port to WebAssembly without difficultly.
 
-In [the MVP](MVP.md), WebAssembly will have an ILP32 data model.
+In [the MVP](MVP.md), WebAssembly will have an ILP32 data model, meaning
+that `int`, `long`, and pointer types are all 32-bit. The `long long`
+type is 64-bit.
 
 In the future, WebAssembly will be extended to support
-[64-bit address spaces](FutureFeatures.md#Heaps-bigger-than-4GiB), which
-will enable an LP64 data model as well. From a C/C++ perspective, this
-will be a separate mode from ILP32, with a separate ABI.
+[64-bit address spaces](FutureFeatures.md#Heaps-bigger-than-4GiB). This
+will enable an LP64 data model as well, meaning that `long` and pointer
+types will be 64-bit, while `int` is 32-bit. From a C/C++ perspective,
+this will be a separate mode from ILP32, with a separate ABI.
 
 ### APIs
 
