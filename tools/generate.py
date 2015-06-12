@@ -18,7 +18,7 @@ import subprocess
 import sys
 import urllib2
 
-class check_dir(argparse.Action):
+class CheckDir(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         d = values
         if not os.path.isdir(d):
@@ -31,7 +31,7 @@ class check_dir(argparse.Action):
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--socket-timeout', type=int, default=30,
                     help='timeout for URL fetch (seconds)')
-parser.add_argument('--dir', type=str, action=check_dir, default=os.getcwd(),
+parser.add_argument('--dir', type=str, action=CheckDir, default=os.getcwd(),
                     help='Markdown file location (default: current)')
 parser.add_argument('--out', type=str, default='out',
                     help='subdirectory for output HTML files')
