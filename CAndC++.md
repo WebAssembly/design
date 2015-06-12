@@ -22,6 +22,27 @@ will enable an LP64 data model as well, meaning that `long` and pointer
 types will be 64-bit, while `int` is 32-bit. From a C/C++ perspective,
 this will be a separate mode from ILP32, with a separate ABI.
 
+### Language Support
+
+C and C++ language conformance is largely determined by individual compiler
+support, but WebAssembly includes all the functionality that popular C and C++
+compilers need to support high-quality implementations.
+
+While [the MVP](MVP.md) will be fully functional, additional features enabling
+greater performance will be added soon after, including:
+
+ * [Support for multi-threaded execution with shared memory](PostMVP.md#threads).
+
+ * [Zero-cost C++ exception handling](PostMVP.md#zero-cost-exception-handling).
+   C++ exceptions can be implemented without this, but this feature will
+   enable them to have lower runtime overhead.
+
+ * Support for [128-bit SIMD](PostMVP.md#fixed-width-SIMD). SIMD will be
+   exposed to C/C++ through auto-vectorization, explicit APIs such as
+   [this](http://clang.llvm.org/docs/LanguageExtensions.html#vectors-and-extended-vectors)
+   and [this](https://gcc.gnu.org/onlinedocs/gcc/Vector-Extensions.html),
+   and emulated APIs from other platforms such as `<xmmintrin.h>`.
+
 ### APIs
 
 Libraries providing high-level C/C++ APIs such as the C and C++ standard
