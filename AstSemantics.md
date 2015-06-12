@@ -362,8 +362,8 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
   * Float32Lt - less than
   * Float32Le - less than or equal
   * Float32Sqrt - square root
-  * Float32Min - minimum; if either operand is NaN, returns NaN
-  * Float32Max - maximum; if either operand is NaN, returns NaN
+  * Float32Min - minimum (binary operator); if either operand is NaN, returns NaN
+  * Float32Max - maximum (binary operator); if either operand is NaN, returns NaN
 
   * Float64Add - addition
   * Float64Sub - subtraction
@@ -380,8 +380,8 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
   * Float64Lt - less than
   * Float64Le - less than or equal
   * Float64Sqrt - square root
-  * Float64Min - minimum; if either operand is NaN, returns NaN
-  * Float64Max - maximum; if either operand is NaN, returns NaN
+  * Float64Min - minimum (binary operator); if either operand is NaN, returns NaN
+  * Float64Max - maximum (binary operator); if either operand is NaN, returns NaN
 
 Min and Max operations treat -0 as being effectively less than 0.
 
