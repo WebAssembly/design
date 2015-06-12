@@ -208,6 +208,7 @@ use cases:
     altered, if there can be a reasonable way to specify how that should work.
 
 ## Additional integer operations
+
 * The following operations can be built from other operators already present,
   however in doing so they read at least one non-constant input multiple times,
   breaking single-use expression tree formation.
