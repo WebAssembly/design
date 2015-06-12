@@ -17,7 +17,7 @@ The text format will be standardized, but only for tooling purposes:
   implement WebAssembly semantics.
 
 Given that the code representation is actually an
-[Abstract Syntax Tree](ASTSemantics.md), the syntax would contain nested
+[Abstract Syntax Tree](AstSemantics.md), the syntax would contain nested
 statements and expressions (instead of the linear list of instructions most
 assembly languages have).
 
