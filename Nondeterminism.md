@@ -2,13 +2,13 @@
 
 WebAssembly is a [portable](Portability.md) sandboxed platform with limited,
 local, nondeterminism. 
-  * *Limited*: non-deterministic execution can only occur in a small number of
+  * *Limited*: nondeterministic execution can only occur in a small number of
     well-defined cases (described below) and, in those cases, the implementation
     may select from a limited set of possible behaviors.
-  * *Local*: when non-deterministic execution occurs, the effect is local,
+  * *Local*: when nondeterministic execution occurs, the effect is local,
     there is no "spooky action at a distance".
 
-The limited, local, non-deterministic model implies:
+The limited, local, nondeterministic model implies:
   * Applications can't access data outside the sandbox without going through
     appropriate APIs, or otherwise escape the sandbox.
   * WebAssembly always maintains valid, trusted callstacks; stray pointer writes

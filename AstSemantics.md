@@ -204,7 +204,7 @@ opportunities provided by each.
       is incoherent and further execution could lead to Bad Things (e.g., XSS
       attacks).
   * To allow for potentially more-efficient heap sandboxing, the semantics could
-    allow for a non-deterministic choice between one of the following when an
+    allow for a nondeterministic choice between one of the following when an
     out-of-bounds access occurred.
     * The ideal trap semantics.
     * Loads return an unspecified value.
@@ -341,7 +341,7 @@ Additional 32-bit integer Operations under consideration:
 Floating point arithmetic follows the IEEE-754 standard, except that:
  - The sign bit and significand bit pattern of any `NaN` value returned from a
    floating point arithmetic operation other than `Neg`, `Abs`, and `Copysign`
-   are computed non-deterministically. In particular, the "`NaN` propagation"
+   are computed nondeterministically. In particular, the "`NaN` propagation"
    section of IEEE-754 is not required. `NaN`s do propagate through arithmetic
    operations according to IEEE-754 rules, the difference here is that they do
    so without necessarily preserving the specific bit patterns of the original
