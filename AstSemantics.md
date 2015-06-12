@@ -6,8 +6,8 @@ expressions. Expressions are typed; validation consists of simple, bottom-up,
 
 Why not a stack-, register- or SSA-based bytecode?
 * Smaller binary encoding:
-  [JSZap](http://research.microsoft.com/en-us/projects/jszap),
-  [Slim Binaries](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.108.1711)
+  [JSZap](https://research.microsoft.com/en-us/projects/jszap),
+  [Slim Binaries](https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.108.1711)
 * [Polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1) shows simple and
   efficient translation to asm.js.
 

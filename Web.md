@@ -44,8 +44,8 @@ that the design, especially that of the [MVP](MVP.md), are sensible:
   - Reuse specification of operation semantics (with TC39);
   - Reuse backend implementation (same IR nodes).
 
-  [CORS]: http://www.w3.org/TR/cors/
-  [subresource integrity]: http://www.w3.org/TR/SRI/
-  [module loader pipeline]: http://whatwg.github.io/loader
+  [CORS]: https://www.w3.org/TR/cors/
+  [subresource integrity]: https://www.w3.org/TR/SRI/
+  [module loader pipeline]: https://whatwg.github.io/loader
   [SIMD.js-in-asm.js]: http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js
   

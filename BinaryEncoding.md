@@ -27,7 +27,7 @@ Reducing download size, is achieved through three layers:
        features like constant pools.
      * Another example is reordering of functions and some internal nodes, which
        we know does not change semantics, but
-       [can improve general compression](http://www.rfk.id.au/blog/entry/cromulate-improve-compressibility/).
+       [can improve general compression](https://www.rfk.id.au/blog/entry/cromulate-improve-compressibility/).
  * **Generic** compression, such as gzip, already supported in browsers, or LZMA
    and other compression algorithms, which might be standardized as well.
 
@@ -61,7 +61,7 @@ Yes:
 
 ### Variable-length integers
  * 31% size reduction before compression, 7% size reduction after compression.
- * [LEB128](http://en.wikipedia.org/wiki/LEB128) except limited to uint32_t payloads.
+ * [LEB128](https://en.wikipedia.org/wiki/LEB128) except limited to uint32_t payloads.
 
 ## Global structure
 
@@ -113,7 +113,7 @@ having unique names for unique features (and associated [conventions](https://hs
 The current proposal is to maintain both the efficiency of indices in the [serialized AST](BinaryEncoding.md#serialized-ast) and the established
 conflict-avoidance practices surrounding string names:
   * The WebAssembly spec doesn't define any global index spaces
-    * So, as a general rule, no magic numbers in the spec (other than the literal [magic number](http://en.wikipedia.org/wiki/Magic_number_%28programming%29)).
+    * So, as a general rule, no magic numbers in the spec (other than the literal [magic number](https://en.wikipedia.org/wiki/Magic_number_%28programming%29)).
   * Instead, a module defines its *own* local index spaces of opcodes by providing tables *of names*. 
     * So what the spec *would* define is a set of names and their associated semantics.
   * If the implementation encounters a name it doesn't implement, by default an error is thrown while loading.
