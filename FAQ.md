@@ -1,6 +1,6 @@
 # FAQ
 
-## Who was WebAssembly designed for?
+## What are WebAssembly's use cases?
 
 WebAssembly was designed with [a variety of use cases in mind](UseCases.md).
 
