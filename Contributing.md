@@ -19,6 +19,9 @@ Frequent and high-quality contributors will be invited to join the
 [contributors group][]. Truly dedicated individuals will then be invited to the
 [workshop group][].
 
+As WebAssembly moves forward we expect to form an official standards body, which
+will have its own contribution process to the specification.
+
 Happy assembly!
 
   [WebAssembly design]: https://github.com/WebAssembly/design
