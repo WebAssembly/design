@@ -41,11 +41,12 @@ characteristics:
 WebAssembly does not specify any APIs or syscalls, only an 
 [import mechanism](MVP.md#modules) where the set of available imports is defined
 by the host environment. In a [Web](Web.md) environment, functionality is
-accessed through the Web APIs defined by the [Web](https://whatwg.org)
-[Platform](http://w3c.org). Non-Web environments can choose to implement
-standard Web APIs, standard non-Web APIs (e.g. POSIX), or invent their own.
-Portability at the C/C++ level can, however, still be achieved by programming to
-a standard API (e.g., POSIX) and relying on the compiler and/or libraries
-to map the standard interface to the host environment's available imports either 
+accessed through the Web APIs defined by the
+[Web Platform](https://en.wikipedia.org/wiki/Open_Web_Platform). Non-Web
+environments can choose to implement standard Web APIs, standard non-Web APIs
+(e.g. POSIX), or invent their own. Portability at the C/C++ level can, however,
+still be achieved by programming to a standard API (e.g., POSIX) and relying
+on the compiler and/or libraries to map the standard interface to the host
+environment's available imports either 
 at compile-time (via `#ifdef`) or run-time (via [feature detection](FeatureTest.md)
 and [dynamic loading](MVP.md#modules)).
