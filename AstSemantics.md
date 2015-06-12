@@ -323,11 +323,6 @@ Note that greater-than and greater-than-or-equal operations are not required,
 since "a < b" == "b > a" and "a <= b" == "b >= a". Such equalities also hold for
 floating point comparisons, even considering NaN.
 
-Additional 32-bit integer Operations under consideration:
-  * Int32Not - signed-less one's complement
-  * Int32Neg - two's complement negation
-  * Int32Bang - test equality with zero
-
 ## Floating point operations
 
 Floating point arithmetic follows the IEEE-754 standard, except that:
