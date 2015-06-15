@@ -1,7 +1,7 @@
 # Contributing to WebAssembly
 
 WebAssembly is initially designed and implemented by browser vendors who are
-interested in meeting a variaty of [use cases](UseCases.md). As design and
+interested in meeting a variety of [use cases](UseCases.md). As design and
 implementation progresses they'll need input and contributions from developers
 interested in using WebAssembly.
 
