@@ -50,7 +50,7 @@ are a subset of the Memory types:
   * float32 - 32-bit floating point
   * float64 - 64-bit floating point
 
-All IR operations except loads and stores deal with local types. Loads convert
+All operations except loads and stores deal with local types. Loads convert
 Memory types to Local types according to the following rules:
 
   * int32.load_sx[int8] - sign-extend to int32
