@@ -144,6 +144,7 @@ which leads to the following advantages:
 
 Each heap access is annotated with a *Memory type* and
 the presumed alignment of the incoming pointer. As discussed previously, loads may
+include explicit zero- or sign-extension and stores may include implicit wrapping.
 
 Indexes into the heap are always byte indexes.
 
