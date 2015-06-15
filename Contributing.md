@@ -9,7 +9,6 @@ Interested in participating? We suggest you start by:
 
 1. Reading the [WebAssembly design][].
 2. Joining the IRC channel `irc://irc.w3.org:6667/#webassembly`.
-3. Joining the [mailing list][].
 
 With that background understood and communication set up, feel free to
 [file issues][] in the WebAssembly design repository.
@@ -20,5 +19,4 @@ will have its own contribution process to the specification.
 Happy assembly!
 
   [WebAssembly design]: https://github.com/WebAssembly/design
-  [mailing list]: https://lists.w3.org/Archives/Public/public-webassembly/
   [file issues]: https://github.com/WebAssembly/design/issues
