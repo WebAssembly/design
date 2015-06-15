@@ -8,7 +8,8 @@
    [IoT](http://en.wikipedia.org/wiki/Internet_of_Things).
 2. Specify and implement incrementally:
     * a [Minimum Viable Product (MVP)](MVP.md) for the standard with
-      roughly the same functionality as [asm.js](http://asmjs.org);
+      roughly the same functionality as [asm.js](http://asmjs.org), primarily
+      aimed at [C/C++](CAndC++.md);
     * an effective and efficient [polyfill](Polyfill.md) library for the
       MVP that translates WebAssembly code into JavaScript in the client so that
       WebAssembly MVP can run on existing browsers;

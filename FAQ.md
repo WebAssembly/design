@@ -49,7 +49,8 @@ even before there is any native support.
 ## Is WebAssembly only for C/C++ programmers?
 
 As explained in the [high-level goals](HighLevelGoals.md), to achieve a Minimum Viable Product, the
-initial focus is on C/C++.  However, by [integrating with JS at the ES6 Module interface](MVP.md#modules),
+initial focus is on [C/C++](CAndC++.md).
+However, by [integrating with JS at the ES6 Module interface](MVP.md#modules),
 web developers don't need to write C++ to take advantage of libraries that others have written; 
 reusing a modular C++ library can be as simple as [using a module from JS](http://jsmodules.io).
 
@@ -65,9 +66,9 @@ cycle-collection problems and miss optimizations that require integration with t
 
 ## What compilers can I use to build WebAssembly programs?
 
-WebAssembly initially focuses on C/C++, and an experimental backend is being
-built using [clang/LLVM](http://llvm.org). As WebAssembly evolves it will
-support more languages which often use non-LLVM compilers.
+WebAssembly initially focuses on [C/C++](CAndC++.md), and an experimental
+backend is being built using [clang/LLVM](http://llvm.org). As WebAssembly
+evolves it will support more languages which often use non-LLVM compilers.
 
 Even for C/C++ language support we hope that other compilers, such as
 [GCC](https://gcc.gnu.org), gain support for WebAssembly. The WebAssembly
