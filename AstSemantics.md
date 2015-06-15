@@ -50,8 +50,8 @@ are a subset of the Memory types:
   * float32 - 32-bit floating point
   * float64 - 64-bit floating point
 
-All IR operations except loads and stores deal with local types. Loads implicitly
-convert Memory types to Local types according to the follow rules:
+All IR operations except loads and stores deal with local types. Loads convert
+Memory types to Local types according to the following rules:
 
   * int32.load_sx[int8] - sign-extend to int32
   * int32.load_sx[int16] - sign-extend to int32
@@ -71,20 +71,20 @@ convert Memory types to Local types according to the follow rules:
 Note that the local types int32 and int64 don't technically have a sign; the
 sign bit is interpreted differently by the operations below.
 
-Similar to loads, stores implicitly truncate Local types to Memory types
-according to the following rules:
+Similar to loads, stores convert Local types to Memory types according to the
+following rules:
 
-  * int32.store[int8] - truncate int32 to int8
-  * int32.store[int16] - truncate int32 to int16
-  * int32.store[int32] - (no truncation)
-  * int64.store[int8] - truncate int64 to int8
-  * int64.store[int16] - truncate int64 to int16
-  * int64.store[int32] - truncate int64 to int32
-  * int64.store[int64] - (no truncation)
-  * float32.store[float32] - (no truncation)
-  * float64.store[float64] - (no truncation)
+  * int32.store[int8] - wrap int32 to int8
+  * int32.store[int16] - wrap int32 to int16
+  * int32.store[int32] - (no conversion)
+  * int64.store[int8] - wrap int64 to int8
+  * int64.store[int16] - wrap int64 to int16
+  * int64.store[int32] - wrap int64 to int32
+  * int64.store[int64] - (no conversion)
+  * float32.store[float32] - (no conversion)
+  * float64.store[float64] - (no conversion)
 
-Truncation of integers simply discards any upper bits; i.e. truncation does not
+Wrapping of integers simply discards any upper bits; i.e. wrapping does not
 perform saturation, trap on overflow, etc.
 
 ## Addressing local variables
@@ -144,7 +144,6 @@ which leads to the following advantages:
 
 Each heap access is annotated with a *Memory type* and
 the presumed alignment of the incoming pointer. As discussed previously, loads may
-include implicit zero- or sign-extension and stores may include implicit truncation.
 
 Indexes into the heap are always byte indexes.
 
