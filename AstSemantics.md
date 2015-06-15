@@ -55,8 +55,8 @@ convert Memory types to Local types according to the follow rules:
 
   * int32.load_sx[int8] - sign-extend to int32
   * int32.load_sx[int16] - sign-extend to int32
-  * int32.load_zx[int8] - sign-extend to int32
-  * int32.load_zx[int16] - sign-extend to int32
+  * int32.load_zx[int8] - zero-extend to int32
+  * int32.load_zx[int16] - zero-extend to int32
   * int32.load[int32] - (no conversion)
   * int64.load_sx[int8] - sign-extend to int64
   * int64.load_sx[int16] - sign-extend to int64
@@ -77,8 +77,8 @@ according to the following rules:
   * int32.store[int8] - truncate int32 to int8
   * int32.store[int16] - truncate int32 to int16
   * int32.store[int32] - (no truncation)
-  * int64.store[int8] - truncate int64 to uint8
-  * int64.store[int16] - truncate int64 to uint16
+  * int64.store[int8] - truncate int64 to int8
+  * int64.store[int16] - truncate int64 to int16
   * int64.store[int32] - truncate int64 to int32
   * int64.store[int64] - (no truncation)
   * float32.store[float32] - (no truncation)
