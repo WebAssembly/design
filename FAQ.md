@@ -1,5 +1,48 @@
 # FAQ
 
+## Why create a new standard when there is already asm.js?
+
+... especially since pthreads 
+[[1](https://blog.mozilla.org/javascript/2015/02/26/the-path-to-parallel-javascript/),
+ [2](https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/d-0ibJwCS24)] 
+and SIMD 
+[[1](https://hacks.mozilla.org/2014/10/introducing-simd-js/),
+ [2](https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/2PIOEJG_aYY),
+ [3](http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js/676)] 
+are coming to asm.js.
+
+There are several reasons:
+
+1. By addressing outstanding philosophical and pragmatic concerns, WebAssembly
+   provides an opportunity to get *all* browsers fully on board and
+   participating in its future evolution. This is especially important for the
+   Web on mobile where the load-time and throughput variation seen between
+   [asm.js-optimizing](https://blog.mozilla.org/luke/2015/02/18/microsoft-announces-asm-js-optimizations/#asmjs-opts)
+   and non-optimizing engines on large codes is magnified. Even on desktop,
+   high-end WebGL applications are coming that demand reliable, cross-browser,
+   very-near-native performance. [WebVR](http://webvr.info) will push browsers
+   even harder by significantly shrinking the latency budget.
+
+2. The kind of binary format being considered for WebAssembly can be natively
+   decoded
+   [much more efficiently](BinaryEncoding.md#why-a-binary-encoding-instead-of-a-text-only-representation) 
+   than a text format. A custom asm.js parser would be a large maintenance
+   burden and still have comparatively inferior performance.
+
+3. A new standard makes it *much easier* to add [new](PostMVP.md) 
+   [features](FutureFeatures.md) by avoiding the extremely nuanced requirements of
+   [AOT](http://asmjs.org/spec/latest/#ahead-of-time-compilation)-[compilability](https://blog.mozilla.org/luke/2014/01/14/asm-js-aot-compilation-and-startup-performance/) 
+   necessary for asm.js. Additionally, what asm.js wants as a compiler target
+   can come into conflict with what JS wants as a programming language written
+   by humans.
+
+Of course, every new standard introduces new costs (maintenance, attack surface,
+code size). WebAssembly mitigates this problem to a degree by having a design that
+allows (though not requires) a browser to implement WebAssembly inside the
+*existing* JavaScript engine (thereby reusing the compiler backend, the ES6 module
+loading frontend, and other supporting VM components). Thus, in cost, WebAssembly
+should be comparable to a big new JS feature.
+
 ## What are WebAssembly's use cases?
 
 WebAssembly was designed with [a variety of use cases in mind](UseCases.md).
