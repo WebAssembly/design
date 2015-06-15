@@ -318,11 +318,15 @@ operations the possibility of having side effects.
 
 Debugging techniques are also important, but they don't necessarily need to be
 in the spec itself. Implementations are welcome (and encouraged) to support
-execution modes with alternate default rounding modes, or alternate execution
-modes which evaluate floating point expressions at greater precision, to support
-techniques used to detect numerical instability. Implementations are welcome to
-support execution modes where floating point exceptions trap by default,
-although this will be tricky because it may cause programs not written to
-anticipate this to fail spuriously. Implementations are welcome to produce quiet
-NaN values that contain identifiers helping programmers locate where the NaNs
-were first produced.
+non-standard execution modes, enabled only from developer tools, such as modes
+with alternate rounding, or evaluation of floating point expressions at greater
+precision, to support [techniques for detecting numerical instability]
+(http://www.cs.berkeley.edu/~wkahan/Mindless.pdf).
+
+To help developers find the sources of floating point exceptions,
+implementations may wish to provide a mode where NaN values are produced with
+payloads containing identifiers helping programmers locate where the NaNs first
+appeared. Another option would be to offer another non-standard execution mode,
+enabled only from developer tools, that would enable traps on selected floating
+point exceptions, however care should be taken, since not all floating point
+exceptions indicate bugs.
