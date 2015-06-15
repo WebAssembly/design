@@ -3,16 +3,19 @@
 1. Define a [portable](Portability.md), size- and load-time-efficient
    [binary format](MVP.md#binary-format) to serve as a compilation target which
    can be compiled to execute at native speed by taking advantage of common
-   hardware capabilities.
+   hardware capabilities available on a wide range of platforms, including
+   [mobile](http://en.wikipedia.org/wiki/Mobile_device) and
+   [IoT](http://en.wikipedia.org/wiki/Internet_of_Things).
 2. Specify and implement incrementally:
-    * design [a Minimum Viable Product (MVP)](MVP.md) for the standard with
-      roughly the same functionality as [asm.js](http://asmjs.org);
-    * ship an effective and efficient [polyfill](Polyfill.md) library for the
+    * a [Minimum Viable Product (MVP)](MVP.md) for the standard with
+      roughly the same functionality as [asm.js](http://asmjs.org), primarily
+      aimed at [C/C++](CAndC++.md);
+    * an effective and efficient [polyfill](Polyfill.md) library for the
       MVP that translates WebAssembly code into JavaScript in the client so that
       WebAssembly MVP can run on existing browsers;
-    * ship a follow-up to the MVP which adds several more
-      [essential features](EssentialPostMVPFeatures.md); and
-    * continue to iteratively specify [additional features](FutureFeatures.md),
+    * a [follow-up to the MVP](PostMVP.md) which adds several more
+      essential features; and
+    * [additional features](FutureFeatures.md), specified iteratively and
       prioritized by feedback and experience, including support for languages
       other than C/C++.
 3. Design to execute within and integrate well with the *existing*

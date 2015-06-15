@@ -1,10 +1,12 @@
 # Minimum Viable Product
 
 As stated in the [high-level goals](HighLevelGoals.md), the first release aims
-at being a Minimum Viable Product (MVP), with roughly the same functionality as
-[asm.js](http://asmjs.org). This means that there are important features we
-*know* we want and need, but are post-MVP; these are in a separate [essential
-post-MVP features doc](EssentialPostMVPFeatures.md).
+at being a Minimum Viable Product (MVP). This means that there are important
+features we *know* we want and need, but are post-MVP; these are in a separate
+essential [post-MVP](PostMVP.md) features document. The MVP will contain
+features which are available today in modern web browsers and which perform well
+even on mobile devices, which leads to roughly the same functionality as
+[asm.js](http://asmjs.org).
 
 This document explains the contents of the MVP at a high-level. There are also
 separate docs with more precise descriptions of:
@@ -43,6 +45,10 @@ separate docs with more precise descriptions of:
     `puts`.
   * In the browser, the WebIDL support mentioned in
     [future features](FutureFeatures.md).
+* Any [ABI](http://en.wikipedia.org/wiki/Application_binary_interface) for
+  statically linked libraries will specific to your source language compiler.
+  In the future, [standard ABIs may be defined](FutureFeatures.md#dynamic-linking)
+  to allow for compatibility between compilers and versions of compilers.
 * **TODO**: there is more to discuss here concerning APIs.
 
 ## Module structure

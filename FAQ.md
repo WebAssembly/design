@@ -1,14 +1,18 @@
 # FAQ
 
+## What are WebAssembly's use cases?
+
+WebAssembly was designed with [a variety of use cases in mind](UseCases.md).
+
 ## Can the polyfill really be efficient?
 
 Yes, this is a [high-level goal](HighLevelGoals.md) and there is a 
-[prototype](https://github.com/WebAssembly/polyfill) with demos 
+[prototype](https://github.com/WebAssembly/polyfill-prototype-1) with demos 
 [[1](http://lukewagner.github.io/AngryBotsPacked), 
 [2](http://lukewagner.github.io/PlatformerGamePacked)].  Although the 
 [binary format](BinaryEncoding.md) is not yet specified in any detail, the format used 
 by the prototype has promising initial experimental results. To allow direct comparison with asm.js, 
-the prototype has a tool to [pack asm.js](https://github.com/WebAssembly/polyfill/blob/master/src/pack-asmjs.cpp#L3117)
+the prototype has a tool to [pack asm.js](https://github.com/WebAssembly/polyfill-prototype-1/blob/master/src/pack-asmjs.cpp#L3117)
 into the prototype's binary format. Using this tool, we can see significant size savings before and 
 after <code>gzip</code> compression:
 
@@ -17,7 +21,7 @@ after <code>gzip</code> compression:
 | [AngryBots](http://lukewagner.github.io/AngryBotsPacked) | 19MiB | 6.3MiB | 4.1MiB | 3.0MiB |
 | [PlatformerGame](http://lukewagner.github.io/PlatformerGamePacked) | 49MiB | 18MiB | 11MiB | 7.3MiB |
 
-By writing the [decoder prototype in C++](https://github.com/WebAssembly/polyfill/blob/611ec5c8c41b08b112cf064ec49b13bf87e400cd/src/unpack.cpp#L2306) 
+By writing the [decoder prototype in C++](https://github.com/WebAssembly/polyfill-prototype-1/blob/611ec5c8c41b08b112cf064ec49b13bf87e400cd/src/unpack.cpp#L2306) 
 and Emscripten-compiling to asm.js, the polyfill is able to perform the translation to asm.js
 faster than a native JS parser can parse the result (results measured in Firefox 41 
 on an Intel® Xeon® E5-2665 @ 2.40GHz):
@@ -45,7 +49,8 @@ even before there is any native support.
 ## Is WebAssembly only for C/C++ programmers?
 
 As explained in the [high-level goals](HighLevelGoals.md), to achieve a Minimum Viable Product, the
-initial focus is on C/C++.  However, by [integrating with JS at the ES6 Module interface](MVP.md#modules),
+initial focus is on [C/C++](CAndC++.md).
+However, by [integrating with JS at the ES6 Module interface](MVP.md#modules),
 web developers don't need to write C++ to take advantage of libraries that others have written; 
 reusing a modular C++ library can be as simple as [using a module from JS](http://jsmodules.io).
 
@@ -59,6 +64,27 @@ to WebAssembly (assuming it's written in portable C/C++) and this has already be
 increase the size of distributed code, lose browser devtools integration, can have cross-language
 cycle-collection problems and miss optimizations that require integration with the browser.
 
+## What compilers can I use to build WebAssembly programs?
+
+WebAssembly initially focuses on [C/C++](CAndC++.md), and an experimental
+backend is being built using [clang/LLVM](http://llvm.org). As WebAssembly
+evolves it will support more languages which often use non-LLVM compilers.
+
+Even for C/C++ language support we hope that other compilers, such as
+[GCC](https://gcc.gnu.org), gain support for WebAssembly. The WebAssembly
+working group found it easier to start with LLVM support because they had more
+experience with that toolchain from their [Emscripten](http://emscripten.org)
+and [PNaCl](http://gonacl.com) work.
+
+We hope that proprietary compilers also gain WebAssembly support, but we'll let
+vendors speak about their own platform.
+
+The [WebAssembly Community Group][] would be delighted to collaborate with more
+compiler vendors, take their input into consideration in WebAssembly itself, and
+work with them on ABI matters.
+
+  [WebAssembly Community Group]: https://www.w3.org/community/webassembly
+
 ## Will WebAssembly support View Source on the Web?
 
 Yes! WebAssembly defines a [text format](TextFormat.md) to be rendered when developers view
@@ -68,8 +94,7 @@ learning and teaching purposes. In fact, by dropping all the [coercions required
 validation](http://asmjs.org/spec/latest/#introduction), the WebAssembly text format should be much 
 more natural to read and write than asm.js. Outside the browser, command-line and online tools that 
 convert between text and binary will also be made readily available.  Lastly, a scalable form of 
-source maps is also being considered as part of the WebAssembly [tooling story]
-(https://github.com/WebAssembly/spec/blob/master/Tooling.md).
+source maps is also being considered as part of the WebAssembly [tooling story](Tooling.md).
 
 ## What's the story for Emscripten users?
 

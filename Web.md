@@ -1,10 +1,12 @@
 # Browser Embedding
 
-WebAssembly's [Minimum Viable Product](MVP.md) explicitly targets browser
-embeddings, and treats WebAssembly as an integral part of the Web platform.
+Unsurprisingly, one of WebAssembly's primary purposes is to run on the Web,
+embedded in Web browsers (though this is [not its only purpose](NonWeb.md)).
 
-A key part of operating on the web is supporting
-[feature testing](FeatureTest.md).
+This means integrating with the Web ecosystem, leveraging Web APIs, supporting
+the Web's security model, preserving the Web's portability, and designing in
+room for evolutionary development. Many of these goals are clearly
+reflected in WebAssembly's [high-level goals](HighLevelGoals.md).
 
 # Implementation Details
 
@@ -18,20 +20,32 @@ that the design, especially that of the [MVP](MVP.md), are sensible:
 * A [module](MVP.md#Modules) can be loaded in the same way as an ES6 module
   (`import` statements, `Reflect` API, `Worker` constructor, etc) and the result
   is reflected to JS as an ES6 module object.
-  * Exports are the ES6 module object exports.
-  * An import first passes the module name to the [module loader pipeline][] and
+  - Exports are the ES6 module object exports.
+  - An import first passes the module name to the [module loader pipeline][] and
     resulting ES6 module (which could be implemented in JS or WebAssembly) is
     queried for the export name.
-  * There is no special case for when one WebAssembly module imports another:
+  - There is no special case for when one WebAssembly module imports another:
     they have separate [heaps](MVP.md#heap) and pointers cannot be passed
     between the two. Module imports encapsulate the importer and
     importee. [Dynamic linking](FutureFeatures.md#dynamic-linking) should be
     used to share heaps and pointers across modules.
-  * To synchronously call into JavaScript from C++, the C++ code would declare
+  - To synchronously call into JavaScript from C++, the C++ code would declare
     and call an undefined `extern` function and the target JavaScript function
     would be given the (mangled) name of the `extern` and put inside the
     imported ES6 module.
+* Once [threads are supported](PostMVP.md#Threads), a WebAssembly module would
+  initially be distributed between workers via `postMessage()`.
+  - This also has the effect of explicitly sharing code so that engines don't
+    perform N fetches and compile N copies.
+  - May later standardize a more direct way to create a thread from WebAssembly.
+* Once [SIMD is supported](PostMVP.md#Fixed-width-SIMD), a Web implementation of
+  WebAssembly would:
+  - Be statically typed analogous to [SIMD.js-in-asm.js][];
+  - Reuse specification of operation semantics (with TC39);
+  - Reuse backend implementation (same IR nodes).
 
   [CORS]: http://www.w3.org/TR/cors/
   [subresource integrity]: http://www.w3.org/TR/SRI/
   [module loader pipeline]: http://whatwg.github.io/loader
+  [SIMD.js-in-asm.js]: http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js
+  

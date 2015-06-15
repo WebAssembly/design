@@ -2,10 +2,12 @@
 
 WebAssembly's [binary format](BinaryEncoding.md) is designed to be executable
 efficiently on a variety of operating systems and instruction set architectures,
-[on the web](Web.md) and [off the web](NonWeb.md).
+[on the Web](Web.md) and [off the Web](NonWeb.md).
+
+## Assumptions for Efficient Execution
 
 Execution environments which, despite
-[allowed implementation variants](IncompletelySpecifiedBehavior.md), don't offer
+[limited, local, nondeterminism](Nondeterminism.md), don't offer
 the following characteristics may be able to execute WebAssembly modules
 nonetheless. In some cases they may have to emulate behavior that the host
 hardware or operating system don't offer so that WebAssembly modules execute
@@ -23,20 +25,35 @@ characteristics:
 * Addressable at a byte memory granularity.
 * Support unaligned memory accesses or reliable trapping that allows software
   emulation thereof.
+* Two's complement signed integers in 32 bits and optionally 64 bits.
+* IEEE-754 32-bit and 64-bit floating point, except for
+  [a few exceptions](AstSemantics.md#floating-point-operations).
 * Little-endian byte ordering.
-* Up to 4GiB of addressable memory in a 32-bit address space. Heaps bigger than
-  4GiB in a 64-bit address space
-  [may be added later](FutureFeatures.md#Heaps-bigger-than-4GiB).
+* Memory regions which can be efficiently addressed with 32-bit
+  pointers or indices.
+* Heaps bigger than 4GiB with 64-bit addressing
+  [may be added later](FutureFeatures.md#Heaps-bigger-than-4GiB), though it will
+  be done under a [feature test](FeatureTest.md) so it won't be required for all
+  WebAssembly implementations.
 * Enforce secure isolation between WebAssembly modules and other modules or
   processes executing on the same machine.
 * An execution environment which offers forward progress guarantees to all
   threads of execution (even when executing in a non-parallel manner).
 
-Developer-exposed APIs (such as POSIX) are expected to be portable at a
-source-code level through WebAssembly libraries which will use
-[feature detection](FeatureTest.md). These libraries aren't necessarily
-standardized: WebAssembly will follow the
-[extensible web manifesto](https://extensiblewebmanifesto.org)'s lead and expose
-low-level capabilities that expose the possibilities of the underlying platform
-as closely as possible. WebAssembly therefore standardizes a lower-level
-abstraction layer, and expects libraries to offer portable APIs.
+## API
+
+WebAssembly does not specify any APIs or syscalls, only an 
+[import mechanism](MVP.md#modules) where the set of available imports is defined
+by the host environment. In a [Web](Web.md) environment, functionality is
+accessed through the Web APIs defined by the
+[Web Platform](https://en.wikipedia.org/wiki/Open_Web_Platform).
+[Non-Web](NonWeb.md) environments can choose to implement standard Web APIs,
+standard non-Web APIs (e.g. POSIX), or invent their own.
+
+## Source-level
+
+Portability at the C/C++ level can be achieved by programming to
+a standard API (e.g., POSIX) and relying on the compiler and/or libraries to map
+the standard interface to the host environment's available imports either at
+compile-time (via `#ifdef`) or run-time (via [feature detection](FeatureTest.md)
+and dynamic [loading](MVP.md#modules)/[linking](FutureFeatures.md#dynamic-linking)).

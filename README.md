@@ -10,12 +10,13 @@ followed by the [FAQ](FAQ.md).
 
 We've mapped out features we expect to ship:
  1. In [the Minimum Viable Product (MVP)](MVP.md);
- 2. Closely [after the MVP](EssentialPostMVPFeatures.md);
+ 2. Closely [after the MVP](PostMVP.md);
  3. In [future versions](FutureFeatures.md).
 
 Join us:
  * On IRC: `irc://irc.w3.org:6667/#webassembly`
  * On the [mailing list][].
+ * [Contribute](Contributing.md)!
 
   [WebAssembly]: https://www.w3.org/community/webassembly
   [mailing list]: https://lists.w3.org/Archives/Public/public-webassembly/
