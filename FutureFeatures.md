@@ -35,8 +35,8 @@ for interoperability, WebAssembly runtimes will be ABI agnostic, so it will be
 possible to use a non-standard ABI for specialized purposes.
 
   [hosted libraries]: https://developers.google.com/speed/libraries/
-  [service workers]: http://www.w3.org/TR/service-workers/
-  [ABI]: http://en.wikipedia.org/wiki/Application_binary_interface
+  [service workers]: https://www.w3.org/TR/service-workers/
+  [ABI]: https://en.wikipedia.org/wiki/Application_binary_interface
 
 ## Finer-grained control over memory
 
@@ -49,7 +49,7 @@ possible to use a non-standard ABI for specialized purposes.
 
 Some types of control flow (especially irreducible and indirect) cannot be
 expressed with maximum efficiency in WebAssembly without patterned output by the
-relooper and [jump-threading](http://en.wikipedia.org/wiki/Jump_threading)
+relooper and [jump-threading](https://en.wikipedia.org/wiki/Jump_threading)
 optimizations in the engine.
 
 Options under consideration:

@@ -14,7 +14,7 @@ The limited, local, nondeterministic model implies:
   * WebAssembly always maintains valid, trusted callstacks; stray pointer writes
     cannot corrupt return addresses or spilled variables on the stack.
   * Calls and branches always have valid destinations ensuring 
-    [Control Flow Integrity](http://research.microsoft.com/apps/pubs/default.aspx?id=64250).
+    [Control Flow Integrity](https://research.microsoft.com/apps/pubs/default.aspx?id=64250).
   * WebAssembly has no [nasal demons](https://en.wikipedia.org/w/index.php?title=Nasal_demons).
 
 Ideally, WebAssembly would be fully deterministic (except where nondeterminism

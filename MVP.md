@@ -45,7 +45,7 @@ separate docs with more precise descriptions of:
     `puts`.
   * In the browser, the WebIDL support mentioned in
     [future features](FutureFeatures.md).
-* Any [ABI](http://en.wikipedia.org/wiki/Application_binary_interface) for
+* Any [ABI](https://en.wikipedia.org/wiki/Application_binary_interface) for
   statically linked libraries will specific to your source language compiler.
   In the future, [standard ABIs may be defined](FutureFeatures.md#dynamic-linking)
   to allow for compatibility between compilers and versions of compilers.

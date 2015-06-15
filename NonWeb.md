@@ -15,7 +15,7 @@ usable.
 Where there is overlap between the browser and popular non-browser environments,
 shared specs could be proposed, but this would be separate from the WebAssembly
 spec. A symmetric example in JavaScript would be the
-[Loader](http://whatwg.github.io/loader) spec, intended to be implemented by
+[Loader](https://whatwg.github.io/loader) spec, intended to be implemented by
 both browsers and node.js. This situation is expected to be first encountered
 with POSIX features such as file I/O. In that respect, WebAssembly would err
 towards standardizing existing practice through libraries, and let developers

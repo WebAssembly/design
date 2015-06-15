@@ -8,8 +8,8 @@ WebAssembly was designed with [a variety of use cases in mind](UseCases.md).
 
 Yes, this is a [high-level goal](HighLevelGoals.md) and there is a 
 [prototype](https://github.com/WebAssembly/polyfill-prototype-1) with demos 
-[[1](http://lukewagner.github.io/AngryBotsPacked), 
-[2](http://lukewagner.github.io/PlatformerGamePacked)].  Although the 
+[[1](https://lukewagner.github.io/AngryBotsPacked), 
+[2](https://lukewagner.github.io/PlatformerGamePacked)].  Although the 
 [binary format](BinaryEncoding.md) is not yet specified in any detail, the format used 
 by the prototype has promising initial experimental results. To allow direct comparison with asm.js, 
 the prototype has a tool to [pack asm.js](https://github.com/WebAssembly/polyfill-prototype-1/blob/master/src/pack-asmjs.cpp#L3117)
@@ -18,8 +18,8 @@ after <code>gzip</code> compression:
 
 | Demo | asm.js | binary | `gzip` asm.js | `gzip` binary |
 |------|--------|--------|---------------|---------------|
-| [AngryBots](http://lukewagner.github.io/AngryBotsPacked) | 19MiB | 6.3MiB | 4.1MiB | 3.0MiB |
-| [PlatformerGame](http://lukewagner.github.io/PlatformerGamePacked) | 49MiB | 18MiB | 11MiB | 7.3MiB |
+| [AngryBots](https://lukewagner.github.io/AngryBotsPacked) | 19MiB | 6.3MiB | 4.1MiB | 3.0MiB |
+| [PlatformerGame](https://lukewagner.github.io/PlatformerGamePacked) | 49MiB | 18MiB | 11MiB | 7.3MiB |
 
 By writing the [decoder prototype in C++](https://github.com/WebAssembly/polyfill-prototype-1/blob/611ec5c8c41b08b112cf064ec49b13bf87e400cd/src/unpack.cpp#L2306) 
 and Emscripten-compiling to asm.js, the polyfill is able to perform the translation to asm.js
@@ -28,15 +28,15 @@ on an Intel® Xeon® E5-2665 @ 2.40GHz):
 
 | Demo  | binary | time to decode into asm.js |
 |-------|--------|----------------------------|
-| [AngryBots](http://lukewagner.github.io/AngryBotsPacked) | 6.3MiB | 240ms |
-| [PlatformerGame](http://lukewagner.github.io/PlatformerGamePacked)  | 18MiB  | 550ms |
+| [AngryBots](https://lukewagner.github.io/AngryBotsPacked) | 6.3MiB | 240ms |
+| [PlatformerGame](https://lukewagner.github.io/PlatformerGamePacked)  | 18MiB  | 550ms |
 
 Since the polyfill algorithm (at least in the prototype) is simple and single-pass, 
 memory usage is basically the size of the input plus the size of the decoded text.
 
 Additionally, there are two further improvements that can be made in the real polyfill:
   1. Decode while downloading using either chunked files, HTTP `Range` requests or (eventually) 
-     the [Stream API](http://www.w3.org/TR/streams-api).
+     the [Stream API](https://www.w3.org/TR/streams-api/).
   2. Include optional better-than-`gzip` compression in the polyfill.  For example, the 
      [lzham](https://github.com/richgel999/lzham_codec) library shows an *additional* 24% 
      improvement over the above "`gzip` binary" figures while maintaining high decode rates.
@@ -59,8 +59,8 @@ is to improve support for languages other than C/C++.  This includes [allowing W
 allocate and access garbage-collected (JS, DOM, Web API) objects](FutureFeatures.md#gcdom-integration). 
 Even before GC support is added to WebAssembly, it is possible to compile a language's VM 
 to WebAssembly (assuming it's written in portable C/C++) and this has already been demonstrated 
-([1](http://ruby.dj), [2](http://kripken.github.io/lua.vm.js/lua.vm.js.html),
-[3](http://syntensity.blogspot.com/2010/12/python-demo.html)).  However, "compile the VM" strategies 
+([1](http://ruby.dj), [2](https://kripken.github.io/lua.vm.js/lua.vm.js.html),
+[3](https://syntensity.blogspot.com/2010/12/python-demo.html)).  However, "compile the VM" strategies 
 increase the size of distributed code, lose browser devtools integration, can have cross-language
 cycle-collection problems and miss optimizations that require integration with the browser.
 
@@ -83,7 +83,7 @@ The [WebAssembly Community Group][] would be delighted to collaborate with more
 compiler vendors, take their input into consideration in WebAssembly itself, and
 work with them on ABI matters.
 
-  [WebAssembly Community Group]: https://www.w3.org/community/webassembly
+  [WebAssembly Community Group]: https://www.w3.org/community/webassembly/
 
 ## Will WebAssembly support View Source on the Web?
 
