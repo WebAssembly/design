@@ -343,7 +343,7 @@ The same operations are available on 64-bit integers as the ones available for
 
 Floating point arithmetic follows the IEEE-754 standard, except that:
  - The sign bit and significand bit pattern of any NaN value returned from a
-   floating point arithmetic operation other than `Neg`, `Abs`, and `Copysign`
+   floating point arithmetic operation other than `neg`, `abs`, and `copysign`
    are computed nondeterministically. In particular, the "NaN propagation"
    section of IEEE-754 is not required. NaNs do propagate through arithmetic
    operations according to IEEE-754 rules, the difference here is that they do
