@@ -25,22 +25,24 @@ other practical way to achieve [portable](Portability.md) native performance.
 The following is a list of the places where the WebAssembly specification
 currently admits nondeterminism:
 
- - [When threads are added as a feature](PostMVP.md#threads), even without
+ * [When threads are added as a feature](PostMVP.md#threads), even without
    shared memory, nondeterminism will be visible through the global sequence of
    API calls. With shared memory, the result of load operations is
    nondeterministic.
-
- - [Out of bounds heap accesses *may* want some flexibility](AstSemantics.md#out-of-bounds)
-
- - [NaN bit patterns](AstSemantics.md#floating-point-operations)
-
- - [Fixed-width SIMD may want some flexibility](PostMVP.md#fixed-width-simd)
-   - In SIMD.js, floating point values may or may not have subnormals flushed to zero.
-   - In SIMD.js, operations ending in "Approximation" return approximations that may vary between platforms.
-
- - Environment-dependent resource limits may be exhausted.
+ * Out of bounds heap accesses *may* want
+   [some flexibility](AstSemantics.md#out-of-bounds)
+ * [NaN bit patterns](AstSemantics.md#floating-point-operations)
+ * [Fixed-width SIMD may want some flexibility](PostMVP.md#fixed-width-simd)
+   - In SIMD.js, floating point values may or may not have subnormals flushed to
+     zero.
+   - In SIMD.js, operations ending in "Approximation" return approximations that
+     may vary between platforms.
+ * Environment-dependent resource limits may be exhausted. A few examples:
+   - Memory allocation may fail.
+   - Program stack may get exhausted.
+   - Resources such as handles may get exahusted.
 
 Users of C, C++, and similar languages should be aware that operations which
-have defined or constrained behavior in WebAssembly itself may nonetheless
-still have undefined behavior
+have defined or constrained behavior in WebAssembly itself may nonetheless still
+have undefined behavior
 [at the source code level](CAndC++.md#undefined-behavior).
