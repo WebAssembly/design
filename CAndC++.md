@@ -38,10 +38,12 @@ greater performance will be added soon after, including:
    enable them to have lower runtime overhead.
 
  * Support for [128-bit SIMD](PostMVP.md#fixed-width-SIMD). SIMD will be
-   exposed to C/C++ through auto-vectorization, explicit APIs such as
-   [this](http://clang.llvm.org/docs/LanguageExtensions.html#vectors-and-extended-vectors)
-   and [this](https://gcc.gnu.org/onlinedocs/gcc/Vector-Extensions.html),
-   and emulated APIs from other platforms such as `<xmmintrin.h>`.
+   exposed to C/C++ though explicit APIs such as [LLVM's vector extensions]
+   and [GCC's vector extensions], auto-vectorization, and emulated APIs from
+   other platforms such as `<xmmintrin.h>`.
+
+  [LLVM's vector extensions]: http://clang.llvm.org/docs/LanguageExtensions.html#vectors-and-extended-vectors
+  [GCC's vector extensions]: https://gcc.gnu.org/onlinedocs/gcc/Vector-Extensions.html
 
 ### APIs
 
