@@ -17,4 +17,4 @@ Join us:
  * On IRC: `irc://irc.w3.org:6667/#webassembly`
  * [Contribute](Contributing.md)!
 
-  [WebAssembly]: https://www.w3.org/community/webassembly
+  [WebAssembly]: https://www.w3.org/community/webassembly/

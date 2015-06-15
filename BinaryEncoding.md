@@ -108,7 +108,7 @@ F1 and F2 and vendor V1 implements F1, assigning the next logical opcode indices
 opcodes, and V2 implements F2, assigning the same next logical opcode indices to F2's new opcodes 
 and now a single binary has ambiguous semantics if it tries to use either F1 or F2. This type of 
 non-linear feature addition is commonplace in JS and Web APIs and is guarded against by 
-having unique names for unique features (and associated [conventions](https://hsivonen.fi/vendor-prefixes)).
+having unique names for unique features (and associated [conventions](https://hsivonen.fi/vendor-prefixes/)).
 
 The current proposal is to maintain both the efficiency of indices in the [serialized AST](BinaryEncoding.md#serialized-ast) and the established
 conflict-avoidance practices surrounding string names:
