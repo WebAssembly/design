@@ -301,3 +301,28 @@ tradeoffs.
   * `float32.pow`: exponentiate
 
 The rounding behavior of these operations would need clarification.
+
+## Full IEEE-754 conformance
+
+IEEE-754 NaN bit pattern propagation is presently permitted but not required.
+It would be possible for WebAssembly to require it in the future.
+
+To support exceptions and alternate rounding modes, one option is to define an
+alternate form for each of `add`, `sub`, `mul`, `div`, `sqrt`, and `fma`. These
+alternate forms would have extra operands for rounding mode, masked traps, and
+old flags, and an extra result for a new flags value. These operations would be
+fairly verbose, but it's expected that their use cases will specialized. This
+approach has the advantage of exposing no global (even if only per-thread)
+control and status registers to applications, and to avoid giving the common
+operations the possibility of having side effects.
+
+Debugging techniques are also important, but they don't necessarily need to be
+in the spec itself. Implementations are welcome (and encouraged) to support
+execution modes with alternate default rounding modes, or alternate execution
+modes which evaluate floating point expressions at greater precision, to support
+techniques used to detect numerical instability. Implementations are welcome to
+support execution modes where floating point exceptions trap by default,
+although this will be tricky because it may cause programs not written to
+anticipate this to fail spuriously. Implementations are welcome to produce quiet
+NaN values that contain identifiers helping programmers locate where the NaNs
+were first produced.
