@@ -59,7 +59,7 @@ Some divergences that we've identified as potentially desirable:
   semantics chosen for out of bounds access in WebAssembly, an asm.js polyfill
   will follow standard asm.js behavior:
   - Out of bound stores are ignored (treated as no-op);
-  - Out of bound loads return `0` for integer loads or `NaN` for floating point.
+  - Out of bound loads return zero for integer loads or NaN for floating point.
 * **[32-bit integer operations](AstSemantics.md#32-bit-integer-operations)**:
   Regardless of WebAssembly behavior, an asm.js polyfill will follow its
   standard behavior:
@@ -70,7 +70,7 @@ Some divergences that we've identified as potentially desirable:
   Regardless of WebAssembly behavior, an asm.js polyfill will follow its
   standard behavior:
   - Return zero when conversion from floating point to integer fails;
-  - Optionally canonicalize `NaN` values.
+  - Optionally canonicalize NaN values.
 
 ## Polyfill Evolution
 
