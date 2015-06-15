@@ -106,7 +106,7 @@ initialized to the values of the arguments passed to the function.
   * set_local - set the current value of a local variable
 
 The details of index space for local variables and their types needs
-clarification, e.g. whether locals with type Int32 and Int64 must be contiguous
+clarification, e.g. whether locals with type int32 and int64 must be contiguous
 and separate from others, etc.
 
 ## Control flow structures
