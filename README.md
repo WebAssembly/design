@@ -15,8 +15,6 @@ We've mapped out features we expect to ship:
 
 Join us:
  * On IRC: `irc://irc.w3.org:6667/#webassembly`
- * On the [mailing list][].
  * [Contribute](Contributing.md)!
 
   [WebAssembly]: https://www.w3.org/community/webassembly
-  [mailing list]: https://lists.w3.org/Archives/Public/public-webassembly/
