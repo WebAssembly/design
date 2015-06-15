@@ -24,13 +24,14 @@ this will be a separate mode from ILP32, with a separate ABI.
 
 ### APIs
 
-Libraries providing high-level C/C++ APIs such as the C and C++ standard
-libraries, OpenGL, SDL, pthreads, and others are being developed to
-support normal C/C++ development. Under the covers, these libraries will
+WebAssembly applications can use high-level C/C++ APIs such as the C
+and C++ standard libraries, OpenGL, SDL, pthreads, and others, just as
+in normal C/C++ development. Under the covers, these libraries
 implement their functionality by using low-level facilities provided by
-WebAssembly implementations. On [the Web](Web.md), they will utilize
-Web APIs. [In other contexts](NonWeb.md), other low-level mechanisms may
-be used.
+WebAssembly implementations. On [the Web](Web.md), they utilize
+Web APIs (for example, OpenGL is executed on WebGL, libc date and
+time methods use the browser's Date functionality, etc.).
+[In other contexts](NonWeb.md), other low-level mechanisms may be used.
 
 ### ABIs
 
