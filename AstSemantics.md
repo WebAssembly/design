@@ -333,6 +333,11 @@ Note that greater-than and greater-than-or-equal operations are not required,
 since "a < b" == "b > a" and "a <= b" == "b >= a". Such equalities also hold for
 floating point comparisons, even considering NaN.
 
+## 64-bit integer operations
+
+The same operations are available on 64-bit integers as the ones available for
+32-bit integers.
+
 ## Floating point operations
 
 Floating point arithmetic follows the IEEE-754 standard, except that:
