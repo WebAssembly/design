@@ -140,6 +140,8 @@ def check_outer_link(link):
     except urllib2.HTTPError as e:
         responses = BaseHTTPServer.BaseHTTPRequestHandler.responses
         return (link, 'HTTP error ' + responses[e.code()])
+    except socket.timeout as e:
+        return (link, 'Socket timeout after %i seconds' % args.socket_timeout)
     return (link, None)
 
 def print_invalid_links(links):
