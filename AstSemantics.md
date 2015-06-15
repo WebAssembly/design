@@ -38,9 +38,11 @@ global variables and heap accesses are called *Memory types*.
   * sint8 - signed 8-bit integer
   * sint16 - signed 16-bit integer
   * sint32 - signed 32-bit integer
+  * sint64 - signed 64-bit integer
   * uint8 - unsigned 8-bit integer
   * uint16 - unsigned 16-bit integer
   * uint32 - unsigned 32-bit integer
+  * uint64 - unsigned 64-bit integer
   * float32 - 32-bit floating point
   * float64 - 64-bit floating point
 
@@ -48,6 +50,7 @@ The legal types for parameters and local variables, called *Local types*
 are a subset of the Memory types:
 
   * int32 - 32-bit integer
+  * int64 - 64-bit integer
   * float32 - 32-bit floating point
   * float64 - 64-bit floating point
 
@@ -57,29 +60,36 @@ convert Memory types to Local types according to the follow rules:
   * load[sint8] - sign-extend to int32
   * load[sint16] - sign-extend to int32
   * load[sint32] - (no conversion)
+  * load[sint64] - (no conversion)
   * load[uint8] - zero-extend to int32
   * load[uint16] - zero-extend to int32
   * load[uint32] - reinterpret as int32
+  * load[uint64] - reinterpret as int64
   * load[float32] - (no conversion)
   * load[float64] - (no conversion)
 
-Note that the local type int32 does not technically have a sign; the sign bit
-is interpreted differently by the operations below.
+Note that the local types int32 and int64 don't technically have a sign; the
+sign bit is interpreted differently by the operations below.
 
-Similar to loads, stores implicitly truncate Local types to Memory types according to the
-following rules:
+Note: [issue #139](https://github.com/WebAssembly/design/issues/139) discussed
+extending loads and truncating stores in more details.
+
+Similar to loads, stores implicitly truncate Local types to Memory types
+according to the following rules:
 
   * store[sint8] - truncate int32 to sint8
   * store[sint16] - truncate int32 to sint16
   * store[sint32] - (no truncation)
+  * store[sint64] - (no truncation)
   * store[uint8] - truncate int32 to uint8
   * store[uint16] - truncate int32 to uint16
   * store[uint32] - reinterpret int32 as uint32
+  * store[uint64] - reinterpret int64 as uint64
   * store[float32] - (no truncation)
   * store[float64] - (no truncation)
 
-Truncation of integers simply discards any upper bits; i.e. truncation does not perform saturation,
-trap on overflow, etc.
+Truncation of integers simply discards any upper bits; i.e. truncation does not
+perform saturation, trap on overflow, etc.
 
 ## Addressing local variables
 
@@ -95,9 +105,9 @@ initialized to the values of the arguments passed to the function.
   * get_local - read the current value of a local variable
   * set_local - set the current value of a local variable
 
-The details of index space for local variables and their types needs clarification,
-e.g. whether locals with type int32 must be contiguous and separate from others,
-etc.
+The details of index space for local variables and their types needs
+clarification, e.g. whether locals with type int32 and int64 must be contiguous
+and separate from others, etc.
 
 ## Control flow structures
 
@@ -323,6 +333,11 @@ Note that greater-than and greater-than-or-equal operations are not required,
 since "a < b" == "b > a" and "a <= b" == "b >= a". Such equalities also hold for
 floating point comparisons, even considering NaN.
 
+## 64-bit integer operations
+
+The same operations are available on 64-bit integers as the ones available for
+32-bit integers.
+
 ## Floating point operations
 
 Floating point arithmetic follows the IEEE-754 standard, except that:
@@ -391,14 +406,24 @@ Min and Max operations treat -0 as being effectively less than 0.
   * sint32_from_float32 - truncate a 32-bit float to a signed integer
   * uint32_from_float64 - truncate a 64-bit float to an unsigned integer
   * uint32_from_float32 - truncate a 32-bit float to an unsigned integer
+  * sint64_from_float64 - truncate a 64-bit float to a signed integer
+  * sint64_from_float32 - truncate a 32-bit float to a signed integer
+  * uint64_from_float64 - truncate a 64-bit float to an unsigned integer
+  * uint64_from_float32 - truncate a 32-bit float to an unsigned integer
   * int32_from_float32_bits - reinterpret the bits of a 32-bit float as a 32-bit integer
+  * int64_from_float64_bits - reinterpret the bits of a 64-bit float as a 64-bit integer
   * float64_from_float32 - promote a 32-bit float to a 64-bit float
   * float64_from_sint32 - convert a signed integer to a 64-bit float
   * float64_from_uint32 - convert an unsigned integer to a 64-bit float
+  * float64_from_sint64 - convert a signed integer to a 64-bit float
+  * float64_from_uint64 - convert an unsigned integer to a 64-bit float
   * float32_from_float64 - demote a 64-bit float to a 32-bit float
   * float32_from_sint32 - convert a signed integer to a 32-bit float
   * float32_from_uint32 - convert an unsigned integer to a 32-bit float
+  * float32_from_sint64 - convert a signed integer to a 32-bit float
+  * float32_from_uint64 - convert an unsigned integer to a 32-bit float
   * float32_from_int32_bits - reinterpret the bits of a 32-bit integer as a 32-bit float
+  * float64_from_int64_bits - reinterpret the bits of a 64-bit integer as a 64-bit float
 
 Promotion and demotion of floating point values always succeeds.
 Demotion of floating point values uses round-to-nearest ties-to-even rounding,
