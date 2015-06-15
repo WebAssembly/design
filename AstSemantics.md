@@ -429,8 +429,8 @@ Min and Max operations treat -0 as being effectively less than 0.
   * float32_from_int32_bits - reinterpret the bits of a 32-bit integer as a 32-bit float
   * float64_from_int64_bits - reinterpret the bits of a 64-bit integer as a 64-bit float
 
-Wrapping and extension of integer values always succeeds.
-Promotion and demotion of floating point values always succeeds.
+Wrapping and extension of integer values always succeed.
+Promotion and demotion of floating point values always succeed.
 Demotion of floating point values uses round-to-nearest ties-to-even rounding,
 and may overflow to infinity or negative infinity as specified by IEEE-754.
 If the operand of promotion or demotion is NaN, the sign bit and significand
