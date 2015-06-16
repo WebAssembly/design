@@ -399,6 +399,9 @@ Min and Max operations treat -0 as being effectively less than 0.
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
+  * int32_from_int64 - wrap a 64-bit integer to a 32-bit integer
+  * int64_from_sint32 - extend a signed 32-bit integer to a 64-bit integer
+  * int64_from_uint32 - extend an unsigned 32-bit integer to a 64-bit integer
   * sint32_from_float64 - truncate a 64-bit float to a signed integer
   * sint32_from_float32 - truncate a 32-bit float to a signed integer
   * uint32_from_float64 - truncate a 64-bit float to an unsigned integer
@@ -422,7 +425,8 @@ Min and Max operations treat -0 as being effectively less than 0.
   * float32_from_int32_bits - reinterpret the bits of a 32-bit integer as a 32-bit float
   * float64_from_int64_bits - reinterpret the bits of a 64-bit integer as a 64-bit float
 
-Promotion and demotion of floating point values always succeeds.
+Wrapping and extension of integer values always succeed.
+Promotion and demotion of floating point values always succeed.
 Demotion of floating point values uses round-to-nearest ties-to-even rounding,
 and may overflow to infinity or negative infinity as specified by IEEE-754.
 If the operand of promotion or demotion is NaN, the sign bit and significand
