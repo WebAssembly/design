@@ -105,8 +105,8 @@ cycle-collection problems and miss optimizations that require integration with t
 
 ## What compilers can I use to build WebAssembly programs?
 
-WebAssembly initially focuses on [C/C++](CAndC++.md), and an experimental
-backend is being built using [clang/LLVM](http://llvm.org). As WebAssembly
+WebAssembly initially focuses on [C/C++](CAndC++.md), and a new, clean
+WebAssembly backend is being proposed for upstream clang/LLVM. As WebAssembly
 evolves it will support more languages which often use non-LLVM compilers.
 
 Even for C/C++ language support we hope that other compilers, such as
@@ -137,15 +137,13 @@ source maps is also being considered as part of the WebAssembly [tooling story](
 
 ## What's the story for Emscripten users?
 
-Existing Emscripten users will get the option to build their projects to WebAssembly, by
-flipping a flag. Initially this will be using a [polyfill](Polyfill.md), converting
-Emscripten's asm.js output to WebAssembly, and eventually Emscripten will utilize
-the [WebAssembly LLVM backend](https://github.com/WebAssembly/llvm) project, which aims to
-create a clean, new WebAssembly backend for LLVM (the open source compiler that powers Emscripten) with the
-intention of submitting to upstream. This painless transition is enabled by the
-[high-level goal](HighLevelGoals.md) that WebAssembly integrate well with the Web platform (including 
-allowing synchronous calls into and out of JS) which makes WebAssembly compatible with Emscripten's 
-current asm.js compilation model.
+Existing Emscripten users will get the option to build their projects to
+WebAssembly, by flipping a flag. Initially, Emscripten's asm.js output would
+be converted to WebAssembly, but eventually Emscripten would use WebAssembly
+throughout the pipeline. This painless transition is enabled by the 
+[high-level goal](HighLevelGoals.md) that WebAssembly integrate well with the
+Web platform (including allowing synchronous calls into and out of JS) which
+makes WebAssembly compatible with Emscripten's current asm.js compilation model.
 
 ## Is WebAssembly trying to replace JavaScript?
 
