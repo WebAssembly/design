@@ -16,7 +16,7 @@ There are two main benefits WebAssembly provides:
 1. The kind of binary format being considered for WebAssembly can be natively
    decoded much faster than JS can be parsed 
    ([experiments show more than 20× faster](BinaryEncoding.md#why-a-binary-encoding-instead-of-a-text-only-representation)).
-   On mobile, large compiled codes can easily take 20-40s *just to parse*, so
+   On mobile, large compiled codes can easily take 20&ndash;40s *just to parse*, so
    native decoding (especially when combined with other techniques like
    streaming) is critical to providing a good cold-load user experience.
 
