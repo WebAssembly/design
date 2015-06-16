@@ -40,7 +40,7 @@ currently admits nondeterminism:
  * Environment-dependent resource limits may be exhausted. A few examples:
    - Memory allocation may fail.
    - Program stack may get exhausted.
-   - Resources such as handles may get exahusted.
+   - Resources such as handles may get exhausted.
 
 Users of C, C++, and similar languages should be aware that operations which
 have defined or constrained behavior in WebAssembly itself may nonetheless still
