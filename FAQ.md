@@ -1,5 +1,44 @@
 # FAQ
 
+## Why create a new standard when there is already asm.js?
+
+... especially since pthreads 
+[[1](https://blog.mozilla.org/javascript/2015/02/26/the-path-to-parallel-javascript/),
+ [2](https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/d-0ibJwCS24)] 
+and SIMD 
+[[1](https://hacks.mozilla.org/2014/10/introducing-simd-js/),
+ [2](https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/2PIOEJG_aYY),
+ [3](http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js/676)] 
+are coming to asm.js.
+
+There are two main benefits WebAssembly provides:
+
+1. The kind of binary format being considered for WebAssembly can be natively
+   decoded much faster than JS can be parsed 
+   ([experiments show more than 20× faster](BinaryEncoding.md#why-a-binary-encoding-instead-of-a-text-only-representation)).
+   On mobile, large compiled codes can easily take 20&ndash;40s *just to parse*, so
+   native decoding (especially when combined with other techniques like
+   streaming) is critical to providing a good cold-load user experience.
+
+2. By avoiding the simultaneous asm.js constraints of
+   (1) [AOT](http://asmjs.org/spec/latest/#ahead-of-time-compilation)-[compilability](https://blog.mozilla.org/luke/2014/01/14/asm-js-aot-compilation-and-startup-performance/) 
+   and (2) good performance even on engines without 
+   [specific asm.js optimizations](https://blog.mozilla.org/luke/2015/02/18/microsoft-announces-asm-js-optimizations/#asmjs-opts),
+   a new standard makes it *much easier* to add the [features](FutureFeatures.md)
+   required to reach native levels of performance.
+
+Of course, every new standard introduces new costs (maintenance, attack surface,
+code size) that must be offset by the benefits. WebAssembly minimizes costs by
+having a design that allows (though not requires) a browser to implement
+WebAssembly inside its *existing* JS engine (thereby reusing the JS engine's
+existing compiler backend, ES6 module loading frontend, security sandboxing
+mechanisms and other supporting VM components). Thus, in cost, WebAssembly
+should be comparable to a big new JS feature, not a fundamental extension to
+the browser model.
+
+Comparing the two, even for engines which already optimize asm.js, the benefits
+outweigh the costs.
+
 ## What are WebAssembly's use cases?
 
 WebAssembly was designed with [a variety of use cases in mind](UseCases.md).
