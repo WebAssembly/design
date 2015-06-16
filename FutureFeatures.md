@@ -235,7 +235,8 @@ use cases:
   * float64.maxnum - maximum; if exactly one operand is NaN, returns the other operand
   * float64.fma - fused multiply-add (results always conforming to IEEE-754)
 
-MinNum, and MaxNum operations would treat -0 as being effectively less than 0.
+`minnum` and `maxnum` operations would treat `-0.0` as being effectively less
+than `0.0`.
 
 Note that some operations, like fma, may not be available or may not perform
 well on all platforms. These should be guarded by
