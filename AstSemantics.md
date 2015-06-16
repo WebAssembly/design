@@ -365,11 +365,15 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
  - WebAssembly uses the round-to-nearest ties-to-even rounding attribute, except
    where otherwise specified. Non-default directed rounding attributes are not
    supported.
- - Not all operations required by IEEE-754 are provided directly. However,
-   WebAssembly includes enough functionality to support reasonable library
-   implementations of the remaining required operations.
  - The strategy for gradual underflow (subnormals) is
    [under discussion](https://github.com/WebAssembly/design/issues/148).
+
+In the future, these limitations may be lifted, enabling
+[full IEEE-754 support](FutureFeatures.md#full-ieee-754-conformance).
+
+Note that not all operations required by IEEE-754 are provided directly.
+However, WebAssembly includes enough functionality to support reasonable library
+implementations of the remaining required operations.
 
   * `float32.add`: addition
   * `float32.sub`: subtraction
