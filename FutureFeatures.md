@@ -304,6 +304,9 @@ The rounding behavior of these operations would need clarification.
 
 ## Full IEEE-754 conformance
 
+WebAssembly floating point conforms IEEE-754 in most respects, but there are a
+few areas that are [not yet covered](AstSemantics.md#floating-point-operations).
+
 IEEE-754 NaN bit pattern propagation is presently permitted but not required.
 It would be possible for WebAssembly to require it in the future.
 
