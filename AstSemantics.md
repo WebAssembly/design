@@ -368,6 +368,8 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
  - Not all operations required by IEEE-754 are provided directly. However,
    WebAssembly includes enough functionality to support reasonable library
    implementations of the remaining required operations.
+ - The strategy for gradual underflow (subnormals) is
+   [under discussion](https://github.com/WebAssembly/design/issues/148).
 
   * `float32.add`: addition
   * `float32.sub`: subtraction
