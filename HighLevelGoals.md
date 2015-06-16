@@ -32,7 +32,7 @@
       binary format, supporting View Source functionality.
 4. Design to support [non-browser embeddings](NonWeb.md) as well.
 5. Make a great platform:
-    * build an [LLVM backend](https://github.com/WebAssembly/llvm) and
-      accompanying [clang port](https://github.com/WebAssembly/clang);
+    * build a new LLVM backend for WebAssembly and an accompanying
+      clang port;
     * promote other compilers and tools targeting WebAssembly; and
     * enable other useful [tooling](Tooling.md).
