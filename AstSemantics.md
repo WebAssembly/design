@@ -403,7 +403,7 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
   * `float64.le`: less than or equal
   * `float64.sqrt`: square root
   * `float64.min`: minimum (binary operator); if either operand is NaN, returns NaN
-   * `float64.max`: maximum (binary operator); if either operand is NaN, returns NaN
+  * `float64.max`: maximum (binary operator); if either operand is NaN, returns NaN
 
 `min` and `max` operations treat `-0.0` as being effectively less than `0.0`.
 
