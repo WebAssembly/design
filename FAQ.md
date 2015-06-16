@@ -106,11 +106,13 @@ cycle-collection problems and miss optimizations that require integration with t
 ## What compilers can I use to build WebAssembly programs?
 
 WebAssembly initially focuses on [C/C++](CAndC++.md), and a new, clean
-WebAssembly backend is being proposed for upstream clang/LLVM. As WebAssembly
-evolves it will support more languages which often use non-LLVM compilers.
+WebAssembly backend is being proposed for upstream clang/LLVM, which can
+then be used by LLVM-based projects like [Emscripten](http://emscripten.org)
+and [PNaCl](http://gonacl.com).
 
-Even for C/C++ language support we hope that other compilers, such as
-[GCC](https://gcc.gnu.org), gain support for WebAssembly. The WebAssembly
+As WebAssembly evolves it will support more languages than C/C++, and
+we hope that other compilers will support it as well, even for the C/C++
+language, for example [GCC](https://gcc.gnu.org). The WebAssembly
 working group found it easier to start with LLVM support because they had more
 experience with that toolchain from their [Emscripten](http://emscripten.org)
 and [PNaCl](http://gonacl.com) work.
