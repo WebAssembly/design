@@ -1,7 +1,9 @@
 # WebAssembly Community Group: Design
 
-This repository details [WebAssembly][]'s design. The WebAssembly specification
-will be drafted in a different repository.
+This repository contains documents describing the high-level design of
+WebAssembly and is part of the 
+[WebAssembly Community Group](https://www.w3.org/community/webassembly/).
+The WebAssembly specification will be drafted in a different repository.
 
 **Expect the contents to be in flux: everything is still tentative.**
 
@@ -16,5 +18,3 @@ We've mapped out features we expect to ship:
 Join us:
  * On IRC: `irc://irc.w3.org:6667/#webassembly`
  * [Contribute](Contributing.md)!
-
-  [WebAssembly]: https://www.w3.org/community/webassembly/
