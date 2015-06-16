@@ -20,11 +20,12 @@ There are two main benefits WebAssembly provides:
    native decoding (especially when combined with other techniques like
    streaming) is critical to providing a good cold-load user experience.
 
-2. A new standard makes it *much easier* to add 
-   [new features](FutureFeatures.md) by avoiding the extremely nuanced requirements of
-   [AOT](http://asmjs.org/spec/latest/#ahead-of-time-compilation)-[compilability](https://blog.mozilla.org/luke/2014/01/14/asm-js-aot-compilation-and-startup-performance/) 
-   necessary for asm.js combined with the requirement that asm.js run well on
-   all browsers (including those that do not have specific asm.js optimizations).
+2. By avoiding the simultaneous asm.js constraints of
+   (1) [AOT](http://asmjs.org/spec/latest/#ahead-of-time-compilation)-[compilability](https://blog.mozilla.org/luke/2014/01/14/asm-js-aot-compilation-and-startup-performance/) 
+   and (2) good performance even on engines without 
+   [specific asm.js optimizations](https://blog.mozilla.org/luke/2015/02/18/microsoft-announces-asm-js-optimizations/#asmjs-opts),
+   a new standard makes it *much easier* to add the [features](FutureFeatures.md)
+   required to reach native levels of performance.
 
 Of course, every new standard introduces new costs (maintenance, attack surface,
 code size) that must be offset by the benefits. WebAssembly minimizes costs by
@@ -35,9 +36,8 @@ mechanisms and other supporting VM components). Thus, in cost, WebAssembly
 should be comparable to a big new JS feature, not a fundamental extension to
 the browser model.
 
-Comparing the two, even for engines which already 
-[optimize asm.js](https://blog.mozilla.org/luke/2015/02/18/microsoft-announces-asm-js-optimizations/#asmjs-opts),
-the benefits outweigh the costs.
+Comparing the two, even for engines which already optimize asm.js, the benefits
+outweigh the costs.
 
 ## What are WebAssembly's use cases?
 
