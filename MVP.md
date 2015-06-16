@@ -71,7 +71,7 @@ separate docs with more precise descriptions of:
    closed under these bindings.
   * The [Abstract Syntax Tree](AstSemantics.md) is composed of two primary kinds
     of nodes: statements and expressions.
- * [Control flow](AstSemantics.md#Control_flow_structures) is structured (no
+ * [Control flow](AstSemantics.md#control-flow-structures) is structured (no
    `goto`).
 
 ## Binary format
