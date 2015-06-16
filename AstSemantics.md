@@ -36,60 +36,56 @@ variables, local variables, and parameters. The heap itself is not typed, but
 all accesses to the heap are annotated with a type. The legal types for
 global variables and heap accesses are called *Memory types*.
 
-  * `sint8`: signed 8-bit integer
-  * `sint16`: signed 16-bit integer
-  * `sint32`: signed 32-bit integer
-  * `sint64`: signed 64-bit integer
-  * `uint8`: unsigned 8-bit integer
-  * `uint16`: unsigned 16-bit integer
-  * `uint32`: unsigned 32-bit integer
-  * `uint64`: unsigned 64-bit integer
-  * `float32`: 32-bit floating point
-  * `float64`: 64-bit floating point
+  * `int8` - 8-bit integer
+  * `int16` - 16-bit integer
+  * `int32` - 32-bit integer
+  * `int64` - 64-bit integer
+  * `float32` - 32-bit floating point
+  * `float64` - 64-bit floating point
 
 The legal types for parameters and local variables, called *Local types*
 are a subset of the Memory types:
 
-  * `int32`: 32-bit integer
-  * `int64`: 64-bit integer
-  * `float32`: 32-bit floating point
-  * `float64`: 64-bit floating point
+  * `int32` - 32-bit integer
+  * `int64` - 64-bit integer
+  * `float32` - 32-bit floating point
+  * `float64` - 64-bit floating point
 
-All IR operations except loads and stores deal with local types. Loads
-implicitly convert Memory types to Local types according to the follow rules:
+All operations except loads and stores deal with local types. Loads convert
+Memory types to Local types according to the following rules:
 
-  * `load[sint8]`: sign-extend to int32
-  * `load[sint16]`: sign-extend to int32
-  * `load[sint32]`: (no conversion)
-  * `load[sint64]`: (no conversion)
-  * `load[uint8]`: zero-extend to int32
-  * `load[uint16]`: zero-extend to int32
-  * `load[uint32]`: reinterpret as int32
-  * `load[uint64]`: reinterpret as int64
-  * `load[float32]`: (no conversion)
-  * `load[float64]`: (no conversion)
+  * `int32.load_sx[int8]` - sign-extend to int32
+  * `int32.load_sx[int16]` - sign-extend to int32
+  * `int32.load_zx[int8]` - zero-extend to int32
+  * `int32.load_zx[int16]` - zero-extend to int32
+  * `int32.load[int32]` - (no conversion)
+  * `int64.load_sx[int8]` - sign-extend to int64
+  * `int64.load_sx[int16]` - sign-extend to int64
+  * `int64.load_sx[int32]` - sign-extend to int64
+  * `int64.load_zx[int8]` - zero-extend to int64
+  * `int64.load_zx[int16]` - zero-extend to int64
+  * `int64.load_zx[int32]` - zero-extend to int64
+  * `int64.load[int64]` - (no conversion)
+  * `float32.load[float32]` - (no conversion)
+  * `float64.load[float64]` - (no conversion)
 
-Note that the local types int32 and int64 don't technically have a sign; the
+Note that the local types `int32` and `int64` don't technically have a sign; the
 sign bit is interpreted differently by the operations below.
 
-Note: [issue #139](https://github.com/WebAssembly/design/issues/139) discussed
-extending loads and truncating stores in more details.
+Similar to loads, stores convert Local types to Memory types according to the
+following rules:
 
-Similar to loads, stores implicitly truncate Local types to Memory types
-according to the following rules:
+  * `int32.store[int8]` - wrap int32 to int8
+  * `int32.store[int16]` - wrap int32 to int16
+  * `int32.store[int32]` - (no conversion)
+  * `int64.store[int8]` - wrap int64 to int8
+  * `int64.store[int16]` - wrap int64 to int16
+  * `int64.store[int32]` - wrap int64 to int32
+  * `int64.store[int64]` - (no conversion)
+  * `float32.store[float32]` - (no conversion)
+  * `float64.store[float64]` - (no conversion)
 
-  * `store[sint8]`: truncate int32 to sint8
-  * `store[sint16]`: truncate int32 to sint16
-  * `store[sint32]`: (no truncation)
-  * `store[sint64]`: (no truncation)
-  * `store[uint8]`: truncate int32 to uint8
-  * `store[uint16]`: truncate int32 to uint16
-  * `store[uint32]`: reinterpret int32 as uint32
-  * `store[uint64]`: reinterpret int64 as uint64
-  * `store[float32]`: (no truncation)
-  * `store[float64]`: (no truncation)
-
-Truncation of integers simply discards any upper bits; i.e. truncation does not
+Wrapping of integers simply discards any upper bits; i.e. wrapping does not
 perform saturation, trap on overflow, etc.
 
 ## Addressing local variables
@@ -146,9 +142,9 @@ which leads to the following advantages:
 
 ## Accessing the heap
 
-Each heap access is annotated with a *Memory type* and the presumed alignment of
-the incoming pointer. As discussed previously, loads may include implicit zero-
-or sign-extension and stores may include implicit truncation.
+Each heap access is annotated with a *Memory type* and
+the presumed alignment of the incoming pointer. As discussed previously, loads may
+include explicit zero- or sign-extension and stores may include implicit wrapping.
 
 Indexes into the heap are always byte indexes.
 
@@ -413,30 +409,34 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
-  * `sint32_from_float64`: truncate a 64-bit float to a signed integer
-  * `sint32_from_float32`: truncate a 32-bit float to a signed integer
-  * `uint32_from_float64`: truncate a 64-bit float to an unsigned integer
-  * `uint32_from_float32`: truncate a 32-bit float to an unsigned integer
-  * `sint64_from_float64`: truncate a 64-bit float to a signed integer
-  * `sint64_from_float32`: truncate a 32-bit float to a signed integer
-  * `uint64_from_float64`: truncate a 64-bit float to an unsigned integer
-  * `uint64_from_float32`: truncate a 32-bit float to an unsigned integer
-  * `int32_from_float32_bits`: reinterpret the bits of a 32-bit float as a 32-bit integer
-  * `int64_from_float64_bits`: reinterpret the bits of a 64-bit float as a 64-bit integer
-  * `float64_from_float32`: promote a 32-bit float to a 64-bit float
-  * `float64_from_sint32`: convert a signed integer to a 64-bit float
-  * `float64_from_uint32`: convert an unsigned integer to a 64-bit float
-  * `float64_from_sint64`: convert a signed integer to a 64-bit float
-  * `float64_from_uint64`: convert an unsigned integer to a 64-bit float
-  * `float32_from_float64`: demote a 64-bit float to a 32-bit float
-  * `float32_from_sint32`: convert a signed integer to a 32-bit float
-  * `float32_from_uint32`: convert an unsigned integer to a 32-bit float
-  * `float32_from_sint64`: convert a signed integer to a 32-bit float
-  * `float32_from_uint64`: convert an unsigned integer to a 32-bit float
-  * `float32_from_int32_bits`: reinterpret the bits of a 32-bit integer as a 32-bit float
-  * `float64_from_int64_bits`: reinterpret the bits of a 64-bit integer as a 64-bit float
+  * `int32_from_int64` - wrap a 64-bit integer to a 32-bit integer
+  * `int64_from_sint32` - extend a signed 32-bit integer to a 64-bit integer
+  * `int64_from_uint32` - extend an unsigned 32-bit integer to a 64-bit integer
+  * `sint32_from_float64` - truncate a 64-bit float to a signed integer
+  * `sint32_from_float32` - truncate a 32-bit float to a signed integer
+  * `uint32_from_float64` - truncate a 64-bit float to an unsigned integer
+  * `uint32_from_float32` - truncate a 32-bit float to an unsigned integer
+  * `sint64_from_float64` - truncate a 64-bit float to a signed integer
+  * `sint64_from_float32` - truncate a 32-bit float to a signed integer
+  * `uint64_from_float64` - truncate a 64-bit float to an unsigned integer
+  * `uint64_from_float32` - truncate a 32-bit float to an unsigned integer
+  * `int32_from_float32_bits` - reinterpret the bits of a 32-bit float as a 32-bit integer
+  * `int64_from_float64_bits` - reinterpret the bits of a 64-bit float as a 64-bit integer
+  * `float64_from_float32` - promote a 32-bit float to a 64-bit float
+  * `float64_from_sint32` - convert a signed integer to a 64-bit float
+  * `float64_from_uint32` - convert an unsigned integer to a 64-bit float
+  * `float64_from_sint64` - convert a signed integer to a 64-bit float
+  * `float64_from_uint64` - convert an unsigned integer to a 64-bit float
+  * `float32_from_float64` - demote a 64-bit float to a 32-bit float
+  * `float32_from_sint32` - convert a signed integer to a 32-bit float
+  * `float32_from_uint32` - convert an unsigned integer to a 32-bit float
+  * `float32_from_sint64` - convert a signed integer to a 32-bit float
+  * `float32_from_uint64` - convert an unsigned integer to a 32-bit float
+  * `float32_from_int32_bits` - reinterpret the bits of a 32-bit integer as a 32-bit float
+  * `float64_from_int64_bits` - reinterpret the bits of a 64-bit integer as a 64-bit float
 
-Promotion and demotion of floating point values always succeeds.
+Wrapping and extension of integer values always succeed.
+Promotion and demotion of floating point values always succeed.
 Demotion of floating point values uses round-to-nearest ties-to-even rounding,
 and may overflow to infinity or negative infinity as specified by IEEE-754.
 If the operand of promotion or demotion is NaN, the sign bit and significand

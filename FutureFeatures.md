@@ -251,9 +251,9 @@ well on all platforms. These should be guarded by
 These operations would not required to be fully precise, but the specifics
 would need clarification.
 
-## 16-bit and 128-bit floating-point support
+## 16-bit and 128-bit floating point support
 
-For 16-bit floating-point support, it may make sense to split the feature
+For 16-bit floating point support, it may make sense to split the feature
 into two parts: support for just converting between 16-bit and 32-bit or
 64-bit formats possibly folded into load and store operations, and full
 support for actual 16-bit arithmetic.
@@ -267,7 +267,7 @@ techniques such as double-double arithmetic. If we standardize 128-bit
 floating point in WebAssembly, it will probably be standard IEEE-754
 quadruple precision.
 
-## Floating-point library intrinsics
+## Floating point library intrinsics
 
 These operations aren't needed because they can be implemented in WebAssembly
 code and linked into WebAssembly modules as at small size cost, and this avoids
