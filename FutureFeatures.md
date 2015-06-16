@@ -238,7 +238,7 @@ use cases:
 `minnum` and `maxnum` operations would treat `-0.0` as being effectively less
 than `0.0`.
 
-Note that some operations, like fma, may not be available or may not perform
+Note that some operations, like `fma`, may not be available or may not perform
 well on all platforms. These should be guarded by
 [feature tests](FeatureTest.md) so that if available, they behave consistently.
 
