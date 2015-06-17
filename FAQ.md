@@ -18,7 +18,8 @@ There are two main benefits WebAssembly provides:
    ([experiments show more than 20× faster](BinaryEncoding.md#why-a-binary-encoding-instead-of-a-text-only-representation)).
    On mobile, large compiled codes can easily take 20&ndash;40s *just to parse*, so
    native decoding (especially when combined with other techniques like
-   streaming) is critical to providing a good cold-load user experience.
+   [streaming](https://www.w3.org/TR/streams-api/) for better-than-gzip compression)
+   is critical to providing a good cold-load user experience.
 
 2. By avoiding the simultaneous asm.js constraints of
    (1) [AOT](http://asmjs.org/spec/latest/#ahead-of-time-compilation)-[compilability](https://blog.mozilla.org/luke/2014/01/14/asm-js-aot-compilation-and-startup-performance/) 
