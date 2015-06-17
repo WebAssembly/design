@@ -57,10 +57,8 @@ Yes:
      *just* parsing in SpiderMonkey (no validation, IR generation) to *just*
      decoding in the polyfill (no asm.js code generation).
 
-## Building blocks
-
-### Variable-length integers
- * 31% size reduction before compression, 7% size reduction after compression.
+## Variable-length integers
+ * [Polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1) shows significant size savings before (31%) and after (7%) compression.
  * [LEB128](https://en.wikipedia.org/wiki/LEB128) except limited to uint32_t payloads.
 
 ## Global structure
