@@ -182,7 +182,7 @@ WebAssembly has several requirements and goals for its IR and binary encoding:
  * Fast decoding: The binary format should be fast to decompress and decode for fast startup of programs.
  * Fast compiling: The IR should be fast to compile (and suitable for either AOT- or JIT-compilation) for fast
    startup of programs.
- * Minimal [nondeterminsim](Nondeterminsism.md): The behavior of programs should be as predictable and
+ * Minimal [nondeterminsim](Nondeterminism.md): The behavior of programs should be as predictable and
    deterministic as possible (and should be the same on every architecture, a stronger form of the
    portability requirement stated above).
 
