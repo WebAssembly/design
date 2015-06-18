@@ -44,6 +44,10 @@ possible to use a non-standard ABI for specialized purposes.
 * `madvise(MADV_DONTNEED)`.
 * Shared memory, where a physical address range is mapped to multiple physical
   pages in a single WebAssembly module as well as across modules.
+* Shared memory ACL - thread that allocates memory pool can grant other threads
+  read or read-write access to that pool, and without that grant no other thread
+  could access that memory. It should be also possible for allocator thread to
+  revoke given accesses ( any time ).
 
 ## More expressive control flow
 
