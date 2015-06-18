@@ -12,7 +12,7 @@ Interested in participating? We suggest you start by:
 
 With that background understood and communication set up, feel free to
 [file issues][] in the WebAssembly design repository. Please join the
-[W3C Community Group](w3.org/community/webassembly/) before sending pull
+[W3C Community Group](https://www.w3.org/community/webassembly/) before sending pull
 requests: it provides the legal framework that protects the work in this
 repository.
 
