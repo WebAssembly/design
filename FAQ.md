@@ -186,15 +186,15 @@ WebAssembly has several requirements and goals for its IR and binary encoding:
    deterministic as possible (and should be the same on every architecture, a stronger form of the
    portability requirement stated above).
 
-LLVM IR was designed for use primarily as an offline compiler. It is meant to make compiler optimizations
-easy to implement, and to represent the constructs and semantics required by C, C++, and other languages
-on a large variety of operating systems and architectures. This means that by default the IR is not portable
-(the same program has different representations for different architectures) or stable (it changes over
-time as optimization and language requirements change). It has representations for a huge variety
-of information that is useful for implementing mid-level compiler optimizations but is not useful
-for code generation (but which represents a large surface area for codegen implementers to deal with).
-It also has undefined behavior (largely similar to that of C and C++) which makes some classes of
-optimization feasible or more powerful.
+LLVM IR is meant to make compiler optimizations easy to implement, and to represent the constructs
+and semantics required by C, C++, and other languages on a large variety of operating systems and
+architectures. This means that by default the IR is not portable (the same program has different
+representations for different architectures) or stable (it changes over time as optimization and
+language requirements change). It has representations for a huge variety of information that is
+useful for implementing mid-level compiler optimizations but is not useful for code generation (but
+which represents a large surface area for codegen implementers to deal with).  It also has undefined
+behavior (largely similar to that of C and C++) which makes some classes of optimization feasible or
+more powerful.
 
 LLVM's binary format (bitcode) was designed for temporary on-disk serialization of the IR for link-time
 optimization, and not for stability or compressibility (although it does have some features for both
