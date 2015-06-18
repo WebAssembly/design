@@ -167,4 +167,4 @@ together in a number of configurations:
 
 ## Why do we have our own binary format, rather then using LLVM-IR/bitcode?
 
-LLVM bitcode/IR is not portable and stable enough to be used in a portable manner. LLVM-IR is used for compiler optimization, and hence has a large surface area to cover, more then what is needed for our purposes. Our own binary format allows us to easily create a polyfill for features that require one. It also easily translates to other compiler IR's, rather then being stuck with one/
+LLVM bitcode/IR is not portable and stable enough to be used in a portable manner. LLVM-IR is used for compiler optimization, and hence has a large surface area to cover, more then what is needed for our purposes. Our own binary format allows us to easily create a polyfill for features that require one. It also easily translates to other compiler bitcodes.
