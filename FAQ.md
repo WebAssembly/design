@@ -182,6 +182,9 @@ WebAssembly has several requirements and goals for its IR and binary encoding:
  * Fast decoding: The binary format should be fast to decompress and decode for fast startup of programs.
  * Fast compiling: The IR should be fast to compile (and suitable for either AOT- or JIT-compilation) for fast
    startup of programs.
+ * Minimal [nondeterminsim](Nondeterminsism.md): The behavior of programs should be as predictable and
+   deterministic as possible (and should be the same on every architecture, a stronger form of the
+   portability requirement stated above).
 
 LLVM IR was designed for use primarily as an offline compiler. It is meant to make compiler optimizations
 easy to implement, and to represent the constructs and semantics required by C, C++, and other languages
@@ -190,6 +193,9 @@ on a large variety of operating systems and architectures. This means that by de
 time as optimization and language requirements change). It has representations for a huge variety
 of information that is useful for implementing mid-level compiler optimizations but is not useful
 for code generation (but which represents a large surface area for codegen implementers to deal with).
+It also has undefined behavior (largely similar to that of C and C++) which makes some classes of
+optimization feasible or more powerful.
+
 LLVM's binary format (bitcode) was designed for temporary on-disk serialization of the IR for link-time
 optimization, and not for stability or compressibility (although it does have some features for both
 of those). LLVM's code generation backends are designed to generate the best possible code, rather
@@ -199,11 +205,11 @@ using LLVM's existing backends is slow.
 
 None of these problems is insurmountable. For example PNaCl defines a small portable
 [subset](https://developer.chrome.com/native-client/reference/pnacl-bitcode-abi) of the IR
-and a stable version of the bitcode encoding, and employs several techniques to improve startup
-performance. However, each customization, workaround, and special solution means less benefit from
-the common infrastructure. We believe that by taking our experience with LLVM and designing an IR and
-binary encoding for our goals and requirements, we can do much better than adapting a system desgined
-for other purposes.
+with reduced undefined behavior, and a stable version of the bitcode encoding. It also employs several
+techniques to improve startup performance. However, each customization, workaround, and special solution
+means less benefit from the common infrastructure. We believe that by taking our experience with LLVM and
+designing an IR and binary encoding for our goals and requirements, we can do much better than adapting a
+system desgined for other purposes.
 
 Note that this discussion applies to LLVM's IR and backend code. LLVM's clang frontend and midlevel
 optimizers can still be used to generate WebAssembly code from C and C++, similarly to how PNaCl
