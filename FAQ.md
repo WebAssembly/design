@@ -203,7 +203,7 @@ than to generate code quickly, and the common software infrastructure in the LLV
 to be easy to use and modify rather than to be as fast as possible; this means that code generation
 using LLVM's existing backends is slow.
 
-None of these problems is insurmountable. For example PNaCl defines a small portable
+None of these problems are insurmountable. For example PNaCl defines a small portable
 [subset](https://developer.chrome.com/native-client/reference/pnacl-bitcode-abi) of the IR
 with reduced undefined behavior, and a stable version of the bitcode encoding. It also employs several
 techniques to improve startup performance. However, each customization, workaround, and special solution
