@@ -180,13 +180,13 @@ WebAssembly has several requirements and goals for its IR and binary encoding:
  * Small encoding: The representation of a program should be as small as possible for transmission over
    the Internet.
  * Fast decoding: The binary format should be fast to decompress and decode for fast startup of programs.
- * Fast compiling: The IR should be fast to compile (and suitable for either AOT or JIT) for fast startup
-   of programs.
+ * Fast compiling: The IR should be fast to compile (and suitable for either AOT- or JIT-compilation) for fast
+   startup of programs.
 
 LLVM IR was designed for use primarily as an offline compiler. It is meant to make compiler optimizations
 easy to implement, and to represent the constructs and semantics required by C, C++, and other languages
 on a large variety of operating systems and architectures. This means that by default the IR is not portable
-(the same program has different representations for different architctures) or stable (it changes over
+(the same program has different representations for different architectures) or stable (it changes over
 time as optimization and language requirements change). It has representations for a huge variety
 of information that is useful for implementing mid-level compiler optimizations but is not useful
 for code generation (but which represents a large surface area for codegen implementers to deal with).
@@ -197,7 +197,8 @@ than to generate code quickly, and the common software infrastructure in the LLV
 to be easy to use and modify rather than to be as fast as possible; this means that code generation
 using LLVM's existing backends is slow.
 
-None of these problems is insurmountable. For example PNaCl defines a small portable subset of the IR
+None of these problems is insurmountable. For example PNaCl defines a small portable
+[subset](https://developer.chrome.com/native-client/reference/pnacl-bitcode-abi) of the IR
 and a stable version of the bitcode encoding, and employs several techniques to improve startup
 performance. However, each customization, workaround, and special solution means less benefit from
 the common infrastructure. We believe that by taking our experience with LLVM and designing an IR and
