@@ -11,7 +11,7 @@ Interested in participating? We suggest you start by:
 2. Joining the IRC channel `irc://irc.w3.org:6667/#webassembly`.
 
 With that background understood and communication set up, feel free to
-[file issues][] in the WebAssembly design repository. Please joing the
+[file issues][] in the WebAssembly design repository. Please join the
 [W3C Community Group](w3.org/community/webassembly/) before sending pull
 requests: it provides the legal framework that protects the work in this
 repository.
