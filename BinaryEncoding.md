@@ -65,7 +65,7 @@ Yes:
 
 * A module contains:
   * a header followed by
-  * a table containing, for each section, its type, offset (within the module), and byte length, followed by
+  * a table (sorted by offset) containing, for each section, its type, offset (within the module), followed by
   * a sequence of sections.
 * A section contains:
   * a header followed by
