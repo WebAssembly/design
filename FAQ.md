@@ -194,14 +194,9 @@ language requirements change). It has representations for a huge variety of info
 useful for implementing mid-level compiler optimizations but is not useful for code generation (but
 which represents a large surface area for codegen implementers to deal with).  It also has undefined
 behavior (largely similar to that of C and C++) which makes some classes of optimization feasible or
-more powerful.
-
-LLVM's binary format (bitcode) was designed for temporary on-disk serialization of the IR for link-time
-optimization, and not for stability or compressibility (although it does have some features for both
-of those). LLVM's code generation backends are designed to generate the best possible code, rather
-than to generate code quickly, and the common software infrastructure in the LLVM project is designed
-to be easy to use and modify rather than to be as fast as possible; this means that code generation
-using LLVM's existing backends is slow.
+more powerful.  LLVM's binary format (bitcode) was designed for temporary on-disk serialization of
+the IR for link-time optimization, and not for stability or compressibility (although it does have
+some features for both of those).
 
 None of these problems are insurmountable. For example PNaCl defines a small portable
 [subset](https://developer.chrome.com/native-client/reference/pnacl-bitcode-abi) of the IR
