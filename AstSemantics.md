@@ -1,28 +1,31 @@
 # Abstract Syntax Tree Semantics
 
-The Abstract Syntax Tree (AST) has a basic division between statements and
-expressions. Expressions are typed; validation consists of simple, bottom-up,
-`O(1)` type checking.
+WebAssembly code is represented as an abstract syntax tree
+that has a basic division between statements and
+expressions. Each function body consists of exactly one statement.
+All expressions and operations are typed, with no implicit conversions or
+overloading rules.
+
+Verification of WebAssembly code requires only a single pass with constant-time
+type checking and well-formedness checking.
 
 Why not a stack-, register- or SSA-based bytecode?
-* Smaller binary encoding: [JSZap][], [Slim Binaries][].
+* Trees allow a smaller binary encoding: [JSZap][], [Slim Binaries][].
 * [Polyfill prototype][] shows simple and efficient translation to asm.js.
 
   [JSZap]: https://research.microsoft.com/en-us/projects/jszap/
   [Slim Binaries]: https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.108.1711
   [Polyfill prototype]: https://github.com/WebAssembly/polyfill-prototype-1
 
-Each function body consists of exactly one statement.
-
-The operations available in the AST are defined here in language-independent
-way but closely match operations in many programming languages and are
-efficiently implementable on all modern computers.
+WebAssembly offers a set of operations that are language-independent but closely
+match operations in many programming languages and are efficiently implementable
+on all modern computers.
 
 Some operations may *trap* under some conditions, as noted below. In the MVP,
 trapping means that execution in the WebAssembly module is terminated and
 abnormal termination is reported to the outside environment. In a JS
-environment, such as a browser, this would translate into a JS exception being
-thrown. If developer tools are active, attaching a debugger before the
+environment such as a browser, a trap results in throwing a JS exception.
+If developer tools are active, attaching a debugger before the
 termination would be sensible.
 
 Callstack space is limited by unspecified and dynamically varying constraints.
@@ -90,20 +93,19 @@ perform saturation, trap on overflow, etc.
 
 ## Addressing local variables
 
-All local variables occupy a single index space local to the function.
-Parameters are addressed as local variables. Local variables do not have
-addresses and are not aliased in the globals or the heap. Each function has a
-fixed, pre-declared number of local variables. Local variables have *Local
-types* and are initialized to the appropriate zero value for their type at the
-beginning of the function, except parameters which are initialized to the values
+Each function has a fixed, pre-declared number of local variables which occupy a single
+index space local to the function. Parameters are addressed as local variables. Local
+variables do not have addresses and are not aliased in the globals or the heap. Local
+variables have *Local types* and are initialized to the appropriate zero value for their
+type at the beginning of the function, except parameters which are initialized to the values
 of the arguments passed to the function.
 
   * `get_local`: read the current value of a local variable
   * `set_local`: set the current value of a local variable
 
-The details of index space for local variables and their types needs
-clarification, e.g. whether locals with type `int32` and `int64` must be
-contiguous and separate from others, etc.
+The details of index space for local variables and their types will be further clarified,
+e.g. whether locals with type `int32` and `int64` must be contiguous and separate from 
+others, etc.
 
 ## Control flow structures
 
@@ -122,8 +124,7 @@ are statements.
   * `switch`: switch statement with fallthrough
 
 Break and continue statements can only target blocks or loops in which they are
-nested. This guarantees that all resulting control flow graphs are reducible,
-which leads to the following advantages:
+nested. This guarantees that all resulting control flow graphs are well-structured.
 
   * Simple and size-efficient binary encoding and compilation.
   * Any control flow—even irreducible—can be transformed into structured control
@@ -142,11 +143,12 @@ which leads to the following advantages:
 
 ## Accessing the heap
 
-Each heap access is annotated with a *Memory type* and
-the presumed alignment of the incoming pointer. As discussed previously, loads may
-include explicit zero- or sign-extension and stores may include implicit wrapping.
-
-Indexes into the heap are always byte indexes.
+Programs address the heap by using integers that are interpreted as unsigned byte indexes
+starting at `0`.
+Accesses to the heap at indices larger than the size of the heap are considered out-of-bounds,
+and a module may optionally define that out-of-bounds includes small indices close to `0`.
+Out-of-bounds access is considered a program error, and the semantics are discussed below.
+Each heap access is annotated with a *Memory type* and the presumed alignment of the index.
 
   * `load_heap`: load a value from the heap at a given index with given
     alignment
@@ -198,12 +200,11 @@ is why it isn't the specified default.)
 
 ### Out of bounds
 
-The ideal semantics is for out-of-bounds accesses to trap. A module may
-optionally define that "out of bounds" includes low-memory accesses.
+The ideal semantics is for out-of-bounds accesses to trap, but the performance
+implications and ability to polyfill to JS are not yet fully clear.
 
 There are several possible variations on this design being discussed and
-experimented with. More measurement is required to understand the optimization
-opportunities provided by each.
+experimented with. More measurement is required to understand the associated tradeoffs.
 
   * After an out-of-bounds access, the module can no longer execute code and any
     outstanding JS ArrayBuffers aliasing the heap are detached.
@@ -225,8 +226,9 @@ opportunities provided by each.
 
 ## Accessing globals
 
-Global accesses always specify a single global variable with a constant index.
-Every global has exactly one type. Global variables are not aliased to the heap.
+Global variables are storage locations outside the main heap.
+Every global has exactly one Memory type.
+Accesses to global variables specify the index as an integer literal.
 
   * `load_global`: load the value of a given global variable
   * `store_global`: store a given value to a given global variable
@@ -272,7 +274,7 @@ values.
 
 ## Literals
 
-All basic data types allow literal values of that data type. See the
+Each Local type allows literal values directly in the AST. See the
 [binary encoding section](BinaryEncoding.md#constant-pool).
 
 ## Expressions with control flow
@@ -291,7 +293,7 @@ WebAssembly-generators (including the JavaScript polyfill prototype).
     return the second operand
   * `conditional`: basically ternary `?:` operator
 
-New operands should be considered which allow measurably greater
+New operations may be considered which allow measurably greater
 expression-tree-building opportunities.
 
 ## 32-bit Integer operations
@@ -331,8 +333,8 @@ non-zero denominator always returns the correct value, even when the
 corresponding division would trap. Signed-less operations never trap.
 
 Shifts interpret their shift count operand as an unsigned value. When the shift
-count is at least the bitwidth of the shift, `shl` and `shr` return zero, and
-`sar` returns zero if the value being shifted is non-negative, and negative one
+count is at least the bitwidth of the shift, `shl` and `shr` produce `0`, and
+`sar` produces `0` if the value being shifted is non-negative, and `-1`
 otherwise.
 
 Note that greater-than and greater-than-or-equal operations are not required,
@@ -342,7 +344,7 @@ NaN.
 
 ## 64-bit integer operations
 
-The same operations are available on 64-bit integers as the ones available for
+The same operations are available on 64-bit integers as the those available for
 32-bit integers.
 
 ## Floating point operations
@@ -350,7 +352,7 @@ The same operations are available on 64-bit integers as the ones available for
 Floating point arithmetic follows the IEEE-754 standard, except that:
  - The sign bit and significand bit pattern of any NaN value returned from a
    floating point arithmetic operation other than `neg`, `abs`, and `copysign`
-   are computed nondeterministically. In particular, the "NaN propagation"
+   are not specified. In particular, the "NaN propagation"
    section of IEEE-754 is not required. NaNs do propagate through arithmetic
    operations according to IEEE-754 rules, the difference here is that they do
    so without necessarily preserving the specific bit patterns of the original
