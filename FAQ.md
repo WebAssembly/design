@@ -165,3 +165,48 @@ together in a number of configurations:
   * When WebAssembly [gains the ability to access garbage-collected objects](FutureFeatures.md#gcdom-integration),
     those objects will be shared with JS, and not live in a walled-off world of their own.
 
+## Why not just use LLVM bitcode as a binary format?
+
+The [LLVM](http://llvm.org/) compiler infrastructure has a lot to recommend it: it has an existing intermediate
+representation (LLVM IR) and binary encoding format (bitcode). It has code generation backends targeting
+many architectures is actively developed and maintained by a large community. In fact [PNaCl](http://gonacl.com)
+already uses LLVM as a basis for its binary format. However the goals and requirements that LLVM was designed
+to meet are subtly mismatched with those of WebAssembly.
+
+WebAssembly has several requirements and goals for its IR and binary encoding:
+ * Portability: The IR must be the same for every machine architecture.
+ * Stability: The IR and binary encoding must not change over time (or change only in ways that can
+   be kept backward-compatible).
+ * Small encoding: The representation of a program should be as small as possible for transmission over
+   the Internet.
+ * Fast decoding: The binary format should be fast to decompress and decode for fast startup of programs.
+ * Fast compiling: The IR should be fast to compile (and suitable for either AOT- or JIT-compilation) for fast
+   startup of programs.
+ * Minimal [nondeterminsim](Nondeterminism.md): The behavior of programs should be as predictable and
+   deterministic as possible (and should be the same on every architecture, a stronger form of the
+   portability requirement stated above).
+
+LLVM IR is meant to make compiler optimizations easy to implement, and to represent the constructs
+and semantics required by C, C++, and other languages on a large variety of operating systems and
+architectures. This means that by default the IR is not portable (the same program has different
+representations for different architectures) or stable (it changes over time as optimization and
+language requirements change). It has representations for a huge variety of information that is
+useful for implementing mid-level compiler optimizations but is not useful for code generation (but
+which represents a large surface area for codegen implementers to deal with).  It also has undefined
+behavior (largely similar to that of C and C++) which makes some classes of optimization feasible or
+more powerful, but which can lead to unpredictable behavior at runtime.  LLVM's binary format
+(bitcode) was designed for temporary on-disk serialization of the IR for link-time optimization, and
+not for stability or compressibility (although it does have some features for both of those).
+
+None of these problems are insurmountable. For example PNaCl defines a small portable
+[subset](https://developer.chrome.com/native-client/reference/pnacl-bitcode-abi) of the IR
+with reduced undefined behavior, and a stable version of the bitcode encoding. It also employs several
+techniques to improve startup performance. However, each customization, workaround, and special solution
+means less benefit from the common infrastructure. We believe that by taking our experience with LLVM and
+designing an IR and binary encoding for our goals and requirements, we can do much better than adapting a
+system desgined for other purposes.
+
+Note that this discussion applies to use of LLVM IR as a standardized format. LLVM's clang frontend
+and midlevel optimizers can still be used to generate WebAssembly code from C and C++, and will use
+LLVM IR in their implementation similarly to how PNaCl and Emscripten do today.
+
