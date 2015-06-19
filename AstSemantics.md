@@ -200,8 +200,8 @@ is why it isn't the specified default.)
 
 ### Out of bounds
 
-The ideal semantics is for out-of-bounds accesses to trap, but the performance
-implications and ability to polyfill to JS are not yet fully clear.
+The ideal semantics is for out-of-bounds accesses to trap, but the 
+implications are not yet fully clear.
 
 There are several possible variations on this design being discussed and
 experimented with. More measurement is required to understand the associated tradeoffs.
