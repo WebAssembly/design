@@ -50,13 +50,19 @@ possible to use a non-standard ABI for specialized purposes.
 Some types of control flow (especially irreducible and indirect) cannot be
 expressed with maximum efficiency in WebAssembly without patterned output by the
 relooper and [jump-threading](https://en.wikipedia.org/wiki/Jump_threading)
-optimizations in the engine.
+optimizations in the engine. Target uses for more expressive control flow are:
+* Language interpreters, which often use computed-`goto`.
+* Functional language support, where guaranteed tail call optimization is
+  expected for correctness and performance.
 
 Options under consideration:
 * No action, `while` and `switch` combined with jump-threading are enough.
 * Just add `goto` (direct and indirect).
-* Add [signature-restricted Proper Tail Calls](FutureFeatures.md#signature-restricted-proper-tail-calls).
 * Add new control-flow primitives that address common patterns.
+* Add signature-restricted Proper Tail Calls.
+* Add proper tail call, expanding upon signature-restricted proper tail calls, and
+  making it easier to support other languages, especially functional programming
+  languages.
 
 ## GC/DOM Integration
 
@@ -116,11 +122,6 @@ Useful properties of signature-restricted PTCs:
   ordering of arguments in the PTC signature.
 
   [asm.js RFC]: http://discourse.specifiction.org/t/request-for-comments-add-a-restricted-subset-of-proper-tail-calls-to-asm-js
-
-## Proper Tail Calls
-
-Expands upon signature-restricted Proper Tail Calls, and makes it easier to
-support other languages, especially functional programming languages.
  
 ## Asynchronous Signals
 
