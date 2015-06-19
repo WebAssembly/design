@@ -30,7 +30,8 @@ Reducing download size, is achieved through three layers:
        [can improve general compression](https://www.rfk.id.au/blog/entry/cromulate-improve-compressibility/).
  * **Generic** compression, such as gzip, already supported in browsers. Other
    compression algorithms being considered and which might be standardized
-   include: LZMA, [Brotli](https://datatracker.ietf.org/doc/draft-alakuijala-brotli/).
+   include: LZMA, [LZHAM](https://github.com/richgel999/lzham_codec),
+    [Brotli](https://datatracker.ietf.org/doc/draft-alakuijala-brotli/).
 
 Each of the three layers work to find compression opportunities to the best of
 its abilities, without encroaching upon the subsequent layer's compression
