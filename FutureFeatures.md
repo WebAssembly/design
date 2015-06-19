@@ -94,6 +94,8 @@ implementation running on such a platform may restrict allocations to the lower
   be downloaded.
 * Text source maps become intractably large for even moderate-sized compiled
   codes, so probably need to define new binary format for source maps.
+* Gestate ideas and start discussions at the
+  [Source Map RFC repository](https://github.com/source-map/source-map-rfc/issues)
 
 ## Coroutines
 
