@@ -50,9 +50,9 @@ possible to use a non-standard ABI for specialized purposes.
 Some types of control flow (especially irreducible and indirect) cannot be
 expressed with maximum efficiency in WebAssembly without patterned output by the
 relooper and [jump-threading](https://en.wikipedia.org/wiki/Jump_threading)
-optimizations in the engine. Targets uses for more expressive control flow are:
+optimizations in the engine. Target uses for more expressive control flow are:
 * Language interpreters, which often use computed-`goto`.
-* Functional language support, where guarantee tail call optimization is
+* Functional language support, where guaranteed tail call optimization is
   expected for correctness and performance.
 
 Options under consideration:
@@ -60,7 +60,7 @@ Options under consideration:
 * Just add `goto` (direct and indirect).
 * Add new control-flow primitives that address common patterns.
 * Add signature-restricted Proper Tail Calls.
-* Proper tail call, expanding upon signature-restricted proper tail calls, and
+* Add proper tail call, expanding upon signature-restricted proper tail calls, and
   making it easier to support other languages, especially functional programming
   languages.
 
