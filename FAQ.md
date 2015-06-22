@@ -76,7 +76,7 @@ memory usage is basically the size of the input plus the size of the decoded tex
 
 Additionally, there are two further improvements that can be made in the real polyfill:
   1. Decode while downloading using either chunked files, HTTP `Range` requests or (eventually) 
-     the [Stream API](https://www.w3.org/TR/streams-api/).
+     the [Streams API](https://streams.spec.whatwg.org/).
   2. Include optional better-than-`gzip` compression in the polyfill.  For example, the 
      [lzham](https://github.com/richgel999/lzham_codec) library shows an *additional* 24% 
      improvement over the above "`gzip` binary" figures while maintaining high decode rates.
