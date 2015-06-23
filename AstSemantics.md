@@ -146,7 +146,7 @@ nested. This guarantees that all resulting control flow graphs are well-structur
 Programs address the heap by using integers that are interpreted as unsigned byte indexes
 starting at `0`.
 Accesses to the heap at indices larger than the size of the heap are considered out-of-bounds,
-and a module may optionally define that out-of-bounds includes small indices close to `0` (see https://github.com/WebAssembly/design/issues/204).
+and a module may optionally define that out-of-bounds includes small indices close to `0` (see [discussion] (https://github.com/WebAssembly/design/issues/204)).
 Out-of-bounds access is considered a program error, and the semantics are discussed below.
 Each heap access is annotated with a *Memory type* and the presumed alignment of the index.
 
