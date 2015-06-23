@@ -18,3 +18,6 @@ We've mapped out features we expect to ship:
 Join us:
  * On IRC: `irc://irc.w3.org:6667/#webassembly`
  * [Contribute](Contributing.md)!
+
+When contributing, please follow our
+[Code of Ethics and Professional Conduct](CodeOfConduct.md).
