@@ -17,10 +17,10 @@ WebAssembly operates under the W3C's
 
 We hope that our community group act according to these guidelines, and that
 participants hold each other to these high standards. If you have any questions
-or are worried that the code isn't being followed, please
-[contact the Community Group's chairs][]. For very serious concerns, the W3C has
-[procedures][] allowing you to access its ombuds directly and confidentially.
+or are worried that the code isn't being followed, please contact the Community
+Group's chairs at `team-webassembly-chairs@w3.org` (note: this list is also
+visible to W3C staff). For very serious concerns, the W3C has [procedures][]
+allowing you to access its ombuds directly and confidentially.
 
   [Code of Ethics and Professional Conduct]: https://www.w3.org/Consortium/cepc
-  [contact the Community Group's chairs]: team-webassembly-chairs@w3.org
   [procedures]: https://www.w3.org/Consortium/pwe/#Procedures
