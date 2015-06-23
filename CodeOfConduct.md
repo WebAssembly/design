@@ -22,5 +22,5 @@ or are worried that the code isn't being followed, please
 [procedures][] allowing you to access its ombuds directly and confidentially.
 
   [Code of Ethics and Professional Conduct]: https://www.w3.org/Consortium/cepc
-  [contact the Community Group's chairs]: https://www.w3.org/community/webassembly/participants
+  [contact the Community Group's chairs]: team-webassembly-chairs@w3.org
   [procedures]: https://www.w3.org/Consortium/pwe/#Procedures
