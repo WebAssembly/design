@@ -40,7 +40,7 @@ called the *Linear memory*, is a contiguous, byte-addressable range of memory
 spanning from offset `0` to `memory_size`. The linear memory can be considered 
 to be a untyped array of bytes which is stored separately from the global variables.
 The linear memory is sandboxed; it does not alias the execution engine's internal
-data structures, the stack, or other process memory.
+data structures, the execution stack, or other process memory.
 All accesses to memory are annotated with a type. The legal types for
 global variables and memory accesses are called *Memory types*.
 
