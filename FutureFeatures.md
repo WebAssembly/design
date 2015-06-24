@@ -14,7 +14,7 @@ This is covered in the [tooling](Tooling.md) section.
 ## Dynamic linking
 
 [Dynamic loading](MVP.md#code-loading-and-imports) is in [the MVP](MVP.md), but
-all loaded modules have their own [separate linear memory](MVP.md#memory) and cannot share
+all loaded modules have their own [separate linear memory](MVP.md#linear-memory) and cannot share
 [function pointers](MVP.md#function-pointers). Dynamic linking will allow
 developers to share memory and function pointers between WebAssembly modules.
 
