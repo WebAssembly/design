@@ -34,9 +34,9 @@ separate docs with more precise descriptions of:
   * In a minimal shell environment, imports could be limited to builtin modules
     (implemented by the shell) and/or shell scripts.
   * The [dynamic linking](FutureFeatures.md#dynamic-linking) post-MVP feature
-    would extend the semantics to include multiple modules and thus allow heap
-    and pointer sharing. Dynamic linking would be semantically distinct from
-    importing, though.
+    would extend the semantics to include multiple modules and thus allow sharing 
+linear memory and pointers. Dynamic linking would be semantically distinct from
+    importing, however.
 * When compiling from C++, imports would be generated for unresolved `extern`
   functions and calls to those `extern` functions would call the import.
 * Host environments can define builtin modules that are implemented natively but
@@ -60,7 +60,7 @@ separate docs with more precise descriptions of:
   * module import section;
   * globals section (constants, signatures, variables);
   * code section;
-  * heap initialization section.
+  * memory initialization section.
 
 ## Code section
 
@@ -89,21 +89,21 @@ separate docs with more precise descriptions of:
 The [text format](TextFormat.md) provides readability to developers, and is
 isomorphic to the [binary format](BinaryEncoding.md).
 
-## Heap
+## Linear Memory
 
-* In the MVP, when a WebAssembly module is loaded, it creates a new heap which
+* In the MVP, when a WebAssembly module is loaded, it creates a new linear memory which
   isn't directly accessible from other modules.
 * The [dynamic linking](FutureFeatures.md#dynamic-linking) feature will be
-  necessary for two WebAssembly modules to share the same heap.
-* Modules can specify heap size and initialization data (`data`, `rodata`,
-  `bss`) in the [heap-initialization section](MVP.md#module-structure).
-* Modules can specify whether the heap is growable (via `sbrk`).
-* Modules can optionally export the heap, allowing it to be aliased by the
+  necessary for two WebAssembly modules to share the same linear memory.
+* Modules can specify memory size and initialization data (`data`, `rodata`,
+  `bss`) in the [memory-initialization section](MVP.md#module-structure).
+* Modules can specify whether memory is growable (via `sbrk`).
+* Modules can optionally export memory, allowing it to be aliased by the
   embedder, such as JavaScript:
-  * JavaScript sees the exported heap as an `ArrayBuffer`.
-  * To keep an `ArrayBuffer`'s length immutable, resizing a module's heap
+  * JavaScript sees the exported memory as an `ArrayBuffer`.
+  * To keep an `ArrayBuffer`'s length immutable, resizing a module's memory
     detaches any existent `ArrayBuffer`.
-* See the [AST Semantics heap section](AstSemantics.md#accessing-the-heap) for
+* See the [AST Semantics memory section](AstSemantics.md#accessing-the-memory) for
   more details.
  
 ## Security
