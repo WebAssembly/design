@@ -103,7 +103,7 @@ isomorphic to the [binary format](BinaryEncoding.md).
   * JavaScript sees the exported memory as an `ArrayBuffer`.
   * To keep an `ArrayBuffer`'s length immutable, resizing a module's memory
     detaches any existent `ArrayBuffer`.
-* See the [AST Semantics memory section](AstSemantics.md#accessing-the-memory) for
+* See the [AST Semantics memory section](AstSemantics.md#accessing-linear-memory) for
   more details.
  
 ## Security
