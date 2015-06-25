@@ -458,8 +458,8 @@ the opcode, and the operand.
 
 Reinterpretations always succeed.
 
-Conversions from integer to floating point always succeed, though they may
-overflow to infinity or negative infinity as specified by IEEE-754.
+Conversions from integer to floating point always succeed, and use
+round-to-nearest ties-to-even rounding.
 
 Truncation from floating point to integer where IEEE-754 would specify an
 invalid operation exception (e.g. when the floating point value is NaN or
