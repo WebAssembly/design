@@ -18,7 +18,7 @@ happens-before relationship, and synchronize-with edges as defined in other
 languages.
 
 Modules can have global variables that are either shared or thread-local. While
-the heap could be used for shared global variables, global variables are not
+the linear memory could be used to store shared global variables, global variables are not
 aliasable and thus allow more aggressive optimization.
 
   [synchronic]: http://wg21.link/n4195

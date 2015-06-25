@@ -25,10 +25,10 @@ that the design, especially that of the [MVP](MVP.md), are sensible:
     resulting ES6 module (which could be implemented in JS or WebAssembly) is
     queried for the export name.
   - There is no special case for when one WebAssembly module imports another:
-    they have separate [heaps](MVP.md#heap) and pointers cannot be passed
+    they have separate [memory](MVP.md#linear-memory) and pointers cannot be passed
     between the two. Module imports encapsulate the importer and
     importee. [Dynamic linking](FutureFeatures.md#dynamic-linking) should be
-    used to share heaps and pointers across modules.
+    used to share memory and pointers across modules.
   - To synchronously call into JavaScript from C++, the C++ code would declare
     and call an undefined `extern` function and the target JavaScript function
     would be given the (mangled) name of the `extern` and put inside the

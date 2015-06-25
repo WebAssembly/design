@@ -14,9 +14,9 @@ This is covered in the [tooling](Tooling.md) section.
 ## Dynamic linking
 
 [Dynamic loading](MVP.md#code-loading-and-imports) is in [the MVP](MVP.md), but
-all loaded modules have their own [separate heaps](MVP.md#heap) and cannot share
+all loaded modules have their own [separate linear memory](MVP.md#linear-memory) and cannot share
 [function pointers](MVP.md#function-pointers). Dynamic linking will allow
-developers to share heaps and function pointers between WebAssembly modules.
+developers to share memory and function pointers between WebAssembly modules.
 
 WebAssembly will support both load-time and run-time (`dlopen`) dynamic linking
 of both WebAssembly modules and non-WebAssembly modules (e.g., on the Web, ES6
@@ -77,13 +77,13 @@ Options under consideration:
   * DOM objects via WebIDL.
 * Perhaps a rooting API for safe reference from the linear address space.
 
-## Heaps bigger than 4GiB
+## Linear memory bigger than 4GiB
 
-WebAssembly will eventually allow heaps greater than 4GiB by providing
-load/store operations that take 64-bit address operands. Modules which opt-in to
+WebAssembly will eventually allow a module to have a linear memory size greater than 4GiB by providing
+load/store operations that take 64-bit index operands. Modules which opt-in to
 this feature have `int64` as the canonical pointer type.
 
-On a 32-bit system, heaps must still be smaller than 4GiB. A WebAssembly
+On a 32-bit system, memory must still be smaller than 4GiB. A WebAssembly
 implementation running on such a platform may restrict allocations to the lower
 4GiB, and leave the two 32-bits untouched.
 
@@ -114,7 +114,7 @@ Useful properties of signature-restricted PTCs:
 * In most cases, can be compiled to a single jump.
 * Can express indirect `goto` via function-pointer calls.
 * Can be used as a compile target for languages with unrestricted PTCs; the code
-  generator can use a stack in the heap to effectively implement a custom call
+  generator can use a stack in the linear memory to effectively implement a custom call
   ABI on top of signature-restricted PTCs.
 * An engine that wishes to perform aggressive optimization can fuse a graph of
   PTCs into a single function.

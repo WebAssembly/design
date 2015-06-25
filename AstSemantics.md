@@ -35,9 +35,14 @@ a trap occurs.
 ## Local and Memory types
 
 Individual storage locations in WebAssembly are typed, including global
-variables, local variables, and parameters. The heap itself is not typed, but
-all accesses to the heap are annotated with a type. The legal types for
-global variables and heap accesses are called *Memory types*.
+variables, local variables, and parameters. The main storage of a wasm module, 
+called the *Linear memory*, is a contiguous, byte-addressable range of memory
+spanning from offset `0` to `memory_size`. The linear memory can be considered 
+to be a untyped array of bytes which is stored separately from the global variables.
+The linear memory is sandboxed; it does not alias the execution engine's internal
+data structures, the execution stack, or other process memory.
+All accesses to memory are annotated with a type. The legal types for
+global variables and memory accesses are called *Memory types*.
 
   * `int8`: 8-bit integer
   * `int16`: 16-bit integer
@@ -95,7 +100,7 @@ perform saturation, trap on overflow, etc.
 
 Each function has a fixed, pre-declared number of local variables which occupy a single
 index space local to the function. Parameters are addressed as local variables. Local
-variables do not have addresses and are not aliased in the globals or the heap. Local
+variables do not have addresses and are not aliased in the globals or memory. Local
 variables have *Local types* and are initialized to the appropriate zero value for their
 type at the beginning of the function, except parameters which are initialized to the values
 of the arguments passed to the function.
@@ -141,26 +146,26 @@ nested. This guarantees that all resulting control flow graphs are well-structur
     feature would allow efficient compilation of arbitrary irreducible control
     flow.
 
-## Accessing the heap
+## Accessing Linear Memory
 
-Programs address the heap by using integers that are interpreted as unsigned byte indexes
+Programs address memory by using integers that are interpreted as unsigned byte indexes
 starting at `0`.
-Accesses to the heap at indices larger than the size of the heap are considered out-of-bounds,
+Accesses to memory at indices larger than the size of memory are considered out-of-bounds,
 and a module may optionally define that out-of-bounds includes small indices close to `0` (see [discussion] (https://github.com/WebAssembly/design/issues/204)).
 Out-of-bounds access is considered a program error, and the semantics are discussed below.
-Each heap access is annotated with a *Memory type* and the presumed alignment of the index.
+Each memory access is annotated with a *Memory type* and the presumed alignment of the index.
 
-  * `load_heap`: load a value from the heap at a given index with given
+  * `load_mem`: load a value from memory at a given index with given
     alignment
-  * `store_heap`: store a given value to the heap at a given index with given
+  * `store_mem`: store a given value to memory at a given index with given
     alignment
 
-To enable more aggressive hoisting of bounds checks, heap accesses may also
+To enable more aggressive hoisting of bounds checks, memory accesses may also
 include an offset:
 
-  * `load_heap_with_offset`: load a value from the heap at a given index plus a
+  * `load_mem_with_offset`: load a value from memory at a given index plus a
     given immediate offset
-  * `store_heap_with_offset`: store a given value to the heap at a given index
+  * `store_mem_with_offset`: store a given value to memory at a given index
     plus a given immediate offset
 
 The addition of the offset and index is specified to use infinite precision such
@@ -171,21 +176,21 @@ same base and different offsets to easily share a single bounds check.
 
 In the MVP, the indices are 32-bit unsigned integers. With
 [64-bit integers](PostMVP.md#64-bit-integers) and
-[>4GiB heaps](FutureFeatures.md#heaps-bigger-than-4gib), these nodes would also
+[>4GiB memory](FutureFeatures.md#heaps-bigger-than-4gib), these nodes would also
 accept 64-bit unsigned integers.
 
-In the MVP, heaps are not shared between threads. When
+In the MVP, linear memory is not shared between threads. When
 [threads](PostMVP.md#threads) are added as a feature, the basic
-`load_heap`/`store_heap` nodes will have the most relaxed semantics specified in
-the memory model and new heap-access nodes will be added with atomic and
+`load_mem`/`store_mem` nodes will have the most relaxed semantics specified in
+the memory model and new memory-access nodes will be added with atomic and
 ordering guarantees.
 
 Two important semantic cases are **misaligned** and **out-of-bounds** accesses:
 
 ### Alignment
 
-If the incoming index argument to a heap access is misaligned with respect to
-the alignment operand of the heap access, the heap access must still work
+If the incoming index argument to a memory access is misaligned with respect to
+the alignment operand of the memory access, the memory access must still work
 correctly (as if the alignment operand was `1`). However, on some platforms,
 such misaligned accesses may incur a *massive* performance penalty (due to trap
 handling). Thus, it is highly recommend that every WebAssembly producer provide
@@ -207,26 +212,26 @@ There are several possible variations on this design being discussed and
 experimented with. More measurement is required to understand the associated tradeoffs.
 
   * After an out-of-bounds access, the module can no longer execute code and any
-    outstanding JS ArrayBuffers aliasing the heap are detached.
+    outstanding JS ArrayBuffers aliasing the linear memory are detached.
     * This would primarily allow hoisting bounds checks above effectful
       operations.
     * This can be viewed as a mild security measure under the assumption that
       while the sandbox is still ensuring safety, the module's internal state
       is incoherent and further execution could lead to Bad Things (e.g., XSS
       attacks).
-  * To allow for potentially more-efficient heap sandboxing, the semantics could
+  * To allow for potentially more-efficient memory sandboxing, the semantics could
     allow for a nondeterministic choice between one of the following when an
     out-of-bounds access occurred.
     * The ideal trap semantics.
     * Loads return an unspecified value.
-    * Stores are either ignored or store to an unspecified location in the heap.
+    * Stores are either ignored or store to an unspecified location in the linear memory.
     * Either tooling or an explicit opt-in "debug mode" in the spec should allow
       execution of a module in a mode that threw exceptions on out-of-bounds
       access.
 
 ## Accessing globals
 
-Global variables are storage locations outside the main heap.
+Global variables are storage locations outside the linear memory.
 Every global has exactly one Memory type.
 Accesses to global variables specify the index as an integer literal.
 
@@ -257,8 +262,8 @@ in the function table.
 
 Function-pointer values are comparable for equality and the `addressof` operator
 is monomorphic. Function-pointer values can be explicitly coerced to and from
-integers (which, in particular, is necessary when loading/storing to the heap
-since the heap only provides integer types). For security and safety reasons,
+integers (which, in particular, is necessary when loading/storing to memory
+since memory only provides integer types). For security and safety reasons,
 the integer value of a coerced function-pointer value is an abstract index and
 does not reveal the actual machine code address of the target function.
 

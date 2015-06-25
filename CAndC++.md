@@ -92,7 +92,7 @@ become corrupted.
 
 Other than that, programs which invoke undefined behavior at the source language
 level may be compiled into WebAssembly programs which do anything else,
-including corrupting the contents of the application heap, calling APIs with
+including corrupting the contents of the application's linear memory, calling APIs with
 arbitrary parameters, hanging, trapping, or consuming arbitrary amounts of
 resources (within the limits).
 
