@@ -1,6 +1,6 @@
 # Essential Post-MVP Features
 
-Some features are know to be essential and needed as soon as possible but aren't
+Some features are known to be essential and needed as soon as possible but aren't
 in the [Minimum Viable Product (MVP)](MVP.md) because there isn't yet a
 portably-efficient [polyfill](Polyfill.md) via JavaScript. There is a much
 bigger [list of features](FutureFeatures.md) that will be added after these
