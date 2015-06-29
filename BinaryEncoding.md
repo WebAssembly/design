@@ -67,23 +67,30 @@ Yes:
 
 * A module contains:
   * a header followed by
-  * a table (sorted by offset) containing, for each section, its type and offset (within the module), followed by
+  * a table (sorted by offset) containing, for each section, its type and
+    offset (within the module), followed by
   * a sequence of sections.
 * A section contains:
   * a header followed by
   * the section contents (specific to the section type)
-* An opcode definitions section contains:
+* A definitions section contains:
   * the generic section header
-  * a table containing, for each opcode-space, it's type, offset (within the section), sorted by offset, followed by
+  * a sequence of standardized string literal types, where order determines
+    type ID, followed by
+  * a table containing, for each opcode-space, its type, offset (within the
+    section), sorted by offset, followed by
   * a sequence of opcode tables
   * An opcode table contains:
-    * a sequence of standardized string literals, where order determines opcode index
+    * a sequence of standardized string literal opcodes, where order determines
+      opcode index
 * A code section contains:
   * the generic section header
-  * a table containing, for each function, it's signature, offset (within the section), sorted by offset, followed by
+  * a table containing, for each function, its signature, offset (within the
+    section), sorted by offset, followed by
   * a sequence of functions
   * A function contains:
-    * a table containing, for each type, how many locals are indexed by the function body of that type
+    * a table containing, for each type, how many locals are indexed by the
+      function body of that type
     * the serialized AST
 
 ## Serialized AST
