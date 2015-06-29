@@ -66,35 +66,39 @@ Yes:
 ## Global structure
 
 * A module contains (in this order):
-  * A header
-  * A table (sorted by offset) containing, for each section:
-    * Section type
-    * Offset within the module
-  * A sequence of sections
+  - A header, containing:
+    + The [magic number](https://en.wikipedia.org/wiki/Magic_number_%28programming%29)
+    + Other data TBD (possibly entrypoint, memory bitness, source language, etc.)
+  - A table (sorted by offset) containing, for each section:
+    + A string literal section type name
+    + 32-bit offset within the module
+  - A sequence of sections
 * A section contains:
-  * A header followed by
-  * The section contents (specific to the section type)
-* A definitions section contains (in this order):
-  * The generic section header
-  * A table (sorted by offset) containing, for each type which has opcodes:
-    * A standardized string literal [type name](AstSemantics.md#local-and-memory-types).
+  - A header followed by
+  - The section contents (specific to the section type)
+* A `definitions` section contains (in this order):
+  - The generic section header
+  - A table (sorted by offset) containing, for each type which has opcodes:
+    + A standardized string literal [type name](AstSemantics.md#local-and-memory-types).
       The index of a type name in this table is referred to as a type ID
-    * Offset of its opcode table within the section
-  * A sequence of opcode tables
-  * An opcode table contains:
-    * A sequence of standardized string literal [opcode names](AstSemantics.md),
+    + 32-bit offset of its opcode table within the section
+  - A sequence of opcode tables
+  - An opcode table contains:
+    + A sequence of standardized string literal [opcode names](AstSemantics.md),
       where order determines opcode index
-* A code section contains (in this order):
-  * The generic section header
-  * A table (sorted by offset) containing, for each function:
-     * Signature
-     * Offset within the section
-  * A sequence of functions
-  * A function contains:
-    * A table containing, for each type ID that has [locals](AstSemantics.md#addressing-local-variables):
+* A `code` section contains (in this order):
+  - The generic section header
+  - A table (sorted by offset) containing, for each function:
+     + Signature
+     + 32-bit offset within the section
+  - A sequence of functions
+  - A function contains:
+    + A table containing, for each type ID that has [locals](AstSemantics.md#addressing-local-variables):
       * Type ID
       * Count of locals
-    * The serialized AST
+    + The serialized AST
+
+All strings are encoded as null-terminated UTF8.
 
 ## Serialized AST
 
