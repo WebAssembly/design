@@ -75,14 +75,13 @@ Yes:
   * the section contents (specific to the section type)
 * A definitions section contains:
   * the generic section header
-  * a sequence of standardized string literal types, where order determines
-    type ID, followed by
-  * a table containing, for each opcode-space, its type, offset (within the
-    section), sorted by offset, followed by
+  * a table containing, for each opcode-space, a standardized string literal
+    type name (where index defines its type), offset (within the section),
+    sorted by offset, followed by
   * a sequence of opcode tables
   * An opcode table contains:
-    * a sequence of standardized string literal opcodes, where order determines
-      opcode index
+    * a sequence of standardized string literal opcode names, where order
+      determines opcode index
 * A code section contains:
   * the generic section header
   * a table containing, for each function, its signature, offset (within the
