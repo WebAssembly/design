@@ -72,13 +72,19 @@ Yes:
 * A section contains:
   * a header followed by
   * the section contents (specific to the section type)
+* An opcode definitions section contains:
+  * the generic section header
+  * a table containing, for each opcode-space, it's type, offset (within the section), sorted by offset, followed by
+  * a sequence of opcode tables
+  * An opcode table contains:
+    * a sequence of standardized string literals, where order determines opcode index
 * A code section contains:
   * the generic section header
   * a table containing, for each function, it's signature, offset (within the section), sorted by offset, followed by
   * a sequence of functions
-* A function contains:
-  * a table containing, for each type, how many locals are indexed by the function body of that type
-  * the serialized AST
+  * A function contains:
+    * a table containing, for each type, how many locals are indexed by the function body of that type
+    * the serialized AST
 
 ## Serialized AST
 
