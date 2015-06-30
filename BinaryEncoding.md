@@ -90,7 +90,7 @@ Yes:
   - The generic section header
   - A table (sorted by offset) containing, for each function:
      + Signature
-     + 32-bit offset within the section
+     + 64-bit offset within the section
   - A sequence of functions
   - A function contains:
     + A table containing, for each type ID that has [locals](AstSemantics.md#addressing-local-variables):
