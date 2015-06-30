@@ -68,10 +68,10 @@ Yes:
 * A module contains (in this order):
   - A header, containing:
     + The [magic number](https://en.wikipedia.org/wiki/Magic_number_%28programming%29)
-    + Other data TBD (possibly entrypoint, memory bitness, source language, etc.)
+    + Other data TBD
   - A table (sorted by offset) containing, for each section:
     + A string literal section type name
-    + 32-bit offset within the module
+    + 64-bit offset within the module
   - A sequence of sections
 * A section contains:
   - A header followed by
