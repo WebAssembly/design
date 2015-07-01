@@ -65,20 +65,40 @@ Yes:
 
 ## Global structure
 
-* A module contains:
-  * a header followed by
-  * a table (sorted by offset) containing, for each section, its type and offset (within the module), followed by
-  * a sequence of sections.
+* A module contains (in this order):
+  - A header, containing:
+    + The [magic number](https://en.wikipedia.org/wiki/Magic_number_%28programming%29)
+    + Other data TBD
+  - A table (sorted by offset) containing, for each section:
+    + A string literal section type name
+    + 64-bit offset within the module
+  - A sequence of sections
 * A section contains:
-  * a header followed by
-  * the section contents (specific to the section type)
-* A code section contains:
-  * the generic section header
-  * a table containing, for each function, it's signature, offset (within the section), sorted by offset, followed by
-  * a sequence of functions
-* A function contains:
-  * a table containing, for each type, how many locals are indexed by the function body of that type
-  * the serialized AST
+  - A header followed by
+  - The section contents (specific to the section type)
+* A `definitions` section contains (in this order):
+  - The generic section header
+  - A table (sorted by offset) containing, for each type which has opcodes:
+    + A standardized string literal [type name](AstSemantics.md#local-and-memory-types).
+      The index of a type name in this table is referred to as a type ID
+    + 32-bit offset of its opcode table within the section
+  - A sequence of opcode tables
+  - An opcode table contains:
+    + A sequence of standardized string literal [opcode names](AstSemantics.md),
+      where order determines opcode index
+* A `code` section contains (in this order):
+  - The generic section header
+  - A table (sorted by offset) containing, for each function:
+     + Signature
+     + 64-bit offset within the section
+  - A sequence of functions
+  - A function contains:
+    + A table containing, for each type ID that has [locals](AstSemantics.md#addressing-local-variables):
+      * Type ID
+      * Count of locals
+    + The serialized AST
+
+All strings are encoded as null-terminated UTF8.
 
 ## Serialized AST
 
