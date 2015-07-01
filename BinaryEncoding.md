@@ -81,7 +81,7 @@ Yes:
   - A table (sorted by offset) containing, for each type which has opcodes:
     + A standardized string literal [type name](AstSemantics.md#local-and-memory-types).
       The index of a type name in this table is referred to as a type ID
-    + 32-bit offset of its opcode table within the section
+    + 64-bit offset of its opcode table within the section
   - A sequence of opcode tables
   - An opcode table contains:
     + A sequence of standardized string literal [opcode names](AstSemantics.md),
@@ -90,6 +90,7 @@ Yes:
   - The generic section header
   - A table (sorted by offset) containing, for each function:
      + Signature
+     + Function attributes, valid attributes TBD (could include hot/cold, optimization level, noreturn, read/write/pure, ...)
      + 64-bit offset within the section
   - A sequence of functions
   - A function contains:
