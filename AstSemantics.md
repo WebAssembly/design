@@ -126,9 +126,9 @@ their value operand, with no conversion applied.
 ### Addressing
 
 Each linear memory access operation also has an address operand and an immediate
-integer offset attribute. The infinite-precision sum of the address operand's
-value with the offset attribute's value is called the *effective address*, which
-is interpreted as an unsigned byte index.
+integer byte offset attribute. The infinite-precision sum of the address
+operand's value with the byte offset attribute's value is called the
+*effective address*, which is interpreted as an unsigned byte index.
 
 Linear memory accesses access the bytes starting at the location in the linear
 memory storage indexed by the effective address, and extending for the number
