@@ -13,6 +13,10 @@ environments, which
 [dynamic linking](FutureFeatures.md#dynamic-linking) will make discoverable and
 usable.
 
+Non-Web environments may include JavaScript interpreters (e.g. node.js), however
+WebAssembly is also being designed to be capable of being executed without a
+JavaScript interpreter present.
+
 The WebAssembly spec will not try to define any large portable libc-like
 library. However, certain features that are core to WebAssembly semantics that
 are found in native libc *would* be part of the core WebAssembly spec as either
