@@ -147,8 +147,9 @@ address for an access is out-of-bounds, the effective address will always also
 be out-of-bounds. This is intended to simplify folding of offsets into complex
 address modes in hardware, and to simplify bounds checking optimizations.
 
-In the MVP, address operands and offset attributes have type `int32`, and heap
-sizes are limited to 4 GiB. In the future, to support
+In the MVP, address operands and offset attributes have type `int32`, and linear
+memory sizes are limited to 4 GiB (of course, actual sizes are further limited
+by [available resources](Nondeterminism.md)). In the future, to support
 [>4GiB linear memory](FutureFeatures.md#heaps-bigger-than-4gib), there will be
 a mode in which they have type `int64`.
 
