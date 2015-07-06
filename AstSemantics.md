@@ -500,8 +500,7 @@ Promotion and demotion of floating point values always succeed.
 Demotion of floating point values uses round-to-nearest ties-to-even rounding,
 and may overflow to infinity or negative infinity as specified by IEEE-754.
 If the operand of promotion or demotion is NaN, the sign bit and significand
-of the result are computed from an unspecified function of the implementation,
-the opcode, and the operand.
+of the result are not specified.
 
 Reinterpretations always succeed.
 

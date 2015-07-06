@@ -31,7 +31,9 @@ currently admits nondeterminism:
    nondeterministic.
  * Out of bounds heap accesses *may* want
    [some flexibility](AstSemantics.md#out-of-bounds)
- * [NaN bit patterns](AstSemantics.md#floating-point-operations)
+ * NaN bit patterns in floating point
+   [operations](AstSemantics.md#floating-point-operations) and
+   [conversions](AstSemantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions)
  * Within the lexical extent of a
    `dont_care` [`subnormal_mode`](AstSemantics.md#floating-point-subnormal-handling)
    block, the interpretation and production of subnormal values is
