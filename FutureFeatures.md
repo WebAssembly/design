@@ -336,3 +336,26 @@ appeared. Another option would be to offer another non-standard execution mode,
 enabled only from developer tools, that would enable traps on selected floating
 point exceptions, however care should be taken, since not all floating point
 exceptions indicate bugs.
+
+## Integer Overflow Detection
+
+There are two different use cases here, one where the application is prepared
+to handle overflow, and one where it isn't.
+
+When the application is prepared to handle overflow, it would be useful to have
+arithmetic operations which can indicate when overflow occured. An example of
+this is the checked arithmetic builtins available in some compilers:
+
+ * http://clang.llvm.org/docs/LanguageExtensions.html#checked-arithmetic-builtins
+ * https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html
+
+If WebAssembly is made to support nodes with multiple return values, that could
+be used instead of passing a pointer.
+
+When the application is not prepared to handle overflow, it would be useful to
+have arithmetic operations which trap on overflow. Following the rule that
+explicitly signed and unsigned operations trap whenever the result value can not
+be represented in the result type, it would be possible to add explicitly signed
+and unsigned versions of integer `add`, `sub`, and `mul`, which would trap on
+overflow. The main reason we haven't added these already is that they're not
+efficient for general-purpose use on today's popular hardware.
