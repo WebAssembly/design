@@ -13,7 +13,7 @@ environments, which
 [dynamic linking](FutureFeatures.md#dynamic-linking) will make discoverable and
 usable.
 
-Non-Web environments may include JavaScript interpreters (e.g. node.js), however
+Non-Web environments may include JavaScript VMs (e.g. node.js), however
 WebAssembly is also being designed to be capable of being executed without a
 JavaScript VM present.
 
