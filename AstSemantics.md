@@ -253,8 +253,10 @@ are statements.
   * `return`: return zero or more values from this function
   * `switch`: switch statement with fallthrough
 
-Break and continue statements can only target blocks or loops in which they are
-nested. This guarantees that all resulting control flow graphs are well-structured.
+Loops (`do_while` and `forever`) may only be entered via fallthrough at the top.
+In particular, they may not be entered directly via a `break`, `continue`, or
+`switch` destination. This guarantees that all control flow graphs are
+well-structured.
 
   * Simple and size-efficient binary encoding and compilation.
   * Any control flow—even irreducible—can be transformed into structured control
