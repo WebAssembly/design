@@ -15,7 +15,7 @@ usable.
 
 Non-Web environments may include JavaScript interpreters (e.g. node.js), however
 WebAssembly is also being designed to be capable of being executed without a
-JavaScript interpreter present.
+JavaScript VM present.
 
 The WebAssembly spec will not try to define any large portable libc-like
 library. However, certain features that are core to WebAssembly semantics that
