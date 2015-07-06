@@ -327,6 +327,10 @@ representing `false`.
   * `int32.sle`: signed less than or equal
   * `int32.ult`: unsigned less than
   * `int32.ule`: unsigned less than or equal
+  * `int32.sgt`: signed greater than
+  * `int32.sge`: signed greater than or equal
+  * `int32.ugt`: unsigned greater than
+  * `int32.uge`: unsigned greater than or equal
   * `int32.clz`: count leading zeroes (defined for all values, including zero)
   * `int32.ctz`: count trailing zeroes (defined for all values, including zero)
   * `int32.popcnt`: count number of ones
@@ -341,11 +345,6 @@ Shifts interpret their shift count operand as an unsigned value. When the shift
 count is at least the bitwidth of the shift, `shl` and `shr` produce `0`, and
 `sar` produces `0` if the value being shifted is non-negative, and `-1`
 otherwise.
-
-Note that greater-than and greater-than-or-equal operations are not required,
-since `a < b` is equivalent to `b > a` and `a <= b` is equivalent to `b >=
-a`. Such equalities also hold for floating point comparisons, even considering
-NaN.
 
 ## 64-bit integer operations
 
@@ -396,6 +395,8 @@ implementations of the remaining required operations.
   * `float32.eq`: compare equal
   * `float32.lt`: less than
   * `float32.le`: less than or equal
+  * `float32.gt`: greater than
+  * `float32.ge`: greater than or equal
   * `float32.sqrt`: square root
   * `float32.min`: minimum (binary operator); if either operand is NaN, returns NaN
   * `float32.max`: maximum (binary operator); if either operand is NaN, returns NaN
@@ -414,6 +415,8 @@ implementations of the remaining required operations.
   * `float64.eq`: compare equal
   * `float64.lt`: less than
   * `float64.le`: less than or equal
+  * `float64.gt`: greater than
+  * `float64.ge`: greater than or equal
   * `float64.sqrt`: square root
   * `float64.min`: minimum (binary operator); if either operand is NaN, returns NaN
   * `float64.max`: maximum (binary operator); if either operand is NaN, returns NaN
