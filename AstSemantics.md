@@ -127,18 +127,19 @@ their value operand, with no conversion applied.
 
 Each linear memory access operation also has an address operand and an immediate
 integer offset attribute. The infinite-precision sum of the address operand's
-value with the offset attribute's value is called the *effective address*.
+value with the offset attribute's value is called the *effective address*, which
+is interpreted as an unsigned byte index.
 
-Effective addresses are interpreted as unsigned byte indices into the linear
-memory storage, starting at `0`. Linear memory accesses access memory starting
-at this byte and extending for the number of bytes implied by the memory
-attribute.
+Linear memory accesses access the bytes starting at the location in the linear
+memory storage indexed by the effective address, and extending for the number
+of bytes implied by the memory type attribute of the access.
 
-Accesses to any bytes of linear memory beyond the `memory_size` are considered
+If any of the accessed bytes are beyond `memory_size`, the access is considered
 *out-of-bounds*. A module may optionally define that out-of-bounds includes
 small effective addresses close to `0`
-(see [discussion] (https://github.com/WebAssembly/design/issues/204)).
-The semantics of out-of-bounds accesses are discussed below.
+(see [discussion](https://github.com/WebAssembly/design/issues/204)).
+The semantics of out-of-bounds accesses are discussed
+[below](AstSemantics.md#out-of-bounds).
 
 The use of infinite-precision in the effective address computation means that
 the addition of the offset to the address does is never wrapped, so if the
