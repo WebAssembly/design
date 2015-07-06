@@ -1,7 +1,8 @@
-# Browser Embedding
+# Web Embedding
 
 Unsurprisingly, one of WebAssembly's primary purposes is to run on the Web,
-embedded in Web browsers (though this is [not its only purpose](NonWeb.md)).
+for example embedded in Web browsers (though this is
+[not its only purpose](NonWeb.md)).
 
 This means integrating with the Web ecosystem, leveraging Web APIs, supporting
 the Web's security model, preserving the Web's portability, and designing in
