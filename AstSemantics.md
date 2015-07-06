@@ -120,6 +120,9 @@ basic type to their memory type, and write the resulting value to linear memory:
 Wrapping of integers simply discards any upper bits; i.e. wrapping does not
 perform saturation, trap on overflow, etc.
 
+In addition to storing a value to linear memory, store instructions also return
+their value operand, with no conversion applied.
+
 ### Addressing
 
 Each linear memory access operation also has an address operand and an immediate
