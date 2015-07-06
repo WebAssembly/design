@@ -32,11 +32,13 @@ currently admits nondeterminism:
  * Out of bounds heap accesses *may* want
    [some flexibility](AstSemantics.md#out-of-bounds)
  * [NaN bit patterns](AstSemantics.md#floating-point-operations)
- * [Fixed-width SIMD may want some flexibility](PostMVP.md#fixed-width-simd)
-   - In SIMD.js, floating point values may or may not have subnormals flushed to
-     zero.
-   - In SIMD.js, operations ending in "Approximation" return approximations that
-     may vary between platforms.
+ * Within the lexical extent of a
+   `dont_care` [`subnormal_mode`](AstSemantics.md#floating-point-subnormal-handling)
+   block, the interpretation and production of subnormal values is
+   nondeterministically relaxed.
+ * [Fixed-width SIMD](PostMVP.md#fixed-width-simd) may define operations with
+   names ending in "approximation" which return approximations that may vary
+   nondeterministically.
  * Environment-dependent resource limits may be exhausted. A few examples:
    - Memory allocation may fail.
    - Program stack may get exhausted.
