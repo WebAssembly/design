@@ -34,24 +34,24 @@ a trap occurs.
 
 ## Types
 
-### Basic Types
+### Local Types
 
-The following types are called the *basic types*:
+The following types are called the *local types*:
 
   * `int32`: 32-bit integer
   * `int64`: 64-bit integer
   * `float32`: 32-bit floating point
   * `float64`: 64-bit floating point
 
-Note that the basic types `int32` and `int64` are not inherently signed or
+Note that the local types `int32` and `int64` are not inherently signed or
 unsigned. The interpretation of these types is determined by individual
 operations.
 
-Parameters and local variables use basic types.
+Parameters and local variables use local types.
 
 ### Expression Types
 
-*Expression types* include all the basic types, and also:
+*Expression types* include all the local types, and also:
 
   * `void`: no value
 
@@ -59,7 +59,7 @@ AST expression nodes use expression types.
 
 ### Memory Types
 
-*Memory types* are a different superset of the basic types, adding the
+*Memory types* are a different superset of the local types, adding the
 following:
 
   * `int8`: 8-bit integer
@@ -84,7 +84,7 @@ memory-access nodes will be added with atomic and ordering guarantees.
 ### Linear Memory Operations
 
 Linear memory operations are annotated with a memory type and perform a
-conversion between that memory type and a basic type.
+conversion between that memory type and a local type.
 
 Loads read data from linear memory, convert from their memory type to a basic
 type, and return the result:
@@ -105,7 +105,7 @@ type, and return the result:
   * `float64.load[float64]`: (no conversion)
 
 Stores have an operand providing a value to store. They convert from the value's
-basic type to their memory type, and write the resulting value to linear memory:
+local type to their memory type, and write the resulting value to linear memory:
 
   * `int32.store[int8]`: wrap int32 to int8
   * `int32.store[int16]`: wrap int32 to int16
@@ -213,7 +213,7 @@ tradeoffs.
 Each function has a fixed, pre-declared number of local variables which occupy a single
 index space local to the function. Parameters are addressed as local variables. Local
 variables do not have addresses and are not aliased in the globals or memory. Local
-variables have basic types and are initialized to the appropriate zero value for their
+variables have local types and are initialized to the appropriate zero value for their
 type at the beginning of the function, except parameters which are initialized to the values
 of the arguments passed to the function.
 
@@ -308,7 +308,7 @@ values.
 
 ## Literals
 
-Each basic type allows literal values directly in the AST. See the
+Each local type allows literal values directly in the AST. See the
 [binary encoding section](BinaryEncoding.md#constant-pool).
 
 ## Expressions with control flow
