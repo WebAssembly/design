@@ -36,7 +36,7 @@ could be either builtin operations (no different from `int32.add`) or exports of
 a builtin SIMD module.
 
   [PNaCl's SIMD]: https://developer.chrome.com/native-client/reference/pnacl-c-cpp-language-support#portable-simd-vectors
-  [SIMD.js]: https://github.com/johnmccutchan/ecmascript_simd
+  [SIMD.js]: https://github.com/tc39/ecmascript_simd
 
 ## Zero-cost Exception Handling
 
