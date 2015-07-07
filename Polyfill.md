@@ -23,7 +23,7 @@ polyfills existing to meet different developers' needs.
 
 An **effective** polyfill should reuse much of the Web platform's existing
 capabilities, as detailed in the browser embedding
-[implementation details](Web.md#Implementation-Details).
+[implementation details](Web.md#implementation-details).
 
   [polyfill]: https://remysharp.com/2010/10/08/what-is-a-polyfill
   [Emscripten]: http://emscripten.org

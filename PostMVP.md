@@ -64,7 +64,7 @@ implement `setjmp`/`longjmp`. This can enable all of the defined behavior of
 destructors. It does not, however, allow the undefined behavior case of jumping
 forward to a stack that was already unwound which is sometimes used to implement
 coroutines. Coroutine support is being
-[considered separately](FutureFeatures.md#Coroutines).
+[considered separately](FutureFeatures.md#coroutines).
 
   [caveats]: https://blog.mozilla.org/nnethercote/2011/01/18/the-dangers-of-fno-exceptions
   [low-level capabilities]: https://extensiblewebmanifesto.org

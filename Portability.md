@@ -31,8 +31,8 @@ characteristics:
 * Little-endian byte ordering.
 * Memory regions which can be efficiently addressed with 32-bit
   pointers or indices.
-* Heaps bigger than 4GiB with 64-bit addressing
-  [may be added later](FutureFeatures.md#Heaps-bigger-than-4GiB), though it will
+* Linear memory bigger than 4GiB with 64-bit addressing
+  [may be added later](FutureFeatures.md#linear-memory-bigger-than-4gib), though it will
   be done under a [feature test](FeatureTest.md) so it won't be required for all
   WebAssembly implementations.
 * Enforce secure isolation between WebAssembly modules and other modules or

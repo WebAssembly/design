@@ -17,7 +17,7 @@ that `int`, `long`, and pointer types are all 32-bit. The `long long`
 type is 64-bit.
 
 In the future, WebAssembly will be extended to support
-[64-bit address spaces](FutureFeatures.md#Heaps-bigger-than-4GiB). This
+[64-bit address spaces](FutureFeatures.md#linear-memory-bigger-than-4gib). This
 will enable an LP64 data model as well, meaning that `long` and pointer
 types will be 64-bit, while `int` is 32-bit. From a C/C++ perspective,
 this will be a separate mode from ILP32, with a separate ABI.
@@ -37,7 +37,7 @@ greater performance will be added soon after, including:
    C++ exceptions can be implemented without this, but this feature will
    enable them to have lower runtime overhead.
 
- * Support for [128-bit SIMD](PostMVP.md#fixed-width-SIMD). SIMD will be
+ * Support for [128-bit SIMD](PostMVP.md#fixed-width-simd). SIMD will be
    exposed to C/C++ though explicit APIs such as [LLVM's vector extensions]
    and [GCC's vector extensions], auto-vectorization, and emulated APIs from
    other platforms such as `<xmmintrin.h>`.
@@ -78,7 +78,7 @@ optimizers still assume that undefined behavior won't occur, so such bugs
 can still lead to surprising behavior.
 
 For example, while unaligned memory access is
-[fully defined](AstSemantics.md#Alignment) in WebAssembly, C and C++ compilers
+[fully defined](AstSemantics.md#alignment) in WebAssembly, C and C++ compilers
 make no guarantee that a (non-packed) unaligned memory access at the source
 level is harmlessly translated into an unaligned memory access in WebAssembly.
 And in practice, popular C and C++ compilers do optimize on the assumption that

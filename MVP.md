@@ -40,7 +40,7 @@ linear memory and pointers. Dynamic linking would be semantically distinct from
 * When compiling from C++, imports would be generated for unresolved `extern`
   functions and calls to those `extern` functions would call the import.
 * Host environments can define builtin modules that are implemented natively but
-  can otherwise be imported like [other modules](MVP.md#Modules). As examples:
+  can otherwise be imported like [other modules](MVP.md#modules). As examples:
   * A WebAssembly shell might define a builtin `stdio` library with an export
     `puts`.
   * In the browser, the WebIDL support mentioned in

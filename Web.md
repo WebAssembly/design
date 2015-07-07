@@ -17,7 +17,7 @@ that the design, especially that of the [MVP](MVP.md), are sensible:
   [subresource integrity][] to enable distribution, especially through content
   distribution networks and to implement
   [dynamic linking](FutureFeatures.md#dynamic-linking).
-* A [module](MVP.md#Modules) can be loaded in the same way as an ES6 module
+* A [module](MVP.md#modules) can be loaded in the same way as an ES6 module
   (`import` statements, `Reflect` API, `Worker` constructor, etc) and the result
   is reflected to JS as an ES6 module object.
   - Exports are the ES6 module object exports.
@@ -33,12 +33,12 @@ that the design, especially that of the [MVP](MVP.md), are sensible:
     and call an undefined `extern` function and the target JavaScript function
     would be given the (mangled) name of the `extern` and put inside the
     imported ES6 module.
-* Once [threads are supported](PostMVP.md#Threads), a WebAssembly module would
+* Once [threads are supported](PostMVP.md#threads), a WebAssembly module would
   initially be distributed between workers via `postMessage()`.
   - This also has the effect of explicitly sharing code so that engines don't
     perform N fetches and compile N copies.
   - May later standardize a more direct way to create a thread from WebAssembly.
-* Once [SIMD is supported](PostMVP.md#Fixed-width-SIMD), a Web implementation of
+* Once [SIMD is supported](PostMVP.md#fixed-width-simd), a Web implementation of
   WebAssembly would:
   - Be statically typed analogous to [SIMD.js-in-asm.js][];
   - Reuse specification of operation semantics (with TC39);
