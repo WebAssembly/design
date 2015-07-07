@@ -153,7 +153,7 @@ include:
   support it? Reasonable options may include emulating it without the benefit of
   hardware acceleration, or indicating a lack of support through feature tests.
 
-  [a proposal in the SIMD.js repository]: https://github.com/johnmccutchan/ecmascript_simd/issues/180
+  [a proposal in the SIMD.js repository]: https://github.com/tc39/ecmascript_simd/issues/180
 
 ## Platform-independent Just-in-Time compilation
 
