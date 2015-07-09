@@ -76,11 +76,14 @@ of bytes. The linear memory is sandboxed; it does not alias the execution
 engine's internal data structures, the execution stack, local variables, global
 variables, or other process memory.
 
-In the MVP, linear memory is not shared between threads. When
-[threads](PostMVP.md#threads) are added as a feature, regular load and store
-nodes will be bound by a happens-before relationship to atomic operations in
-the same thread of execution, which themselves synchronize-with atomics in other
-threads. This follows the [C++11 memory model](http://www.hboehm.info/c++mm/).
+In the MVP, linear memory is not shared between threads. New atomic memory
+operations will be added when [threads](PostMVP.md#threads) are added as a
+feature, including loads/stores annotated with their atomic ordering property,
+following the [C++11 memory model](http://www.hboehm.info/c++mm/). Regular
+loads and stores will be bound by a happens-before relationship to atomic
+operations in the same thread of execution, which themselves synchronize-with
+atomics in other threads. Following these rules, regular load/store operations
+can still be elided, duplicated, and split up.
 
 ### Linear Memory Operations
 
