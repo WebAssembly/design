@@ -78,8 +78,9 @@ variables, or other process memory.
 
 In the MVP, linear memory is not shared between threads. When
 [threads](PostMVP.md#threads) are added as a feature, regular load and store
-nodes will have the most relaxed semantics specified in the memory model and new
-memory-access nodes will be added with atomic and ordering guarantees.
+nodes will be bound by a happens-before relationship to atomic operations in
+the same thread of execution, which themselves synchronize-with atomics in other
+threads. This follows the [C++11 memory model](http://www.hboehm.info/c++mm/).
 
 ### Linear Memory Operations
 
