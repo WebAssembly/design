@@ -336,3 +336,33 @@ appeared. Another option would be to offer another non-standard execution mode,
 enabled only from developer tools, that would enable traps on selected floating
 point exceptions, however care should be taken, since not all floating point
 exceptions indicate bugs.
+
+## Integer Overflow Detection
+
+There are two different use cases here, one where the application wishes to
+handle overflow locally, and one where it doesn't.
+
+When the application is prepared to handle overflow locally, it would be useful
+to have arithmetic operations which can indicate when overflow occured. An
+example of this is the checked arithmetic builtins available in compilers such
+as
+[clang](http://clang.llvm.org/docs/LanguageExtensions.html#checked-arithmetic-builtins)
+and
+[GCC](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html).
+If WebAssembly is made to support nodes with multiple return values, that could
+be used instead of passing a pointer.
+
+There are also several use cases where an application does not wish to handle
+overflow locally. One family of examples includes implementing optimized bignum
+arithmetic, or optimizing JS Numbers to use int32 operations. Another family
+includes compiling code that doesn't expect overflow to occur, but which wishes
+to have overflow detected and reported if it does happen. These use cases would
+ideally like to have overflow trap, and to allow them to
+[handle trap specially][]. Following the rule that explicitly signed and
+unsigned operations trap whenever the result value can not be represented in the
+result type, it would be possible to add explicitly signed and unsigned versions
+of integer `add`, `sub`, and `mul`, which would trap on overflow. The main
+reason we haven't added these already is that they're not efficient for
+general-purpose use on several of today's popular hardware architectures.
+
+  [handle trap specially]: FutureFeatures.md#trapping-or-non-trapping-strategies
