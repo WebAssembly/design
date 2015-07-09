@@ -79,7 +79,7 @@ Yes:
 * A `definitions` section contains (in this order):
   - The generic section header
   - A table (sorted by offset) containing, for each type which has opcodes:
-    + A standardized string literal [type name](AstSemantics.md#local-and-memory-types).
+    + A standardized string literal [type name](AstSemantics.md#expression-types).
       The index of a type name in this table is referred to as a type ID
     + 64-bit offset of its opcode table within the section
   - A sequence of opcode tables
@@ -94,7 +94,7 @@ Yes:
      + 64-bit offset within the section
   - A sequence of functions
   - A function contains:
-    + A table containing, for each type ID that has [locals](AstSemantics.md#addressing-local-variables):
+    + A table containing, for each type ID that has [locals](AstSemantics.md#local-variables):
       * Type ID
       * Count of locals
     + The serialized AST
