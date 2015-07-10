@@ -210,3 +210,20 @@ Note that this discussion applies to use of LLVM IR as a standardized format. LL
 and midlevel optimizers can still be used to generate WebAssembly code from C and C++, and will use
 LLVM IR in their implementation similarly to how PNaCl and Emscripten do today.
 
+## Why is there no fast-math mode with relaxed floating point semantics?
+
+Optimizing compilers commonly have fast-math flags which permit the compiler to relax the rules around floating point in order to optimize more aggressively. This can including assuming that NaNs or infinities don't occur, ignoring the difference between negative zero and positive zero, making algebraic manipulations which change how rounding is performed or when overflow might occur, or replacing operations with approximations that are cheaper to compute.
+
+These optimizations effectively introduce nondeterminism; it isn't possible to determine how the code will behave without knowing the specific choices made by the optimizer. This often isn't a serious problem in native code scenarios, because all the nondeterminism is resolved by the time native code is produced. Since most hardware doesn't have floating point nondeterminism, developers have an opportunity to test the generated code, and then count on it behaving consistently for all users thereafter.
+
+WebAssembly implementations run on the user side, so there is no opportunity for developers to test the final behavior of the code. Nondeterminism at this level could cause distributed WebAssembly programs to behave differently in different implementations, or change over time. WebAssembly does have [some nondeterminism](Nondeterminism.md) in cases where the tradeoffs warrant it, but fast-math flags are not believed to be important enough:
+
+ * Many of the important fast-math optimizations happen in the mid-level optimizer of a compiler, before WebAssembly code is emitted. For example, loop vectorization that depends on floating point reassociation can still be done at this level if the user applies the appropriate fast-math flags, so WebAssembly programs can still enjoy these benefits. As another example, compilers can replace floating point division with floating point multiplication by a reciprocal in WebAssembly programs just as they do for other platforms.
+
+ * When WebAssembly [adds an FMA operation](FutureFeatures.md#additional-floating-point-operations), optimizations like folding multiply and add into FMA will be possible by having compilers produce two versions of key code sequences, one with FMA, and one without, and selecting between them using [feature testing](FeatureTest.md).
+
+ * WebAssembly doesn't include its own math functions like sin, cos, exp, pow, and so on. WebAssembly's strategy for such functions is to allow them to be implemented as library routines in WebAssembly itself (note that x86's sin and cos instructions are slow and imprecise and are generally avoided these days anyway). Users wishing to use faster and less precise math functions on WebAssembly can simply select a math library implementation which does so.
+
+ * Most of the individual floating point operations that WebAssembly does have already map to individual fast instructions in hardware. Telling `add`, `sub`, or `mul` they don't have to worry about NaN for example doesn't make them any faster, because NaN is handled quickly and transparently in hardware on all modern platforms.
+
+ * WebAssembly has no floating point traps, status register, dynamic rounding modes, or signalling NaNs, so optimizations that depend on the absense of these features are all safe.
