@@ -76,10 +76,11 @@ of bytes. The linear memory is sandboxed; it does not alias the execution
 engine's internal data structures, the execution stack, local variables, global
 variables, or other process memory.
 
-In the MVP, linear memory is not shared between threads. When
-[threads](PostMVP.md#threads) are added as a feature, regular load and store
-nodes will have the most relaxed semantics specified in the memory model and new
-memory-access nodes will be added with atomic and ordering guarantees.
+In the MVP, linear memory is not shared between threads of execution. Separate
+modules can execute in separate threads but have their own linear memory and can
+only communicate through messaging, e.g. in browsers using `postMessage`. It
+will be possible to share linear memory between threads of execution when
+[threads](PostMVP.md#threads) are added.
 
 ### Linear Memory Operations
 

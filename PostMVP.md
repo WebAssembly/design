@@ -11,18 +11,26 @@ Post-MVP features will be available under [feature tests](FeatureTest.md).
 ## Threads
 
 Provide low-level buildings blocks for pthreads-style shared memory: shared
-memory between threads, atomics and futexes (or [synchronic][]). WebAssembly's
-approach would be similar to the [original PNaCl atomic support][] and
-[SharedArrayBuffer][] proposal: reuse the specification of memory model,
-happens-before relationship, and synchronize-with edges as defined in other
-languages.
+memory between threads, atomics and futexes (or [synchronic][]).
+
+New atomic memory operations, including loads/stores annotated with their atomic
+ordering property, will follow the [C++11 memory model][], similarly to the
+[PNaCl atomic support][] and the [SharedArrayBuffer][] proposal. Regular loads
+and stores will be bound by a happens-before relationship to atomic operations
+in the same thread of execution, which themselves synchronize-with atomics in
+other threads. Following these rules, regular load/store operations can still be
+elided, duplicated, and split up. This guarantees that data-race free code
+executes as if it were sequentially consistent. Even when there are data races,
+WebAssembly will ensure that the [nondeterminism](Nondeterminism.md) remains
+limited and local.
 
 Modules can have global variables that are either shared or thread-local. While
-the linear memory could be used to store shared global variables, global variables are not
-aliasable and thus allow more aggressive optimization.
+the linear memory could be used to store shared global variables, global
+variables are not aliasable and thus allow more aggressive optimization.
 
   [synchronic]: http://wg21.link/n4195
-  [original PNaCl atomic support]: https://developer.chrome.com/native-client/reference/pnacl-c-cpp-language-support#memory-model-and-atomics
+  [C++11 memory model]: http://www.hboehm.info/c++mm/
+  [PNaCl atomic support]: https://developer.chrome.com/native-client/reference/pnacl-c-cpp-language-support#memory-model-and-atomics
   [SharedArrayBuffer]: https://docs.google.com/document/d/1NDGA_gZJ7M7w1Bh8S0AoDyEqwDdRh4uSoTPSNn77PFk
 
 ## Fixed-width SIMD
