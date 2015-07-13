@@ -5,11 +5,6 @@ The following is a proposal for a **layered binary encoding**, designed as a set
 
 Each layer represents small changes to the on-disk file format that enable a large set of encoder-side optimizations. A production implementation would implement the entirety of Layer 2 with simple fallback to handle Layer 0 and Layer 1 files. The overall process of decoding files is the same regardless of layer.
 
-In testing, applying all the optimizations described below (full Layer 2) reduces the size of a [representative Layer 0 file](#f1) on-disk from **23,455KiB** down to **3,389KiB**.
-Stream-compressed results are even more significant, with the size post-GZIP decreasing from **6,716KiB** to **1,072KiB**, and the size post-LZHAM going from **4,499KiB** to **986KiB**.
-
-The optimizations below do not just reduce file size - they also increase decoding speed **and reduce the amount of heap necessary to decode the file**. For the graph used in the above size tests, the amount of heap used to decode it from JSON is **262,717KiB**, the amount of heap used to decode it from Layer 0 is **177,741KiB**, and the amount of heap used to decode the fully-optimized Layer 2 file is **47,219KiB**, a reduction of **nearly 4x**. Decoding speed likewise increases.
-
 Schemas
 -------
 Files in this format rely on a schema that describes all the node types that can appear in the file. This allows robust decoding even in the presence of new, unknown node types, and efficient decoding logic can be generated from the schema as needed. Schemas are small so they are embedded at the front of the file to ensure that decoding can occur without use of external resources.
