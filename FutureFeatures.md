@@ -275,17 +275,25 @@ quadruple precision.
 
 These operations aren't needed for the MVP because they can be implemented in
 WebAssembly code and linked into WebAssembly modules at small size cost (as is
-traditionally done through C libraries such as libm). This avoids a non-trivial
-specification burden for their semantics, precision, and performance.
+traditionally done through C libraries such as libm). This approach:
 
-[Dynamic linking](FutureFeatures.md#dynamic-linking) will allow caching of libm,
-making this sharing cost trivial.
+* Avoids a non-trivial specification burden for their semantics, precision, and
+  performance.
+* Allows developers to make different application-specific tradeoffs of
+  precision/robustness versus performance, while still getting deterministic
+  results across implementations.
+* Reduces the implementation burden for WebAssembly, since more than the few
+  math functions listed below may be needed by different developers.
+
+[Dynamic linking](FutureFeatures.md#dynamic-linking) will also allow caching of
+libm, making this already low-cost sharing trivial.
 
 Adding these intrinsics would potentially allow for better high-level backend
 optimization of these intrinsics that require builtin knowledge of their
 semantics. WebAssembly may support these operations in the future if data shows
 it would be useful. The rounding behavior of these operations would need
 clarification.
+
 
   * `float64.sin`: trigonometric sine
   * `float64.cos`: trigonometric cosine
