@@ -13,23 +13,23 @@ environments, which
 [dynamic linking](FutureFeatures.md#dynamic-linking) will make discoverable and
 usable.
 
-Where there is overlap between the browser and popular non-browser environments,
-shared specs could be proposed, but this would be separate from the WebAssembly
-spec. A symmetric example in JavaScript would be the
-[Loader](https://whatwg.github.io/loader) spec, intended to be implemented by
-both browsers and node.js. This situation is expected to be first encountered
-with POSIX features such as file I/O. In that respect, WebAssembly would err
-towards standardizing existing practice through libraries, and let developers
-choose which libraries to use.
-Similarly, the SDL interface (exposed by emscripten) could be made into a
-shared spec with non-browser mobile/desktop environments, which combined with
-the existing WebGL spec would for example allow for cross platform browser
-and non-browser games (and other things).
-
 The WebAssembly spec will not try to define any large portable libc-like
 library. However, certain features that are core to WebAssembly semantics that
 are found in native libc *would* be part of the core WebAssembly spec as either
-primitive opcodes or a special builtin module (e.g., `sbrk`, `mmap`).
+primitive opcodes or a special builtin module (e.g., `sbrk`, `dlopen`).
+
+Where there is overlap between the browser and popular non-browser environments,
+shared specs could be proposed, but these would be separate from the WebAssembly
+spec. A symmetric example in JavaScript would be the in-progress 
+[Loader](https://whatwg.github.io/loader) spec, which is proposed for both
+browser and node.js environments and is distinct from the JavaScript spec.
+
+However, for most cases it is expected that, to achieve portability at the
+source code level, communities would build libraries that mapped from a 
+source-level interface to the host environment's builtin capabilities
+(either at build time or runtime).  WebAssembly would provide the raw building
+blocks (feature testing, dynamic loading) to make these libraries possible.
+Two early expected examples are POSIX and SDL.
 
 In general, by keeping the non-browser path such that it doesn't require
 browser APIs, WebAssembly could be used as a portable binary format on many
