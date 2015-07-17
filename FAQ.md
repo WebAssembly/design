@@ -220,7 +220,7 @@ WebAssembly implementations run on the user side, so there is no opportunity for
 
  * Many of the important fast-math optimizations happen in the mid-level optimizer of a compiler, before WebAssembly code is emitted. For example, loop vectorization that depends on floating point reassociation can still be done at this level if the user applies the appropriate fast-math flags, so WebAssembly programs can still enjoy these benefits. As another example, compilers can replace floating point division with floating point multiplication by a reciprocal in WebAssembly programs just as they do for other platforms.
 
- * When WebAssembly [adds an FMA operation](FutureFeatures.md#additional-floating-point-operations), optimizations like folding multiply and add into FMA will be possible by having compilers produce two versions of key code sequences, one with FMA, and one without, and selecting between them using [feature testing](FeatureTest.md).
+ * When WebAssembly [adds an FMA operation](FutureFeatures.md#additional-floating-point-operations), folding multiply and add sequences into FMA operators will be possible.
 
  * WebAssembly doesn't include its own math functions like sin, cos, exp, pow, and so on. WebAssembly's strategy for such functions is to allow them to be implemented as library routines in WebAssembly itself (note that x86's sin and cos instructions are slow and imprecise and are generally avoided these days anyway). Users wishing to use faster and less precise math functions on WebAssembly can simply select a math library implementation which does so.
 
