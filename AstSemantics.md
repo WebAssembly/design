@@ -271,6 +271,21 @@ nested. This guarantees that all resulting control flow graphs are well-structur
     feature would allow efficient compilation of arbitrary irreducible control
     flow.
 
+## Floating Point Subnormal Handling
+
+  * `subnormal_mode`: Like [`block`](AstSemantics.md#control-flow-structures),
+     but with a mode attribute specifying special semantics for the handling of
+     subnormal values in all lexically contained [floating point operations][]
+     except `neg`, `abs`, and `copysign`, and [conversions][], except those in
+     contained `subnormal_mode` blocks. The mode may be one of:
+    * `standard`: standard semantics are followed
+    * `dont_care`: Subnormal values may or may not be interpreted as zero of the
+       same sign. Subnormal result values may or may not be replaced by any
+       subnormal value of the same sign, or zero of the same sign.
+
+  [floating point operations]: AstSemantics.md#floating-point-operations
+  [conversions]: AstSemantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions
+
 ## Calls
 
 Direct calls to a function specify the callee by index into a function table.
@@ -401,8 +416,8 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
  - WebAssembly uses the round-to-nearest ties-to-even rounding attribute, except
    where otherwise specified. Non-default directed rounding attributes are not
    supported.
- - The strategy for gradual underflow (subnormals) is
-   [under discussion](https://github.com/WebAssembly/design/issues/148).
+ - Inside the lexical extent of a `subnormal_mode` block, operators may follow
+   [alternate semantics](AstSemantics.md#floating-point-subnormal-handling).
 
 In the future, these limitations may be lifted, enabling
 [full IEEE-754 support](FutureFeatures.md#full-ieee-754-conformance).
@@ -486,8 +501,7 @@ Promotion and demotion of floating point values always succeed.
 Demotion of floating point values uses round-to-nearest ties-to-even rounding,
 and may overflow to infinity or negative infinity as specified by IEEE-754.
 If the operand of promotion or demotion is NaN, the sign bit and significand
-of the result are computed from an unspecified function of the implementation,
-the opcode, and the operand.
+of the result are not specified.
 
 Reinterpretations always succeed.
 
