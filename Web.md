@@ -9,36 +9,22 @@ the Web's security model, preserving the Web's portability, and designing in
 room for evolutionary development. Many of these goals are clearly
 reflected in WebAssembly's [high-level goals](HighLevelGoals.md).
 
-# Implementation Details
+More concretely, the following is a list of points of contact between WebAssembly
+and the rest of the Web platform that have been considered:
 
-We've identified interesting implementation approaches which help convince us
-that the design, especially that of the [MVP](MVP.md), are sensible:
-
+* WebAssembly's [modules](Modules.md) allow for natural [integration with
+  the ES6 module system](Modules.md#integration-with-es6-modules) and thus
+  synchronous calling to and from JavaScript.
 * WebAssembly's security model should depend on [CORS][] and
   [subresource integrity][] to enable distribution, especially through content
   distribution networks and to implement
   [dynamic linking](FutureFeatures.md#dynamic-linking).
-* A [module](MVP.md#modules) can be loaded in the same way as an ES6 module
-  (`import` statements, `Reflect` API, `Worker` constructor, etc) and the result
-  is reflected to JS as an ES6 module object.
-  - Exports are the ES6 module object exports.
-  - An import first passes the module name to the [module loader pipeline][] and
-    resulting ES6 module (which could be implemented in JS or WebAssembly) is
-    queried for the export name.
-  - There is no special case for when one WebAssembly module imports another:
-    they have separate [memory](MVP.md#linear-memory) and pointers cannot be passed
-    between the two. Module imports encapsulate the importer and
-    importee. [Dynamic linking](FutureFeatures.md#dynamic-linking) should be
-    used to share memory and pointers across modules.
-  - To synchronously call into JavaScript from C++, the C++ code would declare
-    and call an undefined `extern` function and the target JavaScript function
-    would be given the (mangled) name of the `extern` and put inside the
-    imported ES6 module.
 * Once [threads are supported](PostMVP.md#threads), a WebAssembly module would
-  initially be distributed between workers via `postMessage()`.
+  shared (including its heap) between workers via `postMessage()`.
   - This also has the effect of explicitly sharing code so that engines don't
     perform N fetches and compile N copies.
-  - May later standardize a more direct way to create a thread from WebAssembly.
+  - WebAssembly may later standardize a more direct way to create a thread that
+    doesn't involve creating a new Worker.
 * Once [SIMD is supported](PostMVP.md#fixed-width-simd), a Web implementation of
   WebAssembly would:
   - Be statically typed analogous to [SIMD.js-in-asm.js][];
@@ -47,6 +33,5 @@ that the design, especially that of the [MVP](MVP.md), are sensible:
 
   [CORS]: https://www.w3.org/TR/cors/
   [subresource integrity]: https://www.w3.org/TR/SRI/
-  [module loader pipeline]: https://whatwg.github.io/loader
   [SIMD.js-in-asm.js]: http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js
   
