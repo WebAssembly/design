@@ -222,7 +222,7 @@ WebAssembly implementations run on the user side, so there is no opportunity for
 
  * When WebAssembly [adds an FMA operation](FutureFeatures.md#additional-floating-point-operations), folding multiply and add sequences into FMA operators will be possible.
 
- * WebAssembly doesn't include its own math functions like sin, cos, exp, pow, and so on. WebAssembly's strategy for such functions is to allow them to be implemented as library routines in WebAssembly itself (note that x86's sin and cos instructions are slow and imprecise and are generally avoided these days anyway). Users wishing to use faster and less precise math functions on WebAssembly can simply select a math library implementation which does so.
+ * WebAssembly doesn't include its own math functions like `sin`, `cos`, `exp`, `pow`, and so on. WebAssembly's strategy for such functions is to allow them to be implemented as library routines in WebAssembly itself (note that x86's `sin` and `cos` instructions are slow and imprecise and are generally avoided these days anyway). Users wishing to use faster and less precise math functions on WebAssembly can simply select a math library implementation which does so.
 
  * Most of the individual floating point operations that WebAssembly does have already map to individual fast instructions in hardware. Telling `add`, `sub`, or `mul` they don't have to worry about NaN for example doesn't make them any faster, because NaN is handled quickly and transparently in hardware on all modern platforms.
 
