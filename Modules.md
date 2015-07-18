@@ -5,8 +5,11 @@ is called a **module**. A module contains:
 * a set of [imports and exports](Modules.md#imports-and-exports);
 * a section defining the [initial state of linear memory](Modules.md#initial-state-of-linear-memory);
 * a section containing [code](Modules.md#code-section);
-* after the MVP, sections containing [debugging/symbol information](Tooling.md); and
+* after the MVP, sections containing [debugging/symbol information](Tooling.md) or
+  a reference to separate files containing them; and
 * possibly other sections in the future.
+Sections declare their type and byte-length and sections with unknown types are
+silently ignored.
 
 While WebAssembly modules are designed to interoperate with ES6 modules
 in a Web environment (more details [below](Modules.md#integration-with-es6-modules)),
@@ -26,7 +29,9 @@ A module can declare a set of **imports**. An import is a tuple containing a
 module name, the name of an exported function to import from the named module,
 and the signature to use for that import within the importing module. Within a
 module, the import can be [directly called](AstSemantics.md#calls) like a
-function (according to its locally-declared signature).
+function (according to the signature of the import). When the imported
+module is also WebAssembly, it would be an error if the signature of the import
+doesn't match the signature of the export.
 
 The WebAssembly spec does not define how imports are interpreted:
 * the host environment can interpret the module name as a file path, a URL,
@@ -97,9 +102,9 @@ to allow *explicitly* sharing linear memory between multiple modules.
 
 ## Initial state of linear memory
 
-A module will contain a section declaring the heap size (initial and maximum
-size allowed by `sbrk`) and the initial contents of memory (analogous to
-`.data`, `.rodata`, `.bss` sections in native executables).
+A module will contain a section declaring the linear memory size (initial and
+maximum size allowed by `sbrk`) and the initial contents of memory (analogous
+to `.data`, `.rodata`, `.bss` sections in native executables).
 
 ## Code section
 
@@ -107,6 +112,11 @@ The WebAssembly spec defines the code section of a module in terms of an
 [Abstract Syntax Tree](AstSemantics.md) (AST). Additionally, the spec defines
 two concrete representations of the AST: a [binary format](BinaryEncoding.md)
 which is natively decoded by the browser and a [text format](TextFormat.md)
-which is intended to be read and written by humans. This design separates
-the concerns of specifying and reasoning about behavior, over-the-wire size
-and compilation speed, and ergonomic syntax.
+which is intended to be read and written by humans. A WebAssembly environment
+is only required to understand the binary format; the text format is defined so
+that WebAssembly modules can be written by hand (and then converted to binary
+with an offline tool) and so that developer tools have a well-defined text
+projection of a binary WebAssembly module. This design separates the concerns
+of specifying and reasoning about behavior, over-the-wire size and compilation
+speed, and ergonomic syntax.
+

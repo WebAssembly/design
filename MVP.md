@@ -15,7 +15,10 @@ separate docs with more precise descriptions of:
  * [Polyfill to JavaScript](Polyfill.md);
  * [AST semantics](AstSemantics.md);
  * [Binary encoding](BinaryEncoding.md);
+ * [Text format](TextFormat.md);
  * Implementation [in the browser](Web.md) and [outside the browser](NonWeb.md).
+
+**Note**: This content is still in flux and open for discussion.
 
 ## Linear Memory
 
@@ -33,6 +36,21 @@ separate docs with more precise descriptions of:
     detaches any existent `ArrayBuffer`.
 * See the [AST Semantics linear memory section](AstSemantics.md#linear-memory)
   for more details.
+
+## Binary format
+
+* A [binary format](BinaryEncoding.md) provides efficiency: it reduces download
+  size and accelerates decoding, thus enabling even very large codebases to have
+  quick startup times. Towards that goal, the binary format will be natively
+  decoded by browsers.
+* The binary format has an equivalent and isomorphic
+  [text format](MVP.md#text-format).  Conversion from one format to the other is
+  both straightforward and causes no loss of information in either direction.
+
+## Text format
+
+The [text format](TextFormat.md) provides readability to developers, and is
+isomorphic to the [binary format](BinaryEncoding.md).
  
 ## Security
 
