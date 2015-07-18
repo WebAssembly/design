@@ -273,14 +273,27 @@ quadruple precision.
 
 ## Floating point library intrinsics
 
-These operations aren't needed because they can be implemented in WebAssembly
-code and linked into WebAssembly modules as at small size cost, and this avoids
-a non-trivial specification burden of their semantics/precision. Adding these
-intrinsics would allow for better high-level backend optimization of these
-intrinsics that require builtin knowledge of their semantics. On the other
-hand, a code generator may continue to statically link in its own
-implementation since this provides greater control over precision/performance
-tradeoffs.
+These operations aren't needed for the MVP because they can be implemented in
+WebAssembly code and linked into WebAssembly modules at small size cost (as is
+traditionally done through C libraries such as libm). This approach:
+
+* Avoids a non-trivial specification burden for their semantics, precision, and
+  performance.
+* Allows developers to make different application-specific tradeoffs of
+  precision/robustness versus performance, while still getting deterministic
+  results across implementations.
+* Reduces the implementation burden for WebAssembly, since more than the few
+  math functions listed below may be needed by different developers.
+
+[Dynamic linking](FutureFeatures.md#dynamic-linking) will also allow caching of
+libm, making this already low-cost sharing trivial.
+
+Adding these intrinsics would potentially allow for better high-level backend
+optimization of these intrinsics that require builtin knowledge of their
+semantics. WebAssembly may support these operations in the future if data shows
+it would be useful. The rounding behavior of these operations would need
+clarification.
+
 
   * `float64.sin`: trigonometric sine
   * `float64.cos`: trigonometric cosine
@@ -302,8 +315,6 @@ tradeoffs.
   * `float32.exp`: exponentiate e
   * `float32.ln`: natural logarithm
   * `float32.pow`: exponentiate
-
-The rounding behavior of these operations would need clarification.
 
 ## Full IEEE-754 conformance
 
