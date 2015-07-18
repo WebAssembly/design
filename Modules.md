@@ -8,7 +8,7 @@ is called a **module**. A module contains:
 * after the MVP, sections containing [debugging/symbol information](Tooling.md) or
   a reference to separate files containing them; and
 * possibly other sections in the future.
-Sections declare their type and byte-length and sections with unknown types are
+Sections declare their type and byte-length. Sections with unknown types are
 silently ignored.
 
 While WebAssembly modules are designed to interoperate with ES6 modules
@@ -58,8 +58,8 @@ terms of host-specific functionality.
 While ES6 defines how to parse, link and execute a module, ES6 does not
 define when this parsing/linking/execution occurs. An additional extension
 to the HTML spec is required to say when a script is parsed as a module instead
-of normal global code. This work is [ongoing](TODO). Currently, the following
-entry points for modules are being considered:
+of normal global code. This work is [ongoing](http://TODO:link-to-loader-level-0-repo).
+Currently, the following entry points for modules are being considered:
 * `<script type="module">`;
 * an overload to the `Worker` constructor;
 * an overload to the `importScripts` Worker API;
