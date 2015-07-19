@@ -333,26 +333,26 @@ expression-tree-building opportunities.
 
 ## 32-bit Integer operations
 
-Most operations available on 32-bit integers are sign-independent. Signed
+Many operations available on 32-bit integers are sign-agnostic. Signed
 integers are always represented as two's complement and arithmetic that
 overflows conforms to the standard wrap-around semantics. All comparison
 operations yield 32-bit integer results with `1` representing `true` and `0`
 representing `false`.
 
-  * `int32.add`: signed-less addition
-  * `int32.sub`: signed-less subtraction
-  * `int32.mul`: signed-less multiplication (lower 32-bits)
+  * `int32.add`: sign-agnostic addition
+  * `int32.sub`: sign-agnostic subtraction
+  * `int32.mul`: sign-agnostic multiplication (lower 32-bits)
   * `int32.sdiv`: signed division
   * `int32.udiv`: unsigned division
   * `int32.srem`: signed remainder
   * `int32.urem`: unsigned remainder
-  * `int32.and`: signed-less logical and
-  * `int32.ior`: signed-less inclusive or
-  * `int32.xor`: signed-less exclusive or
-  * `int32.shl`: signed-less shift left
-  * `int32.shr`: signed-less logical shift right
-  * `int32.sar`: signed-less arithmetic shift right
-  * `int32.eq`: signed-less compare equal
+  * `int32.and`: sign-agnostic logical and
+  * `int32.ior`: sign-agnostic inclusive or
+  * `int32.xor`: sign-agnostic exclusive or
+  * `int32.shl`: sign-agnostic shift left
+  * `int32.shr`: sign-agnostic logical shift right
+  * `int32.sar`: sign-agnostic arithmetic shift right
+  * `int32.eq`: sign-agnostic compare equal
   * `int32.slt`: signed less than
   * `int32.sle`: signed less than or equal
   * `int32.ult`: unsigned less than
