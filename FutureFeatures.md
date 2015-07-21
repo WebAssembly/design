@@ -90,7 +90,7 @@ type is to be passed to and returned from exported functions.
 
 Reference types are allowed to be used as the types of locals, parameters
 and return types. Additionally, references would be allowed as operands to
-operators that treat their values as black boxes (`conditional`, `comma`, maybe
+operators that treat their values as black boxes (`conditional`, `comma`, 
 `eq`, etc.). A new `dynamic_cast` operator would be added to allow checked
 casting from any opaque reference type to any other opaque reference type.
 Whether the cast succeeds is up to the host environment; WebAssembly itself
@@ -102,8 +102,9 @@ could otherwise be arbitrarily aliased as integers. Instead, a new set of
 operations would be added for allocating, deallocating, loading and storing
 from integer-indexed cells that could hold references and were not aliasable by
 linear memory. There are several important alternatives to consider:
-* LIFO allocation of cells versus (or in addition to) ad hoc explicit
-  allocation and deallocation.
+* Are cells allocated globally, in a LIFO stack-like manner, or via
+  explicit allocation/deallocation? There are use cases for each of these
+  so multiple options could be provided.
 * Untyped cells (requiring `dynamic_cast` after load before use) vs. 
   typed cells (with a separate index per type).
 * Cells that hold a weak reference.
@@ -124,7 +125,8 @@ JS values could be made accessible to WebAssembly code through a builtin
 * an exported `string` opaque reference type and exported functions
   to allocate, query length, and index `string` values;
 * an exported `object` opaque reference type and exported functions
-  that correspond with the ES5 meta-object protocol;
+  that correspond with the ES5 meta-object protocol including the 
+  ability to `[[Call]]` function objects;
 * an exported `value` opaque reference type with exported functions for
   constructing `value`s from integers, floats, `object`s, and `string`s and
   with exported functions for querying the type of a `value` and extracting the
