@@ -47,11 +47,12 @@ arbitrary host environment functionality to WebAssembly code, similar to a
 native `syscall`. For example, a shell environment could define a builtin
 `stdio` module with an export `puts`.
 
-In C/C++, an undefined `extern` declaration could be compiled to an import and
-C/C++ calls to this `extern` would then be compiled to calls to this import. This
-is one way low-level C/C++ libraries could call out of WebAssembly in order to
-implement portable source-level interfaces (e.g., POSIX, OpenGL or SDL) in
-terms of host-specific functionality.
+In C/C++, an undefined `extern` declaration (perhaps only when given the
+magic `__attribute__` or declared in a separate list of imports) could be
+compiled to an import and C/C++ calls to this `extern` would then be compiled
+to calls to this import. This is one way low-level C/C++ libraries could call
+out of WebAssembly in order to implement portable source-level interfaces
+(e.g., POSIX, OpenGL or SDL) in terms of host-specific functionality.
 
 ### Integration with ES6 modules
 
@@ -83,7 +84,11 @@ if they were `import` statements of an ES6 module. If an ES6 module `import`ed
 a WebAssembly module, the WebAssembly module's exports would be linked as if
 they were the exports of an ES6 module. Once parsing and linking phases
 were complete, a WebAssembly module would have its `_start` function called in
-place of executing the ES6 module top-level script.
+place of executing the ES6 module top-level script. By default, multiple 
+loads of the same module URL (in the same realm) reuse the same singleton
+module instance. It may be worthwhile in the future to consider extensions to
+allow applications to load/compile/link a module once and instantiate multiple
+times (each with a separate heap and global state).
 
 This integration strategy should allow WebAssembly modules to be fairly
 interchangeable with ES6 modules (ignoring 
