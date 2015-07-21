@@ -66,16 +66,160 @@ Options under consideration:
 
 ## GC/DOM Integration
 
-* Access to certain kinds of Garbage-Collected (GC) objects from variables,
-  arguments, expressions.
-* Ability to GC-allocate certain kinds of GC objects.
-* Initially, things with fixed structure:
-  * JavaScript strings;
-  * JavaScript functions (as callable closures);
-  * Typed Arrays;
-  * [Typed objects](https://github.com/nikomatsakis/typed-objects-explainer/);
-  * DOM objects via WebIDL.
-* Perhaps a rooting API for safe reference from the linear address space.
+To realize the [high-level goals](HighLevelGoals.md) of (1) integrating well
+with the existing web platform and (2) supporting languages other than C++,
+WebAssembly needs to be able to:
+* reference DOM and other Web API objects directly from WebAssembly code;
+* efficiently allocate and manipulate GC objects directly from WebAssembly
+  code; and
+* call Web APIs (passing primitives or DOM/GC/Web API objects) directly from
+  WebAssembly without calling through JS.
+
+These goals can be separated into two complementary sub-features that are
+specified independently of JS and the Web platform but allow a natural
+integration.
+
+### Opaque reference types
+
+The first sub-feature is to extend [module imports](Modules.md#imports-and-exports)
+to allow modules to import *opaque reference types*. "Opaque" means that the
+reference type itself has no structural content and does not, e.g., define any
+methods or fields. Once imported, an opaque reference type can be used in the
+signature of other imported functions. Thus, the point of an opaque reference
+type is to be passed to and returned from exported functions.
+
+Reference types are allowed to be used as the types of locals, parameters
+and return types. Additionally, references would be allowed as operands to
+operators that treat their values as black boxes (`conditional`, `comma`, maybe
+`eq`, etc.). A new `dynamic_cast` operator would be added to allow checked
+casting from any opaque reference type to any other opaque reference type.
+Whether the cast succeeds is up to the host environment; WebAssembly itself
+will define no a priori subtyping relationship.
+
+For reasons of safety and limiting nondeterminism, imported opaque reference
+types would not be able to be loaded from or stored to linear memory where they
+could otherwise be arbitrarily aliased as integers. Instead, a new set of
+operations would be added for allocating, deallocating, loading and storing
+from integer-indexed cells that could hold references and were not aliasable by
+linear memory. There are several important alternatives to consider:
+* LIFO allocation of cells versus (or in addition to) ad hoc explicit
+  allocation and deallocation.
+* Untyped cells (requiring `dynamic_cast` after load before use) vs. 
+  typed cells (with a separate index per type).
+* Cells that hold a weak reference.
+
+With opaque reference types expressed as imports, host environments can provide
+access to various kinds of reference-counted or garbage-collected host-defined
+objects via builtin modules. While this design does not mandate a JS VM or
+browser, it does allow natural integration with both
+[JS](FutureFeatures.md#js-integration) and
+[WebIDL](FutureFeatures.md#webidl-integration)
+in a Web environment.
+
+### JS integration
+
+Using [opaque reference types](FutureFeatures.md#opaque-reference-types),
+JS values could be made accessible to WebAssembly code through a builtin
+`js` module providing:
+* an exported `string` opaque reference type and exported functions
+  to allocate, query length, and index `string` values;
+* an exported `object` opaque reference type and exported functions
+  that correspond with the ES5 meta-object protocol;
+* an exported `value` opaque reference type with exported functions for
+  constructing `value`s from integers, floats, `object`s, and `string`s and
+  with exported functions for querying the type of a `value` and extracting the
+  abovementioned payload types.
+
+Since a browser's WebAssembly engine would have full knowledge of the `js`
+builtin module, it should be able to optimize string/object accesses as well as
+a normal JS JIT (perhaps even using the same JIT compiler).
+
+### WebIDL integration
+
+Using [opaque reference types](FutureFeatures.md#opaque-reference-types), it
+would be possible to allow direct access to DOM and Web APIs by mapping their
+[WebIDL](http://www.w3.org/TR/WebIDL) interfaces to WebAssembly builtin module 
+signatures. In particular:
+* WebIDL interfaces (like 
+  [WebGLRenderingContextBase](https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14)
+  or [WebGLTexture](https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.9))
+  would map to exported [opaque reference types](FutureFeatures.md#opaque-reference-types);
+* methods of WebIDL interfaces would map to exported functions where the
+  receiver was translated into an explicit argument and WebIDL value
+  types were mapped to appropriate [local types](AstSemantics.md#local-types)
+  (e.g., [bindTexture](https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14)
+  would translate to `void (WebGLRenderingContextBase, int32, WebGLTexture?)`).
+
+This high-level description glosses over many important details about WebIDL:
+
+First, the WebIDL spec contains many JavaScript-specific details that are
+unnecessary in a WebAssembly context. In particular, there are basically three
+components specified by a WebIDL interface:
+
+1. a signature declaration composed of language-independent data types (like
+   IEEE754 doubles and floats);
+2. a set of basic wellformedness checks that are executed on the arguments of
+   the signature declared in (1); and
+3. a JavaScript-specific algorithm that maps the arbitrary set of JavaScript
+   values passed to a WebIDL invocation to the signature declared by (1) and
+   checked by (2).
+
+(1) and (2) of the WebIDL spec are meaningful to WebAssembly, but (3)
+would effectively be skipped.
+
+Another important issue is mapping WebIDL values types that aren't simple
+[primitive types](http://www.w3.org/TR/WebIDL/#dfn-primitive-type):
+* [Dictionary types](http://www.w3.org/TR/WebIDL/#idl-dictionary)
+  would [appear](http://www.w3.org/TR/WebIDL/#es-dictionary) to require
+  JS objects but are actually defined as values such that they can
+  be (and are, in various browser implementations) flattened to C structs.
+  Thus, a natural WebAssembly binding would be to map dictionaries to structs
+  in linear memory passed by reference (integer offset).
+* The same goes for [sequence types](http://www.w3.org/TR/WebIDL/#idl-sequence).
+* [Enumeration types](http://www.w3.org/TR/WebIDL/#es-enumeration) could be
+  mapped to canonical integers.
+* [Union types](http://www.w3.org/TR/WebIDL/#idl-union) could be handled in
+  multiple ways. One option is to treat the union type itself as an importable
+  opaque reference type (when all the elements are themselves reference types).
+  Another option is to introduce an overload of each signature for each element
+  of the union type such that all calls passed a single element type and the
+  full Union Type was never explicitly represented in WebAssembly.
+* [Callback function types](http://www.w3.org/TR/WebIDL/#es-callback-function)
+  could map to a `(function pointer, environment pointer)` closure pair.
+
+Overall, the goal of mapping WebIDL to WebAssembly builtin modules is to avoid
+the need to define a duplicate WebAssembly interface for all Web APIs.  In
+practice, some WebIDL patterns may have an unnatural or inefficient mapping
+into WebAssembly such that new overloads and best practices would need to be
+adopted. Over time, though, these rough edges would be ironed out leaving the
+long term benefit of defining Web APIs with a single interface and ensuring
+that JS and WebAssembly always had access to the same raw functionality.
+
+### Direct GC access
+
+In contract to *opaque* reference types, a second sub-feature would be to allow
+direct GC allocation and field access from WebAssembly code through
+*non-opaque* reference types.
+
+There is a lot of the design left to
+consider for this feature, but a few points of tentative agreement are:
+* To avoid baking in a single language's object model, define low-level GC
+  primitives (viz., structs and arrays) and allow the source language compiler
+  to build up features like virtual dispatch and access control.
+* GC struct and array types would have associated *struct/array reference
+  types* that were similar to and symmetric with 
+  [opaque reference types](FutureFeatures.md#opaque-reference-types)
+  (just not opaque).
+* The GC heap would be semantically distinct from linear memory and thus
+  the fields of GC objects could safely hold reference types (unlike linear
+  memory). GC object fields could also hold 
+  [function pointers](AstSemantics.md#calls) directly (again, unlike
+  linear memory). This would allow an efficient implementation of vtables and
+  virtual dispatch.
+* The GC struct and array types could be passed to and from JavaScript
+  by reflecting the WebAssembly GC objects in JavaScript using the 
+  [Typed Objects](https://github.com/nikomatsakis/typed-objects-explainer/)
+  proposal.
 
 ## Linear memory bigger than 4GiB
 
