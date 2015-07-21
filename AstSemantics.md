@@ -335,18 +335,22 @@ expression-tree-building opportunities.
 
 ## 32-bit Integer operations
 
-Many operations available on 32-bit integers are sign-agnostic. Signed
-integers are always represented as two's complement and arithmetic that
-overflows conforms to the standard wrap-around semantics. All comparison
-operations yield 32-bit integer results with `1` representing `true` and `0`
-representing `false`.
+Integer operations are signed, unsigned, or sign-agnostic. Signed operations
+use two's complement signed integer representation.
+
+Signed and unsigned operations trap whenever the result cannot be represented
+in the result type. This includes division and remainder by zero, and signed
+division overflow (`INT32_MIN / -1`). Signed remainder with a non-zero
+denominator always returns the correct value, even when the corresponding
+division would trap. Sign-agnostic operations silently wrap overflowing
+results into the result type.
 
   * `int32.add`: sign-agnostic addition
   * `int32.sub`: sign-agnostic subtraction
   * `int32.mul`: sign-agnostic multiplication (lower 32-bits)
-  * `int32.sdiv`: signed division
+  * `int32.sdiv`: signed division (result is truncated toward zero)
   * `int32.udiv`: unsigned division
-  * `int32.srem`: signed remainder
+  * `int32.srem`: signed remainder (result has the sign of the dividend)
   * `int32.urem`: unsigned remainder
   * `int32.and`: sign-agnostic logical and
   * `int32.ior`: sign-agnostic inclusive or
@@ -363,20 +367,17 @@ representing `false`.
   * `int32.sge`: signed greater than or equal
   * `int32.ugt`: unsigned greater than
   * `int32.uge`: unsigned greater than or equal
-  * `int32.clz`: count leading zeroes (defined for all values, including zero)
-  * `int32.ctz`: count trailing zeroes (defined for all values, including zero)
-  * `int32.popcnt`: count number of ones
-
-Explicitly signed and unsigned operations trap whenever the result cannot be
-represented in the result type. This includes division and remainder by zero,
-and signed division overflow (`INT32_MIN / -1`). Signed remainder with a
-non-zero denominator always returns the correct value, even when the
-corresponding division would trap. Signed-less operations never trap.
+  * `int32.clz`: sign-agnostic count leading zeroes (defined for all values, including zero)
+  * `int32.ctz`: sign-agnostic count trailing zeroes (defined for all values, including zero)
+  * `int32.popcnt`: sign-agnostic count number of ones
 
 Shifts interpret their shift count operand as an unsigned value. When the shift
 count is at least the bitwidth of the shift, `shl` and `shr` produce `0`, and
 `sar` produces `0` if the value being shifted is non-negative, and `-1`
 otherwise.
+
+All comparison operations yield 32-bit integer results with `1` representing
+`true` and `0` representing `false`.
 
 ## 64-bit integer operations
 
