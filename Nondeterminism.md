@@ -31,7 +31,9 @@ currently admits nondeterminism:
    nondeterministic.
  * Out of bounds heap accesses *may* want
    [some flexibility](AstSemantics.md#out-of-bounds)
- * [NaN bit patterns](AstSemantics.md#floating-point-operations)
+ * NaN bit patterns in floating point
+   [operations](AstSemantics.md#floating-point-operations) and
+   [conversions](AstSemantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions)
  * [Fixed-width SIMD may want some flexibility](PostMVP.md#fixed-width-simd)
    - In SIMD.js, floating point values may or may not have subnormals flushed to
      zero.
