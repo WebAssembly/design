@@ -253,23 +253,25 @@ are statements.
   * `return`: return zero or more values from this function
   * `switch`: switch statement with fallthrough
 
-Break and continue statements can only target blocks or loops in which they are
-nested. This guarantees that all resulting control flow graphs are well-structured.
+Loops (`do_while` and `forever`) may only be entered via fallthrough at the top.
+In particular, loops may not be entered directly via a `break`, `continue`, or
+`switch` destination. Break and continue statements can only target blocks or
+loops in which they are nested. These rules guarantee that all control flow
+graphs are well-structured.
 
-  * Simple and size-efficient binary encoding and compilation.
-  * Any control flow—even irreducible—can be transformed into structured control
-    flow with the
-    [Relooper](https://github.com/kripken/emscripten/raw/master/docs/paper.pdf)
-    [algorithm](http://dl.acm.org/citation.cfm?id=2048224&CFID=670868333&CFTOKEN=46181900),
-    with guaranteed low code size overhead, and typically minimal throughput
-    overhead (except for pathological cases of irreducible control
-    flow). Alternative approaches can generate reducible control flow via node
-    splitting, which can reduce throughput overhead, at the cost of increasing
-    code size (potentially very significantly in pathological cases).
-  * The
-    [signature-restricted proper tail-call](PostMVP.md#signature-restricted-proper-tail-calls)
-    feature would allow efficient compilation of arbitrary irreducible control
-    flow.
+Structured control flow provides simple and size-efficient binary encoding and
+compilation. Any control flow—even irreducible—can be transformed into structured
+control flow with the
+[Relooper](https://github.com/kripken/emscripten/raw/master/docs/paper.pdf)
+[algorithm](http://dl.acm.org/citation.cfm?id=2048224&CFID=670868333&CFTOKEN=46181900),
+with guaranteed low code size overhead, and typically minimal throughput
+overhead (except for pathological cases of irreducible control
+flow). Alternative approaches can generate reducible control flow via node
+splitting, which can reduce throughput overhead, at the cost of increasing
+code size (potentially very significantly in pathological cases).
+Also,
+[more expressive control flow constructs](FutureFeatures.md#more-expressive-control-flow)
+may be added in the future.
 
 ## Calls
 
