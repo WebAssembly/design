@@ -127,8 +127,10 @@ JS values could be made accessible to WebAssembly code through a builtin
 * an exported `object` opaque reference type and exported functions
   that correspond with the ES5 meta-object protocol including the 
   ability to `[[Call]]` function objects;
+* further exported opaque reference types for symbols and value 
+  types (including SIMD);
 * an exported `value` opaque reference type with exported functions for
-  constructing `value`s from integers, floats, `object`s, and `string`s and
+  constructing `value`s from integers, floats, `object`s, `string`s, etc and
   with exported functions for querying the type of a `value` and extracting the
   abovementioned payload types.
 
@@ -214,10 +216,7 @@ consider for this feature, but a few points of tentative agreement are:
   (just not opaque).
 * The GC heap would be semantically distinct from linear memory and thus
   the fields of GC objects could safely hold reference types (unlike linear
-  memory). GC object fields could also hold 
-  [function pointers](AstSemantics.md#calls) directly (again, unlike
-  linear memory). This would allow an efficient implementation of vtables and
-  virtual dispatch.
+  memory).
 * The GC struct and array types could be passed to and from JavaScript
   by reflecting the WebAssembly GC objects in JavaScript using the 
   [Typed Objects](https://github.com/nikomatsakis/typed-objects-explainer/)
