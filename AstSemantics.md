@@ -174,7 +174,7 @@ the same behavior. Alignment affects performance as follows:
 
 Thus, it is recommend that WebAssembly producers align frequently-used data
 to permit the use of natural alignment access, and use loads and stores with
-the grestest alignment values practical, while always avoiding misaligned
+the greatest alignment values practical, while always avoiding misaligned
 accesses.
 
 Either tooling or an explicit opt-in "debug mode" in the spec should allow

@@ -228,4 +228,4 @@ WebAssembly implementations run on the user side, so there is no opportunity for
 
  * Most of the individual floating point operations that WebAssembly does have already map to individual fast instructions in hardware. Telling `add`, `sub`, or `mul` they don't have to worry about NaN for example doesn't make them any faster, because NaN is handled quickly and transparently in hardware on all modern platforms.
 
- * WebAssembly has no floating point traps, status register, dynamic rounding modes, or signalling NaNs, so optimizations that depend on the absense of these features are all safe.
+ * WebAssembly has no floating point traps, status register, dynamic rounding modes, or signalling NaNs, so optimizations that depend on the absence of these features are all safe.
