@@ -13,7 +13,7 @@ More concretely, the following is a list of points of contact between WebAssembl
 and the rest of the Web platform that have been considered:
 
 * WebAssembly's [modules](Modules.md) allow for natural [integration with
-  the ES6 module system](Modules.md#integration-with-es6-modules) and thus
+  the ES6 module system](Modules.md#integration-with-es6-modules) and allow
   synchronous calling to and from JavaScript.
 * WebAssembly's security model should depend on [CORS][] and
   [subresource integrity][] to enable distribution, especially through content
