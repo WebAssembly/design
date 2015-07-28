@@ -236,6 +236,8 @@ source overlap.
 `memzero`'s operands are a destination address, and a size in bytes. It writes
 zeros to memory of the given size at the destination address.
 
+`memmove` and `memzero` return the value of their `destination` address operand.
+
 If any of the accessed bytes are beyond `memory_size`, the access is considered
 [out-of-bounds](AstSemantics.md#out-of-bounds).
 
