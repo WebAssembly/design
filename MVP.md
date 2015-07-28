@@ -97,7 +97,6 @@ isomorphic to the [binary format](BinaryEncoding.md).
   necessary for two WebAssembly modules to share the same linear memory.
 * Modules can specify memory size and initialization data (`data`, `rodata`,
   `bss`) in the [memory-initialization section](MVP.md#module-structure).
-* Modules can specify whether memory is growable (via `sbrk`).
 * Modules can optionally export memory, allowing it to be aliased by the
   embedder, such as JavaScript:
   * JavaScript sees the exported memory as an `ArrayBuffer`.
