@@ -79,13 +79,18 @@ Options under consideration:
 
 ## Linear memory bigger than 4GiB
 
-WebAssembly will eventually allow a module to have a linear memory size greater than 4GiB by providing
-load/store operations that take 64-bit index operands. Modules which opt-in to
-this feature have `int64` as the canonical pointer type.
+WebAssembly will eventually allow a module to have a linear memory size greater
+than 4GiB by providing load/store/etc. operations that take 64-bit index
+operands.
 
-On a 32-bit system, memory must still be smaller than 4GiB. A WebAssembly
-implementation running on such a platform may restrict allocations to the lower
-4GiB, and leave the two 32-bits untouched.
+Of course, the ability to actually allocate this much memory will always be
+subject to dynamic resource availability.
+
+Initially, it will likely be required that a program use all 32-bit indices or
+all 64-bit indices, and not a mix of both, so that implementations don't have
+to support both at the same time. However, operators with 32-bit indices and
+operations with 64-bit indices will be given separate names to leave open the
+possibility of supporting both in the same program.
 
 ## Source maps integration
 
