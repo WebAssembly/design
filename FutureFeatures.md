@@ -88,9 +88,9 @@ subject to dynamic resource availability.
 
 Initially, it will likely be required that a program use all 32-bit indices or
 all 64-bit indices, and not a mix of both, so that implementations don't have
-to support both at the same time. However, operators with 32-bit indices and
+to support both in the same program. However, operators with 32-bit indices and
 operations with 64-bit indices will be given separate names to leave open the
-possibility of supporting both in the same program.
+possibility of supporting both in the same program in the future.
 
 ## Source maps integration
 
