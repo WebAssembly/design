@@ -223,6 +223,26 @@ MVP, there are [future features](FutureFeatures.md#finer-grained-control-over-me
 proposed to allow setting protection and creating mappings within the
 contiguous linear memory.
 
+### Bulk-Memory Operations
+
+  * `memmove`: bulk-copy memory
+  * `memzero`: bulk-zero memory
+
+`memmove`'s operands are a destination address, a source address, and a size
+in bytes. It copies memory of the given size from the source address to the
+destination address, correctly handling the case where the destination and
+source overlap.
+
+`memzero`'s operands are a destination address, and a size in bytes. It writes
+zeros to memory of the given size at the destination address.
+
+If any of the accessed bytes are beyond `memory_size`, the access is considered
+[out-of-bounds](AstSemantics.md#out-of-bounds).
+
+All the bulk-memory operator operands have type `int32` in the MVP; `int64`
+forms will be added along with the rest of the support for
+[>4GiB linear memory](FutureFeatures.md#heaps-bigger-than-4gib).
+
 ## Local variables
 
 Each function has a fixed, pre-declared number of local variables which occupy a single
