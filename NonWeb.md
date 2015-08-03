@@ -20,7 +20,8 @@ JavaScript VM present.
 The WebAssembly spec will not try to define any large portable libc-like
 library. However, certain features that are core to WebAssembly semantics that
 are found in native libc *would* be part of the core WebAssembly spec as either
-primitive opcodes or a special builtin module (e.g., `sbrk`, `dlopen`).
+primitive opcodes or a function exported by a
+[builtin module](Modules.md#imports-and-exports) (e.g., `sbrk`, `dlopen`).
 
 Where there is overlap between the Web and popular non-Web environments,
 shared specs could be proposed, but these would be separate from the WebAssembly
@@ -32,8 +33,9 @@ However, for most cases it is expected that, to achieve portability at the
 source code level, communities would build libraries that mapped from a 
 source-level interface to the host environment's builtin capabilities
 (either at build time or runtime).  WebAssembly would provide the raw building
-blocks (feature testing, dynamic loading) to make these libraries possible.
-Two early expected examples are POSIX and SDL.
+blocks (feature testing, [builtin modules](Modules.md#imports-and-exports) and
+dynamic loading) to make these libraries possible. Two early expected examples
+are POSIX and SDL.
 
 In general, by keeping the non-Web path such that it doesn't require
 Web APIs, WebAssembly could be used as a portable binary format on many

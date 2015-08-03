@@ -90,7 +90,7 @@ even before there is any native support.
 
 As explained in the [high-level goals](HighLevelGoals.md), to achieve a Minimum Viable Product, the
 initial focus is on [C/C++](CAndC++.md).
-However, by [integrating with JS at the ES6 Module interface](MVP.md#modules),
+However, by [integrating with JS at the ES6 Module interface](Modules.md#integration-with-es6-modules),
 web developers don't need to write C++ to take advantage of libraries that others have written; 
 reusing a modular C++ library can be as simple as [using a module from JS](http://jsmodules.io).
 
