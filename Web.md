@@ -25,11 +25,12 @@ and the rest of the Web platform that have been considered:
     perform N fetches and compile N copies.
   - WebAssembly may later standardize a more direct way to create a thread that
     doesn't involve creating a new Worker.
-* Once [SIMD is supported](PostMVP.md#fixed-width-simd), a Web implementation of
-  WebAssembly would:
+* Once [SIMD is supported](PostMVP.md#fixed-width-simd) WebAssembly would:
   - Be statically typed analogous to [SIMD.js-in-asm.js][];
   - Reuse specification of operation semantics (with TC39);
   - Reuse backend implementation (same IR nodes).
+* Once [GC is supported](GC.md), WebAssembly code would be able to reference
+  and access and JS, DOM, and general WebIDL-defined objects.
 
   [CORS]: https://www.w3.org/TR/cors/
   [subresource integrity]: https://www.w3.org/TR/SRI/
