@@ -229,3 +229,36 @@ WebAssembly implementations run on the user side, so there is no opportunity for
  * Most of the individual floating point operations that WebAssembly does have already map to individual fast instructions in hardware. Telling `add`, `sub`, or `mul` they don't have to worry about NaN for example doesn't make them any faster, because NaN is handled quickly and transparently in hardware on all modern platforms.
 
  * WebAssembly has no floating point traps, status register, dynamic rounding modes, or signalling NaNs, so optimizations that depend on the absence of these features are all safe.
+
+## What about `mmap`?
+
+The [`mmap`](http://pubs.opengroup.org/onlinepubs/009695399/functions/mmap.html)
+syscall has many useful features. While these are all packed into one
+overloaded syscall in POSIX, WebAssembly unpacks this functionality into
+multiple builtins:
+* the MVP starts with the ability to resize linear memory via a
+  [`resize_memory`](AstSemantics.md#resizing) builtin operation;
+* proposed [future features](FutureFeatures.md#finer-grained-control-over-memory)
+  would allow the application to change the protection and mappings for pages
+  in the contiguous range set by `resize_memory`.
+
+A significant feature of `mmap` that is missing from the above list is the
+ability to allocate disjoint virtual address ranges. The reasoning for this
+omission is:
+* The above functionality is sufficient to allow a user-level libc to
+  implement full, compatible `mmap` with what appears to be noncontiguous
+  memory allocation (but, under the hood is just coordinated use of
+  `memory_resize` and `mprotect`/`map_file`/`map_shmem`/`madvise`).
+* The benefit of allowing noncontiguous virtual address allocation would be if
+  it allowed the engine to interleave a WebAssembly module's linear memory with
+  other memory allocations in the same process (in order to mitigate virtual
+  address space fragmentation). There are two problems with this:
+  * This interleaving with unrelated allocations does not currently admit
+    efficient security checks to prevent one module from corrupting data outside
+    its heap (see discussion in #285).
+  * This interleaving would require making allocation nondeterministic.
+    Nondeterminism is something that WebAssemgly generally 
+    [tries to avoid](Nondeterminism.md) and in this particular case, history
+    has clear examples of memory allocator nondeterminism leading to real-world
+    bustage ([[1](https://technet.microsoft.com/en-us/magazine/ff625273.aspx)],
+    [[2](http://lxr.free-electrons.com/source/include/linux/personality.h?v=3.2#L31)]).

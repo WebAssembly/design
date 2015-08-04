@@ -31,6 +31,7 @@ currently admits nondeterminism:
    nondeterministic.
  * Out of bounds heap accesses *may* want
    [some flexibility](AstSemantics.md#out-of-bounds)
+ * The [`page_size` global constant](AstSemantics.md#resizing)
  * NaN bit patterns in floating point
    [operations](AstSemantics.md#floating-point-operations) and
    [conversions](AstSemantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions)

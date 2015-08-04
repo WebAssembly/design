@@ -40,10 +40,27 @@ possible to use a non-standard ABI for specialized purposes.
 
 ## Finer-grained control over memory
 
-* `mmap` of files.
-* `madvise(MADV_DONTNEED)`.
-* Shared memory, where a physical address range is mapped to multiple physical
-  pages in a single WebAssembly module as well as across modules.
+Provide access to safe OS-provided functionality including:
+* `map_file(addr, length, Blob, file-offset)`: semantically, this operation
+   copies the specified range from `Blob` into the range `[addr, addr+length)`
+   (where `addr+length <= memory_size`) but implementations are encouraged
+   to `mmap(addr, length, MAP_FIXED | MAP_PRIVATE, fd)`
+* `dont_need(addr, length)`: semantically, this operation zeroes the given range
+   but the implementation is encouraged to `madvise(addr, length, MADV_DONTNEED)`
+* `shmem_create(length)`: create a memory object that can be simultaneously
+  shared between multiple linear memories
+* `map_shmem(addr, length, shmem, shmem-offset)`: like `map_file` except
+  `MAP_SHARED`, which isn't otherwise valid on read-only Blobs
+* `mprotect(addr, length, prot-flags)`: change protection on the range
+  `[addr, addr+length)` (where `addr+length <= memory_size`)
+
+The `addr` and `length` parameters above would be required to be multiples of
+the [`page_size`](AstSemantics.md#resizing) global constant.
+
+The above list of functionality mostly covers the set of functionality
+provided by the `mmap` OS primitive. One significant exception is that `mmap`
+can allocate noncontiguous virtual address ranges. See the
+[FAQ](FAQ.md#what-about-mmap) for rationale.
 
 ## More expressive control flow
 
