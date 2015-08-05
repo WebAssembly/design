@@ -255,7 +255,7 @@ omission is:
   address space fragmentation). There are two problems with this:
   * This interleaving with unrelated allocations does not currently admit
     efficient security checks to prevent one module from corrupting data outside
-    its heap (see discussion in #285).
+    its heap (see discussion in [#285](https://github.com/WebAssembly/design/pull/285)).
   * This interleaving would require making allocation nondeterministic.
     Nondeterminism is something that WebAssemgly generally 
     [tries to avoid](Nondeterminism.md) and in this particular case, history

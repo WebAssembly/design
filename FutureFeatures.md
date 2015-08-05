@@ -47,6 +47,9 @@ Provide access to safe OS-provided functionality including:
    to `mmap(addr, length, MAP_FIXED | MAP_PRIVATE, fd)`
 * `dont_need(addr, length)`: semantically, this operation zeroes the given range
    but the implementation is encouraged to `madvise(addr, length, MADV_DONTNEED)`
+   (this allows applications to be good citizens and release unused physical
+   pages back to the OS, thereby reducing their RSS and avoiding OOM-killing on
+   mobile)
 * `shmem_create(length)`: create a memory object that can be simultaneously
   shared between multiple linear memories
 * `map_shmem(addr, length, shmem, shmem-offset)`: like `map_file` except
