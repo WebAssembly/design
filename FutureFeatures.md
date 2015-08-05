@@ -66,16 +66,7 @@ Options under consideration:
 
 ## GC/DOM Integration
 
-* Access to certain kinds of Garbage-Collected (GC) objects from variables,
-  arguments, expressions.
-* Ability to GC-allocate certain kinds of GC objects.
-* Initially, things with fixed structure:
-  * JavaScript strings;
-  * JavaScript functions (as callable closures);
-  * Typed Arrays;
-  * [Typed objects](https://github.com/nikomatsakis/typed-objects-explainer/);
-  * DOM objects via WebIDL.
-* Perhaps a rooting API for safe reference from the linear address space.
+See [GC.md](GC.md).
 
 ## Linear memory bigger than 4GiB
 
