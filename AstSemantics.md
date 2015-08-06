@@ -367,9 +367,9 @@ results into the result type.
   * `int32.sge`: signed greater than or equal
   * `int32.ugt`: unsigned greater than
   * `int32.uge`: unsigned greater than or equal
-  * `int32.clz`: sign-agnostic count leading zeroes (defined for all values, including zero)
-  * `int32.ctz`: sign-agnostic count trailing zeroes (defined for all values, including zero)
-  * `int32.popcnt`: sign-agnostic count number of ones
+  * `int32.clz`: sign-agnostic count leading zero bits (defined for all values, including zero)
+  * `int32.ctz`: sign-agnostic count trailing zero bits (defined for all values, including zero)
+  * `int32.popcnt`: sign-agnostic count number of one bits
 
 Shifts interpret their shift count operand as an unsigned value. When the shift
 count is at least the bitwidth of the shift, `shl` and `shr` produce `0`, and
