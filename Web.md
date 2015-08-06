@@ -7,7 +7,9 @@ for example embedded in Web browsers (though this is
 This means integrating with the Web ecosystem, leveraging Web APIs, supporting
 the Web's security model, preserving the Web's portability, and designing in
 room for evolutionary development. Many of these goals are clearly
-reflected in WebAssembly's [high-level goals](HighLevelGoals.md).
+reflected in WebAssembly's [high-level goals](HighLevelGoals.md). In
+particular, WebAssembly MVP will be no looser from a security point of view
+than if the module was JavaScript.
 
 More concretely, the following is a list of points of contact between WebAssembly
 and the rest of the Web platform that have been considered:
@@ -15,6 +17,9 @@ and the rest of the Web platform that have been considered:
 * WebAssembly's [modules](Modules.md) allow for natural [integration with
   the ES6 module system](Modules.md#integration-with-es6-modules) and allow
   synchronous calling to and from JavaScript.
+* If allowed by the module, JavaScript can alias a loaded module's linear
+  memory via Typed Arrays. (To keep the Typed Arrays' lengths constant,
+  if linear memory is resized, any extant Typed Arrays are detached.)
 * WebAssembly's security model should depend on [CORS][] and
   [subresource integrity][] to enable distribution, especially through content
   distribution networks and to implement

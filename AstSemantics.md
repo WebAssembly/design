@@ -69,18 +69,19 @@ Global variables and linear memory accesses use memory types.
 
 ## Linear Memory
 
-The main storage of a wasm module, called the *linear memory*, is a contiguous,
-byte-addressable range of memory spanning from offset `0` and extending for
-`memory_size` bytes. The linear memory can be considered to be a untyped array
-of bytes. The linear memory is sandboxed; it does not alias the execution
-engine's internal data structures, the execution stack, local variables, global
-variables, or other process memory.
+The main storage of a WebAssembly module, called the *linear memory*, is a
+contiguous, byte-addressable range of memory spanning from offset `0` and
+extending for `memory_size` bytes. The linear memory can be considered to be a
+untyped array of bytes. The linear memory is sandboxed; it does not alias the
+execution engine's internal data structures, the execution stack, local
+variables, global variables, or other process memory. The initial state of
+linear memory is specified by the [module](Modules.md#initial-state-of-linear-memory).
 
-In the MVP, linear memory is not shared between threads of execution. Separate
-modules can execute in separate threads but have their own linear memory and can
-only communicate through messaging, e.g. in browsers using `postMessage`. It
-will be possible to share linear memory between threads of execution when
-[threads](PostMVP.md#threads) are added.
+In the MVP, linear memory is not shared between threads of execution or
+modules: every module has its own separate linear memory. It will,
+however, be possible to share linear memory between separate modules and
+threads once [threads](PostMVP.md#threads) and 
+[dynamic linking](FutureFeatures.md#dynamic-inking) are added as features.
 
 ### Linear Memory Operations
 
