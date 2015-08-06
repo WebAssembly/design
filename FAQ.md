@@ -258,7 +258,7 @@ omission is:
     its heap (see discussion in [#285](https://github.com/WebAssembly/design/pull/285)).
   * This interleaving would require making allocation nondeterministic.
     Nondeterminism is something that WebAssemgly generally 
-    [tries to avoid](Nondeterminism.md) and in this particular case, history
-    has clear examples of memory allocator nondeterminism leading to real-world
-    bustage ([[1](https://technet.microsoft.com/en-us/magazine/ff625273.aspx)],
+    [tries to avoid](Nondeterminism.md) and history has clear examples of
+    memory allocator almost-determinism leading to real-world bustage
+    ([[1](https://technet.microsoft.com/en-us/magazine/ff625273.aspx)],
     [[2](http://lxr.free-electrons.com/source/include/linux/personality.h?v=3.2#L31)]).
