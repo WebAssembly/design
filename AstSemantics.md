@@ -136,10 +136,7 @@ memory storage indexed by the effective address, and extending for the number
 of bytes implied by the memory type attribute of the access.
 
 If any of the accessed bytes are beyond `memory_size`, the access is considered
-*out-of-bounds*. A module may optionally define that out-of-bounds includes
-small effective addresses close to `0`
-(see [discussion](https://github.com/WebAssembly/design/issues/204)).
-The semantics of out-of-bounds accesses are discussed
+*out-of-bounds*. The semantics of out-of-bounds accesses are discussed
 [below](AstSemantics.md#out-of-bounds).
 
 The use of infinite-precision in the effective address computation means that
@@ -153,6 +150,30 @@ memory sizes are limited to 4 GiB (of course, actual sizes are further limited
 by [available resources](Nondeterminism.md)). In the future, to support
 [>4GiB linear memory](FutureFeatures.md#heaps-bigger-than-4gib), support for
 indices with type `int64` will be added.
+
+### Adjusting memory size and permissions: `mmap`
+
+In the MVP the size of linear memory is fixed: The initial size of linear
+memory will remain unchanged for the life of that WebAssembly module. Later,
+we will support a limited form of `mmap` which can:
+
+  * Allocate pages of memory, in order to increase or decrease
+    the amount of available memory to the WebAssembly module.
+  * Adjust the permissions of a page of memory, for example to make
+    small effective addresses close to `0` behave as if they are
+    [out-of-bounds](AstSemantics.md#out-of-bounds)
+    (see [discussion](https://github.com/WebAssembly/design/issues/204)).
+
+In addition to the `mmap` operation, applications will also have access to
+
+ * `munmap`, to unmap `mmap`ed pages, and
+ * `mmap_get_page_size`, to detect the system page size (this may not
+   provide accurate information about the underlying system, but it
+   should be good enough for purposes of calling `mmap`).
+
+In the future,
+[further `mmap` functionality](FutureFeatures.md#finer-grained-control-over-memory)
+may be added.
 
 ### Alignment
 
