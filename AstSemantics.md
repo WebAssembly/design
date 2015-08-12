@@ -213,14 +213,19 @@ tradeoffs.
 
 ### Resizing
 
-As stated [above](AstSemantics.md#linear-memory), linear memory can be resized
-by a `resize_memory` builtin operation. The resize delta is required to be a
-multiple of a global `page_size` constant.  Also as stated
-[above](AstSemantics.md#linear-memory), linear memory is contiguous, meaning
-there are no "holes" in the linear address space. After the MVP, there are
-[future features](FutureFeatures.md#finer-grained-control-over-memory) proposed
-to allow setting protection and creating mappings within the contiguous
-linear memory.
+Linear memory can be resized by a `resize_memory` builtin operation. The
+`resize_memory` operation requires its operand to be a multiple of the system
+page size. To determine page size, a nullary `page_size` operation is provided.
+
+ * `resize_memory` : grow or shrink linear memory by a given delta which
+    must be a multiple of `page_size`
+ * `page_size` : nullary constant function returning page size
+
+Also as stated [above](AstSemantics.md#linear-memory), linear memory is
+contiguous, meaning there are no "holes" in the linear address space. After the
+MVP, there are [future features](FutureFeatures.md#finer-grained-control-over-memory)
+proposed to allow setting protection and creating mappings within the
+contiguous linear memory.
 
 ## Local variables
 

@@ -58,7 +58,7 @@ Provide access to safe OS-provided functionality including:
   `[addr, addr+length)` (where `addr+length <= memory_size`)
 
 The `addr` and `length` parameters above would be required to be multiples of
-the [`page_size`](AstSemantics.md#resizing) global constant.
+[`page_size`](AstSemantics.md#resizing).
 
 The above list of functionality mostly covers the set of functionality
 provided by the `mmap` OS primitive. One significant exception is that `mmap`
