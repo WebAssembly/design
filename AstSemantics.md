@@ -477,6 +477,9 @@ implementations of the remaining required operations.
 
 `min` and `max` operations treat `-0.0` as being effectively less than `0.0`.
 
+In floating point comparisons, the operands are *unordered* if either operand
+is NaN, and *ordered* otherwise.
+
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
   * `int32.wrap[int64]`: wrap a 64-bit integer to a 32-bit integer
