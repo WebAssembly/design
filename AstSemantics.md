@@ -71,17 +71,18 @@ Global variables and linear memory accesses use memory types.
 
 The main storage of a WebAssembly module, called the *linear memory*, is a
 contiguous, byte-addressable range of memory spanning from offset `0` and
-extending for `memory_size` bytes. The linear memory can be considered to be a
-untyped array of bytes. The linear memory is sandboxed; it does not alias the
-execution engine's internal data structures, the execution stack, local
+extending for `memory_size` bytes which can be dynamically adjusted by
+[`resize_memory`](Modules.md#resizing). The linear memory can be considered to
+be an untyped array of bytes. The linear memory is sandboxed; it does not alias
+the execution engine's internal data structures, the execution stack, local
 variables, global variables, or other process memory. The initial state of
 linear memory is specified by the [module](Modules.md#initial-state-of-linear-memory).
 
-In the MVP, linear memory is not shared between threads of execution or
-modules: every module has its own separate linear memory. It will,
-however, be possible to share linear memory between separate modules and
-threads once [threads](PostMVP.md#threads) and 
-[dynamic linking](FutureFeatures.md#dynamic-inking) are added as features.
+In the MVP, linear memory is not shared between threads of execution. Separate
+modules can execute in separate threads but have their own linear memory and can
+only communicate through messaging, e.g. in browsers using `postMessage`. It
+will be possible to share linear memory between threads of execution when
+[threads](PostMVP.md#threads) are added.
 
 ### Linear Memory Operations
 
@@ -209,6 +210,22 @@ tradeoffs.
     * Either tooling or an explicit opt-in "debug mode" in the spec should allow
       execution of a module in a mode that threw exceptions on out-of-bounds
       access.
+
+### Resizing
+
+Linear memory can be resized by a `resize_memory` builtin operation. The
+`resize_memory` operation requires its operand to be a multiple of the system
+page size. To determine page size, a nullary `page_size` operation is provided.
+
+ * `resize_memory` : grow or shrink linear memory by a given delta which
+    must be a multiple of `page_size`
+ * `page_size` : nullary constant function returning page size
+
+Also as stated [above](AstSemantics.md#linear-memory), linear memory is
+contiguous, meaning there are no "holes" in the linear address space. After the
+MVP, there are [future features](FutureFeatures.md#finer-grained-control-over-memory)
+proposed to allow setting protection and creating mappings within the
+contiguous linear memory.
 
 ## Local variables
 

@@ -31,6 +31,10 @@ currently admits nondeterminism:
    nondeterministic.
  * Out of bounds heap accesses *may* want
    [some flexibility](AstSemantics.md#out-of-bounds)
+ * The value returned by `page_size` is system-dependent. The arguments to the
+   [`resize_memory`](AstSemantics.md#resizing) and other 
+   [future memory management builtins](FutureFeatures.md#finer-grained-control-over-memory)
+   are required to be multiples of `page_size`.
  * NaN bit patterns in floating point
    [operations](AstSemantics.md#floating-point-operations) and
    [conversions](AstSemantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions)
