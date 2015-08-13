@@ -256,9 +256,6 @@ omission is:
   * This interleaving with unrelated allocations does not currently admit
     efficient security checks to prevent one module from corrupting data outside
     its heap (see discussion in [#285](https://github.com/WebAssembly/design/pull/285)).
-  * This interleaving would require making allocation nondeterministic.
-    Nondeterminism is something that WebAssemgly generally 
-    [tries to avoid](Nondeterminism.md) and history has clear examples of
-    memory allocator almost-determinism leading to real-world bustage
-    ([[1](https://technet.microsoft.com/en-us/magazine/ff625273.aspx)],
-    [[2](http://lxr.free-electrons.com/source/include/linux/personality.h?v=3.2#L31)]).
+  * This interleaving would require making allocation nondeterministic and
+    nondeterminism is something that WebAssemgly generally 
+    [tries to avoid](Nondeterminism.md).
