@@ -444,12 +444,12 @@ implementations of the remaining required operations.
   * `float32.floor`: floor operation
   * `float32.trunc`: round to nearest integer towards zero
   * `float32.nearestint`: round to nearest integer, ties to even
-  * `float32.eq`: compare equal
-  * `float32.ne`: compare unequal
-  * `float32.lt`: less than
-  * `float32.le`: less than or equal
-  * `float32.gt`: greater than
-  * `float32.ge`: greater than or equal
+  * `float32.eq`: compare ordered and equal
+  * `float32.ne`: compare unordered or unequal
+  * `float32.lt`: compare ordered and less than
+  * `float32.le`: compare ordered and less than or equal
+  * `float32.gt`: compare ordered and greater than
+  * `float32.ge`: compare ordered and greater than or equal
   * `float32.sqrt`: square root
   * `float32.min`: minimum (binary operator); if either operand is NaN, returns NaN
   * `float32.max`: maximum (binary operator); if either operand is NaN, returns NaN
@@ -465,17 +465,20 @@ implementations of the remaining required operations.
   * `float64.floor`: floor operation
   * `float64.trunc`: round to nearest integer towards zero
   * `float64.nearestint`: round to nearest integer, ties to even
-  * `float64.eq`: compare equal
-  * `float64.ne`: compare unequal
-  * `float64.lt`: less than
-  * `float64.le`: less than or equal
-  * `float64.gt`: greater than
-  * `float64.ge`: greater than or equal
+  * `float64.eq`: compare ordered and equal
+  * `float64.ne`: compare unordered or unequal
+  * `float64.lt`: compare ordered and less than
+  * `float64.le`: compare ordered and less than or equal
+  * `float64.gt`: compare ordered and greater than
+  * `float64.ge`: compare ordered and greater than or equal
   * `float64.sqrt`: square root
   * `float64.min`: minimum (binary operator); if either operand is NaN, returns NaN
   * `float64.max`: maximum (binary operator); if either operand is NaN, returns NaN
 
 `min` and `max` operations treat `-0.0` as being effectively less than `0.0`.
+
+In floating point comparisons, the operands are *unordered* if either operand
+is NaN, and *ordered* otherwise.
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
