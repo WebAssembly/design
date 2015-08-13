@@ -232,6 +232,10 @@ support for page sizes requiring a type of `int64` may be added. The page size
 is an unsigned integer which is a power of 2 and at least 1024. `page_size`
 traps if the actual page size cannot be represented under these constraints.
 
+(Note that the `page_size` value need not reflect the actual internal page size
+of the implementation; it just needs to be a value suitable for use with
+`resize_memory`)
+
 ## Local variables
 
 Each function has a fixed, pre-declared number of local variables which occupy a single
