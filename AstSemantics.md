@@ -258,22 +258,22 @@ others, etc.
 WebAssembly offers basic structured control flow. All control flow structures
 are statements.
 
-  * `block`: a fixed-length sequence of statements
-  * `if`: if statement
-  * `do_while`: do while statement, basically a loop with a conditional branch
-    (back to the top of the loop)
-  * `forever`: infinite loop statement (like `while (1)`), basically an
-    unconditional branch (back to the top of the loop)
-  * `continue`: continue to start of nested loop
-  * `break`: break to end from nested loop or block
+  * `block`: a fixed-length sequence of statements that may be exited early via a `break`
+  * `loop`: a fixed-length sequence of statements that may be restarted at the beginning via a `continue`
+  * `break`: exit a lexically enclosing `block`
+  * `break_if`: like `break`, but has a `bool` operand and does nothing if the operand is false
+  * `continue`: restart a lexically enclosing `loop`
+  * `continue_if`: like `continue`, but has a `bool` operand and does nothing if the operand is false
   * `return`: return zero or more values from this function
   * `switch`: switch statement with fallthrough
 
-Loops (`do_while` and `forever`) may only be entered via fallthrough at the top.
-In particular, loops may not be entered directly via a `break`, `continue`, or
-`switch` destination. Break and continue statements can only target blocks or
-loops in which they are nested. These rules guarantee that all control flow
-graphs are well-structured.
+`break` and `break_if` specify a lexically enclosing `block` to exit from,
+which need not be the innermost `block`. `continue` and `continue_if` specify a
+lexically enclosing `loop` to restart, which need not be the innermost `loop`.
+
+As a consequence of these rules and the nesting structure of the AST, `block`
+and `loop` nodes may only be entered via fallthrough at the top. These rules
+guarantee that all control flow graphs are well-structured.
 
 Structured control flow provides simple and size-efficient binary encoding and
 compilation. Any control flow—even irreducible—can be transformed into structured
