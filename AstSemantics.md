@@ -403,6 +403,7 @@ results into the result type.
   * `i32.clz`: sign-agnostic count leading zero bits (defined for all values, including zero)
   * `i32.ctz`: sign-agnostic count trailing zero bits (defined for all values, including zero)
   * `i32.popcnt`: sign-agnostic count number of one bits
+  * `int32.select`: select between two values with a condition (not short-circuiting)
 
 Shifts interpret their shift count operand as an unsigned value. When the shift
 count is at least the bitwidth of the shift, `shl` and `shr_u` produce `0`, and
@@ -421,8 +422,8 @@ The same operations are available on 64-bit integers as the those available for
 
 Floating point arithmetic follows the IEEE 754-2008 standard, except that:
  - The sign bit and significand bit pattern of any NaN value returned from a
-   floating point arithmetic operation other than `neg`, `abs`, and `copysign`
-   are not specified. In particular, the "NaN propagation"
+   floating point arithmetic operation other than `neg`, `abs`, `copysign`,
+   and `select` are not specified. In particular, the "NaN propagation"
    section of IEEE 754-2008 is not required. NaNs do propagate through
    arithmetic operations according to IEEE 754-2008 rules, the difference here
    is that they do so without necessarily preserving the specific bit patterns
@@ -467,6 +468,7 @@ implementations of the remaining required operations.
   * `f32.sqrt`: square root
   * `f32.min`: minimum (binary operator); if either operand is NaN, returns NaN
   * `f32.max`: maximum (binary operator); if either operand is NaN, returns NaN
+  * `float32.select`: select between two values with a condition (not short-circuiting)
 
   * `f64.add`: addition
   * `f64.sub`: subtraction
@@ -488,6 +490,7 @@ implementations of the remaining required operations.
   * `f64.sqrt`: square root
   * `f64.min`: minimum (binary operator); if either operand is NaN, returns NaN
   * `f64.max`: maximum (binary operator); if either operand is NaN, returns NaN
+  * `float64.select`: select between two values with a condition (not short-circuiting)
 
 `min` and `max` operations treat `-0.0` as being effectively less than `0.0`.
 
