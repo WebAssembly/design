@@ -219,7 +219,7 @@ page size. To determine page size, a nullary `page_size` operation is provided.
 
  * `resize_memory` : grow or shrink linear memory by a given delta which
     must be a multiple of `page_size`
- * `page_size` : nullary constant function returning page size
+ * `page_size` : nullary constant function returning page size in bytes
 
 Also as stated [above](AstSemantics.md#linear-memory), linear memory is
 contiguous, meaning there are no "holes" in the linear address space. After the
