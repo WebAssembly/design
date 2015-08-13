@@ -3,7 +3,11 @@
 This repository contains documents describing the high-level design of
 WebAssembly and is part of the 
 [WebAssembly Community Group](https://www.w3.org/community/webassembly/).
-The WebAssembly specification will be drafted in a different repository.
+
+The actual WebAssembly specification is being developed in the
+[spec repository](https://github.com/WebAssembly/spec/). High-level design
+discussions should continue to be held in the design repository for now so
+that the spec work can remain focused.
 
 **Expect the contents to be in flux: everything is still tentative.**
 
