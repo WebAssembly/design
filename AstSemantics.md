@@ -227,6 +227,11 @@ MVP, there are [future features](FutureFeatures.md#finer-grained-control-over-me
 proposed to allow setting protection and creating mappings within the
 contiguous linear memory.
 
+In the MVP, the result type of `page_size` is `int32`; in the future, support
+support for page sizes requiring a type of `int64` may be added. The page size
+is an unsigned integer which is a power of 2 and at least 1024. `page_size`
+traps if the actual page size cannot be represented under these constraints.
+
 ## Local variables
 
 Each function has a fixed, pre-declared number of local variables which occupy a single
