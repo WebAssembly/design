@@ -34,9 +34,9 @@ exceeds the available callstack space at any time, a trap occurs.
 
 ## Types
 
-### Local Types
+### Basic Types
 
-The following types are called the *local types*:
+The following types are called the *basic types*:
 
   * `i32`: 32-bit integer
   * `i64`: 64-bit integer
@@ -47,11 +47,17 @@ Note that the local types `i32` and `i64` are not inherently signed or
 unsigned. The interpretation of these types is determined by individual
 operations.
 
-Parameters and local variables use local types.
-
 Also note that there is no need for a `void` type; function signatures use
 [sequences of types](#calls) to describe their return values, so a `void`
 return type is represented as an empty sequence.
+
+### Local Types
+
+*Local types* are a superset of the basic types, adding the following:
+
+  * `bool`: boolean
+
+Parameters and local variables use local types.
 
 ## Linear Memory
 
@@ -397,14 +403,15 @@ results into the result type.
   * `i32.clz`: sign-agnostic count leading zero bits (defined for all values, including zero)
   * `i32.ctz`: sign-agnostic count trailing zero bits (defined for all values, including zero)
   * `i32.popcnt`: sign-agnostic count number of one bits
+  * `int32.select`: sign-agnostic ternary `?:` operator (non-short-circuiting)
 
 Shifts interpret their shift count operand as an unsigned value. When the shift
 count is at least the bitwidth of the shift, `shl` and `shr_u` produce `0`, and
 `shr_s` produces `0` if the value being shifted is non-negative, and `-1`
 otherwise.
 
-All comparison operations yield 32-bit integer results with `1` representing
-`true` and `0` representing `false`.
+All comparison operations yield `bool` results. The first operand to `select`
+is a `bool` value determining which of the other two operands to return.
 
 ## 64-bit integer operations
 
@@ -415,8 +422,8 @@ The same operations are available on 64-bit integers as the those available for
 
 Floating point arithmetic follows the IEEE 754-2008 standard, except that:
  - The sign bit and significand bit pattern of any NaN value returned from a
-   floating point arithmetic operation other than `neg`, `abs`, and `copysign`
-   are not specified. In particular, the "NaN propagation"
+   floating point arithmetic operation other than `neg`, `abs`, `copysign`,
+   and `select` are not specified. In particular, the "NaN propagation"
    section of IEEE 754-2008 is not required. NaNs do propagate through
    arithmetic operations according to IEEE 754-2008 rules, the difference here
    is that they do so without necessarily preserving the specific bit patterns
@@ -482,11 +489,22 @@ implementations of the remaining required operations.
   * `f64.sqrt`: square root
   * `f64.min`: minimum (binary operator); if either operand is NaN, returns NaN
   * `f64.max`: maximum (binary operator); if either operand is NaN, returns NaN
+  * `float64.select`: sign-agnostic ternary `?:` operator (non-short-circuiting)
 
 `min` and `max` operations treat `-0.0` as being effectively less than `0.0`.
 
 In floating point comparisons, the operands are *unordered* if either operand
 is NaN, and *ordered* otherwise.
+
+All comparison operations yield `bool` results. The first operand to `select`
+is a `bool` value determining which of the other two operands to return.
+
+## Boolean operations
+
+  * `bool.and`: binary logical and
+  * `bool.ior`: binary inclusive logical or
+  * `bool.xor`: binary exclusive logical or
+  * `bool.not`: unary logical negation
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
