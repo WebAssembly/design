@@ -105,7 +105,6 @@ All strings are encoded as null-terminated UTF8.
 
 * Use a preorder encoding of the AST
   * Efficient single-pass validation+compilation and polyfill
-  * Allows context-dependent index spaces (described above)
 * The data of a node (if there is any), is written immediately after the opcode and before child nodes
   * The opcode statically determines what follows, so no generic metadata is necessary.
 * Examples
