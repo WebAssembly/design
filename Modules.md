@@ -109,8 +109,8 @@ to allow *explicitly* sharing linear memory between multiple modules.
 
 A module will contain a section declaring the linear memory size (initial and
 maximum size allowed by [`resize_memory`](AstSemantics.md#resizing) and the
-initial contents of memory (analogous to `.data`, `.rodata`, `.bss` sections in
-native executables).
+initial contents of memory,analogous to `.data`, `.rodata`, `.bss` sections in
+native executables (see [binary encoding](BinaryEncoding.md#global-structure)
 
 ## Code section
 
