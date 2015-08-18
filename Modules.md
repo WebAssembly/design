@@ -59,7 +59,7 @@ out of WebAssembly in order to implement portable source-level interfaces
 While ES6 defines how to parse, link and execute a module, ES6 does not
 define when this parsing/linking/execution occurs. An additional extension
 to the HTML spec is required to say when a script is parsed as a module instead
-of normal global code. This work is [ongoing](http://TODO-link-to-loader-level-0-repo).
+of normal global code. This work is [ongoing](https://github.com/whatwg/loader/blob/master/roadmap.md).
 Currently, the following entry points for modules are being considered:
 * `<script type="module">`;
 * an overload to the `Worker` constructor;
