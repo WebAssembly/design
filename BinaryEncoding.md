@@ -98,8 +98,12 @@ Yes:
       * Type ID
       * Count of locals
     + The serialized AST
+ * A `data` section contains
+   - A sequence of byte ranges within the binary and corresponding addresses in the linear memory
+
 
 All strings are encoded as null-terminated UTF8.
+Data segments represent initialized data that is loaded directly from the binary into the linear memory when the program starts (see [modules](Modules.md#initial-state-of-linear-memory)).
 
 ## Serialized AST
 
