@@ -303,8 +303,8 @@ exactly. [Imported functions](MVP.md#code-loading-and-imports) also have
 signatures and are added to the same function table and are thus also callable
 via `call_direct`.
 
-Indirect calls may be made to a value of function-pointer type. A function-
-pointer value may be obtained for a given function as specified by its index
+Indirect calls may be made to a value of function-pointer type. A 
+function-pointer value may be obtained for a given function as specified by its index
 in the function table.
 
   * `call_indirect`: call function indirectly
