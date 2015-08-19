@@ -5,8 +5,11 @@ WebAssembly's
 interface will likely be fairly low-level, exposing general-purpose primitives
 rather than higher-level functionality. Still, there is a need for higher-level
 functionality, and for greater flexibility than the WebAssembly spec can provide.
-JIT and Optimization libraries that would run inside WebAssembly and provide
-support and higher-level features would fit this need very well.
+There is also a need for experimentation, particularly in the area of
+applications wishing to dynamically generate new code, to determine which features
+and interfaces are most appropriate. JIT and Optimization libraries that would run
+inside WebAssembly and provide support and higher-level features would fit this
+need very well.
 
 Such libraries wouldn't be part of the WebAssembly spec itself, but the concept
 is relevant to discuss here because features that we can expect to address in
@@ -14,9 +17,12 @@ libraries are features that we may not need to add to the spec. This strategy
 can help keep the spec itself simple and reduce the surface area of features
 required of every spec implementation.
 
-And, libraries are a good way to develop new features that we may eventually
-want to add to the spec. They make it easy to iterate, experiment, and gain
-real-world insight before freezing all the details in a spec.
+And, libraries will facilitate light-weight experimentation with new features
+that we may eventually want to add to WebAssembly itself. In a library layer,
+we can quickly iterate, experiment, and gain real-world insight, before adding
+features to the spec itself and freezing all the details. And as new features
+are standardized, libraries will become the polyfills which will help those
+features gain adoption.
 
 This raises the question of how we should decide which features belong in the
 spec, and which belong in a library. Some of the fundamental advantages of
