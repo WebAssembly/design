@@ -257,5 +257,5 @@ omission is:
     efficient security checks to prevent one module from corrupting data outside
     its heap (see discussion in [#285](https://github.com/WebAssembly/design/pull/285)).
   * This interleaving would require making allocation nondeterministic and
-    nondeterminism is something that WebAssemgly generally 
+    nondeterminism is something that WebAssembly generally
     [tries to avoid](Nondeterminism.md).
