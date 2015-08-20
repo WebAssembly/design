@@ -393,3 +393,37 @@ reason we haven't added these already is that they're not efficient for
 general-purpose use on several of today's popular hardware architectures.
 
   [handle trap specially]: FutureFeatures.md#trapping-or-non-trapping-strategies
+
+## Multiple Return Values
+
+In the MVP, functions and operators are limited to having at most one return
+value. It is desirable to lift this restriction in the future.
+
+Currently, when the result of an operator is used more than once, it must be
+stored in a local variable. Multiple return values could generalize this rule
+to require when an operator has multiple result values, the result values must
+be all stored in local variables too. This suggests a new form of `set_local`
+which can directly assign the results of a multiple-result operator into
+multiple local variables, and a new form of `return` which can return multiple
+values from a function. An advantage of this approach is avoiding the need
+for tuple values to be live anywhere.
+
+One interesting question is whether it should be possible to have a function
+call another function which returns multiple result values, and then forward
+all of those result values to its own result, without copying them all into
+local variables first. It gets even more interesting with the discussion of
+[statements versus expressions](https://github.com/WebAssembly/design/issues/223).
+
+## C++-style vtable optimizations
+
+Storing function pointers in memory requires converting them into function table
+indices. Since the traditional implementation of C++ virtual functions is to
+have vtables stored as arrays in the address space, a traditional implementation
+of C++ virtual functions in WebAssembly would work, but would require an extra
+table lookup.
+
+However, because vtable objects are not exposed at the C++ level, it isn't
+actually necessary to represent them inside the address space of the program. If
+WebAssembly allowed modules to define alternate function tables, C++ compilers
+could lower vtables into these alternate tables, so their contents could be
+actual function pointers instead of function table indices.

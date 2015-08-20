@@ -34,9 +34,9 @@ a trap occurs.
 
 ## Types
 
-### Local Types
+### Basic Types
 
-The following types are called the *local types*:
+The following types are called the *basic types*:
 
   * `int32`: 32-bit integer
   * `int64`: 64-bit integer
@@ -47,15 +47,21 @@ Note that the local types `int32` and `int64` are not inherently signed or
 unsigned. The interpretation of these types is determined by individual
 operations.
 
+Also note that there is no need for a `void` type; function signatures use
+[sequences of types](Calls.md) to describe their return values, so a `void`
+return type is represented as an empty sequence.
+
+### Local Types
+
+*Local types* are a superset of the basic types, adding the following:
+
+  * `funcid`: a function identifier for use in `call_indirect`
+
+The zero value of `funcid` is the identifier for the first function in the
+function table. (C/C++ compilers may wish to put a placeholder function at
+this point in the table to implement a null pointer concept.)
+
 Parameters and local variables use local types.
-
-### Expression Types
-
-*Expression types* include all the local types, and also:
-
-  * `void`: no value
-
-AST expression nodes use expression types.
 
 ### Memory Types
 
@@ -293,39 +299,53 @@ may be added in the future.
 
 ## Calls
 
-Direct calls to a function specify the callee by index into a function table.
+Each function has a *signature*, which consists of:
+
+  * Return types, which are a sequence of local types
+  * Argument types, which are a sequence of local types
+
+Note that WebAssembly itself does not support variable-length argument lists
+(aka varargs). C and C++ compilers are expected to implement this functionality
+by storing arguments in a buffer in linear memory and passing a pointer to the
+buffer.
+
+In the MVP, the length of the return types vector may only be 0 or 1. This
+restriction may be lifted in the future with the addition of support for
+[multiple return values](FutureFeatures.md#multiple-return-values).
+
+There are two forms of calls:
 
   * `call_direct`: call function directly
-
-Each function has a signature in terms of expression types, and calls must match
-the function signature
-exactly. [Imported functions](MVP.md#code-loading-and-imports) also have
-signatures and are added to the same function table and are thus also callable
-via `call_direct`.
-
-Indirect calls may be made to a value of function-pointer type. A 
-function-pointer value may be obtained for a given function as specified by its index
-in the function table.
-
   * `call_indirect`: call function indirectly
-  * `addressof`: obtain a function pointer value for a given function
 
-Function-pointer values are comparable for equality and the `addressof` operator
-is monomorphic. Function-pointer values can be explicitly coerced to and from
-integers (which, in particular, is necessary when loading/storing to memory
-since memory only provides integer types). For security and safety reasons,
-the integer value of a coerced function-pointer value is an abstract index and
-does not reveal the actual machine code address of the target function.
+Direct calls identify their function statically. Indirect calls have a
+`funcid` operand which identifies the function at runtime.
 
-In the MVP, function pointer values are local to a single module. The
+Calls have a signature, which is the expected return types and argument types
+(ignoring the `funcid` operand, in the case of `call_indirect`) of the
+AST node. Call operations trap if the signature of the call differs from the
+signature of the called function.
+
+### Function pointers
+
+Function pointer values are obtained through the use of a special operator:
+
+  * `addressof`: obtain a `funcid` value for a given statically-identified function
+
+and are comparable for equality:
+
+  * `funcid.eq`: function identifier compare equal
+
+Note that it is not possible to directly observe the bits of a `funcid`
+value. They may be [converted into integers][], but the integers only hold an
+index into the *function table*, a table with an entry for each function
+appended to the table in the order that they are loaded into the program.
+
+In the MVP, `funcid` values are local to a single module. The
 [dynamic linking](FutureFeatures.md#dynamic-linking) feature is necessary for
-two modules to pass function pointers back and forth.
+two modules to pass `funcid` values back and forth.
 
-Multiple return value calls will be possible, though possibly not in the
-MVP. The details of multiple-return-value calls needs clarification. Calling a
-function that returns multiple values will likely have to be a statement that
-specifies multiple local variables to which to assign the corresponding return
-values.
+  [converted into integers]: AstSemantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions
 
 ## Literals
 
@@ -507,6 +527,8 @@ is NaN, and *ordered* otherwise.
   * `float64.cvt_unsigned[int32]`: convert an unsigned 32-bit integer to a 64-bit float
   * `float64.cvt_unsigned[int64]`: convert an unsigned 64-bit integer to a 64-bit float
   * `float64.reinterpret[int64]`: reinterpret the bits of a 64-bit integer as a 64-bit float
+  * `funcid.decode[int32]` : convert an unsigned 32-bit integer to a function identifier
+  * `int32.encode` : convert a function identifier to an unsigned 32-bit integer
 
 Wrapping and extension of integer values always succeed.
 Promotion and demotion of floating point values always succeed.
@@ -523,3 +545,10 @@ round-to-nearest ties-to-even rounding.
 Truncation from floating point to integer where IEEE-754 would specify an
 invalid operation exception (e.g. when the floating point value is NaN or
 outside the range which rounds to an integer in range) traps.
+
+Encoding a `funcid` returns the index into the function table. If the index of
+the function is too great to fit in the result type, encoding traps. Decoding
+returns the `funcid` from an encoded function index. If the index is out of
+bounds in the function table, decoding traps. In the MVP, `funcid` values may
+only be converted to and from 32-bit integers. Support for 64-bit funcid may be
+added in the future.
