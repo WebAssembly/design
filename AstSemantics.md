@@ -49,13 +49,9 @@ operations.
 
 Parameters and local variables use local types.
 
-### Expression Types
-
-*Expression types* include all the local types, and also:
-
-  * `void`: no value
-
-AST expression nodes use expression types.
+Also note that there is no need for a `void` type; function signatures use
+[sequences of types](Calls.md) to describe their return values, so a `void`
+return type is represented as an empty sequence.
 
 ### Memory Types
 
@@ -293,12 +289,24 @@ may be added in the future.
 
 ## Calls
 
+Each function has a *signature*, which consists of:
+
+  * Return types, which are a sequence of local types
+  * Argument types, which are a sequence of local types
+
+Note that WebAssembly itself does not support variable-length argument lists
+(aka varargs). C and C++ compilers are expected to implement this functionality
+by storing arguments in a buffer in linear memory and passing a pointer to the
+buffer.
+
+In the MVP, the length of the return types sequence may only be 0 or 1. This
+restriction may be lifted in the future.
+
 Direct calls to a function specify the callee by index into a function table.
 
   * `call_direct`: call function directly
 
-Each function has a signature in terms of expression types, and calls must match
-the function signature
+Calls must match the function signature
 exactly. [Imported functions](MVP.md#code-loading-and-imports) also have
 signatures and are added to the same function table and are thus also callable
 via `call_direct`.
