@@ -370,7 +370,7 @@ There are two different use cases here, one where the application wishes to
 handle overflow locally, and one where it doesn't.
 
 When the application is prepared to handle overflow locally, it would be useful
-to have arithmetic operations which can indicate when overflow occured. An
+to have arithmetic operations which can indicate when overflow occurred. An
 example of this is the checked arithmetic builtins available in compilers such
 as
 [clang](http://clang.llvm.org/docs/LanguageExtensions.html#checked-arithmetic-builtins)

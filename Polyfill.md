@@ -77,7 +77,7 @@ Some divergences that we've identified as potentially desirable:
 The MVP feature set is expected to be entirely polyfillable effectively and
 efficiently. As WebAssembly evolves past MVP the working group will strive to:
 
-* Standardize features which can be pollyfilled;
+* Standardize features which can be polyfilled;
 * Co-evolve with other web standards bodies, ensuring that upcoming WebAssembly
   features remain polyfillable.
 
