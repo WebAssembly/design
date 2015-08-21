@@ -256,12 +256,14 @@ are statements.
   * `if`: if statement
   * `do_while`: do while statement, basically a loop with a conditional branch
     (back to the top of the loop)
-  * `forever`: infinite loop statement (like `while (1)`), basically an
+  * `forever`: infinite loop statement (like `while (true)`), basically an
     unconditional branch (back to the top of the loop)
   * `continue`: continue to start of nested loop
   * `break`: break to end from nested loop or block
   * `return`: return zero or more values from this function
   * `switch`: switch statement with fallthrough
+
+The condition operand of `if` and `do_while` has type `bool`.
 
 Loops (`do_while` and `forever`) may only be entered via fallthrough at the top.
 In particular, loops may not be entered directly via a `break`, `continue`, or
