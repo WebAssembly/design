@@ -102,7 +102,7 @@ scope of "all" is a nuanced question), a single app using multiple
 independent libraries would have to hope that all the WebAssembly modules
 transitively used by those libraries "played well" together (e.g., explicitly
 shared `malloc` and coordinated global address ranges). Instead, the
-[dynamic linking future feature](FutureFeatures.md#dynamic-linking) is intended
+[dynamic linking future feature](DynamicLinking.md) is intended
 to allow *explicitly* sharing linear memory between multiple modules.
 
 ## Initial state of linear memory
