@@ -326,7 +326,7 @@ the integer value of a coerced function-pointer value is an abstract index and
 does not reveal the actual machine code address of the target function.
 
 In the MVP, function pointer values are local to a single module. The
-[dynamic linking](FutureFeatures.md#dynamic-linking) feature is necessary for
+[dynamic linking](DynamicLinking.md) feature is necessary for
 two modules to pass function pointers back and forth.
 
 Multiple return value calls will be possible, though possibly not in the

@@ -56,4 +56,4 @@ Portability at the C/C++ level can be achieved by programming to
 a standard API (e.g., POSIX) and relying on the compiler and/or libraries to map
 the standard interface to the host environment's available imports either at
 compile-time (via `#ifdef`) or run-time (via [feature detection](FeatureTest.md)
-and dynamic [loading](MVP.md#modules)/[linking](FutureFeatures.md#dynamic-linking)).
+and dynamic [loading](Modules.md)/[linking](DynamicLinking.md)).

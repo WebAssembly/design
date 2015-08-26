@@ -10,7 +10,7 @@ embedded within larger programs.
 Non-Web environments may provide different APIs than Web
 environments, which
 [feature testing](FeatureTest.md) and
-[dynamic linking](FutureFeatures.md#dynamic-linking) will make discoverable and
+[dynamic linking](DynamicLinking.md) will make discoverable and
 usable.
 
 Non-Web environments may include JavaScript VMs (e.g. node.js), however
