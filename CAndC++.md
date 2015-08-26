@@ -63,7 +63,7 @@ libraries. Developers will need to ensure that all code linked into an
 application are compiled with the same compiler and options.
 
 In the future, when WebAssembly is extended to support
-[dynamic linking](FutureFeatures.md#dynamic-linking), stable ABIs are
+[dynamic linking](DynamicLinking.md), stable ABIs are
 expected to be defined in accompaniment.
 
 ### Undefined and Implementation-defined Behavior

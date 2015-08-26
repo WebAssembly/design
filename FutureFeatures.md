@@ -13,30 +13,7 @@ This is covered in the [tooling](Tooling.md) section.
 
 ## Dynamic linking
 
-[Dynamic loading](MVP.md#code-loading-and-imports) is in [the MVP](MVP.md), but
-all loaded modules have their own [separate linear memory](MVP.md#linear-memory) and cannot share
-[function pointers](MVP.md#function-pointers). Dynamic linking will allow
-developers to share memory and function pointers between WebAssembly modules.
-
-WebAssembly will support both load-time and run-time (`dlopen`) dynamic linking
-of both WebAssembly modules and non-WebAssembly modules (e.g., on the Web, ES6
-ones containing JavaScript).
-
-Dynamic linking is especially useful when combined with a Content Distribution
-Network (CDN) such as [hosted libraries][] because the library is only ever
-downloaded and compiled once per user device. It can also allow for smaller
-differential updates, which could be implemented in collaboration with
-[service workers][].
-
-Standardize a single [ABI][] per source language, allowing for WebAssembly
-modules to interface with each other regardless of compiler. While it is highly
-recommended for compilers targeting WebAssembly to adhere to the specified ABI
-for interoperability, WebAssembly runtimes will be ABI agnostic, so it will be
-possible to use a non-standard ABI for specialized purposes.
-
-  [hosted libraries]: https://developers.google.com/speed/libraries/
-  [service workers]: https://www.w3.org/TR/service-workers/
-  [ABI]: https://en.wikipedia.org/wiki/Application_binary_interface
+This is covered in the [dynamic linking](DynamicLinking.md) section.
 
 ## Finer-grained control over memory
 

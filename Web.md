@@ -23,7 +23,7 @@ and the rest of the Web platform that have been considered:
 * WebAssembly's security model should depend on [CORS][] and
   [subresource integrity][] to enable distribution, especially through content
   distribution networks and to implement
-  [dynamic linking](FutureFeatures.md#dynamic-linking).
+  [dynamic linking](DynamicLinking.md).
 * Once [threads are supported](PostMVP.md#threads), a WebAssembly module would
   shared (including its heap) between workers via `postMessage()`.
   - This also has the effect of explicitly sharing code so that engines don't
