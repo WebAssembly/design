@@ -231,10 +231,10 @@ use cases:
 
   * `float32.minnum`: minimum; if exactly one operand is NaN, returns the other operand
   * `float32.maxnum`: maximum; if exactly one operand is NaN, returns the other operand
-  * `float32.fma`: fused multiply-add (results always conforming to IEEE-754)
+  * `float32.fma`: fused multiply-add (results always conforming to IEEE 754-2008)
   * `float64.minnum`: minimum; if exactly one operand is NaN, returns the other operand
   * `float64.maxnum`: maximum; if exactly one operand is NaN, returns the other operand
-  * `float64.fma`: fused multiply-add (results always conforming to IEEE-754)
+  * `float64.fma`: fused multiply-add (results always conforming to IEEE 754-2008)
 
 `minnum` and `maxnum` operations would treat `-0.0` as being effectively less
 than `0.0`.
@@ -266,16 +266,17 @@ so there's nothing preventing WebAssembly applications from linking to an
 appropriate emulation library and getting similarly performant results.
 Emulation libraries would have more flexibility to offer approximation
 techniques such as double-double arithmetic. If we standardize 128-bit
-floating point in WebAssembly, it will probably be standard IEEE-754
+floating point in WebAssembly, it will probably be standard IEEE 754-2008
 quadruple precision.
 
-## Full IEEE-754 conformance
+## Full IEEE 754-2008 conformance
 
-WebAssembly floating point conforms IEEE-754 in most respects, but there are a
-few areas that are [not yet covered](AstSemantics.md#floating-point-operations).
+WebAssembly floating point conforms IEEE 754-2008 in most respects, but there
+are a few areas that are
+[not yet covered](AstSemantics.md#floating-point-operations).
 
-IEEE-754 NaN bit pattern propagation is presently permitted but not required.
-It would be possible for WebAssembly to require it in the future.
+IEEE 754-2008 NaN bit pattern propagation is presently permitted but not
+required. It would be possible for WebAssembly to require it in the future.
 
 To support exceptions and alternate rounding modes, one option is to define an
 alternate form for each of `add`, `sub`, `mul`, `div`, `sqrt`, and `fma`. These

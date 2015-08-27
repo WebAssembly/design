@@ -413,21 +413,21 @@ The same operations are available on 64-bit integers as the those available for
 
 ## Floating point operations
 
-Floating point arithmetic follows the IEEE-754 standard, except that:
+Floating point arithmetic follows the IEEE 754-2008 standard, except that:
  - The sign bit and significand bit pattern of any NaN value returned from a
    floating point arithmetic operation other than `neg`, `abs`, and `copysign`
    are not specified. In particular, the "NaN propagation"
-   section of IEEE-754 is not required. NaNs do propagate through arithmetic
-   operations according to IEEE-754 rules, the difference here is that they do
-   so without necessarily preserving the specific bit patterns of the original
-   NaNs.
+   section of IEEE 754-2008 is not required. NaNs do propagate through
+   arithmetic operations according to IEEE-754 rules, the difference here is
+   that they do so without necessarily preserving the specific bit patterns of
+   the original NaNs.
  - WebAssembly uses "non-stop" mode, and floating point exceptions are not
    otherwise observable. In particular, neither alternate floating point
    exception handling attributes nor the non-computational operations on status
    flags are supported. There is no observable difference between quiet and
    signalling NaN. However, positive infinity, negative infinity, and NaN are
    still always produced as result values to indicate overflow, invalid, and
-   divide-by-zero conditions, as specified by IEEE-754.
+   divide-by-zero conditions, as specified by IEEE 754-2008.
  - WebAssembly uses the round-to-nearest ties-to-even rounding attribute, except
    where otherwise specified. Non-default directed rounding attributes are not
    supported.
@@ -435,9 +435,9 @@ Floating point arithmetic follows the IEEE-754 standard, except that:
    [under discussion](https://github.com/WebAssembly/design/issues/148).
 
 In the future, these limitations may be lifted, enabling
-[full IEEE-754 support](FutureFeatures.md#full-ieee-754-conformance).
+[full IEEE 754-2008 support](FutureFeatures.md#full-ieee-754-2008-conformance).
 
-Note that not all operations required by IEEE-754 are provided directly.
+Note that not all operations required by IEEE 754-2008 are provided directly.
 However, WebAssembly includes enough functionality to support reasonable library
 implementations of the remaining required operations.
 
@@ -519,7 +519,7 @@ is NaN, and *ordered* otherwise.
 Wrapping and extension of integer values always succeed.
 Promotion and demotion of floating point values always succeed.
 Demotion of floating point values uses round-to-nearest ties-to-even rounding,
-and may overflow to infinity or negative infinity as specified by IEEE-754.
+and may overflow to infinity or negative infinity as specified by IEEE 754-2008.
 If the operand of promotion or demotion is NaN, the sign bit and significand
 of the result are not specified.
 
@@ -528,6 +528,6 @@ Reinterpretations always succeed.
 Conversions from integer to floating point always succeed, and use
 round-to-nearest ties-to-even rounding.
 
-Truncation from floating point to integer where IEEE-754 would specify an
+Truncation from floating point to integer where IEEE 754-2008 would specify an
 invalid operation exception (e.g. when the floating point value is NaN or
 outside the range which rounds to an integer in range) traps.
