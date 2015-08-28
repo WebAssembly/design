@@ -30,6 +30,6 @@ can be broken out into smaller pieces in the text format.
 
 The text format is precise in that values that cannot be accurately represented in the
 binary format are considered invalid text. Floating-point numbers are therefore
-represented as hexadecimal floating-point as specified by C99. The textual format may
-be improved to also support more human-readable representations, but never at the cost
-of accurate representation.
+represented as hexadecimal floating-point as specified by the C99 standard, which
+IEEE-754-2008 section 5.12.3 also specifies. The textual format may be improved to also
+support more human-readable representations, but never at the cost of accurate representation.
