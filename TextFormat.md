@@ -23,3 +23,13 @@ assembly languages have).
 
 There is no requirement to use JavaScript syntax; this format is not intended to
 be evaluated or translated directly into JavaScript.
+
+The text format isn't uniquely representable. Multiple textual files can assemble
+to the same binary file, for example whitespace isn't relevant and memory initialization
+can be broken out into smaller pieces in the text format.
+
+The text format is precise in that values that cannot be accurately represented in the
+binary format are considered invalid text. Floating-point numbers are therefore
+represented as hexadecimal floating-point as specified by the C99 standard, which
+IEEE-754-2008 section 5.12.3 also specifies. The textual format may be improved to also
+support more human-readable representations, but never at the cost of accurate representation.
