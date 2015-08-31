@@ -418,9 +418,9 @@ Floating point arithmetic follows the IEEE 754-2008 standard, except that:
    floating point arithmetic operation other than `neg`, `abs`, and `copysign`
    are not specified. In particular, the "NaN propagation"
    section of IEEE 754-2008 is not required. NaNs do propagate through
-   arithmetic operations according to IEEE-754 rules, the difference here is
-   that they do so without necessarily preserving the specific bit patterns of
-   the original NaNs.
+   arithmetic operations according to IEEE 754-2008 rules, the difference here
+   is that they do so without necessarily preserving the specific bit patterns
+   of the original NaNs.
  - WebAssembly uses "non-stop" mode, and floating point exceptions are not
    otherwise observable. In particular, neither alternate floating point
    exception handling attributes nor the non-computational operations on status
