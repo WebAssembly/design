@@ -331,3 +331,36 @@ reason we haven't added these already is that they're not efficient for
 general-purpose use on several of today's popular hardware architectures.
 
   [handle trap specially]: FutureFeatures.md#trapping-or-non-trapping-strategies
+
+## Better feature testing support
+
+The MVP will provide a basic [feature detection query](FeatureTest.md) which can
+be used to allow an application to conditionally use features added after the MVP.
+However, the usual feature detection pattern in JS:
+```
+if (foo)
+    foo();
+else
+    alternativeToFoo();
+```
+won't work in WebAssembly since, when `foo` isn't supported, the use of `foo` will
+fail to at decode/validation time.
+
+In the MVP, applications wanting to conditionally use a new feature can employ a
+few brute-force strategies:
+* compile several different versions of a module, each assuming different
+  feature support and use feature testing to decide which one to load;
+* during [layer 1 decoding](BinaryEncoding.md), which happens in user code
+  anyway, use feature detection to translate unsupported opcodes into something
+  that validates (a call to `abort()` or a polyfill).
+
+However, with [SIMD](PostMVP.md#fixed-width-simd) and
+[other](FutureFeatures.md#additional-integer-operations)
+[proposed](FutureFeaturs.md#additional-floating-point-operations)
+[extensions](FutureFeaturs.md#floating-point-approximation-operations),
+it would be good to have a strategy that didn't require these brute
+force techniques (which have developer and load-time cost). The basic challenge
+is to allow a WebAssembly decoder to decode "through" an AST node that it knows
+nothing about. There are a number of ways to achieve this and more concrete
+experience with the realities of polyfilling is necessary to suggest the right
+design.

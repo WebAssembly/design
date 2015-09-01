@@ -140,10 +140,6 @@ conflict-avoidance practices surrounding string names:
     * So, as a general rule, no magic numbers in the spec (other than the literal [magic number](https://en.wikipedia.org/wiki/Magic_number_%28programming%29)).
   * Instead, a module defines its *own* local index spaces of opcodes by providing tables *of names*. 
     * So what the spec *would* define is a set of names and their associated semantics.
-  * If the implementation encounters a name it doesn't implement, by default an error is thrown while loading.
-    * However, a name *may* include a corresponding polyfill function (identified by index 
-      into the function array) to be called if the name isn't natively implemented. (There are a lot
-      more details to figure out here.)
   * To avoid (over time) large index-space declaration sections that are largely the same
     between modules, finalized versions of standards would define named baseline index spaces
     that modules could optionally use as a starting point to further refine.
