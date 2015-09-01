@@ -344,7 +344,7 @@ else
     alternativeToFoo();
 ```
 won't work in WebAssembly since, when `foo` isn't supported, the use of `foo` will
-fail to at decode/validation time.
+fail at decode/validation time.
 
 In the MVP, applications wanting to conditionally use a new feature can employ a
 few brute-force strategies:
