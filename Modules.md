@@ -20,6 +20,7 @@ An instance contains:
 * the code of the module from which the instance was loaded;
 * a [linear memory](AstSemantics.md#linear-memory);
 * [global variable](AstSemantics.md#global-variables) state;
+* fully resolved imports and exports;
 * (when [threading](PostMVP.md#threads) is added) thread-local state;
 * (when [dynamic linking](DynamicLinking.md) is added) the code of multiple modules
   that have been dynamically linked into the same instance;
