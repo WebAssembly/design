@@ -1,7 +1,12 @@
 # Modules
 
 The distributable, loadable, and executable unit of code in WebAssembly
-is called a **module**. A module contains:
+is called a **module**. At runtime, a module can be loaded by a runtime
+to produce an **instance** which encapsulates all the state directly
+manipulated by running WebAssembly code. A WebAssembly instance's initial state
+is determined by the module it was loaded from.
+
+A module contains:
 * a set of [imports and exports](Modules.md#imports-and-exports);
 * a section defining the [initial state of linear memory](Modules.md#initial-state-of-linear-memory);
 * a section containing [code](Modules.md#code-section);
@@ -10,6 +15,13 @@ is called a **module**. A module contains:
 * possibly other sections in the future.
 Sections declare their type and byte-length. Sections with unknown types are
 silently ignored.
+
+An instance contains:
+* a [linear memory](AstSemantics.md#linear-memory);
+* [global variable](AstSemantics.md#global-variables) state;
+* (when [threading](PostMVP.md#threads) is added) thread-local state;
+* (when [dynamic linking](DynamicLinking.md) is added) the code of multiple modules
+  that have been linked into the same instance;
 
 While WebAssembly modules are designed to interoperate with ES6 modules
 in a Web environment (more details [below](Modules.md#integration-with-es6-modules)),
@@ -85,10 +97,10 @@ a WebAssembly module, the WebAssembly module's exports would be linked as if
 they were the exports of an ES6 module. Once parsing and linking phases
 were complete, a WebAssembly module would have its `_start` function called in
 place of executing the ES6 module top-level script. By default, multiple 
-loads of the same module URL (in the same realm) reuse the same singleton
-module instance. It may be worthwhile in the future to consider extensions to
-allow applications to load/compile/link a module once and instantiate multiple
-times (each with a separate heap and global state).
+loads of the same module URL (in the same realm) reuse the same instance. It may
+be worthwhile in the future to consider extensions to allow applications to
+load/compile/link a module once and instantiate multiple times (each with a
+separate heap and global state).
 
 This integration strategy should allow WebAssembly modules to be fairly
 interchangeable with ES6 modules (ignoring 
@@ -103,7 +115,7 @@ independent libraries would have to hope that all the WebAssembly modules
 transitively used by those libraries "played well" together (e.g., explicitly
 shared `malloc` and coordinated global address ranges). Instead, the
 [dynamic linking future feature](DynamicLinking.md) is intended
-to allow *explicitly* sharing linear memory between multiple modules.
+to allow *explicitly* injecting multiple modules into the same instance.
 
 ## Initial state of linear memory
 
