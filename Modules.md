@@ -17,11 +17,12 @@ Sections declare their type and byte-length. Sections with unknown types are
 silently ignored.
 
 An instance contains:
+* the code of the module from which the instance was loaded;
 * a [linear memory](AstSemantics.md#linear-memory);
 * [global variable](AstSemantics.md#global-variables) state;
 * (when [threading](PostMVP.md#threads) is added) thread-local state;
 * (when [dynamic linking](DynamicLinking.md) is added) the code of multiple modules
-  that have been linked into the same instance;
+  that have been dynamically linked into the same instance;
 
 While WebAssembly modules are designed to interoperate with ES6 modules
 in a Web environment (more details [below](Modules.md#integration-with-es6-modules)),
