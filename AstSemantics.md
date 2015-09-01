@@ -505,7 +505,8 @@ is a `bool` value determining which of the other two operands to return.
 
   * `bool.and`: binary logical and
   * `bool.ior`: binary inclusive logical or
-  * `bool.xor`: binary exclusive logical or
+  * `bool.eq`: compare equal
+  * `bool.ne`: compare unequal
   * `bool.not`: unary logical negation
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
