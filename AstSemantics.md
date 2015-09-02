@@ -88,17 +88,17 @@ conversion between that memory type and a local type.
 Loads read data from linear memory, convert from their memory type to a basic
 type, and return the result:
 
-  * `int32.load_sx[int8]`: sign-extend to int32
-  * `int32.load_sx[int16]`: sign-extend to int32
-  * `int32.load_zx[int8]`: zero-extend to int32
-  * `int32.load_zx[int16]`: zero-extend to int32
+  * `int32.load_sx[int8]`: sign-extend to int32 (read int8 from linear memory and convert it to signed int32)
+  * `int32.load_sx[int16]`: sign-extend to int32 (read int16 from linear memory and convert it to signed int32)
+  * `int32.load_zx[int8]`: zero-extend to int32 (read int8 from linear memory and convert it to zero-entend unsigned int32)
+  * `int32.load_zx[int16]`: zero-extend to int32 (read int16 from linear memory and convert it to zero-entend unsigned int32)
   * `int32.load[int32]`: (no conversion)
-  * `int64.load_sx[int8]`: sign-extend to int64
-  * `int64.load_sx[int16]`: sign-extend to int64
-  * `int64.load_sx[int32]`: sign-extend to int64
-  * `int64.load_zx[int8]`: zero-extend to int64
-  * `int64.load_zx[int16]`: zero-extend to int64
-  * `int64.load_zx[int32]`: zero-extend to int64
+  * `int64.load_sx[int8]`: sign-extend to int64 (read int8 from linear memory and convert it to signed int64)
+  * `int64.load_sx[int16]`: sign-extend to int64 (read int16 from linear memory and convert it to signed int64)
+  * `int64.load_sx[int32]`: sign-extend to int64 (read int32 from linear memory and convert it to signed int64)
+  * `int64.load_zx[int8]`: zero-extend to int64 (read int8 from linear memory and convert it to zero-entend unsigned int64)
+  * `int64.load_zx[int16]`: zero-extend to int64 (read int16 from linear memory and convert it to zero-entend unsigned int64)
+  * `int64.load_zx[int32]`: zero-extend to int64 (read int32 from linear memory and convert it to zero-entend unsigned int64)
   * `int64.load[int64]`: (no conversion)
   * `float32.load[float32]`: (no conversion)
   * `float64.load[float64]`: (no conversion)
@@ -106,12 +106,12 @@ type, and return the result:
 Stores have an operand providing a value to store. They convert from the value's
 local type to their memory type, and write the resulting value to linear memory:
 
-  * `int32.store[int8]`: wrap int32 to int8
-  * `int32.store[int16]`: wrap int32 to int16
+  * `int32.store[int8]`: wrap int32 to int8 (convert int32 to int8 and store it to linear memory)
+  * `int32.store[int16]`: wrap int32 to int16 (convert int32 to int16 and store it to linear memory)
   * `int32.store[int32]`: (no conversion)
-  * `int64.store[int8]`: wrap int64 to int8
-  * `int64.store[int16]`: wrap int64 to int16
-  * `int64.store[int32]`: wrap int64 to int32
+  * `int64.store[int8]`: wrap int64 to int8 (convert int64 to int8 and store it to linear memory)
+  * `int64.store[int16]`: wrap int64 to int16 (convert int64 to int16 and store it to linear memory)
+  * `int64.store[int32]`: wrap int64 to int32 (convert int64 to int32 and store it to linear memory)
   * `int64.store[int64]`: (no conversion)
   * `float32.store[float32]`: (no conversion)
   * `float64.store[float64]`: (no conversion)
