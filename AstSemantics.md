@@ -22,7 +22,7 @@ match operations in many programming languages and are efficiently implementable
 on all modern computers.
 
 Some operations may *trap* under some conditions, as noted below. In the MVP,
-trapping means that execution in the WebAssembly module is terminated and
+trapping means that execution in the WebAssembly instance is terminated and
 abnormal termination is reported to the outside environment. In a JS
 environment such as a browser, a trap results in throwing a JS exception.
 If developer tools are active, attaching a debugger before the
@@ -65,7 +65,7 @@ Global variables and linear memory accesses use memory types.
 
 ## Linear Memory
 
-The main storage of a WebAssembly module, called the *linear memory*, is a
+The main storage of a WebAssembly instance, called the *linear memory*, is a
 contiguous, byte-addressable range of memory spanning from offset `0` and
 extending for `memory_size` bytes which can be dynamically adjusted by
 [`resize_memory`](Modules.md#resizing). The linear memory can be considered to
@@ -75,7 +75,7 @@ variables, global variables, or other process memory. The initial state of
 linear memory is specified by the [module](Modules.md#initial-state-of-linear-memory).
 
 In the MVP, linear memory is not shared between threads of execution. Separate
-modules can execute in separate threads but have their own linear memory and can
+instances can execute in separate threads but have their own linear memory and can
 only communicate through messaging, e.g. in browsers using `postMessage`. It
 will be possible to share linear memory between threads of execution when
 [threads](PostMVP.md#threads) are added.
@@ -189,12 +189,12 @@ There are several possible variations on this design being discussed and
 experimented with. More measurement is required to understand the associated
 tradeoffs.
 
-  * After an out-of-bounds access, the module can no longer execute code and any
+  * After an out-of-bounds access, the instance can no longer execute code and any
     outstanding JS ArrayBuffers aliasing the linear memory are detached.
     * This would primarily allow hoisting bounds checks above effectful
       operations.
     * This can be viewed as a mild security measure under the assumption that
-      while the sandbox is still ensuring safety, the module's internal state
+      while the sandbox is still ensuring safety, the instance's internal state
       is incoherent and further execution could lead to Bad Things (e.g., XSS
       attacks).
   * To allow for potentially more-efficient memory sandboxing, the semantics could
