@@ -88,17 +88,17 @@ conversion between that memory type and a local type.
 Loads read data from linear memory, convert from their memory type to a basic
 type, and return the result:
 
-  * `int32.load_sx[int8]`: sign-extend to int32
-  * `int32.load_sx[int16]`: sign-extend to int32
-  * `int32.load_zx[int8]`: zero-extend to int32
-  * `int32.load_zx[int16]`: zero-extend to int32
+  * `int32.load_s[int8]`: sign-extend to int32
+  * `int32.load_s[int16]`: sign-extend to int32
+  * `int32.load_u[int8]`: zero-extend to int32
+  * `int32.load_u[int16]`: zero-extend to int32
   * `int32.load[int32]`: (no conversion)
-  * `int64.load_sx[int8]`: sign-extend to int64
-  * `int64.load_sx[int16]`: sign-extend to int64
-  * `int64.load_sx[int32]`: sign-extend to int64
-  * `int64.load_zx[int8]`: zero-extend to int64
-  * `int64.load_zx[int16]`: zero-extend to int64
-  * `int64.load_zx[int32]`: zero-extend to int64
+  * `int64.load_s[int8]`: sign-extend to int64
+  * `int64.load_s[int16]`: sign-extend to int64
+  * `int64.load_s[int32]`: sign-extend to int64
+  * `int64.load_u[int8]`: zero-extend to int64
+  * `int64.load_u[int16]`: zero-extend to int64
+  * `int64.load_u[int32]`: zero-extend to int64
   * `int64.load[int64]`: (no conversion)
   * `float32.load[float32]`: (no conversion)
   * `float64.load[float64]`: (no conversion)
@@ -374,10 +374,10 @@ results into the result type.
   * `int32.add`: sign-agnostic addition
   * `int32.sub`: sign-agnostic subtraction
   * `int32.mul`: sign-agnostic multiplication (lower 32-bits)
-  * `int32.sdiv`: signed division (result is truncated toward zero)
-  * `int32.udiv`: unsigned division
-  * `int32.srem`: signed remainder (result has the sign of the dividend)
-  * `int32.urem`: unsigned remainder
+  * `int32.div_s`: signed division (result is truncated toward zero)
+  * `int32.div_u`: unsigned division
+  * `int32.rem_s`: signed remainder (result has the sign of the dividend)
+  * `int32.rem_u`: unsigned remainder
   * `int32.and`: sign-agnostic logical and
   * `int32.ior`: sign-agnostic inclusive or
   * `int32.xor`: sign-agnostic exclusive or
@@ -386,14 +386,14 @@ results into the result type.
   * `int32.sar`: sign-agnostic arithmetic shift right
   * `int32.eq`: sign-agnostic compare equal
   * `int32.ne`: sign-agnostic compare unequal
-  * `int32.slt`: signed less than
-  * `int32.sle`: signed less than or equal
-  * `int32.ult`: unsigned less than
-  * `int32.ule`: unsigned less than or equal
-  * `int32.sgt`: signed greater than
-  * `int32.sge`: signed greater than or equal
-  * `int32.ugt`: unsigned greater than
-  * `int32.uge`: unsigned greater than or equal
+  * `int32.lt_s`: signed less than
+  * `int32.le_s`: signed less than or equal
+  * `int32.lt_u`: unsigned less than
+  * `int32.le_u`: unsigned less than or equal
+  * `int32.gt_s`: signed greater than
+  * `int32.ge_s`: signed greater than or equal
+  * `int32.gt_u`: unsigned greater than
+  * `int32.ge_u`: unsigned greater than or equal
   * `int32.clz`: sign-agnostic count leading zero bits (defined for all values, including zero)
   * `int32.ctz`: sign-agnostic count trailing zero bits (defined for all values, including zero)
   * `int32.popcnt`: sign-agnostic count number of one bits
@@ -491,29 +491,29 @@ is NaN, and *ordered* otherwise.
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
   * `int32.wrap[int64]`: wrap a 64-bit integer to a 32-bit integer
-  * `int32.trunc_signed[float32]`: truncate a 32-bit float to a signed 32-bit integer
-  * `int32.trunc_signed[float64]`: truncate a 64-bit float to a signed 32-bit integer
-  * `int32.trunc_unsigned[float32]`: truncate a 32-bit float to an unsigned 32-bit integer
-  * `int32.trunc_unsigned[float64]`: truncate a 64-bit float to an unsigned 32-bit integer
+  * `int32.trunc_s[float32]`: truncate a 32-bit float to a signed 32-bit integer
+  * `int32.trunc_s[float64]`: truncate a 64-bit float to a signed 32-bit integer
+  * `int32.trunc_u[float32]`: truncate a 32-bit float to an unsigned 32-bit integer
+  * `int32.trunc_u[float64]`: truncate a 64-bit float to an unsigned 32-bit integer
   * `int32.reinterpret[float32]`: reinterpret the bits of a 32-bit float as a 32-bit integer
-  * `int64.extend_signed[int32]`: extend a signed 32-bit integer to a 64-bit integer
-  * `int64.extend_unsigned[int32]`: extend an unsigned 32-bit integer to a 64-bit integer
-  * `int64.trunc_signed[float32]`: truncate a 32-bit float to a signed 64-bit integer
-  * `int64.trunc_signed[float64]`: truncate a 64-bit float to a signed 64-bit integer
-  * `int64.trunc_unsigned[float32]`: truncate a 32-bit float to an unsigned 64-bit integer
-  * `int64.trunc_unsigned[float64]`: truncate a 64-bit float to an unsigned 64-bit integer
+  * `int64.extend_s[int32]`: extend a signed 32-bit integer to a 64-bit integer
+  * `int64.extend_u[int32]`: extend an unsigned 32-bit integer to a 64-bit integer
+  * `int64.trunc_s[float32]`: truncate a 32-bit float to a signed 64-bit integer
+  * `int64.trunc_s[float64]`: truncate a 64-bit float to a signed 64-bit integer
+  * `int64.trunc_u[float32]`: truncate a 32-bit float to an unsigned 64-bit integer
+  * `int64.trunc_u[float64]`: truncate a 64-bit float to an unsigned 64-bit integer
   * `int64.reinterpret[float64]`: reinterpret the bits of a 64-bit float as a 64-bit integer
   * `float32.demote[float64]`: demote a 64-bit float to a 32-bit float
-  * `float32.cvt_signed[int32]`: convert a signed 32-bit integer to a 32-bit float
-  * `float32.cvt_signed[int64]`: convert a signed 64-bit integer to a 32-bit float
-  * `float32.cvt_unsigned[int32]`: convert an unsigned 32-bit integer to a 32-bit float
-  * `float32.cvt_unsigned[int64]`: convert an unsigned 64-bit integer to a 32-bit float
+  * `float32.convert_s[int32]`: convert a signed 32-bit integer to a 32-bit float
+  * `float32.convert_s[int64]`: convert a signed 64-bit integer to a 32-bit float
+  * `float32.convert_u[int32]`: convert an unsigned 32-bit integer to a 32-bit float
+  * `float32.convert_u[int64]`: convert an unsigned 64-bit integer to a 32-bit float
   * `float32.reinterpret[int32]`: reinterpret the bits of a 32-bit integer as a 32-bit float
   * `float64.promote[float32]`: promote a 32-bit float to a 64-bit float
-  * `float64.cvt_signed[int32]`: convert a signed 32-bit integer to a 64-bit float
-  * `float64.cvt_signed[int64]`: convert a signed 64-bit integer to a 64-bit float
-  * `float64.cvt_unsigned[int32]`: convert an unsigned 32-bit integer to a 64-bit float
-  * `float64.cvt_unsigned[int64]`: convert an unsigned 64-bit integer to a 64-bit float
+  * `float64.convert_s[int32]`: convert a signed 32-bit integer to a 64-bit float
+  * `float64.convert_s[int64]`: convert a signed 64-bit integer to a 64-bit float
+  * `float64.convert_u[int32]`: convert an unsigned 32-bit integer to a 64-bit float
+  * `float64.convert_u[int64]`: convert an unsigned 64-bit integer to a 64-bit float
   * `float64.reinterpret[int64]`: reinterpret the bits of a 64-bit integer as a 64-bit float
 
 Wrapping and extension of integer values always succeed.
