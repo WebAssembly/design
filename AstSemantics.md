@@ -451,7 +451,7 @@ implementations of the remaining required operations.
   * `float32.ceil`: ceiling operation
   * `float32.floor`: floor operation
   * `float32.trunc`: round to nearest integer towards zero
-  * `float32.nearestint`: round to nearest integer, ties to even
+  * `float32.nearest`: round to nearest integer, ties to even
   * `float32.eq`: compare ordered and equal
   * `float32.ne`: compare unordered or unequal
   * `float32.lt`: compare ordered and less than
@@ -472,7 +472,7 @@ implementations of the remaining required operations.
   * `float64.ceil`: ceiling operation
   * `float64.floor`: floor operation
   * `float64.trunc`: round to nearest integer towards zero
-  * `float64.nearestint`: round to nearest integer, ties to even
+  * `float64.nearest`: round to nearest integer, ties to even
   * `float64.eq`: compare ordered and equal
   * `float64.ne`: compare unordered or unequal
   * `float64.lt`: compare ordered and less than
