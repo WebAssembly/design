@@ -65,20 +65,22 @@ Options under consideration:
 
 See [GC.md](GC.md).
 
-## Linear memory bigger than 4GiB
+## Linear memory bigger than 4 GiB
 
-WebAssembly will eventually allow a module to have a linear memory size greater
-than 4GiB by providing load/store/etc. operations that take 64-bit index
-operands.
+The WebAssembly MVP will support wasm32, with linear memory sizes up to 4 GiB
+using 32-bit linear memory indices. To support larger sizes, wasm64 will be
+added in the future, supporting much greater linear memory sizes using 64-bit
+linear memory indices.
 
 Of course, the ability to actually allocate this much memory will always be
 subject to dynamic resource availability.
 
-Initially, it will likely be required that a program use all 32-bit indices or
-all 64-bit indices, and not a mix of both, so that implementations don't have
-to support both in the same program. However, operators with 32-bit indices and
-operations with 64-bit indices will be given separate names to leave open the
-possibility of supporting both in the same program in the future.
+It is likely that wasm64 will initially support only 64-bit linear memory
+indices, and wasm32 will leave 64-bit linear memory indices unsupported, so
+that implementations don't have to support multiple index sizes in the same
+instance. However, operators with 32-bit indices and operations with 64-bit
+indices will be given separate names to leave open the possibility of
+supporting both in the same instance in the future.
 
 ## Source maps integration
 
