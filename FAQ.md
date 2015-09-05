@@ -173,14 +173,14 @@ many architectures is actively developed and maintained by a large community. In
 already uses LLVM as a basis for its binary format. However the goals and requirements that LLVM was designed
 to meet are subtly mismatched with those of WebAssembly.
 
-WebAssembly has several requirements and goals for its IR and binary encoding:
- * Portability: The IR must be the same for every machine architecture.
- * Stability: The IR and binary encoding must not change over time (or change only in ways that can
+WebAssembly has several requirements and goals for its ISA and binary encoding:
+ * Portability: The ISA must be the same for every machine architecture.
+ * Stability: The ISA and binary encoding must not change over time (or change only in ways that can
    be kept backward-compatible).
  * Small encoding: The representation of a program should be as small as possible for transmission over
    the Internet.
  * Fast decoding: The binary format should be fast to decompress and decode for fast startup of programs.
- * Fast compiling: The IR should be fast to compile (and suitable for either AOT- or JIT-compilation) for fast
+ * Fast compiling: The ISA should be fast to compile (and suitable for either AOT- or JIT-compilation) for fast
    startup of programs.
  * Minimal [nondeterminism](Nondeterminism.md): The behavior of programs should be as predictable and
    deterministic as possible (and should be the same on every architecture, a stronger form of the
