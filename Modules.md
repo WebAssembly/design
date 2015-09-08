@@ -37,18 +37,22 @@ the host environment to include a JavaScript VM.
 
 A module defines a set of functions in its
 [code section](Modules.md#code-section) and can declare and name a subset of
-these functions to be **exports**. The meaning of exports (how and when they are
-called) is defined by the host environment. For example, a minimal shell
-environment might only probe for and call a `_start` export when given a module
-to execute.
+these functions to be **exports**. A module can also a declare and name a
+subset of its [globals](AstSemantics.md#global-variables) to be exports.
+The meaning of exports (how and when they are called) is defined by the host
+environment. For example, a minimal shell environment might only probe for and
+call a `_start` export when given a module to execute.
 
 A module can declare a set of **imports**. An import is a tuple containing a
-module name, the name of an exported function to import from the named module,
-and the signature to use for that import within the importing module. Within a
-module, the import can be [directly called](AstSemantics.md#calls) like a
-function (according to the signature of the import). When the imported
-module is also WebAssembly, it would be an error if the signature of the import
-doesn't match the signature of the export.
+module name, a name exported by the named module, and the type
+to use for the import within the importing module. Within a module, imported
+functions can be [called](AstSemantics.md#calls) just like normal
+functions (according to the signature of the import). Similarly, imported
+globals can be [accessed](AstSemantics.md#global-variables) just like
+normal global variables (according to their type). An imported global has a
+distinct state that is local to the modules instance and not shared with the
+imported module. When the imported module is also WebAssembly, it would be an
+error if the types of imports don't match the types of exports.
 
 The WebAssembly spec does not define how imports are interpreted:
 * the host environment can interpret the module name as a file path, a URL,
@@ -106,6 +110,13 @@ loads of the same module URL (in the same realm) reuse the same instance. It may
 be worthwhile in the future to consider extensions to allow applications to
 load/compile/link a module once and instantiate multiple times (each with a
 separate heap and global state).
+
+In more detail, when WebAssembly imports from an ES6 module, it imports a
+copy of a coerced JS value, not the JS value itself or the mutable location
+of the JS value. The coercions applied to exported JS value may throw if the
+value is sufficiently incompatible (e.g., the JS value `42` would throw when 
+imported from WebAssembly with function type, but succeed when imported with
+type `int32`).
 
 This integration strategy should allow WebAssembly modules to be fairly
 interchangeable with ES6 modules (ignoring 
