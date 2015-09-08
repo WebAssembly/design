@@ -285,3 +285,18 @@ attempts to introduce abstractions.
 
 And finally, it's still possible to add an abstract `size_t` in the future if
 the need arises and practicalities permit it.
+
+## Why have wasm32 and wasm64, instead of just using 8 bytes for storing pointers?
+
+A great number of applications that don't ever need as much as 4 GiB of memory.
+Forcing all these applications to use 8 bytes for every pointer they store would
+significantly increase the amount of memory they require, and decrease their
+effective utilization of important hardware resources such as cache and memory
+bandwidth.
+
+The motivations and performance effects here should be essentially the same as
+those that motivated the development of the
+[x32 ABI](https://en.wikipedia.org/wiki/X32_ABI) for Linux.
+
+Even Knuth found it worthwhile to give us his opinion on this issue at point,
+[a flame about 64-bit pointers](http://www-cs-faculty.stanford.edu/~uno/news08.html).
