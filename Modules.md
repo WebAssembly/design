@@ -46,12 +46,13 @@ call a `_start` export when given a module to execute.
 A module can declare a set of **imports**. An import is a tuple containing a
 module name, a name exported by the named module, and the type
 to use for the import within the importing module. Within a module, imported
-functions can be [directly called](AstSemantics.md#calls) just like normal
+functions can be [called](AstSemantics.md#calls) just like normal
 functions (according to the signature of the import). Similarly, imported
-globals can be [directly accessed](AstSemantics.md#global-variables) just like
-normal global variables (according to their type). When the imported module is
-also WebAssembly, it would be an error if the types imports don't match the
-types of exports.
+globals can be [accessed](AstSemantics.md#global-variables) just like
+normal global variables (according to their type). An imported global has a
+distinct state that is local to the modules instance and not shared with the
+imported module. When the imported module is also WebAssembly, it would be an
+error if the types of imports don't match the types of exports.
 
 The WebAssembly spec does not define how imports are interpreted:
 * the host environment can interpret the module name as a file path, a URL,
