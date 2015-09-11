@@ -88,33 +88,24 @@ conversion between that memory type and a local type.
 Loads read data from linear memory, convert from their memory type to a basic
 type, and return the result:
 
-  * `int32.load_s[int8]`: sign-extend to int32
-  * `int32.load_s[int16]`: sign-extend to int32
-  * `int32.load_u[int8]`: zero-extend to int32
-  * `int32.load_u[int16]`: zero-extend to int32
-  * `int32.load[int32]`: (no conversion)
-  * `int64.load_s[int8]`: sign-extend to int64
-  * `int64.load_s[int16]`: sign-extend to int64
-  * `int64.load_s[int32]`: sign-extend to int64
-  * `int64.load_u[int8]`: zero-extend to int64
-  * `int64.load_u[int16]`: zero-extend to int64
-  * `int64.load_u[int32]`: zero-extend to int64
-  * `int64.load[int64]`: (no conversion)
-  * `float32.load[float32]`: (no conversion)
-  * `float64.load[float64]`: (no conversion)
+  * `int32.load8_s`: sign-extend int8 to int32
+  * `int32.load8_u`: zero-extend uint8 to int32
+  * `int32.load16_s`: sign-extend int8 to int32
+  * `int32.load16_u`: zero-extend uint8 to int32
+  * `int32.load`: (no conversion)
+  * `int64.load`: (no conversion)
+  * `float32.load`: (no conversion)
+  * `float64.load`: (no conversion)
 
 Stores have an operand providing a value to store. They convert from the value's
 local type to their memory type, and write the resulting value to linear memory:
 
-  * `int32.store[int8]`: wrap int32 to int8
-  * `int32.store[int16]`: wrap int32 to int16
-  * `int32.store[int32]`: (no conversion)
-  * `int64.store[int8]`: wrap int64 to int8
-  * `int64.store[int16]`: wrap int64 to int16
-  * `int64.store[int32]`: wrap int64 to int32
-  * `int64.store[int64]`: (no conversion)
-  * `float32.store[float32]`: (no conversion)
-  * `float64.store[float64]`: (no conversion)
+  * `int32.store8`: wrap int32 to int8
+  * `int32.store16`: wrap int32 to int16
+  * `int32.store`: (no conversion)
+  * `int64.store`: (no conversion)
+  * `float32.store`: (no conversion)
+  * `float64.store`: (no conversion)
 
 Wrapping of integers simply discards any upper bits; i.e. wrapping does not
 perform saturation, trap on overflow, etc.
