@@ -539,4 +539,6 @@ To support [feature testing](FeatureTest.md), an AST node would be provided:
   * `has_feature`: return whether the given feature is supported, identified by string
 
 In the MVP, `has_feature` would always return false. As features were added post-MVP,
-`has_feature` would start returning true.
+`has_feature` would start returning true. `has_feature` is a pure function, always
+returning the same value for the same string over the lifetime of a single
+instance and other related (as defined by the host environment) instances.
