@@ -19,7 +19,6 @@ silently ignored.
 An instance contains:
 * the code of the module from which the instance was loaded;
 * a [linear memory](AstSemantics.md#linear-memory);
-* [global variable](AstSemantics.md#global-variables) state;
 * fully resolved imports;
 * host-specific state (for example, the JS function objects that reflect
   exported functions to JS);
@@ -105,7 +104,7 @@ place of executing the ES6 module top-level script. By default, multiple
 loads of the same module URL (in the same realm) reuse the same instance. It may
 be worthwhile in the future to consider extensions to allow applications to
 load/compile/link a module once and instantiate multiple times (each with a
-separate heap and global state).
+separate linear memory).
 
 This integration strategy should allow WebAssembly modules to be fairly
 interchangeable with ES6 modules (ignoring 

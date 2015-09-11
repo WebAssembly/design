@@ -376,3 +376,18 @@ is to allow a WebAssembly decoder to decode "through" an AST node that it knows
 nothing about. There are a number of ways to achieve this and more concrete
 experience with the realities of polyfilling is necessary to suggest the right
 design.
+
+## Mutable global variables
+
+In the MVP, there are no global variables; C/C++ global variables are stored in
+linear memory and thus accessed through normal
+[linear memory operations](AstSemantics.md#linear-memory-operations).
+[Dynamic linking](DynamicLinking.md) will add some form of immutable global
+variable analogous to "symbols" in native binaries. In some cases, though,
+it may be useful to have a fully mutable global variable which lives outside
+linear memory. This would allow more aggressive compiler optimizations (due to
+better alias information). If globals are additionally allowed array types,
+significant portions of memory could be moved out of linear memory which could
+reduce fragmentation issues. Langauges like FORTRAN which limit aliasing would be
+one use case. C/C++ compilers could also determine that some global variables never
+have their address taken.
