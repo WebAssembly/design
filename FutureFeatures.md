@@ -388,6 +388,6 @@ it may be useful to have a fully mutable global variable which lives outside
 linear memory. This would allow more aggressive compiler optimizations (due to
 better alias information). If globals are additionally allowed array types,
 significant portions of memory could be moved out of linear memory which could
-reduce fragmentation issues. Langauges like FORTRAN which limit aliasing would be
+reduce fragmentation issues. Languages like Fortran which limit aliasing would be
 one use case. C/C++ compilers could also determine that some global variables never
 have their address taken.
