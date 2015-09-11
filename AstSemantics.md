@@ -149,6 +149,10 @@ Each linear memory access operation also has an immediate positive integer power
 of 2 alignment attribute. An alignment value which is the same as the memory
 attribute size is considered to be a *natural* alignment.
 
+When a memory access uses addressing as defined above and also specifies a
+non-natural alignment, then the alignment applies to the effective address
+(not merely the address operand).
+
 If the effective address of a memory access is a multiple of the alignment
 attribute value of the memory access, the memory access is considered *aligned*,
 otherwise it is considered *misaligned*. Aligned and misaligned accesses have
