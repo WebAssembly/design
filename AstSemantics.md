@@ -258,18 +258,18 @@ others, etc.
 WebAssembly offers basic structured control flow. All control flow structures
 are statements.
 
-  * `block`: a fixed-length sequence of statements that may be exited early via a `break`
-  * `loop`: a fixed-length sequence of statements that may be restarted at the beginning via a `continue`
-  * `break`: exit a lexically enclosing `block`
-  * `break_if`: like `break`, but has a `bool` operand and does nothing if the operand is false
-  * `continue`: restart a lexically enclosing `loop`
-  * `continue_if`: like `continue`, but has a `bool` operand and does nothing if the operand is false
+  * `block`: a fixed-length sequence of statements with a branch target at the end
+  * `loop`: a fixed-length sequence of statements with a branch target at the beginning
+  * `br`: branch to the branch target of a lexically enclosing `block` or `loop`
+  * `br_if`: like `br`, but has a `bool` operand and does nothing if the operand is false
+  * `br_unless`: like `br`, but has a `bool` operand and does nothing if the operand is true
   * `return`: return zero or more values from this function
-  * `switch`: switch statement with fallthrough
+  * `switch`: like `br_if` but has an integer operand, an arbitrary number of possible
+              branch targets, and a default branch target.
 
-`break` and `break_if` specify a lexically enclosing `block` to exit from,
-which need not be the innermost `block`. `continue` and `continue_if` specify a
-lexically enclosing `loop` to restart, which need not be the innermost `loop`.
+`br`, `br_if`, `br_unless`, and `switch` specify branch targets of lexically
+enclosing `block` and `loop` constructs, which need not be the innermost `block`
+or `loop`.
 
 As a consequence of these rules and the nesting structure of the AST, `block`
 and `loop` nodes may only be entered via fallthrough at the top. These rules
