@@ -225,7 +225,7 @@ use cases:
   * `int32.max_s`: signed maximum
   * `int32.min_u`: unsigned minimum
   * `int32.max_u`: unsigned maximum
-  * `int32.sext`: sign-agnostic `sext(x, y)` is `shr(shl(x,y),y)`
+  * `int32.sext`: sign-agnostic `sext(x, y)` is `shr_s(shl(x,y),y)`
   * `int32.abs_s`: signed absolute value (traps on `INT32_MIN`)
   * `int32.bswap`: sign-agnostic reverse bytes (endian conversion)
   * `int32.bswap16`: sign-agnostic, `bswap16(x)` is `((x>>8)&255)|((x&255)<<8)`
