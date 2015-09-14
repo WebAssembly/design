@@ -173,7 +173,7 @@ many architectures is actively developed and maintained by a large community. In
 already uses LLVM as a basis for its binary format. However the goals and requirements that LLVM was designed
 to meet are subtly mismatched with those of WebAssembly.
 
-WebAssembly has several requirements and goals for its ISA and binary encoding:
+WebAssembly has several requirements and goals for its instruction set architecture (ISA) and binary encoding:
  * Portability: The ISA must be the same for every machine architecture.
  * Stability: The ISA and binary encoding must not change over time (or change only in ways that can
    be kept backward-compatible).
