@@ -288,7 +288,7 @@ the need arises and practicalities permit it.
 
 ## Why have wasm32 and wasm64, instead of just using 8 bytes for storing pointers?
 
-A great number of applications that don't ever need as much as 4 GiB of memory.
+A great number of applications don't ever need as much as 4 GiB of memory.
 Forcing all these applications to use 8 bytes for every pointer they store would
 significantly increase the amount of memory they require, and decrease their
 effective utilization of important hardware resources such as cache and memory
