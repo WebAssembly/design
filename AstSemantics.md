@@ -376,7 +376,7 @@ results into the result type.
   * `int32.sub`: sign-agnostic subtraction
   * `int32.mul`: sign-agnostic multiplication (lower 32-bits)
   * `int32.div_s`: signed division (result is truncated toward zero)
-  * `int32.div_u`: unsigned division
+  * `int32.div_u`: unsigned division (result is [floored](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
   * `int32.rem_s`: signed remainder (result has the sign of the dividend)
   * `int32.rem_u`: unsigned remainder
   * `int32.and`: sign-agnostic logical and

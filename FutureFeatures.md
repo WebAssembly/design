@@ -219,19 +219,25 @@ use cases:
 * The following operations can be built from other operators already present,
   however in doing so they read at least one non-constant input multiple times,
   breaking single-use expression tree formation.
-  * `int32.rotr`: bitwise rotate right
-  * `int32.rotl`: bitwise rotate left
-  * `int32.smin`: signed minimum
-  * `int32.smax`: signed maximum
-  * `int32.umin`: unsigned minimum
-  * `int32.umax`: unsigned maximum
-  * `int32.sext`: `sext(x, y)` is `x<<y>>y`
-  * `int32.abs`: absolute value (is `abs(INT32_MIN)` `INT32_MIN` or should it trap?)
-  * `int32.bswap`: reverse bytes (endian conversion)
-  * `int32.bswap16`: `bswap16(x)` is `((x>>8)&255)|((x&255)<<8)`
+  * `int32.rotr`: sign-agnostic bitwise rotate right
+  * `int32.rotl`: sign-agnostic bitwise rotate left
+  * `int32.min_s`: signed minimum
+  * `int32.max_s`: signed maximum
+  * `int32.min_u`: unsigned minimum
+  * `int32.max_u`: unsigned maximum
+  * `int32.sext`: sign-agnostic `sext(x, y)` is `shr_s(shl(x,y),y)`
+  * `int32.abs_s`: signed absolute value (traps on `INT32_MIN`)
+  * `int32.bswap`: sign-agnostic reverse bytes (endian conversion)
+  * `int32.bswap16`: sign-agnostic, `bswap16(x)` is `((x>>8)&255)|((x&255)<<8)`
 
 * The following operations are just potentially interesting.
-  * `int32.clrs`: count leading redundant sign bits (defined for all values, including 0)
+  * `int32.clrs`: sign-agnostic count leading redundant sign bits (defined for
+    all values, including 0)
+  * `int32.floor_div_s`: signed division (result is [floored](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
+
+* The following 64-bit-only operations are potentially interesting as well.
+  * `int64.mor`: sign-agnostic [8x8 bit-matrix multiply with or](http://mmix.cs.hm.edu/doc/instructions-en.html#MOR)
+  * `int64.mxor`: sign-agnostic [8x8 bit-matrix multiply with xor](http://mmix.cs.hm.edu/doc/instructions-en.html#MXOR)
 
 ## Additional floating point operations
 
