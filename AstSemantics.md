@@ -149,6 +149,12 @@ Each linear memory access operation also has an immediate positive integer power
 of 2 alignment attribute. An alignment value which is the same as the memory
 attribute size is considered to be a *natural* alignment.
 
+The linear memory operation names listed above specify natural alignment.
+To specify unnatural alignment, the opcode name can be suffixed with `/n` for
+`n` any integer power of 2. For example, `float64.load/2` specifies a `float32`
+load with 2-byte alignment; `int32.load16_s/1` specifies a signed 2-byte load
+that is unaligned (1-byte aligned).
+
 The alignment applies to the effective address and not merely the address operand,
 i.e. the immediate offset is taken into account when considering alignment.
 
