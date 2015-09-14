@@ -137,11 +137,12 @@ address for an access is out-of-bounds, the effective address will always also
 be out-of-bounds. This is intended to simplify folding of offsets into complex
 address modes in hardware, and to simplify bounds checking optimizations.
 
-In the MVP, address operands and offset attributes have type `int32`, and linear
+In wasm32, address operands and offset attributes have type `int32`, and linear
 memory sizes are limited to 4 GiB (of course, actual sizes are further limited
-by [available resources](Nondeterminism.md)). In the future, to support
-[>4GiB linear memory](FutureFeatures.md#heaps-bigger-than-4gib), support for
-indices with type `int64` will be added.
+by [available resources](Nondeterminism.md)). In wasm64, address operands and
+offsets have type `int64`. The MVP only includes wasm32; subsequent versions
+will add support for wasm64 and thus
+[>4 GiB linear memory](FutureFeatures.md#linear-memory-bigger-than-4-gib).
 
 ### Alignment
 

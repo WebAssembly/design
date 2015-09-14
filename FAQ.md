@@ -259,3 +259,44 @@ omission is:
   * This interleaving would require making allocation nondeterministic and
     nondeterminism is something that WebAssembly generally
     [tries to avoid](Nondeterminism.md).
+
+## Why have wasm32 and wasm64, instead of just an abstract `size_t`?
+
+The amount of linear memory needed to hold an abstract `size_t` would then also
+need to be determined by an abstraction, and then partitioning the linear memory
+address space into segments for different purposes would be more complex. The
+size of each segment would depend on how many `size_t`-sized objects are stored
+in it. This is theoretically doable, but it would add complexity and there would
+be more work to do at application startup time.
+
+Also, allowing applications to statically know the pointer size can allow them
+to be optimized more aggressively. Optimizers can better fold and simplify
+integer expressions when they have full knowledge of the bitwidth. And, knowing
+memory sizes and layouts for various types allows one to know how many trailing
+zeros there are in various pointer types.
+
+Also, C and C++ deeply conflict with the concept of an abstract `size_t`.
+Constructs like `sizeof` are required to be fully evaluated in the front-end
+of the compiler because they can participate in type checking. And even before
+that, it's common to have predefined macros which indicate pointer sizes,
+allowing code to be specialized for pointer sizes at the very earliest stages of
+compilation. Once specializations are made, information is lost, scuttling
+attempts to introduce abstractions.
+
+And finally, it's still possible to add an abstract `size_t` in the future if
+the need arises and practicalities permit it.
+
+## Why have wasm32 and wasm64, instead of just using 8 bytes for storing pointers?
+
+A great number of applications don't ever need as much as 4 GiB of memory.
+Forcing all these applications to use 8 bytes for every pointer they store would
+significantly increase the amount of memory they require, and decrease their
+effective utilization of important hardware resources such as cache and memory
+bandwidth.
+
+The motivations and performance effects here should be essentially the same as
+those that motivated the development of the
+[x32 ABI](https://en.wikipedia.org/wiki/X32_ABI) for Linux.
+
+Even Knuth found it worthwhile to give us his opinion on this issue at point,
+[a flame about 64-bit pointers](http://www-cs-faculty.stanford.edu/~uno/news08.html).

@@ -31,10 +31,8 @@ characteristics:
 * Little-endian byte ordering.
 * Memory regions which can be efficiently addressed with 32-bit
   pointers or indices.
-* Linear memory bigger than 4GiB with 64-bit addressing
-  [may be added later](FutureFeatures.md#linear-memory-bigger-than-4gib), though it will
-  be done under a [feature test](FeatureTest.md) so it won't be required for all
-  WebAssembly implementations.
+* wasm64 additionally supports linear memory bigger than
+  [4 GiB with 64-bit pointers or indices](FutureFeatures.md#linear-memory-bigger-than-4-gib).
 * Enforce secure isolation between WebAssembly modules and other modules or
   processes executing on the same machine.
 * An execution environment which offers forward progress guarantees to all
@@ -42,6 +40,8 @@ characteristics:
 * Availability of lock-free atomic memory operations, when naturally aligned, for
   8- 16- and 32-bit accesses. At a minimum this must include an atomic
   compare-and-exchange operation (or equivalent load-linked/store-conditional).
+* wasm64 additionally requires lock-free atomic memory operations, when naturally
+  aligned, for 64-bit accesses.
 
 ## API
 
