@@ -236,8 +236,8 @@ use cases:
   * `int32.floor_div_s`: signed division (result is floored)
 
 * The following 64-bit-only operations are potentially interesting as well.
-  * `int64.mor`: sign-agnostic 8x8 bit-matrix multiply with or
-  * `int64.mxor`: sign-agnostic 8x8 bit-matrix multiply with xor
+  * `int64.mor`: sign-agnostic [8x8 bit-matrix multiply with or](http://mmix.cs.hm.edu/doc/instructions-en.html#MOR)
+  * `int64.mxor`: sign-agnostic [8x8 bit-matrix multiply with xor](http://mmix.cs.hm.edu/doc/instructions-en.html#MXOR)
 
 ## Additional floating point operations
 
