@@ -73,7 +73,8 @@ sizes, the wasm64 mode of WebAssembly will be added in the future, supporting
 much greater linear memory sizes using 64-bit linear memory indices. wasm32
 and wasm64 are both just modes of WebAssembly, to be selected by a flag in
 a module header, and don't imply any semantics differences outside of how
-linear memory is handled.
+linear memory is handled. Platforms will also have APIs for querying which of
+wasm32 and wasm64 are supported.
 
 Of course, the ability to actually allocate this much memory will always be
 subject to dynamic resource availability.
