@@ -233,6 +233,11 @@ use cases:
 * The following operations are just potentially interesting.
   * `int32.clrs`: sign-agnostic count leading redundant sign bits (defined for
     all values, including 0)
+  * `int32.floor_div_s`: signed division (result is floored)
+
+* The following 64-bit-only operations are potentially interesting as well.
+  * `int64.mor`: sign-agnostic 8x8 bit-matrix multiply with or
+  * `int64.mxor`: sign-agnostic 8x8 bit-matrix multiply with xor
 
 ## Additional floating point operations
 
