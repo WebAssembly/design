@@ -233,7 +233,7 @@ use cases:
 * The following operations are just potentially interesting.
   * `int32.clrs`: sign-agnostic count leading redundant sign bits (defined for
     all values, including 0)
-  * `int32.floor_div_s`: signed division (result is floored)
+  * `int32.floor_div_s`: signed division (result is [floored](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
 
 * The following 64-bit-only operations are potentially interesting as well.
   * `int64.mor`: sign-agnostic [8x8 bit-matrix multiply with or](http://mmix.cs.hm.edu/doc/instructions-en.html#MOR)
