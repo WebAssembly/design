@@ -169,7 +169,7 @@ the same behavior. Alignment affects performance as follows:
    (think: implementation makes multiple accesses, either in software or
     in hardware).
  * Misaligned access of any kind may be *massively* slower
-   (think: implementation takes a signal and fixes things up)
+   (think: implementation takes a signal and fixes things up).
 
 Thus, it is recommend that WebAssembly producers align frequently-used data
 to permit the use of natural alignment access, and use loads and stores with
