@@ -116,8 +116,8 @@ reproduce their value operand, with no conversion applied.
 ### Addressing
 
 Each linear memory access operation also has an address operand and an immediate
-integer byte offset attribute. The immediate is no bigger than the largest pointer
-size. The infinite-precision sum of the address operand's value with the byte
+integer byte offset attribute. The immediate is the same type as the address'
+index. The infinite-precision sum of the address operand's value with the byte
 offset attribute's value is called the *effective address*, which is interpreted
 as an unsigned byte index.
 
@@ -148,9 +148,9 @@ will add support for wasm64 and thus
 ### Alignment
 
 Each linear memory access operation also has an immediate positive integer power
-of 2 alignment attribute, which is no bigger than the largest pointer size.
-An alignment value which is the same as the memory attribute size is considered
-tobe a *natural* alignment.
+of 2 alignment attribute, which is the same type as the address' index. An
+alignment value which is the same as the memory attribute size is considered
+to be a *natural* alignment.
 
 The linear memory operation names listed above specify natural alignment.
 To specify unnatural alignment, the opcode name can be suffixed with `/n` for
