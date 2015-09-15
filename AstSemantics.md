@@ -23,8 +23,8 @@ on all modern computers.
 
 Some operations may *trap* under some conditions, as noted below. In the MVP,
 trapping means that execution in the WebAssembly instance is terminated and
-abnormal termination is reported to the outside environment. In a JS
-environment such as a browser, a trap results in throwing a JS exception.
+abnormal termination is reported to the outside environment. In a JavaScript
+environment such as a browser, a trap results in throwing a JavaScript exception.
 If developer tools are active, attaching a debugger before the
 termination would be sensible.
 
@@ -191,7 +191,7 @@ experimented with. More measurement is required to understand the associated
 tradeoffs.
 
   * After an out-of-bounds access, the instance can no longer execute code and any
-    outstanding JS ArrayBuffers aliasing the linear memory are detached.
+    outstanding JavaScript ArrayBuffers aliasing the linear memory are detached.
     * This would primarily allow hoisting bounds checks above effectful
       operations.
     * This can be viewed as a mild security measure under the assumption that
