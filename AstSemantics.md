@@ -191,7 +191,7 @@ experimented with. More measurement is required to understand the associated
 tradeoffs.
 
   * After an out-of-bounds access, the instance can no longer execute code and any
-    outstanding JavaScript ArrayBuffers aliasing the linear memory are detached.
+    outstanding JavaScript [ArrayBuffer][] aliasing the linear memory are detached.
     * This would primarily allow hoisting bounds checks above effectful
       operations.
     * This can be viewed as a mild security measure under the assumption that
@@ -207,6 +207,8 @@ tradeoffs.
     * Either tooling or an explicit opt-in "debug mode" in the spec should allow
       execution of a module in a mode that threw exceptions on out-of-bounds
       access.
+
+  [ArrayBuffer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
 
 ### Resizing
 
