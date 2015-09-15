@@ -55,8 +55,7 @@ return type is represented as an empty sequence.
 
 ### Memory Types
 
-*Memory types* are a different superset of the local types, adding the
-following:
+*Memory types* are a superset of the local types, adding the following:
 
   * `int8`: 8-bit integer
   * `int16`: 16-bit integer
