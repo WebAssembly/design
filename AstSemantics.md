@@ -28,9 +28,9 @@ environment such as a browser, a trap results in throwing a JavaScript exception
 If developer tools are active, attaching a debugger before the
 termination would be sensible.
 
-Callstack space is limited by unspecified and dynamically varying constraints.
-If program callstack usage exceeds the available callstack space at any time,
-a trap occurs.
+Callstack space is limited by unspecified and dynamically varying constraints
+and is a source of [nondeterminism](Nondeterminism.md). If program callstack usage
+exceeds the available callstack space at any time, a trap occurs.
 
 ## Types
 
