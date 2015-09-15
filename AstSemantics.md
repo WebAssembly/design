@@ -312,10 +312,14 @@ Direct calls to a function specify the callee by index into a function table.
 
   * `call_direct`: call function directly
 
-Calls must match the function signature
-exactly. [Imported functions](MVP.md#code-loading-and-imports) also have
-signatures and are added to the same function table and are thus also callable
-via `call_direct`.
+Calls must match the function signature exactly.
+
+Like direct calls, calls to [imports](Modules.md#imports-and-exports) specify
+the callee by index into an import table (defined by the sequence of import
+declarations in the module import section) and the call must match the declared
+signature of the import exactly.
+
+  * `call_import` : call imported function directly
 
 Indirect calls may be made to a value of function-pointer type. A 
 function-pointer value may be obtained for a given function as specified by its index
