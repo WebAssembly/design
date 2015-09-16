@@ -219,34 +219,34 @@ use cases:
 * The following operations can be built from other operators already present,
   however in doing so they read at least one non-constant input multiple times,
   breaking single-use expression tree formation.
-  * `int32.rotr`: sign-agnostic bitwise rotate right
-  * `int32.rotl`: sign-agnostic bitwise rotate left
-  * `int32.min_s`: signed minimum
-  * `int32.max_s`: signed maximum
-  * `int32.min_u`: unsigned minimum
-  * `int32.max_u`: unsigned maximum
-  * `int32.sext`: sign-agnostic `sext(x, y)` is `shr_s(shl(x,y),y)`
-  * `int32.abs_s`: signed absolute value (traps on `INT32_MIN`)
-  * `int32.bswap`: sign-agnostic reverse bytes (endian conversion)
-  * `int32.bswap16`: sign-agnostic, `bswap16(x)` is `((x>>8)&255)|((x&255)<<8)`
+  * `i32.rotr`: sign-agnostic bitwise rotate right
+  * `i32.rotl`: sign-agnostic bitwise rotate left
+  * `i32.min_s`: signed minimum
+  * `i32.max_s`: signed maximum
+  * `i32.min_u`: unsigned minimum
+  * `i32.max_u`: unsigned maximum
+  * `i32.sext`: sign-agnostic `sext(x, y)` is `shr_s(shl(x,y),y)`
+  * `i32.abs_s`: signed absolute value (traps on `INT32_MIN`)
+  * `i32.bswap`: sign-agnostic reverse bytes (endian conversion)
+  * `i32.bswap16`: sign-agnostic, `bswap16(x)` is `((x>>8)&255)|((x&255)<<8)`
 
 * The following operations are just potentially interesting.
-  * `int32.clrs`: sign-agnostic count leading redundant sign bits (defined for
+  * `i32.clrs`: sign-agnostic count leading redundant sign bits (defined for
     all values, including 0)
-  * `int32.floor_div_s`: signed division (result is [floored](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
+  * `i32.floor_div_s`: signed division (result is [floored](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
 
 * The following 64-bit-only operations are potentially interesting as well.
-  * `int64.mor`: sign-agnostic [8x8 bit-matrix multiply with or](http://mmix.cs.hm.edu/doc/instructions-en.html#MOR)
-  * `int64.mxor`: sign-agnostic [8x8 bit-matrix multiply with xor](http://mmix.cs.hm.edu/doc/instructions-en.html#MXOR)
+  * `i64.mor`: sign-agnostic [8x8 bit-matrix multiply with or](http://mmix.cs.hm.edu/doc/instructions-en.html#MOR)
+  * `i64.mxor`: sign-agnostic [8x8 bit-matrix multiply with xor](http://mmix.cs.hm.edu/doc/instructions-en.html#MXOR)
 
 ## Additional floating point operations
 
-  * `float32.minnum`: minimum; if exactly one operand is NaN, returns the other operand
-  * `float32.maxnum`: maximum; if exactly one operand is NaN, returns the other operand
-  * `float32.fma`: fused multiply-add (results always conforming to IEEE 754-2008)
-  * `float64.minnum`: minimum; if exactly one operand is NaN, returns the other operand
-  * `float64.maxnum`: maximum; if exactly one operand is NaN, returns the other operand
-  * `float64.fma`: fused multiply-add (results always conforming to IEEE 754-2008)
+  * `f32.minnum`: minimum; if exactly one operand is NaN, returns the other operand
+  * `f32.maxnum`: maximum; if exactly one operand is NaN, returns the other operand
+  * `f32.fma`: fused multiply-add (results always conforming to IEEE 754-2008)
+  * `f64.minnum`: minimum; if exactly one operand is NaN, returns the other operand
+  * `f64.maxnum`: maximum; if exactly one operand is NaN, returns the other operand
+  * `f64.fma`: fused multiply-add (results always conforming to IEEE 754-2008)
 
 `minnum` and `maxnum` operations would treat `-0.0` as being effectively less
 than `0.0`.
@@ -257,10 +257,10 @@ well on all platforms. These should be guarded by
 
 ## Floating point approximation operations
 
-  * `float32.reciprocal_approximation`: reciprocal approximation
-  * `float64.reciprocal_approximation`: reciprocal approximation
-  * `float32.reciprocal_sqrt_approximation`: reciprocal sqrt approximation
-  * `float64.reciprocal_sqrt_approximation`: reciprocal sqrt approximation
+  * `f32.reciprocal_approximation`: reciprocal approximation
+  * `f64.reciprocal_approximation`: reciprocal approximation
+  * `f32.reciprocal_sqrt_approximation`: reciprocal sqrt approximation
+  * `f64.reciprocal_sqrt_approximation`: reciprocal sqrt approximation
 
 These operations would not required to be fully precise, but the specifics
 would need clarification.

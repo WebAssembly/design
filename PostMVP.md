@@ -40,7 +40,7 @@ demonstrated in [PNaCl's SIMD][] and [SIMD.js][].
 
 SIMD adds new local types (e.g., `float32x4`) so it has to be part of the core
 semantics. SIMD operations (e.g., `float32x4.add`) could be either builtin
-operations (no different from `int32.add`) or exports of a builtin SIMD module.
+operations (no different from `i32.add`) or exports of a builtin SIMD module.
 
   [PNaCl's SIMD]: https://developer.chrome.com/native-client/reference/pnacl-c-cpp-language-support#portable-simd-vectors
   [SIMD.js]: https://github.com/tc39/ecmascript_simd
