@@ -38,12 +38,12 @@ exceeds the available callstack space at any time, a trap occurs.
 
 The following types are called the *local types*:
 
-  * `int32`: 32-bit integer
-  * `int64`: 64-bit integer
-  * `float32`: 32-bit floating point
-  * `float64`: 64-bit floating point
+  * `i32`: 32-bit integer
+  * `i64`: 64-bit integer
+  * `f32`: 32-bit floating point
+  * `f64`: 64-bit floating point
 
-Note that the local types `int32` and `int64` are not inherently signed or
+Note that the local types `i32` and `i64` are not inherently signed or
 unsigned. The interpretation of these types is determined by individual
 operations.
 
@@ -57,8 +57,8 @@ return type is represented as an empty sequence.
 
 *Memory types* are a superset of the local types, adding the following:
 
-  * `int8`: 8-bit integer
-  * `int16`: 16-bit integer
+  * `i8`: 8-bit integer
+  * `i16`: 16-bit integer
 
 Global variables and linear memory accesses use memory types.
 
@@ -91,24 +91,24 @@ conversion between that memory type and a local type.
 Loads read data from linear memory, convert from their memory type to a basic
 type, and return the result:
 
-  * `int32.load8_s`: sign-extend int8 to int32
-  * `int32.load8_u`: zero-extend uint8 to int32
-  * `int32.load16_s`: sign-extend int8 to int32
-  * `int32.load16_u`: zero-extend uint8 to int32
-  * `int32.load`: (no conversion)
-  * `int64.load`: (no conversion)
-  * `float32.load`: (no conversion)
-  * `float64.load`: (no conversion)
+  * `i32.load8_s`: sign-extend i8 to i32
+  * `i32.load8_u`: zero-extend uint8 to i32
+  * `i32.load16_s`: sign-extend i8 to i32
+  * `i32.load16_u`: zero-extend uint8 to i32
+  * `i32.load`: (no conversion)
+  * `i64.load`: (no conversion)
+  * `f32.load`: (no conversion)
+  * `f64.load`: (no conversion)
 
 Stores have an operand providing a value to store. They convert from the value's
 local type to their memory type, and write the resulting value to linear memory:
 
-  * `int32.store8`: wrap int32 to int8
-  * `int32.store16`: wrap int32 to int16
-  * `int32.store`: (no conversion)
-  * `int64.store`: (no conversion)
-  * `float32.store`: (no conversion)
-  * `float64.store`: (no conversion)
+  * `i32.store8`: wrap i32 to i8
+  * `i32.store16`: wrap i32 to i16
+  * `i32.store`: (no conversion)
+  * `i64.store`: (no conversion)
+  * `f32.store`: (no conversion)
+  * `f64.store`: (no conversion)
 
 Wrapping of integers simply discards any upper bits; i.e. wrapping does not
 perform saturation, trap on overflow, etc.
@@ -141,10 +141,10 @@ address for an access is out-of-bounds, the effective address will always also
 be out-of-bounds. This is intended to simplify folding of offsets into complex
 address modes in hardware, and to simplify bounds checking optimizations.
 
-In wasm32, address operands and offset attributes have type `int32`, and linear
+In wasm32, address operands and offset attributes have type `i32`, and linear
 memory sizes are limited to 4 GiB (of course, actual sizes are further limited
 by [available resources](Nondeterminism.md)). In wasm64, address operands and
-offsets have type `int64`. The MVP only includes wasm32; subsequent versions
+offsets have type `i64`. The MVP only includes wasm32; subsequent versions
 will add support for wasm64 and thus
 [>4 GiB linear memory](FutureFeatures.md#linear-memory-bigger-than-4-gib).
 
@@ -157,8 +157,8 @@ to be a *natural* alignment.
 
 The linear memory operation names listed above specify natural alignment.
 To specify unnatural alignment, the opcode name can be suffixed with `/n` for
-`n` any integer power of 2. For example, `float64.load/2` specifies a `float32`
-load with 2-byte alignment; `int32.load16_s/1` specifies a signed 2-byte load
+`n` any integer power of 2. For example, `f64.load/2` specifies a `f32`
+load with 2-byte alignment; `i32.load16_s/1` specifies a signed 2-byte load
 that is unaligned (1-byte aligned).
 
 The alignment applies to the effective address and not merely the address operand,
@@ -244,7 +244,7 @@ of the arguments passed to the function.
   * `set_local`: set the current value of a local variable
 
 The details of index space for local variables and their types will be further clarified,
-e.g. whether locals with type `int32` and `int64` must be contiguous and separate from
+e.g. whether locals with type `i32` and `i64` must be contiguous and separate from
 others, etc.
 
 ## Global variables
@@ -383,32 +383,32 @@ denominator always returns the correct value, even when the corresponding
 division would trap. Sign-agnostic operations silently wrap overflowing
 results into the result type.
 
-  * `int32.add`: sign-agnostic addition
-  * `int32.sub`: sign-agnostic subtraction
-  * `int32.mul`: sign-agnostic multiplication (lower 32-bits)
-  * `int32.div_s`: signed division (result is truncated toward zero)
-  * `int32.div_u`: unsigned division (result is [floored](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
-  * `int32.rem_s`: signed remainder (result has the sign of the dividend)
-  * `int32.rem_u`: unsigned remainder
-  * `int32.and`: sign-agnostic logical and
-  * `int32.ior`: sign-agnostic inclusive or
-  * `int32.xor`: sign-agnostic exclusive or
-  * `int32.shl`: sign-agnostic shift left
-  * `int32.shr_u`: zero-replicating (logical) shift right
-  * `int32.shr_s`: sign-replicating (arithmetic) shift right
-  * `int32.eq`: sign-agnostic compare equal
-  * `int32.ne`: sign-agnostic compare unequal
-  * `int32.lt_s`: signed less than
-  * `int32.le_s`: signed less than or equal
-  * `int32.lt_u`: unsigned less than
-  * `int32.le_u`: unsigned less than or equal
-  * `int32.gt_s`: signed greater than
-  * `int32.ge_s`: signed greater than or equal
-  * `int32.gt_u`: unsigned greater than
-  * `int32.ge_u`: unsigned greater than or equal
-  * `int32.clz`: sign-agnostic count leading zero bits (defined for all values, including zero)
-  * `int32.ctz`: sign-agnostic count trailing zero bits (defined for all values, including zero)
-  * `int32.popcnt`: sign-agnostic count number of one bits
+  * `i32.add`: sign-agnostic addition
+  * `i32.sub`: sign-agnostic subtraction
+  * `i32.mul`: sign-agnostic multiplication (lower 32-bits)
+  * `i32.div_s`: signed division (result is truncated toward zero)
+  * `i32.div_u`: unsigned division (result is [floored](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
+  * `i32.rem_s`: signed remainder (result has the sign of the dividend)
+  * `i32.rem_u`: unsigned remainder
+  * `i32.and`: sign-agnostic logical and
+  * `i32.ior`: sign-agnostic inclusive or
+  * `i32.xor`: sign-agnostic exclusive or
+  * `i32.shl`: sign-agnostic shift left
+  * `i32.shr_u`: zero-replicating (logical) shift right
+  * `i32.shr_s`: sign-replicating (arithmetic) shift right
+  * `i32.eq`: sign-agnostic compare equal
+  * `i32.ne`: sign-agnostic compare unequal
+  * `i32.lt_s`: signed less than
+  * `i32.le_s`: signed less than or equal
+  * `i32.lt_u`: unsigned less than
+  * `i32.le_u`: unsigned less than or equal
+  * `i32.gt_s`: signed greater than
+  * `i32.ge_s`: signed greater than or equal
+  * `i32.gt_u`: unsigned greater than
+  * `i32.ge_u`: unsigned greater than or equal
+  * `i32.clz`: sign-agnostic count leading zero bits (defined for all values, including zero)
+  * `i32.ctz`: sign-agnostic count trailing zero bits (defined for all values, including zero)
+  * `i32.popcnt`: sign-agnostic count number of one bits
 
 Shifts interpret their shift count operand as an unsigned value. When the shift
 count is at least the bitwidth of the shift, `shl` and `shr_u` produce `0`, and
@@ -453,47 +453,47 @@ Note that not all operations required by IEEE 754-2008 are provided directly.
 However, WebAssembly includes enough functionality to support reasonable library
 implementations of the remaining required operations.
 
-  * `float32.add`: addition
-  * `float32.sub`: subtraction
-  * `float32.mul`: multiplication
-  * `float32.div`: division
-  * `float32.abs`: absolute value
-  * `float32.neg`: negation
-  * `float32.copysign`: copysign
-  * `float32.ceil`: ceiling operation
-  * `float32.floor`: floor operation
-  * `float32.trunc`: round to nearest integer towards zero
-  * `float32.nearest`: round to nearest integer, ties to even
-  * `float32.eq`: compare ordered and equal
-  * `float32.ne`: compare unordered or unequal
-  * `float32.lt`: compare ordered and less than
-  * `float32.le`: compare ordered and less than or equal
-  * `float32.gt`: compare ordered and greater than
-  * `float32.ge`: compare ordered and greater than or equal
-  * `float32.sqrt`: square root
-  * `float32.min`: minimum (binary operator); if either operand is NaN, returns NaN
-  * `float32.max`: maximum (binary operator); if either operand is NaN, returns NaN
+  * `f32.add`: addition
+  * `f32.sub`: subtraction
+  * `f32.mul`: multiplication
+  * `f32.div`: division
+  * `f32.abs`: absolute value
+  * `f32.neg`: negation
+  * `f32.copysign`: copysign
+  * `f32.ceil`: ceiling operation
+  * `f32.floor`: floor operation
+  * `f32.trunc`: round to nearest integer towards zero
+  * `f32.nearest`: round to nearest integer, ties to even
+  * `f32.eq`: compare ordered and equal
+  * `f32.ne`: compare unordered or unequal
+  * `f32.lt`: compare ordered and less than
+  * `f32.le`: compare ordered and less than or equal
+  * `f32.gt`: compare ordered and greater than
+  * `f32.ge`: compare ordered and greater than or equal
+  * `f32.sqrt`: square root
+  * `f32.min`: minimum (binary operator); if either operand is NaN, returns NaN
+  * `f32.max`: maximum (binary operator); if either operand is NaN, returns NaN
 
-  * `float64.add`: addition
-  * `float64.sub`: subtraction
-  * `float64.mul`: multiplication
-  * `float64.div`: division
-  * `float64.abs`: absolute value
-  * `float64.neg`: negation
-  * `float64.copysign`: copysign
-  * `float64.ceil`: ceiling operation
-  * `float64.floor`: floor operation
-  * `float64.trunc`: round to nearest integer towards zero
-  * `float64.nearest`: round to nearest integer, ties to even
-  * `float64.eq`: compare ordered and equal
-  * `float64.ne`: compare unordered or unequal
-  * `float64.lt`: compare ordered and less than
-  * `float64.le`: compare ordered and less than or equal
-  * `float64.gt`: compare ordered and greater than
-  * `float64.ge`: compare ordered and greater than or equal
-  * `float64.sqrt`: square root
-  * `float64.min`: minimum (binary operator); if either operand is NaN, returns NaN
-  * `float64.max`: maximum (binary operator); if either operand is NaN, returns NaN
+  * `f64.add`: addition
+  * `f64.sub`: subtraction
+  * `f64.mul`: multiplication
+  * `f64.div`: division
+  * `f64.abs`: absolute value
+  * `f64.neg`: negation
+  * `f64.copysign`: copysign
+  * `f64.ceil`: ceiling operation
+  * `f64.floor`: floor operation
+  * `f64.trunc`: round to nearest integer towards zero
+  * `f64.nearest`: round to nearest integer, ties to even
+  * `f64.eq`: compare ordered and equal
+  * `f64.ne`: compare unordered or unequal
+  * `f64.lt`: compare ordered and less than
+  * `f64.le`: compare ordered and less than or equal
+  * `f64.gt`: compare ordered and greater than
+  * `f64.ge`: compare ordered and greater than or equal
+  * `f64.sqrt`: square root
+  * `f64.min`: minimum (binary operator); if either operand is NaN, returns NaN
+  * `f64.max`: maximum (binary operator); if either operand is NaN, returns NaN
 
 `min` and `max` operations treat `-0.0` as being effectively less than `0.0`.
 
@@ -502,31 +502,31 @@ is NaN, and *ordered* otherwise.
 
 ## Datatype conversions, truncations, reinterpretations, promotions, and demotions
 
-  * `int32.wrap[int64]`: wrap a 64-bit integer to a 32-bit integer
-  * `int32.trunc_s[float32]`: truncate a 32-bit float to a signed 32-bit integer
-  * `int32.trunc_s[float64]`: truncate a 64-bit float to a signed 32-bit integer
-  * `int32.trunc_u[float32]`: truncate a 32-bit float to an unsigned 32-bit integer
-  * `int32.trunc_u[float64]`: truncate a 64-bit float to an unsigned 32-bit integer
-  * `int32.reinterpret[float32]`: reinterpret the bits of a 32-bit float as a 32-bit integer
-  * `int64.extend_s[int32]`: extend a signed 32-bit integer to a 64-bit integer
-  * `int64.extend_u[int32]`: extend an unsigned 32-bit integer to a 64-bit integer
-  * `int64.trunc_s[float32]`: truncate a 32-bit float to a signed 64-bit integer
-  * `int64.trunc_s[float64]`: truncate a 64-bit float to a signed 64-bit integer
-  * `int64.trunc_u[float32]`: truncate a 32-bit float to an unsigned 64-bit integer
-  * `int64.trunc_u[float64]`: truncate a 64-bit float to an unsigned 64-bit integer
-  * `int64.reinterpret[float64]`: reinterpret the bits of a 64-bit float as a 64-bit integer
-  * `float32.demote[float64]`: demote a 64-bit float to a 32-bit float
-  * `float32.convert_s[int32]`: convert a signed 32-bit integer to a 32-bit float
-  * `float32.convert_s[int64]`: convert a signed 64-bit integer to a 32-bit float
-  * `float32.convert_u[int32]`: convert an unsigned 32-bit integer to a 32-bit float
-  * `float32.convert_u[int64]`: convert an unsigned 64-bit integer to a 32-bit float
-  * `float32.reinterpret[int32]`: reinterpret the bits of a 32-bit integer as a 32-bit float
-  * `float64.promote[float32]`: promote a 32-bit float to a 64-bit float
-  * `float64.convert_s[int32]`: convert a signed 32-bit integer to a 64-bit float
-  * `float64.convert_s[int64]`: convert a signed 64-bit integer to a 64-bit float
-  * `float64.convert_u[int32]`: convert an unsigned 32-bit integer to a 64-bit float
-  * `float64.convert_u[int64]`: convert an unsigned 64-bit integer to a 64-bit float
-  * `float64.reinterpret[int64]`: reinterpret the bits of a 64-bit integer as a 64-bit float
+  * `i32.wrap[i64]`: wrap a 64-bit integer to a 32-bit integer
+  * `i32.trunc_s[f32]`: truncate a 32-bit float to a signed 32-bit integer
+  * `i32.trunc_s[f64]`: truncate a 64-bit float to a signed 32-bit integer
+  * `i32.trunc_u[f32]`: truncate a 32-bit float to an unsigned 32-bit integer
+  * `i32.trunc_u[f64]`: truncate a 64-bit float to an unsigned 32-bit integer
+  * `i32.reinterpret[f32]`: reinterpret the bits of a 32-bit float as a 32-bit integer
+  * `i64.extend_s[i32]`: extend a signed 32-bit integer to a 64-bit integer
+  * `i64.extend_u[i32]`: extend an unsigned 32-bit integer to a 64-bit integer
+  * `i64.trunc_s[f32]`: truncate a 32-bit float to a signed 64-bit integer
+  * `i64.trunc_s[f64]`: truncate a 64-bit float to a signed 64-bit integer
+  * `i64.trunc_u[f32]`: truncate a 32-bit float to an unsigned 64-bit integer
+  * `i64.trunc_u[f64]`: truncate a 64-bit float to an unsigned 64-bit integer
+  * `i64.reinterpret[f64]`: reinterpret the bits of a 64-bit float as a 64-bit integer
+  * `f32.demote[f64]`: demote a 64-bit float to a 32-bit float
+  * `f32.convert_s[i32]`: convert a signed 32-bit integer to a 32-bit float
+  * `f32.convert_s[i64]`: convert a signed 64-bit integer to a 32-bit float
+  * `f32.convert_u[i32]`: convert an unsigned 32-bit integer to a 32-bit float
+  * `f32.convert_u[i64]`: convert an unsigned 64-bit integer to a 32-bit float
+  * `f32.reinterpret[i32]`: reinterpret the bits of a 32-bit integer as a 32-bit float
+  * `f64.promote[f32]`: promote a 32-bit float to a 64-bit float
+  * `f64.convert_s[i32]`: convert a signed 32-bit integer to a 64-bit float
+  * `f64.convert_s[i64]`: convert a signed 64-bit integer to a 64-bit float
+  * `f64.convert_u[i32]`: convert an unsigned 32-bit integer to a 64-bit float
+  * `f64.convert_u[i64]`: convert an unsigned 64-bit integer to a 64-bit float
+  * `f64.reinterpret[i64]`: reinterpret the bits of a 64-bit integer as a 64-bit float
 
 Wrapping and extension of integer values always succeed.
 Promotion and demotion of floating point values always succeed.
