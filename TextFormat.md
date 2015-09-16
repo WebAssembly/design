@@ -33,3 +33,12 @@ binary format are considered invalid text. Floating-point numbers are therefore
 represented as hexadecimal floating-point as specified by the C99 standard, which
 IEEE-754-2008 section 5.12.3 also specifies. The textual format may be improved to also
 support more human-readable representations, but never at the cost of accurate representation.
+
+## Debug symbol integration
+
+The binary format inherently strips names from functions, locals, globals, etc,
+reducing each of these to dense indices. Without help, the text format must
+therefore synthesize new names. However, as part of the [tooling](Tooling.md)
+story, a lightweight, optional "debug symbol" global section may be defined
+which associates names with each indexed entity and, when present, these names
+will be used in the text format projected from a binary WebAssembly module.

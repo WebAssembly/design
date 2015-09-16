@@ -10,6 +10,17 @@ dynamic libraries.
 WebAssembly will support both load-time and run-time (`dlopen`) dynamic linking
 of libraries.
 
+One important requirement of dynamic linking is to allow the linked module
+to have its own position-independent global data segment. This could be achieved
+by specifying a new kind of link-time-initialized immutable global variable
+which would be initialized with the address (in linear memory) of the modules'
+global data segment. These immutable globals could also be used to provide
+a linked module with the offsets of its function pointers in the instance's
+function pointer tables. An important aspect of immutable globals is that they
+could either be patched directly as constant values or implemented through a
+[Global Offset Table](https://en.wikipedia.org/wiki/Position-independent_code)
+in position-independent code.
+
 Dynamic linking is especially useful when combined with a Content Distribution
 Network (CDN) such as [hosted libraries][] because the library is only ever
 downloaded and compiled once per user device. It can also allow for smaller

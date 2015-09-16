@@ -24,9 +24,8 @@ executes as if it were sequentially consistent. Even when there are data races,
 WebAssembly will ensure that the [nondeterminism](Nondeterminism.md) remains
 limited and local.
 
-Modules can have global variables that are either shared or thread-local. While
-the linear memory could be used to store shared global variables, global
-variables are not aliasable and thus allow more aggressive optimization.
+Modules can have thread-local variables that are disjoint from linear memory
+and can thus be represented efficiently by the engine.
 
   [synchronic]: http://wg21.link/n4195
   [C++11 memory model]: http://www.hboehm.info/c++mm/
