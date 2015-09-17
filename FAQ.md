@@ -300,3 +300,29 @@ those that motivated the development of the
 
 Even Knuth found it worthwhile to give us his opinion on this issue at point,
 [a flame about 64-bit pointers](http://www-cs-faculty.stanford.edu/~uno/news08.html).
+
+## Won't `call_indirect` be slow?
+
+In the general case, [`call_indirect`](AstSemantics.md#calls) implies an extra
+bounds check and load of the callee address from an engine-internal, trusted
+table of function pointers. This design is motivated by concerns of security
+(e.g., defeating ASLR) and [minimizing nondeterminism](Nondeterminism.md).
+
+There are several factors which can help mitigate this overhead compared to native
+code:
+
+* For repeated function pointer calls (e.g., in a loop), the bounds check and
+  load can be hoisted.
+
+* For one of the most frequent sources of `call_indirect`, virtual function
+  calls, compilers may avoid the additional indirection by placing vtables
+  contiguously in an indirect call table and storing the offset of the table in
+  the object in place of the usual
+  [vtable pointer](https://en.wikipedia.org/wiki/Virtual_method_table). Thus,
+  the load implied by the indirect call *replaces* the normal vtable load.
+
+* With [native GC support](GC.md#native-gc), WebAssembly can define an opaque,
+  trusted, function pointer type that would be representable by an actual
+  address (similar to other GC reference types), completely eliminating the
+  bounds check and load.
+
