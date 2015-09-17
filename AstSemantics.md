@@ -67,7 +67,7 @@ Global variables and linear memory accesses use memory types.
 The main storage of a WebAssembly instance, called the *linear memory*, is a
 contiguous, byte-addressable range of memory spanning from offset `0` and
 extending for `memory_size` bytes which can be dynamically adjusted by
-[`resize_memory`](Modules.md#resizing). The linear memory can be considered to
+[`resize_memory`](AstSemantics.md#resizing). The linear memory can be considered to
 be an untyped array of bytes, and it is unspecified how embedders map this array
 into their process' own [virtual memory][]. The linear memory is sandboxed; it
 does not alias the execution engine's internal data structures, the execution
