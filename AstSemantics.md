@@ -222,13 +222,20 @@ page size. To determine page size, a nullary `page_size` operation is provided.
 
  * `resize_memory` : grow or shrink linear memory by a given delta which
     must be a multiple of `page_size`
- * `page_size` : nullary constant function returning page size
+ * `page_size` : nullary constant function returning page size in bytes
 
 Also as stated [above](AstSemantics.md#linear-memory), linear memory is
 contiguous, meaning there are no "holes" in the linear address space. After the
 MVP, there are [future features](FutureFeatures.md#finer-grained-control-over-memory)
 proposed to allow setting protection and creating mappings within the
 contiguous linear memory.
+
+The result type of `page_size` is `int32` for wasm32 and `int64` for wasm64.
+The result value of `page_size` is an unsigned integer which is a power of 2.
+
+(Note that the `page_size` value need not reflect the actual internal page size
+of the implementation; it just needs to be a value suitable for use with
+`resize_memory`)
 
 ## Local variables
 
