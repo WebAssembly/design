@@ -385,7 +385,7 @@ results into the result type.
   * `i32.rem_s`: signed remainder (result has the sign of the dividend)
   * `i32.rem_u`: unsigned remainder
   * `i32.and`: sign-agnostic logical and
-  * `i32.ior`: sign-agnostic inclusive or
+  * `i32.or`: sign-agnostic inclusive or
   * `i32.xor`: sign-agnostic exclusive or
   * `i32.shl`: sign-agnostic shift left
   * `i32.shr_u`: zero-replicating (logical) shift right
