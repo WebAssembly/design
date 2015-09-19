@@ -37,8 +37,8 @@ support more human-readable representations, but never at the cost of accurate r
 # Official Text Format
 
 WebAssembly currently doesn't have a final, official, text format. As detailed above the
-main purpose of the text format will be for human consumption, humans feedback on readability
-will therefore factor into standardizing a text format.
+main purpose of the text format will be for human consumption, feedback from humans on
+readability will therefore factor into standardizing a text format.
 
 There are, however, prototype syntaxes which are used to bring up WebAssembly: it's easier
 to develop using a text format than it is with a binary format, even if the ultimate
