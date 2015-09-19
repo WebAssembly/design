@@ -34,7 +34,35 @@ represented as hexadecimal floating-point as specified by the C99 standard, whic
 IEEE-754-2008 section 5.12.3 also specifies. The textual format may be improved to also
 support more human-readable representations, but never at the cost of accurate representation.
 
-## Debug symbol integration
+# Official Text Format
+
+WebAssembly currently doesn't have a final, official, text format. As detailed above the
+main purpose of the text format will be for human consumption, humans feedback on readability
+will therefore factor into standardizing a text format.
+
+There are, however, prototype syntaxes which are used to bring up WebAssembly: it's easier
+to develop using a text format than it is with a binary format, even if the ultimate
+WebAssembly format will be binary. Most of these prototypes use [s-expressions][] because they
+can easily represent expression trees and [ASTs](ASTSemantics.md) (as opposed to CFGs).
+
+  [s-expressions]: https://en.wikipedia.org/wiki/S-expression
+
+* [Prototype specification][] consumes an s-expression syntax.
+* [WAVM backend][] consumes compatible s-expressions.
+* [sexpr-wasm prototype][] consumes compatible s-expressions, and works closely with the [V8 prototype][].
+* [LLVM backend][] (the `CHECK:` parts of these tests) emits compatible s-expressions.
+* [ilwasm][] emits compatible s-expressions.
+* [wassembler][] consumes a different syntax, and works closely with the [V8 prototype][].
+
+  [prototype specification]: https://github.com/WebAssembly/spec/tree/master/ml-proto/test
+  [LLVM backend]: https://github.com/llvm-mirror/llvm/tree/master/test/CodeGen/WebAssembly
+  [WAVM backend]: https://github.com/AndrewScheidecker/WAVM/tree/master/Test
+  [wassembler]: https://github.com/ncbray/wassembler/tree/master/demos
+  [V8 prototype]: https://github.com/WebAssembly/v8-native-prototype
+  [ilwasm]: https://github.com/WebAssembly/ilwasm
+  [sexpr-wasm prototype]: https://github.com/WebAssembly/sexpr-wasm-prototype
+
+# Debug symbol integration
 
 The binary format inherently strips names from functions, locals, globals, etc,
 reducing each of these to dense indices. Without help, the text format must
