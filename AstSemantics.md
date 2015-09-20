@@ -91,9 +91,9 @@ Loads read data from linear memory, convert from their memory type to a basic
 type, and return the result:
 
   * `i32.load8_s`: sign-extend i8 to i32
-  * `i32.load8_u`: zero-extend uint8 to i32
-  * `i32.load16_s`: sign-extend i8 to i32
-  * `i32.load16_u`: zero-extend uint8 to i32
+  * `i32.load8_u`: zero-extend i8 to i32
+  * `i32.load16_s`: sign-extend i16 to i32
+  * `i32.load16_u`: zero-extend i16 to i32
   * `i32.load`: (no conversion)
   * `i64.load`: (no conversion)
   * `f32.load`: (no conversion)
