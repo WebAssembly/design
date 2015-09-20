@@ -43,7 +43,8 @@ readability will therefore factor into standardizing a text format.
 There are, however, prototype syntaxes which are used to bring up WebAssembly: it's easier
 to develop using a text format than it is with a binary format, even if the ultimate
 WebAssembly format will be binary. Most of these prototypes use [s-expressions][] because they
-can easily represent expression trees and [ASTs](ASTSemantics.md) (as opposed to CFGs).
+can easily represent expression trees and [ASTs](ASTSemantics.md) (as opposed to CFGs)
+and don't have much of a syntax to speak of (avoiding syntax bikeshed discussions).
 
   [s-expressions]: https://en.wikipedia.org/wiki/S-expression
 
