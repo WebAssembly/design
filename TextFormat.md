@@ -48,6 +48,8 @@ and don't have much of a syntax to speak of (avoiding syntax bikeshed discussion
 
   [s-expressions]: https://en.wikipedia.org/wiki/S-expression
 
+Here are some of these prototypes. Keep in mind that these *aren't* official:
+
 * [Prototype specification][] consumes an s-expression syntax.
 * [WAVM backend][] consumes compatible s-expressions.
 * [sexpr-wasm prototype][] consumes compatible s-expressions, and works closely with the [V8 prototype][].
