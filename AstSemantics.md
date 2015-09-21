@@ -306,7 +306,7 @@ restriction may be lifted in the future.
 
 Direct calls to a function specify the callee by index into a function table.
 
-  * `call_direct`: call function directly
+  * `call`: call function directly
 
 Calls must match the function signature exactly.
 
