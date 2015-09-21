@@ -48,7 +48,8 @@ and don't have much of a syntax to speak of (avoiding syntax bikeshed discussion
 
   [s-expressions]: https://en.wikipedia.org/wiki/S-expression
 
-Here are some of these prototypes. Keep in mind that these *aren't* official:
+Here are some of these prototypes. Keep in mind that these *aren't* official, and the final
+official format may look entirely different:
 
 * [Prototype specification][] consumes an s-expression syntax.
 * [WAVM backend][] consumes compatible s-expressions.
