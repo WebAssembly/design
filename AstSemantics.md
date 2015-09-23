@@ -106,7 +106,6 @@ signedness. Such integer loads perform an implicit sign- or zero-extension as sp
 Stores have an additional input operand which is the `value` to store to memory.
 Like loads, integer stores may specify a smaller size than the
 operand size and include an implicit integer wrap operation which discards the upper bits.
-Stores write only the bytes in the linear memory corresponding to their size.
 
   * `i32.store8`: wrap i32 to i8 and store 1 byte
   * `i32.store16`: wrap i32 to i16 and store 2 bytes
