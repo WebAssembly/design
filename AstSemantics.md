@@ -118,8 +118,8 @@ Stores write only the bytes in the linear memory corresponding to their size.
   * `f32.store`: (no conversion) store 4 bytes
   * `f64.store`: (no conversion) store 8 bytes
 
-In addition to storing to memory, store instructions produce a value which is their
-input operand without conversion.
+In addition to storing to memory, store instructions produce a value which is their 
+`value` input operand without conversion.
 
 ### Addressing
 
