@@ -82,38 +82,43 @@ only communicate through messaging, e.g. in browsers using `postMessage`. It
 will be possible to share linear memory between threads of execution when
 [threads](PostMVP.md#threads) are added.
 
-### Linear Memory Operations
+### Linear Memory Accesses
 
-Linear memory operations are annotated with a memory type and perform a
-conversion between that memory type and a local type.
+Linear memory access is accomplished with explicit `load` and `store` operations.
+Integer loads can specify a size which is smaller than the result type as well as a 
+signedness. Such integer loads perform an implicit sign- or zero-extension as specified below.
 
-Loads read data from linear memory, convert from their memory type to a basic
-type, and return the result:
+  * `i32.load8_s`: load 1 byte and sign-extend i8 to i32
+  * `i32.load8_u`: load 1 byte and zero-extend i8 to i32
+  * `i32.load16_s`: load 2 bytes and sign-extend i16 to i32
+  * `i32.load16_u`: load 2 bytes and zero-extend i16 to i32
+  * `i32.load`: load 4 bytes as i32
+  * `i64.load8_s`: load 1 byte and sign-extend i8 to i64
+  * `i64.load8_u`: load 1 byte and zero-extend i8 to i64
+  * `i64.load16_s`: load 2 bytes and sign-extend i16 to i64
+  * `i64.load16_u`: load 2 bytes and zero-extend i16 to i64
+  * `i64.load32_s`: load 4 bytes and sign-extend i32 to i64
+  * `i64.load32_u`: load 4 bytes and zero-extend i32 to i64
+  * `i64.load`: load 8 bytes as i64
+  * `f32.load`: load 4 bytes as f32
+  * `f64.load`: load 8 bytes as f64
 
-  * `i32.load8_s`: sign-extend i8 to i32
-  * `i32.load8_u`: zero-extend i8 to i32
-  * `i32.load16_s`: sign-extend i16 to i32
-  * `i32.load16_u`: zero-extend i16 to i32
-  * `i32.load`: (no conversion)
-  * `i64.load`: (no conversion)
-  * `f32.load`: (no conversion)
-  * `f64.load`: (no conversion)
+Stores have an additional input operand which is the `value` to store to memory.
+Like loads, integer stores may specify a smaller size than the
+operand size and include an implicit integer wrap operation which discards the upper bits.
 
-Stores have an operand providing a value to store. They convert from the value's
-local type to their memory type, and write the resulting value to linear memory:
+  * `i32.store8`: wrap i32 to i8 and store 1 byte
+  * `i32.store16`: wrap i32 to i16 and store 2 bytes
+  * `i32.store`: (no conversion) store 4 bytes
+  * `i64.store8`: wrap i64 to i8 and store 1 byte
+  * `i64.store16`: wrap i64 to i16 and store 2 bytes
+  * `i64.store32`: wrap i64 to i32 and store 4 bytes
+  * `i64.store`: (no conversion) store 8 bytes
+  * `f32.store`: (no conversion) store 4 bytes
+  * `f64.store`: (no conversion) store 8 bytes
 
-  * `i32.store8`: wrap i32 to i8
-  * `i32.store16`: wrap i32 to i16
-  * `i32.store`: (no conversion)
-  * `i64.store`: (no conversion)
-  * `f32.store`: (no conversion)
-  * `f64.store`: (no conversion)
-
-Wrapping of integers simply discards any upper bits; i.e. wrapping does not
-perform saturation, trap on overflow, etc.
-
-In addition to storing a value to linear memory, store instructions also
-reproduce their value operand, with no conversion applied.
+In addition to storing to memory, store instructions produce a value which is their 
+`value` input operand without conversion.
 
 ### Addressing
 
