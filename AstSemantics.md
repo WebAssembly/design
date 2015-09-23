@@ -84,10 +84,7 @@ will be possible to share linear memory between threads of execution when
 
 ### Linear Memory Accesses
 
-Linear memory access is accomplished with explicit `load` and `store` operations that
-accept as input an `index` operand that is interpreted as a unsigned byte offset into the
-linear memory.
-
+Linear memory access is accomplished with explicit `load` and `store` operations.
 Integer loads can specify a size which is smaller than the result type as well as a 
 signedness. Such integer loads perform an implicit sign- or zero-extension as specified below.
 
@@ -106,8 +103,8 @@ signedness. Such integer loads perform an implicit sign- or zero-extension as sp
   * `f32.load`: load 4 bytes as f32
   * `f64.load`: load 8 bytes as f64
 
-In addition to an `index` operand, stores have an additional input operand which is the
-`value` to store to memory. Like loads, integer stores may specify a smaller size than the
+Stores have an additional input operand which is the `value` to store to memory.
+Like loads, integer stores may specify a smaller size than the
 operand size and include an implicit integer wrap operation which discards the upper bits.
 Stores write only the bytes in the linear memory corresponding to their size.
 
