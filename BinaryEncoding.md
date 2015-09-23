@@ -98,7 +98,8 @@ Yes:
       * Type ID
       * Count of locals
     + The serialized AST
- * A `data` section contains
+* A `data` section contains (in this order):
+   - The generic section header
    - A sequence of byte ranges within the binary and corresponding addresses in the linear memory
 
 
