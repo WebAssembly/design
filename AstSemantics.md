@@ -50,8 +50,8 @@ operations.
 Parameters and local variables use local types.
 
 Also note that there is no need for a `void` type; function signatures use
-[sequences of types](Calls.md) to describe their return values, so a `void`
-return type is represented as an empty sequence.
+[sequences of types](AstSemantics.md#calls) to describe their return values, so
+a `void` return type is represented as an empty sequence.
 
 ### Memory Types
 
@@ -309,42 +309,48 @@ buffer.
 In the MVP, the length of the return types sequence may only be 0 or 1. This
 restriction may be lifted in the future.
 
-Direct calls to a function specify the callee by index into a function table.
+Direct calls to a function specify the callee by static index into the global
+function table statically defined by the module.
 
   * `call`: call function directly
 
 Calls must match the function signature exactly.
 
 Like direct calls, calls to [imports](Modules.md#imports-and-exports) specify
-the callee by index into an import table (defined by the sequence of import
-declarations in the module import section) and the call must match the declared
-signature of the import exactly.
+the callee by static index into an import table (defined by the sequence of
+import declarations in the module import section) and the call must match the
+declared signature of the import exactly.
 
   * `call_import` : call imported function directly
 
-Indirect calls may be made to a value of function-pointer type. A 
-function-pointer value may be obtained for a given function as specified by its index
-in the function table.
+Indirect calls specify the callee function with a *dynamic* integer operand and
+may be used to implement function-pointers in C/C++. For reasons of security and
+minimizing [nondeterminism](Nondeterminism.md), the integer operand is a dense
+index into a module-defined table, not derived from the literal address of
+functions in memory. A module can define any number of indirectly-callable
+function tables and these tables can contain an arbitrary sequence of functions,
+identified by their index in the global function table. An indirect call statically
+specifies which table.
 
-  * `call_indirect`: call function indirectly
-  * `addressof`: obtain a function pointer value for a given function
+  * `call_indirect` : call function indirectly, given static table and
+    dynamic table index
 
-Function-pointer values are comparable for equality and the `addressof` operator
-is monomorphic. Function-pointer values can be explicitly coerced to and from
-integers (which, in particular, is necessary when loading/storing to memory
-since memory only provides integer types). For security and safety reasons,
-the integer value of a coerced function-pointer value is an abstract index and
-does not reveal the actual machine code address of the target function.
+The (function) elements of a single indirect-call-table may have different
+signatures. The indirect call operation traps if the signature of the caller and
+callee do not exactly match. Implementations are encouraged to recognize and
+optimize the special case where all elements of a given indirect-call-table have
+the same signature. Memory permitting, engines may futher optimize indirect
+calls of tables with heterogeneous contents by internally making N copies of the
+table, one per signature of elements in the table and replacing all elements
+that don't match the clone's signature with throwing thunks. This avoids any
+dynamic signature check since callsites statically know which signature-cloned
+table to dispatch into.
 
-In the MVP, function pointer values are local to a single module. The
-[dynamic linking](DynamicLinking.md) feature is necessary for
-two modules to pass function pointers back and forth.
-
-Multiple return value calls will be possible, though possibly not in the
-MVP. The details of multiple-return-value calls needs clarification. Calling a
-function that returns multiple values will likely have to be a statement that
-specifies multiple local variables to which to assign the corresponding return
-values.
+In the MVP, indirect-call tables are local to a single
+[instance](Modules.md). The [dynamic linking](DynamicLinking.md) feature is
+necessary to allow multiple modules to share the same instance (and thus
+indirect call tables). See also the [FAQ entry](FAQ.md#wont-call_indirect-be-slow)
+on performance concerns.
 
 ## Literals
 
