@@ -76,7 +76,7 @@ will be possible to share linear memory between threads of execution when
 ### Linear Memory Accesses
 
 Linear memory access is accomplished with explicit `load` and `store` operations.
-Integer loads can specify a *memory size* which is smaller than the result type as
+Integer loads can specify a *storage size* which is smaller than the result type as
 well as a signedness which determines whether the bytes are sign- or zero-
 extended into the result type.
 
@@ -96,7 +96,7 @@ extended into the result type.
   * `f64.load`: load 8 bytes as f64
 
 Stores have an additional input operand which is the `value` to store to memory.
-Like loads, integer stores may specify a smaller *memory size* than the operand
+Like loads, integer stores may specify a smaller *storage size* than the operand
 size in which case integer wrapping is implied.
 
   * `i32.store8`: wrap i32 to i8 and store 1 byte
@@ -121,7 +121,7 @@ offset attribute's value is called the *effective address*, which is interpreted
 as an unsigned byte index.
 
 Linear memory operations access the bytes starting at the effective address and
-extend for the number of bytes implied by the memory size. If any of the
+extend for the number of bytes implied by the storage size. If any of the
 accessed bytes are beyond `memory_size`, the access is considered
 *out-of-bounds*. A module may optionally define that out-of-bounds includes
 small effective addresses close to `0`
