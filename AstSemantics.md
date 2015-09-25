@@ -53,15 +53,6 @@ Also note that there is no need for a `void` type; function signatures use
 [sequences of types](Calls.md) to describe their return values, so a `void`
 return type is represented as an empty sequence.
 
-### Memory Types
-
-*Memory types* are a superset of the local types, adding the following:
-
-  * `i8`: 8-bit integer
-  * `i16`: 16-bit integer
-
-Global variables and linear memory accesses use memory types.
-
 ## Linear Memory
 
 The main storage of a WebAssembly instance, called the *linear memory*, is a
@@ -85,8 +76,9 @@ will be possible to share linear memory between threads of execution when
 ### Linear Memory Accesses
 
 Linear memory access is accomplished with explicit `load` and `store` operations.
-Integer loads can specify a size which is smaller than the result type as well as a 
-signedness. Such integer loads perform an implicit sign- or zero-extension as specified below.
+Integer loads can specify a *memory size* which is smaller than the result type as
+well as a signedness which determines whether the bytes are sign- or zero-
+extended into the result type.
 
   * `i32.load8_s`: load 1 byte and sign-extend i8 to i32
   * `i32.load8_u`: load 1 byte and zero-extend i8 to i32
@@ -104,8 +96,8 @@ signedness. Such integer loads perform an implicit sign- or zero-extension as sp
   * `f64.load`: load 8 bytes as f64
 
 Stores have an additional input operand which is the `value` to store to memory.
-Like loads, integer stores may specify a smaller size than the
-operand size and include an implicit integer wrap operation which discards the upper bits.
+Like loads, integer stores may specify a smaller *memory size* than the operand
+size in which case integer wrapping is implied.
 
   * `i32.store8`: wrap i32 to i8 and store 1 byte
   * `i32.store16`: wrap i32 to i16 and store 2 bytes
@@ -118,7 +110,7 @@ operand size and include an implicit integer wrap operation which discards the u
   * `f64.store`: (no conversion) store 8 bytes
 
 In addition to storing to memory, store instructions produce a value which is their 
-`value` input operand without conversion.
+`value` input operand before wrapping.
 
 ### Addressing
 
@@ -128,11 +120,9 @@ index. The infinite-precision sum of the address operand's value with the byte
 offset attribute's value is called the *effective address*, which is interpreted
 as an unsigned byte index.
 
-Linear memory accesses access the bytes starting at the location in the linear
-memory storage indexed by the effective address, and extending for the number
-of bytes implied by the memory type attribute of the access.
-
-If any of the accessed bytes are beyond `memory_size`, the access is considered
+Linear memory operations access the bytes starting at the effective address and
+extend for the number of bytes implied by the memory size. If any of the
+accessed bytes are beyond `memory_size`, the access is considered
 *out-of-bounds*. A module may optionally define that out-of-bounds includes
 small effective addresses close to `0`
 (see [discussion](https://github.com/WebAssembly/design/issues/204)).
