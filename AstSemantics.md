@@ -50,7 +50,7 @@ operations.
 Parameters and local variables use local types.
 
 Also note that there is no need for a `void` type; function signatures use
-[sequences of types](Calls.md) to describe their return values, so a `void`
+[sequences of types](#calls) to describe their return values, so a `void`
 return type is represented as an empty sequence.
 
 ### Memory Types
