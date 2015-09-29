@@ -349,7 +349,7 @@ values.
 ## Literals
 
 These opcodes have an immediate operand of their associated type which is
-copied into their result value. All possible values of all types are
+produced as their result value. All possible values of all types are
 supported (including NaN values of all possible bit patterns).
 
   * `i32.literal`: produce the value of an i32 immediate
