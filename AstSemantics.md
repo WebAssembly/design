@@ -348,8 +348,14 @@ values.
 
 ## Literals
 
-Each local type allows literal values directly in the AST. See the
-[binary encoding section](BinaryEncoding.md#constant-pool).
+These opcodes have an immediate operand of their associated type which is
+copied into their result value. All possible values of all types are
+supported.
+
+  * `i32.literal`: produce the value of an i32 immediate
+  * `i64.literal`: produce the value of an i64 immediate
+  * `f32.literal`: produce the value of an f32 immediate
+  * `f64.literal`: produce the value of an f64 immediate
 
 ## Expressions with control flow
 
