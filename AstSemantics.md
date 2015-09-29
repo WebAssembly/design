@@ -346,10 +346,15 @@ function that returns multiple values will likely have to be a statement that
 specifies multiple local variables to which to assign the corresponding return
 values.
 
-## Literals
+## Immediates
 
-Each local type allows literal values directly in the AST. See the
-[binary encoding section](BinaryEncoding.md#constant-pool).
+Each local type allows immediate values directly in the AST. All possible
+values of all types are supported.
+
+  * `i32.imm`: i32 immediate
+  * `i64.imm`: i64 immediate
+  * `f32.imm`: f32 immediate
+  * `f64.imm`: f64 immediate
 
 ## Expressions with control flow
 
