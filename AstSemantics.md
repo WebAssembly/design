@@ -346,16 +346,16 @@ function that returns multiple values will likely have to be a statement that
 specifies multiple local variables to which to assign the corresponding return
 values.
 
-## Literals
+## Constants
 
 These opcodes have an immediate operand of their associated type which is
 produced as their result value. All possible values of all types are
 supported (including NaN values of all possible bit patterns).
 
-  * `i32.literal`: produce the value of an i32 immediate
-  * `i64.literal`: produce the value of an i64 immediate
-  * `f32.literal`: produce the value of an f32 immediate
-  * `f64.literal`: produce the value of an f64 immediate
+  * `i32.const`: produce the value of an i32 immediate
+  * `i64.const`: produce the value of an i64 immediate
+  * `f32.const`: produce the value of an f32 immediate
+  * `f64.const`: produce the value of an f64 immediate
 
 ## Expressions with control flow
 
