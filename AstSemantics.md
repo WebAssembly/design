@@ -147,16 +147,9 @@ will add support for wasm64 and thus
 Each linear memory access operation also has an immediate positive integer power
 of 2 alignment attribute, which is the same type as the address' index. An
 alignment value which is the same as the memory attribute size is considered
-to be a *natural* alignment.
-
-The linear memory operation names listed above specify natural alignment.
-To specify unnatural alignment, the opcode name can be suffixed with `/n` for
-`n` any integer power of 2. For example, `f64.load/2` specifies a `f32`
-load with 2-byte alignment; `i32.load16_s/1` specifies a signed 2-byte load
-that is unaligned (1-byte aligned).
-
-The alignment applies to the effective address and not merely the address operand,
-i.e. the immediate offset is taken into account when considering alignment.
+to be a *natural* alignment. The alignment applies to the effective address and
+not merely the address operand, i.e. the immediate offset is taken into account
+when considering alignment.
 
 If the effective address of a memory access is a multiple of the alignment
 attribute value of the memory access, the memory access is considered *aligned*,
