@@ -45,7 +45,9 @@ currently admits nondeterminism:
      may vary between platforms.
  * Environment-dependent resource limits may be exhausted. A few examples:
    - Memory allocation may fail.
-   - Program stack may get exhausted.
+   - Program stack may get exhausted (e.g. because function call depth is too big,
+     or functions have too many locals, or infinite recursion). Note that this stack
+     isn't located in the program-accesible linear memory.
    - Resources such as handles may get exhausted.
 
 Users of C, C++, and similar languages should be aware that operations which
