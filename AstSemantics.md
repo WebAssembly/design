@@ -36,13 +36,13 @@ Implementations are not permitted to do implicit tail-call optimizations.
 Semantically, implementations must have an internal maximum call stack size,
 and every call must take up some resources toward exhausting that size. Of
 course, dynamic resources may be exhausted much earlier. This rule exists
-because otherwise programs could be written to depend on tail call optimizations
-in some implementations and become unportable to other implementations. Also, in
-the future, it is expected that WebAssembly will add some form of
-stack-introspection functionality, in which case such optimizations would be
-observable.
+to avoid programs depending on tail call optimizations which may not be
+portable across implementations. Also, in the future, it is expected that
+WebAssembly will add some form of stack-introspection functionality, in which
+case such optimizations would be directly observable.
 
-Also, support for explicit tail calls is likely to be added in the future.
+Support for explicit tail calls is planned in
+[the future](FutureFeatures.md#general-purpose-proper-tail-calls).
 
 ## Types
 
