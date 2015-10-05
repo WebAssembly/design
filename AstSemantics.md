@@ -42,7 +42,9 @@ WebAssembly will add some form of stack-introspection functionality, in which
 case such optimizations would be directly observable.
 
 Support for explicit tail calls is planned in
-[the future](FutureFeatures.md#general-purpose-proper-tail-calls).
+[the future](FutureFeatures.md#general-purpose-proper-tail-calls),
+which would add an explicit tail-call operation with well-defined effects
+on stack introspection.
 
 ## Types
 
