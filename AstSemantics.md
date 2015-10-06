@@ -21,6 +21,8 @@ WebAssembly offers a set of operations that are language-independent but closely
 match operations in many programming languages and are efficiently implementable
 on all modern computers.
 
+## Traps
+
 Some operations may *trap* under some conditions, as noted below. In the MVP,
 trapping means that execution in the WebAssembly instance is terminated and
 abnormal termination is reported to the outside environment. In a JavaScript
