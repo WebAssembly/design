@@ -124,6 +124,13 @@ Useful properties of signature-restricted PTCs:
 
   [asm.js RFC]: http://discourse.specifiction.org/t/request-for-comments-add-a-restricted-subset-of-proper-tail-calls-to-asm-js
  
+## General-purpose Proper Tail Calls
+
+General-purpose Proper Tail Calls would have no signature restrictions, and
+therefore be more broadly usable than
+[Signature-restricted Proper Tail Calls](AstSemantics.md#signature-restricted-proper-tail-calls),
+though there would be some different performance characataristics.
+
 ## Asynchronous Signals
 
 TODO

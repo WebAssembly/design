@@ -34,6 +34,20 @@ Callstack space is limited by unspecified and dynamically varying constraints
 and is a source of [nondeterminism](Nondeterminism.md). If program callstack usage
 exceeds the available callstack space at any time, a trap occurs.
 
+Implementations must have an internal maximum call stack size, and every call
+must take up some resources toward exhausting that size (of course, dynamic
+resources may be exhausted much earlier). This rule exists to avoid differences
+in observable behavior; if some implementations have this property and others
+don't, the same program which runs successfully on some implementations may
+consume unbounded resources and fail on others. Also, in the future, it is
+expected that WebAssembly will add some form of stack-introspection
+functionality, in which case such optimizations would be directly observable.
+
+Support for explicit tail calls is planned in
+[the future](FutureFeatures.md#general-purpose-proper-tail-calls),
+which would add an explicit tail-call operation with well-defined effects
+on stack introspection.
+
 ## Types
 
 ### Local Types
