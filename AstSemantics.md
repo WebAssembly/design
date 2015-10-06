@@ -190,6 +190,10 @@ contiguous linear memory.
 The result type of `page_size` is `i32` for wasm32 and `i64` for wasm64.  The
 result value of `page_size` is an unsigned integer which is a power of 2.
 
+The `page_size` value need not reflect the actual internal page size of the
+implementation; it just needs to be a value suitable for use with
+`resize_memory`.
+
 
 ## Local variables
 

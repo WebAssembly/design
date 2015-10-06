@@ -109,10 +109,6 @@ map the underlying OS's capabilities to the WebAssembly application, as well as
 to communicate their own implementation details in a useful manner to the
 developer.
 
-Note that the `page_size` value need not reflect the actual internal page size
-of the implementation; it just needs to be a value suitable for use with
-`resize_memory`.
-
 
 ## Control Flow
 
