@@ -278,7 +278,8 @@ Each function has a *signature*, which consists of:
   * Return types, which are a sequence of local types
   * Argument types, which are a sequence of local types
 
-WebAssembly doesn't support variable-length argument lists (aka varargs).
+WebAssembly doesn't support variable-length argument lists (aka varargs), they
+are instead supported through explicit accesses to linear memory.
 
 In the MVP, the length of the return types sequence may only be 0 or 1. This
 restriction may be lifted in the future.
