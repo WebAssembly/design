@@ -42,7 +42,7 @@ WebAssembly only represents [a few types](AstSemantics.md#Types).
 * Other types (such as `f16`, `f80`, `i128`) aren't widely supported by existing
   hardware and can be supported by runtime libraries if developers wish to use
   them. They can be added to WebAssembly later without compromising MVP.
-* More complex object types aren't sematcically useful for MVP. They may become
+* More complex object types aren't semantically useful for MVP. They may become
   useful to support other languages, especially when considering
   [garbage collection](GC.md).
 
