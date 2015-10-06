@@ -146,7 +146,7 @@ The semantics of out-of-bounds accesses are discussed
 [below](AstSemantics.md#out-of-bounds).
 
 The use of infinite-precision in the effective address computation means that
-the addition of the offset to the address does is never wrapped, so if the
+the addition of the offset to the address never causes wrapping, so if the
 address for an access is out-of-bounds, the effective address will always also
 be out-of-bounds. This is intended to simplify folding of offsets into complex
 address modes in hardware, and to simplify bounds checking optimizations.
