@@ -236,11 +236,11 @@ The [`mmap`](http://pubs.opengroup.org/onlinepubs/009695399/functions/mmap.html)
 syscall has many useful features. While these are all packed into one
 overloaded syscall in POSIX, WebAssembly unpacks this functionality into
 multiple builtins:
-* the MVP starts with the ability to resize linear memory via a
-  [`resize_memory`](AstSemantics.md#resizing) builtin operation;
+* the MVP starts with the ability to grow linear memory via a
+  [`grow_memory`](AstSemantics.md#resizing) builtin operation;
 * proposed [future features](FutureFeatures.md#finer-grained-control-over-memory)
   would allow the application to change the protection and mappings for pages
-  in the contiguous range set by `resize_memory`.
+  in the contiguous range `[0, memory_size)`.
 
 A significant feature of `mmap` that is missing from the above list is the
 ability to allocate disjoint virtual address ranges. The reasoning for this

@@ -124,7 +124,7 @@ to allow *explicitly* injecting multiple modules into the same instance.
 ## Initial state of linear memory
 
 A module will contain a section declaring the linear memory size (initial and
-maximum size allowed by [`resize_memory`](AstSemantics.md#resizing) and the
+maximum size allowed by [`grow_memory`](AstSemantics.md#resizing) and the
 initial contents of memory, analogous to `.data`, `.rodata`, `.bss` sections in
 native executables (see [binary encoding](BinaryEncoding.md#global-structure)).
 

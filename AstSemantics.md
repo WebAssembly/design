@@ -59,8 +59,8 @@ return type is represented as an empty sequence.
 
 The main storage of a WebAssembly instance, called the *linear memory*, is a
 contiguous, byte-addressable range of memory spanning from offset `0` and
-extending for `memory_size` bytes which can be dynamically adjusted by
-[`resize_memory`](AstSemantics.md#resizing). The linear memory can be considered to
+extending for `memory_size` bytes which can be dynamically grown by
+[`grow_memory`](AstSemantics.md#resizing). The linear memory can be considered to
 be an untyped array of bytes, and it is unspecified how embedders map this array
 into their process' own [virtual memory][]. The linear memory is sandboxed; it
 does not alias the execution engine's internal data structures, the execution
@@ -206,26 +206,31 @@ tradeoffs.
 
 ### Resizing
 
-Linear memory can be resized by a `resize_memory` builtin operation. The
-`resize_memory` operation requires its operand to be a multiple of the system
+In the MVP, linear memory can be resized by a `grow_memory` operation. This
+operation requires its operand to be a multiple of the system
 page size. To determine page size, a nullary `page_size` operation is provided.
 
- * `resize_memory` : grow or shrink linear memory by a given delta which
+ * `grow_memory` : grow linear memory by a given unsigned delta which
     must be a multiple of `page_size`
  * `page_size` : nullary constant function returning page size in bytes
 
-Also as stated [above](AstSemantics.md#linear-memory), linear memory is
-contiguous, meaning there are no "holes" in the linear address space. After the
+As stated [above](AstSemantics.md#linear-memory), linear memory is contiguous,
+meaning there are no "holes" in the linear address space. After the
 MVP, there are [future features](FutureFeatures.md#finer-grained-control-over-memory)
 proposed to allow setting protection and creating mappings within the
 contiguous linear memory.
+
+In the MVP, memory can only be grown. After the MVP, a memory shrinking operation
+may be added. However, due to normal fragmentation, applications are instead
+expected release unused physical pages from the working set using the
+[`discard`](FutureFeatures.md#finer-grained-control-over-memory) future feature.
 
 The result type of `page_size` is `int32` for wasm32 and `int64` for wasm64.
 The result value of `page_size` is an unsigned integer which is a power of 2.
 
 (Note that the `page_size` value need not reflect the actual internal page size
 of the implementation; it just needs to be a value suitable for use with
-`resize_memory`)
+`grow_memory`)
 
 ## Local variables
 
