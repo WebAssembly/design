@@ -22,17 +22,19 @@ Provide access to safe OS-provided functionality including:
    copies the specified range from `Blob` into the range `[addr, addr+length)`
    (where `addr+length <= memory_size`) but implementations are encouraged
    to `mmap(addr, length, MAP_FIXED | MAP_PRIVATE, fd)`
-* `dont_need(addr, length)`: semantically, this operation zeroes the given range
-   but the implementation is encouraged to `madvise(addr, length, MADV_DONTNEED)`
-   (this allows applications to be good citizens and release unused physical
-   pages back to the OS, thereby reducing their RSS and avoiding OOM-killing on
-   mobile)
+* `discard(addr, length)`: semantically, this operation zeroes the given range
+   but the implementation is encouraged to drop the zeroed physical pages from
+   the process's working set (e.g., by calling `madvise(MADV_DONTNEED)` on
+   POSIX)
 * `shmem_create(length)`: create a memory object that can be simultaneously
   shared between multiple linear memories
 * `map_shmem(addr, length, shmem, shmem-offset)`: like `map_file` except
   `MAP_SHARED`, which isn't otherwise valid on read-only Blobs
 * `mprotect(addr, length, prot-flags)`: change protection on the range
   `[addr, addr+length)` (where `addr+length <= memory_size`)
+* `decommit(addr, length)`: equivalent to `mprotect(addr, length, PROT_NONE)`
+  followed by `discard(addr, length)` and potentially more efficient than
+  performing these operations in sequence.
 
 The `addr` and `length` parameters above would be required to be multiples of
 [`page_size`](AstSemantics.md#resizing).
