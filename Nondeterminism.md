@@ -8,6 +8,9 @@ local, nondeterminism.
   * *Local*: when nondeterministic execution occurs, the effect is local,
     there is no "spooky action at a distance".
 
+The [rationale](Rationale.md) document details why WebAssembly is designed as
+detailed in this document.
+
 The limited, local, nondeterministic model implies:
   * Applications can't access data outside the sandbox without going through
     appropriate APIs, or otherwise escape the sandbox.

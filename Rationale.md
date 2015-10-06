@@ -14,8 +14,8 @@ This rationale document tries to list how decisions were made, and where
 tradeoffs were made for the sake of language ergonomics, portability,
 performance, security, and Getting Things Done.
 
-The rationale for [limited local nondeterminism](Nondeterminism.md) is detailed
-in its own document.
+[Limited local nondeterminism](Nondeterminism.md) is detailed in its own
+document, its rationale is also explained here.
 
 
 ## Why AST?
