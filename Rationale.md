@@ -31,7 +31,7 @@ Why not a stack-, register- or SSA-based bytecode?
 
 ## Basic Types Only
 
-WebAssembly only represents [a few types](AstSemantics.md).
+WebAssembly only represents [a few types](AstSemantics.md#Types).
 * More complex types can be formed from these basic types. It's up to the source
   language compiler to express its own types in terms of the basic machine
   types. This allows WebAssembly to present itself as a virtual ISA, and lets
