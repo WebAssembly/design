@@ -192,7 +192,10 @@ As WebAssembly gets implemented and tested with multiple languages on multiple
 architectures there may be a need to revisit some of the decisions:
 
 * When all relevant hardware implement features the same way then there's no
-  need to get creative.
+  need to get creative and add nondeterminism to WebAssembly when realistically
+  there's only one mapping from WebAssenbly expression to ISA-specific
+  operations. One such example is floating-point, where at a high-level most
+  basic instructions follow IEEE-754 semantics.
 * When different languages have different expectations then it's unfortunate if
   WebAssembly measurably penalizes one's performance by enforcing determinism
   which that language doesn't care about, but which another language may want.
