@@ -190,6 +190,19 @@ The current specification is fairly strict when it comes to
 [limited local nondeterminism](Nondeterminism.md) of operations: it tries to
 specify all possible corner cases.
 
+Ideally, WebAssembly would be fully deterministic because a fully deterministic
+platform is easier to reason about, implement and test portably. There are a few
+obvious exceptions where nondeterminism is essential to the API, like random
+number generators, date/time functions or input events. Nondeterminism is only
+specified as a compromise when there is no other practical way to achieve
+[portable](Portability.md) native performance, or when implementation leeway is
+desirable to allow usage of new hardware features or to security-harden certain
+usecases.
+
+When nondeterminism is allowed into WebAssembly it is always done in a limited
+and local manner. This prevents the entire program from being invalid, as would
+be the case with C++ undefined behavior.
+
 As WebAssembly gets implemented and tested with multiple languages on multiple
 architectures there may be a need to revisit some of the decisions:
 

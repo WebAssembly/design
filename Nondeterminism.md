@@ -20,11 +20,6 @@ The limited, local, nondeterministic model implies:
     [Control Flow Integrity](https://research.microsoft.com/apps/pubs/default.aspx?id=64250).
   * WebAssembly has no [nasal demons](https://en.wikipedia.org/w/index.php?title=Nasal_demons).
 
-Ideally, WebAssembly would be fully deterministic (except where nondeterminism
-was essential to the API, like random number generators, date/time functions or
-input events). Nondeterminism is only specified as a compromise when there is no
-other practical way to achieve [portable](Portability.md) native performance.
-
 The following is a list of the places where the WebAssembly specification
 currently admits nondeterminism:
 
