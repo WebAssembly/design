@@ -49,7 +49,7 @@ WebAssembly only represents [a few types](AstSemantics.md#Types).
 
 ## Load/Store Addressing
 
-Load/store instructions include and immediate offset used for
+Load/store instructions include an immediate offset used for
 [addressing](AstSemantics.md#Addressing). This is intended to simplify folding
 of offsets into complex address modes in hardware, and to simplify bounds
 checking optimizations. It offloads some of the optimization work to the
