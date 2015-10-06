@@ -1,25 +1,19 @@
 # Abstract Syntax Tree Semantics
 
-WebAssembly code is represented as an abstract syntax tree
-that has a basic division between statements and
-expressions. Each function body consists of exactly one statement.
-All expressions and operations are typed, with no implicit conversions or
-overloading rules.
+WebAssembly code is represented as an Abstract Syntax Tree (AST) that has a
+basic division between statements and expressions. Each function body consists
+of exactly one statement. All expressions and operations are typed, with no
+implicit conversions or overloading rules.
 
 Verification of WebAssembly code requires only a single pass with constant-time
 type checking and well-formedness checking.
 
-Why not a stack-, register- or SSA-based bytecode?
-* Trees allow a smaller binary encoding: [JSZap][], [Slim Binaries][].
-* [Polyfill prototype][] shows simple and efficient translation to asm.js.
-
-  [JSZap]: https://research.microsoft.com/en-us/projects/jszap/
-  [Slim Binaries]: https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.108.1711
-  [Polyfill prototype]: https://github.com/WebAssembly/polyfill-prototype-1
-
 WebAssembly offers a set of operations that are language-independent but closely
 match operations in many programming languages and are efficiently implementable
 on all modern computers.
+
+The [rationale](Rationale.md) document details why WebAssembly is designed as
+detailed in this document.
 
 ## Traps
 
@@ -134,8 +128,7 @@ The semantics of out-of-bounds accesses are discussed
 The use of infinite-precision in the effective address computation means that
 the addition of the offset to the address does is never wrapped, so if the
 address for an access is out-of-bounds, the effective address will always also
-be out-of-bounds. This is intended to simplify folding of offsets into complex
-address modes in hardware, and to simplify bounds checking optimizations.
+be out-of-bounds.
 
 In wasm32, address operands and offset attributes have type `i32`, and linear
 memory sizes are limited to 4 GiB (of course, actual sizes are further limited
@@ -156,53 +149,12 @@ when considering alignment.
 If the effective address of a memory access is a multiple of the alignment
 attribute value of the memory access, the memory access is considered *aligned*,
 otherwise it is considered *misaligned*. Aligned and misaligned accesses have
-the same behavior. Alignment affects performance as follows:
+the same behavior. 
 
- * Aligned accesses with at least natural alignment are fast.
- * Aligned accesses with less than natural alignment may be somewhat slower
-   (think: implementation makes multiple accesses, either in software or
-    in hardware).
- * Misaligned access of any kind may be *massively* slower
-   (think: implementation takes a signal and fixes things up).
+### Out of Bounds
 
-Thus, it is recommend that WebAssembly producers align frequently-used data
-to permit the use of natural alignment access, and use loads and stores with
-the greatest alignment values practical, while always avoiding misaligned
-accesses.
+Out of bounds accesses trap.
 
-Either tooling or an explicit opt-in "debug mode" in the spec should allow
-execution of a module in a mode that threw exceptions on misaligned access.
-(This mode would incur some runtime cost for branching on most platforms which
-is why it isn't the specified default.)
-
-### Out of bounds
-
-The ideal semantics is for out-of-bounds accesses to trap, but the implications
-are not yet fully clear.
-
-There are several possible variations on this design being discussed and
-experimented with. More measurement is required to understand the associated
-tradeoffs.
-
-  * After an out-of-bounds access, the instance can no longer execute code and any
-    outstanding JavaScript [ArrayBuffer][] aliasing the linear memory are detached.
-    * This would primarily allow hoisting bounds checks above effectful
-      operations.
-    * This can be viewed as a mild security measure under the assumption that
-      while the sandbox is still ensuring safety, the instance's internal state
-      is incoherent and further execution could lead to Bad Things (e.g., XSS
-      attacks).
-  * To allow for potentially more-efficient memory sandboxing, the semantics could
-    allow for a nondeterministic choice between one of the following when an
-    out-of-bounds access occurred.
-    * The ideal trap semantics.
-    * Loads return an unspecified value.
-    * Stores are either ignored or store to an unspecified location in the linear memory.
-    * Either tooling or an explicit opt-in "debug mode" in the spec should allow
-      execution of a module in a mode that threw exceptions on out-of-bounds
-      access.
-
-  [ArrayBuffer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
 
 ### Resizing
 
@@ -220,12 +172,9 @@ MVP, there are [future features](FutureFeatures.md#finer-grained-control-over-me
 proposed to allow setting protection and creating mappings within the
 contiguous linear memory.
 
-The result type of `page_size` is `int32` for wasm32 and `int64` for wasm64.
-The result value of `page_size` is an unsigned integer which is a power of 2.
+The result type of `page_size` is `i32` for wasm32 and `i64` for wasm64.  The
+result value of `page_size` is an unsigned integer which is a power of 2.
 
-(Note that the `page_size` value need not reflect the actual internal page size
-of the implementation; it just needs to be a value suitable for use with
-`resize_memory`)
 
 ## Local variables
 
@@ -242,6 +191,7 @@ of the arguments passed to the function.
 The details of index space for local variables and their types will be further clarified,
 e.g. whether locals with type `i32` and `i64` must be contiguous and separate from
 others, etc.
+
 
 ## Control flow structures
 
@@ -286,10 +236,7 @@ Each function has a *signature*, which consists of:
   * Return types, which are a sequence of local types
   * Argument types, which are a sequence of local types
 
-Note that WebAssembly itself does not support variable-length argument lists
-(aka varargs). C and C++ compilers are expected to implement this functionality
-by storing arguments in a buffer in linear memory and passing a pointer to the
-buffer.
+WebAssembly doesn't support variable-length argument lists (aka varargs).
 
 In the MVP, the length of the return types sequence may only be 0 or 1. This
 restriction may be lifted in the future.
@@ -316,14 +263,11 @@ in the function table.
 
 Function-pointer values are comparable for equality and the `addressof` operator
 is monomorphic. Function-pointer values can be explicitly coerced to and from
-integers (which, in particular, is necessary when loading/storing to memory
-since memory only provides integer types). For security and safety reasons,
-the integer value of a coerced function-pointer value is an abstract index and
-does not reveal the actual machine code address of the target function.
+integers.
 
 In the MVP, function pointer values are local to a single module. The
-[dynamic linking](DynamicLinking.md) feature is necessary for
-two modules to pass function pointers back and forth.
+[dynamic linking](DynamicLinking.md) feature is necessary for two modules to
+pass function pointers back and forth.
 
 Multiple return value calls will be possible, though possibly not in the
 MVP. The details of multiple-return-value calls needs clarification. Calling a
@@ -342,17 +286,7 @@ supported (including NaN values of all possible bit patterns).
   * `f32.const`: produce the value of an f32 immediate
   * `f64.const`: produce the value of an f64 immediate
 
-## Expressions with control flow
-
-Expression trees offer significant size reduction by avoiding the need for
-`set_local`/`get_local` pairs in the common case of an expression with only one,
-immediate use. The following primitives provide AST nodes that express control
-flow and thus allow more opportunities to build bigger expression trees and
-further reduce `set_local`/`get_local` usage (which constitute 30-40% of total
-bytes in the
-[polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1)).
-Additionally, these primitives are useful building blocks for
-WebAssembly-generators (including the JavaScript polyfill prototype).
+## Expressions with Control Flow
 
   * `comma`: evaluate and ignore the result of the first operand, evaluate and
     return the second operand
