@@ -63,23 +63,10 @@ Load/store instructions contain
 [alignment hints](AstSemantics.md#Alignment). This makes it easier to generate
 efficient code on certain hardware architectures.
 
-Alignment affects performance as follows:
-
- * Aligned accesses with at least natural alignment are fast.
- * Aligned accesses with less than natural alignment may be somewhat slower
-   (think: implementation makes multiple accesses, either in software or in
-   hardware).
- * Misaligned access of any kind may be *massively* slower (think:
-   implementation takes a signal and fixes things up).
-
-Thus, it is recommend that WebAssembly producers align frequently-used data to
-permit the use of natural alignment access, and use loads and stores with the
-greatest alignment values practical, while always avoiding misaligned accesses.
-
-Either tooling or an explicit opt-in "debug mode" in the spec should allow
+Either tooling or an explicit opt-in "debug mode" in the spec could allow
 execution of a module in a mode that threw exceptions on misaligned access.
-(This mode would incur some runtime cost for branching on most platforms which
-is why it isn't the specified default.)
+This mode would incur some runtime cost for branching on most platforms which is
+why it isn't the specified default.
 
 
 ## Out of Bounds

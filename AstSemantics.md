@@ -137,6 +137,7 @@ offsets have type `i64`. The MVP only includes wasm32; subsequent versions
 will add support for wasm64 and thus
 [>4 GiB linear memory](FutureFeatures.md#linear-memory-bigger-than-4-gib).
 
+
 ### Alignment
 
 Each linear memory access operation also has an immediate positive integer power
@@ -150,6 +151,20 @@ If the effective address of a memory access is a multiple of the alignment
 attribute value of the memory access, the memory access is considered *aligned*,
 otherwise it is considered *misaligned*. Aligned and misaligned accesses have
 the same behavior. 
+
+Alignment affects performance as follows:
+
+ * Aligned accesses with at least natural alignment are fast.
+ * Aligned accesses with less than natural alignment may be somewhat slower
+   (think: implementation makes multiple accesses, either in software or in
+   hardware).
+ * Misaligned access of any kind may be *massively* slower (think:
+   implementation takes a signal and fixes things up).
+
+Thus, it is recommend that WebAssembly producers align frequently-used data to
+permit the use of natural alignment access, and use loads and stores with the
+greatest alignment values practical, while always avoiding misaligned accesses.
+
 
 ### Out of Bounds
 
