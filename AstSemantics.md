@@ -322,12 +322,13 @@ into the module's main function table. A function from the main table may appear
 once in the indirect function table. Functions not appearing in the indirect function 
 table cannot be called indirectly.
 
-In the MVP, indices into the indirect function table are local to a single module. The
+In the MVP, indices into the indirect function table are local to a single module, so wasm
+modules may use `i32` constants to refer to entries in their own indirect function table. The
 [dynamic linking](DynamicLinking.md) feature is necessary for two modules to pass function
 pointers back and forth. This will mean concatenating indirect function tables
-and making indices into the indirect function table relative to the module in which
-they are used. JITing may also mean appending more functions to the end of the indirect
-function table.
+and adding an operation `address_of` that computes the absolute index into the concatenated
+table from an index in a module's local indirect table. JITing may also mean appending more 
+functions to the end of the indirect function table.
 
 Multiple return value calls will be possible, though possibly not in the
 MVP. The details of multiple-return-value calls needs clarification. Calling a
