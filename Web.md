@@ -25,7 +25,7 @@ and the rest of the Web platform that have been considered:
   distribution networks and to implement
   [dynamic linking](DynamicLinking.md).
 * Once [threads are supported](PostMVP.md#threads), a WebAssembly module would
-  shared (including its heap) between workers via `postMessage()`.
+  be shared (including its heap) between workers via `postMessage()`.
   - This also has the effect of explicitly sharing code so that engines don't
     perform N fetches and compile N copies.
   - WebAssembly may later standardize a more direct way to create a thread that
