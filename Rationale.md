@@ -108,9 +108,11 @@ See [#299](https://github.com/WebAssembly/design/pull/299).
 ## Locals
 
 C/C++ makes it possible to take the address of a function's local values and
-pass this pointer to callees or to other threads. Such address-taken variables
-in the call stack are expected to be in the WebAssembly linear memory, since
-they cannot be represented as locals. This prevents WebAssembly from performing
+pass this pointer to callees or to other threads. Since WebAssembly's local
+variables are outside the address space, C/C++ compilers implement address-taken
+variables by creating a separate stack data structure within linear memory. This
+stack is sometimes called the "aliased" stack, since it is used for variables
+which may be pointed to by pointers. This prevents WebAssembly from performing
 clever optimizations on the stack and liveness of such variables, but this loss
 isn't expected to be consequential.
 
