@@ -1,22 +1,5 @@
 # Design Rationale
 
-WebAssembly was designed incrementally, and desisions were made with a solid
-rationale which may turn out to be incorrect in the future. Sometimes, decisions
-were made without the luxury of data, and the designers would like to revisit
-certain decisions once real end-to-end usecases are met and Science can be
-performed.
-
-You, the reader, may also be interested in understanding why
-[Abstract Syntax Tree (AST)](AstSemantics.md) semantics are the way they are,
-and digging through github's issues and pull requests becomes difficult.
-
-This rationale document tries to list how decisions were made, and where
-tradeoffs were made for the sake of language ergonomics, portability,
-performance, security, and Getting Things Done.
-
-[Limited local nondeterminism](Nondeterminism.md) is detailed in its own
-document, its rationale is also explained here.
-
 
 ## Why AST?
 
