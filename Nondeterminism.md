@@ -8,6 +8,9 @@ local, nondeterminism.
   * *Local*: when nondeterministic execution occurs, the effect is local,
     there is no "spooky action at a distance".
 
+The [rationale](Rationale.md) document details why WebAssembly is designed as
+detailed in this document.
+
 The limited, local, nondeterministic model implies:
   * Applications can't access data outside the sandbox without going through
     appropriate APIs, or otherwise escape the sandbox.
@@ -16,11 +19,6 @@ The limited, local, nondeterministic model implies:
   * Calls and branches always have valid destinations ensuring 
     [Control Flow Integrity](https://research.microsoft.com/apps/pubs/default.aspx?id=64250).
   * WebAssembly has no [nasal demons](https://en.wikipedia.org/w/index.php?title=Nasal_demons).
-
-Ideally, WebAssembly would be fully deterministic (except where nondeterminism
-was essential to the API, like random number generators, date/time functions or
-input events). Nondeterminism is only specified as a compromise when there is no
-other practical way to achieve [portable](Portability.md) native performance.
 
 The following is a list of the places where the WebAssembly specification
 currently admits nondeterminism:
