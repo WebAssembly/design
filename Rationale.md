@@ -177,10 +177,10 @@ functions, as well as remove them.
 
 Expression trees offer significant size reduction by avoiding the need for
 `set_local`/`get_local` pairs in the common case of an expression with only one,
-immediate use. The following primitives provide AST nodes that express control
-flow and thus allow more opportunities to build bigger expression trees and
-further reduce `set_local`/`get_local` usage (which constitute 30-40% of total
-bytes in the
+immediate use. The `comma` and `conditional` primitives provide AST nodes that
+express control flow and thus allow more opportunities to build bigger
+expression trees and further reduce `set_local`/`get_local` usage (which
+constitute 30-40% of total bytes in the
 [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1)).
 Additionally, these primitives are useful building blocks for
 WebAssembly-generators (including the JavaScript polyfill prototype).
