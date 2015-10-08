@@ -313,36 +313,41 @@ buffer.
 In the MVP, the length of the return types sequence may only be 0 or 1. This
 restriction may be lifted in the future.
 
-Direct calls to a function specify the callee by index into a function table.
+Direct calls to a function specify the callee by index into a *main function table*.
 
   * `call`: call function directly
 
-Calls must match the function signature exactly.
+A direct call to a function with a mismatched signature is a module verification error.
 
 Like direct calls, calls to [imports](Modules.md#imports-and-exports) specify
-the callee by index into an import table (defined by the sequence of import
-declarations in the module import section) and the call must match the declared
-signature of the import exactly.
+the callee by index into an *imported function table* defined by the sequence of import
+declarations in the module import section. A direct call to an imported function with a
+mismatched signature is a module verification error.
 
   * `call_import` : call imported function directly
 
-Indirect calls may be made to a value of function-pointer type. A 
-function-pointer value may be obtained for a given function as specified by its index
-in the function table.
+Indirect calls allow calling target functions that are unknown at compile time.
+The target function is an expression of local type `i32` and is always the first
+input into the indirect call.
+A `call_indirect` specifies the *expected* signature of the target function with
+an index into a *signature table* defined by the module. 
+An indirect call to a function with a mismatched signature causes a trap.
 
   * `call_indirect`: call function indirectly
-  * `addressof`: obtain a function pointer value for a given function
 
-Function-pointer values are comparable for equality and the `addressof` operator
-is monomorphic. Function-pointer values can be explicitly coerced to and from
-integers (which, in particular, is necessary when loading/storing to memory
-since memory only provides integer types). For security and safety reasons,
-the integer value of a coerced function-pointer value is an abstract index and
-does not reveal the actual machine code address of the target function.
+Functions from the main function table are made addressable by defining an 
+*indirect function table* that consists of a sequence of indices
+into the module's main function table. A function from the main table may appear more than
+once in the indirect function table. Functions not appearing in the indirect function 
+table cannot be called indirectly.
 
-In the MVP, function pointer values are local to a single module. The
-[dynamic linking](DynamicLinking.md) feature is necessary for
-two modules to pass function pointers back and forth.
+In the MVP, indices into the indirect function table are local to a single module, so wasm
+modules may use `i32` constants to refer to entries in their own indirect function table. The
+[dynamic linking](DynamicLinking.md) feature is necessary for two modules to pass function
+pointers back and forth. This will mean concatenating indirect function tables
+and adding an operation `address_of` that computes the absolute index into the concatenated
+table from an index in a module's local indirect table. JITing may also mean appending more 
+functions to the end of the indirect function table.
 
 Multiple return value calls will be possible, though possibly not in the
 MVP. The details of multiple-return-value calls needs clarification. Calling a
