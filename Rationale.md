@@ -31,9 +31,10 @@ WebAssembly only represents [a few types](AstSemantics.md#Types).
   `f16` only whereas other hardware also supports scalar arithmetic on `f16`,
   and yet other hardware only supports SIMD arithmetic on `f16`. They can be
   added to WebAssembly later without compromising MVP.
-* More complex object types aren't semantically useful for MVP. They may become
-  useful to support other languages, especially when considering
-  [garbage collection](GC.md).
+* More complex object types aren't semantically useful for MVP: WebAssembly
+  seeks to provide the primitive building blocks upon which higher-level
+  constructs can be built. They may become useful to support other languages,
+  especially when considering [garbage collection](GC.md).
 
 
 ## Load/Store Addressing
