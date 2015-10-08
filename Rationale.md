@@ -206,7 +206,7 @@ Nondeterminism is only specified as a compromise when there is no other
 practical way to:
 
 * Achieve [portable](Portability.md) native performance.
-* Lowering resource usage.
+* Lower resource usage.
 * Reduce implementation complexity (both of WebAssembly VMs as well as compilers
   generating WebAssembly binaries).
 * Allow usage of new hardware features.
