@@ -25,9 +25,12 @@ WebAssembly only represents [a few types](AstSemantics.md#Types).
   languages like C/C++ are only semantically meaningful for memory accesses
   since arithmetic get widened to `i32` or `i64`. Avoiding them at least for MVP
   makes it easier to implement a WebAssembly VM.
-* Other types (such as `f16`, `f80`, `i128`) aren't widely supported by existing
+* Other types (such as `f16`, `i128`) aren't widely supported by existing
   hardware and can be supported by runtime libraries if developers wish to use
-  them. They can be added to WebAssembly later without compromising MVP.
+  them. Hardware support is sometimes uneven, e.g. some support load/store of
+  `f16` only whereas other hardware also supports scalar arithmetic on `f16`,
+  and yet other hardware only supports SIMD arithmetic on `f16`. They can be
+  added to WebAssembly later without compromising MVP.
 * More complex object types aren't semantically useful for MVP. They may become
   useful to support other languages, especially when considering
   [garbage collection](GC.md).
