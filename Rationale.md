@@ -160,7 +160,9 @@ The table-based scheme for indirect function calls was motivated by the need
 to represent function pointers as integer values that can be stored into the
 linear memory, as well as to enforce basic safety properties such as a
 calling a function with the wrong signature does not destroy the safety
-guarantees of WebAssembly.
+guarantees of WebAssembly. In particular, an exact signature match implies
+an internal machine-level ABI match, which some engines require to ensure safety.
+An indirection also avoids a possible information leak through raw code addresses.
 
 Languages like C and C++ that compile to WebAssembly also imposed
 requirements, such as the uniqueness of function pointers and the ability
@@ -170,7 +172,8 @@ pointers.
 Several alternatives to direct indices with a heterogeneous indirect function table
 were considered, from alternatives with multiple tables to statically typed function
 pointers that can be mapped back and forth to integers. With the added complication
-of dynamic linking, none of these alternatives perfectly fit the requirements.
+of dynamic linking and dynamic code generation, none of these alternatives perfectly
+fit the requirements.
 
 The current design requires two dynamic checks when invoking a function pointer:
 a bounds check against the size of the indirect function table and a signature check
@@ -178,7 +181,8 @@ for the function at that index against an expected signature. Some dynamic optim
 techniques (e.g. inline caches, or a one-element cache), can reduce the number of
 checks in common cases. Other techniques such as trading a bounds check for a mask or
 segregating the table per signature to require only a bounds check could be considered
-in the future.
+in the future. Also, if tables are small enough, an engine can internally use per-signature
+tables filled with failure handlers to avoid one check.
 
 ## Expressions with Control Flow
 
