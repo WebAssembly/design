@@ -124,11 +124,11 @@ ranges where they can be allocated as local variables.
 Conversely, non-address taken values which are usually on the stack are instead
 represented as locals inside functions. This effectively means that WebAssembly
 has an infinite set of registers, and can choose to spill values as it sees fit
-in a manner unobservable to the hosted code. This implies that there's a shadow
-stack, which is also used to spill return values. This allows strong security
-properties to be enforced, but does mean that two stacks are maintained (one by
-the VM, the other by the compiler which targets WebAssembly) which can lead to
-some inefficiencies.
+in a manner unobservable to the hosted code. This implies that there's a
+separate stack, unaddressable from hosted code, which is also used to spill
+return values. This allows strong security properties to be enforced, but does
+mean that two stacks are maintained (one by the VM, the other by the compiler
+which targets WebAssembly) which can lead to some inefficiencies.
 
 Local values can also be pre-colored, meaning that multiple incoming SSA values
 which have separate liveness can "share" the storage represented by a
