@@ -169,18 +169,29 @@ WebAssembly-generators (including the JavaScript polyfill prototype).
 
 ## Limited Local Nondeterminism
 
-The current specification is fairly strict when it comes to
-[limited local nondeterminism](Nondeterminism.md) of operations: it tries to
-specify all possible corner cases.
+There are a few obvious cases where nondeterminism is essential to the API, such
+as random number generators, date/time functions or input events. The
+WebAssembly specification is fairly strict when it comes to other sources of
+[limited local nondeterminism](Nondeterminism.md) of operations: it specifies
+all possible corner cases, and specifies a single outcome when this can be done
+reasonably.
 
 Ideally, WebAssembly would be fully deterministic because a fully deterministic
-platform is easier to reason about, implement and test portably. There are a few
-obvious exceptions where nondeterminism is essential to the API, like random
-number generators, date/time functions or input events. Nondeterminism is only
-specified as a compromise when there is no other practical way to achieve
-[portable](Portability.md) native performance, or when implementation leeway is
-desirable to allow usage of new hardware features or to security-harden certain
-usecases.
+platform is easier to:
+
+* Reason about.
+* Implement.
+* Test portably.
+
+Nondeterminism is only specified as a compromise when there is no other
+practical way to:
+
+* Achieve [portable](Portability.md) native performance.
+* Lowering resource usage.
+* Reduce implementation complexity (both of WebAssembly VMs as well as compilers
+  generating WebAssembly binaries).
+* Allow usage of new hardware features.
+* Allows implementations to security-harden certain usecases.
 
 When nondeterminism is allowed into WebAssembly it is always done in a limited
 and local manner. This prevents the entire program from being invalid, as would
