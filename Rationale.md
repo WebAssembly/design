@@ -171,7 +171,7 @@ WebAssembly-generators (including the JavaScript polyfill prototype).
 
 There are a few obvious cases where nondeterminism is essential to the API, such
 as random number generators, date/time functions or input events. The
-WebAssembly specification is fairly strict when it comes to other sources of
+WebAssembly specification is strict when it comes to other sources of
 [limited local nondeterminism](Nondeterminism.md) of operations: it specifies
 all possible corner cases, and specifies a single outcome when this can be done
 reasonably.
