@@ -1,5 +1,17 @@
 # Design Rationale
 
+This document describes rationales for WebAssembly's design decisions, acting as
+footnotes to the main design text, keeping the main specification easier to
+read, and making it easier to revisit decisions later without having to plow
+through all the issues and pull requests. This rationale document tries to list
+how decisions were made, and where tradeoffs were made for the sake of language
+ergonomics, portability, performance, security, and Getting Things Done.
+
+WebAssembly was designed incrementally, with multiple implementations being
+pursued concurrently. Design desisions are made with a solid rationale, but as
+implementations move forward and developers start using WebAssembly it may turn
+out to that some decisions were suboptimal.
+
 
 ## Why AST?
 
