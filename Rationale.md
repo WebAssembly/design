@@ -130,9 +130,14 @@ return values. This allows strong security properties to be enforced, but does
 mean that two stacks are maintained (one by the VM, the other by the compiler
 which targets WebAssembly) which can lead to some inefficiencies.
 
-Local values can also be pre-colored, meaning that multiple incoming SSA values
-which have separate liveness can "share" the storage represented by a
-local. This offloads some of the optimization work from the WebAssembly VM.
+Local variables are not in Static Single Assignment (SSA) form, meaning that
+multiple incoming SSA values which have separate liveness can "share" the
+storage represented by a local through the `set_local` operation. From an SSA
+perspective, this means that multiple independent values can share a local
+variable in WebAssembly, which is effectively a kind of pre-coloring that clever
+producers can use to pre-color variables and give hints to a WebAssembly VM's
+register allocation algorithms, offloading some of the optimization work from
+the WebAssembly VM.
 
 
 ## Variable-Length Argument Lists
