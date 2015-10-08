@@ -15,13 +15,16 @@ Why not a stack-, register- or SSA-based bytecode?
 ## Basic Types Only
 
 WebAssembly only represents [a few types](AstSemantics.md#Types).
+
 * More complex types can be formed from these basic types. It's up to the source
   language compiler to express its own types in terms of the basic machine
   types. This allows WebAssembly to present itself as a virtual ISA, and lets
   compilers target it as they would any other ISA.
 * These types are efficiently executed by all modern architectures.
-* Smaller types (such as `i8` and `i16`) are no more efficient and are only
-  semantically meaningful for memory accesses.
+* Smaller types (such as `i8` and `i16`) are usually no more efficient and in
+  languages like C/C++ are only semantically meaningful for memory accesses
+  since arithmetic get widened to `i32` or `i64`. Avoiding them at least for MVP
+  makes it easier to implement a WebAssembly VM.
 * Other types (such as `f16`, `f80`, `i128`) aren't widely supported by existing
   hardware and can be supported by runtime libraries if developers wish to use
   them. They can be added to WebAssembly later without compromising MVP.
