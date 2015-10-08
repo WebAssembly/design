@@ -209,10 +209,6 @@ instead expected release unused physical pages from the working set using the
 The result type of `page_size` is `int32` for wasm32 and `int64` for wasm64.
 The result value of `page_size` is an unsigned integer which is a power of 2.
 
-(Note that the `page_size` value need not reflect the actual internal page size
-of the implementation; it just needs to be a value suitable for use with
-`grow_memory`)
-
 The `page_size` value need not reflect the actual internal page size of the
 implementation; it just needs to be a value suitable for use with
 `resize_memory`.
