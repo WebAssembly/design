@@ -15,7 +15,8 @@ Interested in participating? We suggest you start by:
 With that background understood and communication set up, feel free to
 [file issues][] in the WebAssembly design repository. Please join the
 [W3C Community Group][] before sending pull requests: it provides the legal
-framework that protects the work in this repository.
+framework that protects the work in this repository. Make sure you're affiliated
+with your company or organization in the Community Group, if any.
 
 As WebAssembly moves forward we expect to form an official standards body, which
 will have its own contribution process to the specification.
