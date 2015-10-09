@@ -56,8 +56,7 @@ Some divergences that we've identified as potentially desirable:
   general; that information also guarantees that the polyfill is both correct
   and fast.
 * **[Out of bounds heap access](AstSemantics.md#out-of-bounds)**: Regardless of
-  semantics chosen for out of bounds access in WebAssembly, an asm.js polyfill
-  will follow standard asm.js behavior:
+  WebAssembly behavior, an asm.js polyfill will follow standard asm.js behavior:
   - Out of bound stores are ignored (treated as no-op);
   - Out of bound loads return zero for integer loads or NaN for floating point.
 * **[32-bit integer operations](AstSemantics.md#32-bit-integer-operations)**:
