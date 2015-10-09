@@ -8,9 +8,11 @@ how decisions were made, and where tradeoffs were made for the sake of language
 ergonomics, portability, performance, security, and Getting Things Done.
 
 WebAssembly was designed incrementally, with multiple implementations being
-pursued concurrently. Design desisions are made with a solid rationale, but as
-implementations move forward and developers start using WebAssembly it may turn
-out to that some decisions were suboptimal.
+pursued concurrently. Design decisions are made with what the authors believe to
+be a solid rationale, but as the MVP stablizes, implementations appear, and we
+get experience from real-world codebases, we can revisit the alternatives listed
+below, reevaluate the tradeoffs and update the [design](AstSemantics.md) before
+the MVP is finalized.
 
 
 ## Why AST?
