@@ -211,7 +211,7 @@ The result value of `page_size` is an unsigned integer which is a power of 2.
 
 The `page_size` value need not reflect the actual internal page size of the
 implementation; it just needs to be a value suitable for use with
-`resize_memory`.
+`grow_memory`.
 
 
 ## Local variables
