@@ -181,7 +181,7 @@ greatest alignment values practical, while always avoiding misaligned accesses.
 
 ### Order of evaluation
 
-Operand evaluation order is deterministic. All statements other than control flow constructs need to evaluate their child nodes in the order they appear in the AST.
+Operand evaluation order is deterministic. All nodes other than control flow constructs need to evaluate their child nodes in the order they appear in the AST.
 
 ### Out of Bounds
 
