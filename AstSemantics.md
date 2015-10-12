@@ -179,6 +179,9 @@ Thus, it is recommend that WebAssembly producers align frequently-used data to
 permit the use of natural alignment access, and use loads and stores with the
 greatest alignment values practical, while always avoiding misaligned accesses.
 
+### Order of evaluation
+
+All operands of arithmetic operations are evaluated left-to-right.
 
 ### Out of Bounds
 
