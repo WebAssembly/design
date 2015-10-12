@@ -181,7 +181,7 @@ greatest alignment values practical, while always avoiding misaligned accesses.
 
 ### Order of evaluation
 
-All operands of arithmetic operations are evaluated left-to-right.
+All operands of arithmetic operations and the arguments of function calls are evaluated left-to-right.
 
 ### Out of Bounds
 
