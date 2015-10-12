@@ -181,7 +181,11 @@ greatest alignment values practical, while always avoiding misaligned accesses.
 
 ### Order of evaluation
 
-Operand evaluation order is deterministic. All nodes other than control flow constructs need to evaluate their child nodes in the order they appear in the AST.
+Operand evaluation order is deterministic. 
+All nodes other than control flow constructs need to evaluate their child nodes in the order they appear in the serialized AST.
+
+For example, this s-expression presentation of a i32.add node `(i32.add (i32.const 2) (get_local $x))`
+would first evaluate the `(i32.const 2)` node and afterwards the `(get_local $x)` node.
 
 ### Out of Bounds
 
