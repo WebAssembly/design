@@ -181,7 +181,7 @@ greatest alignment values practical, while always avoiding misaligned accesses.
 
 ### Order of evaluation
 
-All operands of arithmetic operations and the arguments of function calls are evaluated left-to-right.
+All statements other than control flow constructs need to evaluate their child nodes in the order they appear in the AST.
 
 ### Out of Bounds
 
