@@ -246,6 +246,11 @@ are statements.
   * `break`: break to end from nested loop or block
   * `return`: return zero or more values from this function
   * `switch`: switch statement with fallthrough
+  * `br_if`: conditional branch to end from nested loop or block
+  * `br_switch`: a list of pairs of nested loop or block references and
+     immediate indices, a default loop or block reference, and an index operand.
+     Branch to the end of the indexed loop or block if in bounds, otherwise the
+     default loop or block
 
 Loops (`do_while` and `forever`) may only be entered via fallthrough at the top.
 In particular, loops may not be entered directly via a `break`, `continue`, or
