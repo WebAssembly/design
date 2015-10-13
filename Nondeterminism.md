@@ -27,8 +27,6 @@ currently admits nondeterminism:
    shared memory, nondeterminism will be visible through the global sequence of
    API calls. With shared memory, the result of load operations is
    nondeterministic.
- * Out of bounds heap accesses *may* want
-   [some flexibility](AstSemantics.md#out-of-bounds)
  * The value returned by `page_size` is system-dependent. The arguments to the
    [`grow_memory`](AstSemantics.md#resizing) and other 
    [future memory management builtins](FutureFeatures.md#finer-grained-control-over-memory)
