@@ -29,7 +29,7 @@ currently admits nondeterminism:
    nondeterministic.
  * The value returned by `page_size` is system-dependent. The arguments to the
    [`grow_memory`](AstSemantics.md#resizing) and other 
-   [future memory management builtins](FutureFeatures.md#finer-grained-control-over-memory)
+   [future memory management operations](FutureFeatures.md#finer-grained-control-over-memory)
    are required to be multiples of `page_size`.
  * NaN bit patterns in floating point
    [operations](AstSemantics.md#floating-point-operations) and

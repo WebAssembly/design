@@ -316,10 +316,11 @@ it, but fast-math flags are not believed to be important enough:
 
 The [`mmap`](http://pubs.opengroup.org/onlinepubs/009695399/functions/mmap.html)
 syscall has many useful features. While these are all packed into one overloaded
-syscall in POSIX, WebAssembly unpacks this functionality into multiple builtins:
+syscall in POSIX, WebAssembly unpacks this functionality into multiple
+operations:
 
 * the MVP starts with the ability to grow linear memory via a
-  [`grow_memory`](AstSemantics.md#resizing) builtin operation;
+  [`grow_memory`](AstSemantics.md#resizing) operation;
 * proposed
   [future features](FutureFeatures.md#finer-grained-control-over-memory) would
   allow the application to change the protection and mappings for pages in the

@@ -17,11 +17,12 @@ Non-Web environments may include JavaScript VMs (e.g. node.js), however
 WebAssembly is also being designed to be capable of being executed without a
 JavaScript VM present.
 
-The WebAssembly spec will not try to define any large portable libc-like
+The WebAssembly spec itself will not try to define any large portable libc-like
 library. However, certain features that are core to WebAssembly semantics that
-are found in native libc *would* be part of the core WebAssembly spec as either
-primitive opcodes or a function exported by a
-[builtin module](Modules.md#imports-and-exports) (e.g., `sbrk`, `dlopen`).
+are simimilar to functions found in native libc *would* be part of the core
+WebAssembly spec as primitive opcodes (e.g., the `grow_memory` operation, which
+is similar to the `sbrk` function on many systems, and in the future, operations
+similar to `dlopen`).
 
 Where there is overlap between the Web and popular non-Web environments,
 shared specs could be proposed, but these would be separate from the WebAssembly
