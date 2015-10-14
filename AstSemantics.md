@@ -448,6 +448,7 @@ implementations of the remaining required operations.
   * `f32.min`: minimum (binary operator); if either operand is NaN, returns NaN
   * `f32.max`: maximum (binary operator); if either operand is NaN, returns NaN
 <br>
+<br>
   * `f64.add`: addition
   * `f64.sub`: subtraction
   * `f64.mul`: multiplication
