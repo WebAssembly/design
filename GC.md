@@ -138,7 +138,7 @@ that JS and WebAssembly always had access to the same raw functionality.
 
 ## Native GC
 
-In contract to *opaque* reference types, a second feature would be to allow
+In contrast to *opaque* reference types, a second feature would be to allow
 direct GC allocation and field access from WebAssembly code through
 *non-opaque* reference types.
 
