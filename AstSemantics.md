@@ -530,3 +530,5 @@ In the MVP, `has_feature` would always return false. As features were added post
 `has_feature` would start returning true. `has_feature` is a pure function, always
 returning the same value for the same string over the lifetime of a single
 instance and other related (as defined by the host environment) instances.
+See also [feature testing](FeatureTest.md) and
+[better feature testing](FutureFeatures.md#better-feature-testing-support).
