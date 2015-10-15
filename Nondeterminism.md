@@ -23,6 +23,9 @@ The limited, local, nondeterministic model implies:
 The following is a list of the places where the WebAssembly specification
 currently admits nondeterminism:
 
+ * New features will be added to WebAssembly, which means different implementations
+   will have different support for each feature. This can be detected with
+   `has_feature`, but is still a source of differences between executions.
  * [When threads are added as a feature](PostMVP.md#threads), even without
    shared memory, nondeterminism will be visible through the global sequence of
    API calls. With shared memory, the result of load operations is
