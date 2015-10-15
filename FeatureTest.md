@@ -56,10 +56,12 @@ To illustrate, consider 4 examples:
   efficient polyfill (e.g., `f64x2`, which introduces both operators *and*
   types), alternative algorithms need to be provided and selected at load time.
 
-As a hypothetical (not implemented) example of the SIMD example, the toolchain
-could provide a new function attribute that indicated that the function
-was a feature-dependent optimized version of another function (similar to
-`ifunc`s, but without the callback):
+As a hypothetical (not implemented) example polyfilling the SIMD `f64x2`
+feature, the C++ compiler could provide a new function attribute that indicated
+that one function was an optimized, but feature-dependent, version of another
+function (similar to the
+[`ifunc` attribute](https://gcc.gnu.org/onlinedocs/gcc-4.7.2/gcc/Function-Attributes.html#index-g_t_0040code_007bifunc_007d-attribute-2529),
+but without the callback):
 ```
 #include <xmmintrin.h>
 void foo(...) {
