@@ -6,7 +6,8 @@ the pragmatic reality that features are shipped in different orders at different
 times by different engines.
 
 Since some WebAssembly features add operators and all WebAssembly code in a
-module is validated ahead-of-time, the usual JS feature detection pattern:
+module is validated ahead-of-time, the usual JavaScript feature detection
+pattern:
 ```
 if (foo)
     foo();
