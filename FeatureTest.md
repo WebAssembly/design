@@ -55,30 +55,34 @@ To illustrate, consider 4 examples:
   (similar to the `i32.min_s` example above). However, when a SIMD feature has no
   efficient polyfill (e.g., `f64x2`, which introduces both operators *and*
   types), alternative algorithms need to be provided and selected at load time.
-  With toolchain integration, function attributes could be used to annotate
-  functions as feature-dependent optimized versions of other functions:
-  ```
-  #include <xmmintrin.h>
-  void foo(...) {
-    __m128 x, y;           // -> f32x4 locals
-    ...
-    x = _mm_add_ps(x, y);  // -> f32x4.add
-    ...
-  }
-  void foo_f64x2(...) __attribute__((optimizes("foo","f64x2"))) {
-    __m256 x, y;           // -> f64x2 locals
-    ...
-    x = _m_add_pd(x, y);   // -> f64x2.add
-    ...
-  }
+
+As a hypothetical (not implemented) example of the SIMD example, the toolchain
+could provide a new function attribute that indicated that the function
+was a feature-dependent optimized version of another function (similar to
+`ifunc`s, but without the callback):
+```
+#include <xmmintrin.h>
+void foo(...) {
+  __m128 x, y;           // -> f32x4 locals
   ...
-  foo(...);                 // calls either foo or foo_f64x2
-  ```
-  In this example, the toolchain could emit both `foo` and `foo_f64x2` and
-  the load-time polyfill would replace `foo` with `foo_f64x2` if
-  `(has_feature "f64x2")`. Many other strategies are possible to allow finer or
-  coarser granularity substitution. Since this is all in userspace, the
-  strategy can evolve over time.
+  x = _mm_add_ps(x, y);  // -> f32x4.add
+  ...
+}
+void foo_f64x2(...) __attribute__((optimizes("foo","f64x2"))) {
+  __m256 x, y;           // -> f64x2 locals
+  ...
+  x = _m_add_pd(x, y);   // -> f64x2.add
+  ...
+}
+...
+foo(...);                 // calls either foo or foo_f64x2
+```
+In this example, the toolchain could emit both `foo` and `foo_f64x2` as
+function definitions in the "specific layer" binary format. The load-time
+polyfill would then replace `foo` with `foo_f64x2` if
+`(has_feature "f64x2")`. Many other strategies are possible to allow finer or
+coarser granularity substitution. Since this is all in userspace, the strategy
+can evolve over time.
 
 See also the [better feature testing support](FutureFeatures.md#better-feature-testing-support)
 future feature.
