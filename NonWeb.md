@@ -19,7 +19,7 @@ JavaScript VM present.
 
 The WebAssembly spec itself will not try to define any large portable libc-like
 library. However, certain features that are core to WebAssembly semantics that
-are simimilar to functions found in native libc *would* be part of the core
+are similar to functions found in native libc *would* be part of the core
 WebAssembly spec as primitive opcodes (e.g., the `grow_memory` operation, which
 is similar to the `sbrk` function on many systems, and in the future, operations
 similar to `dlopen`).
