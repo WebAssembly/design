@@ -360,9 +360,9 @@ allowing unknown/unsupported AST operators to decode and validate. The runtime
 semantics of these unknown operators could either be to trap or call a
 same-signature module-defined polyfill function. This feature could provide a
 lighter-weight alternative to load-time polyfilling (approach 2 in
-[FeatureTest.md](FeatureTest.md)), especially if layer 1 were to be standardized
-and performed natively such that no user-space translation pass was otherwise
-necessary.
+[FeatureTest.md](FeatureTest.md)), especially if the [specific layer](BinaryEncoding.md)
+were to be standardized and performed natively such that no user-space translation 
+pass was otherwise necessary.
 
 ## Mutable global variables
 
