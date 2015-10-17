@@ -380,8 +380,8 @@ results into the result type.
   * `i32.ge_s`: signed greater than or equal
   * `i32.gt_u`: unsigned greater than
   * `i32.ge_u`: unsigned greater than or equal
-  * `i32.clz`: sign-agnostic count leading zero bits (defined for all values, including zero)
-  * `i32.ctz`: sign-agnostic count trailing zero bits (defined for all values, including zero)
+  * `i32.clz`: sign-agnostic count leading zero bits (All zero bits are considered leading if the value is zero)
+  * `i32.ctz`: sign-agnostic count trailing zero bits (All zero bits are considered trailing if the value is zero)
   * `i32.popcnt`: sign-agnostic count number of one bits
 
 Shifts interpret their shift count operand as an unsigned value. When the shift
