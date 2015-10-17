@@ -340,7 +340,7 @@ be used instead of passing a pointer.
 
 There are also several use cases where an application does not wish to handle
 overflow locally. One family of examples includes implementing optimized bignum
-arithmetic, or optimizing JS Numbers to use int32 operations. Another family
+arithmetic, or optimizing JavaScript Numbers to use int32 operations. Another family
 includes compiling code that doesn't expect overflow to occur, but which wishes
 to have overflow detected and reported if it does happen. These use cases would
 ideally like to have overflow trap, and to allow them to
