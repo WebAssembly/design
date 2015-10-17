@@ -20,8 +20,8 @@ An instance contains:
 * the code of the module from which the instance was loaded;
 * a [linear memory](AstSemantics.md#linear-memory);
 * fully resolved imports;
-* host-specific state (for example, the JS function objects that reflect
-  exported functions to JS);
+* host-specific state (for example, the JavaScript function objects that reflect
+  exported functions to JavaScript);
 * (when [threading](PostMVP.md#threads) is added) TLS variable state;
 * (when [dynamic linking](DynamicLinking.md) is added) the code of multiple modules
   that have been dynamically linked into the same instance;
