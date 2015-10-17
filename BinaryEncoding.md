@@ -132,7 +132,7 @@ Specifically, we'd like to avoid the situation where a future version of WebAsse
 F1 and F2 and vendor V1 implements F1, assigning the next logical opcode indices to F1's new
 opcodes, and V2 implements F2, assigning the same next logical opcode indices to F2's new opcodes 
 and now a single binary has ambiguous semantics if it tries to use either F1 or F2. This type of 
-non-linear feature addition is commonplace in JS and Web APIs and is guarded against by 
+non-linear feature addition is commonplace in JavaScript and Web APIs and is guarded against by 
 having unique names for unique features (and associated [conventions](https://hsivonen.fi/vendor-prefixes/)).
 
 The current proposal is to maintain both the efficiency of indices in the [serialized AST](BinaryEncoding.md#serialized-ast) and the established
@@ -150,5 +150,5 @@ conflict-avoidance practices surrounding string names:
     * This feature would also be most useful for people handwriting the [text format](TextFormat.md).
     * However, such a version declaration does not establish a global "version" for the module
       or affect anything outside of the initialization of the index spaces; decoders would
-      remain versionless and simply add cases for new *names* (as with current JS parsers).
+      remain versionless and simply add cases for new *names* (as with current JavaScript parsers).
 
