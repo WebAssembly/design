@@ -1,3 +1,18 @@
+# Motivating Scenarios
+1. In MVP + 1 (the version of the WebAssembly after MVP), [`i32.min_s`](FutureFeatures.md#additional-integer-operations) is introduced. A developer updates her toolkit and targets the new features. The compiler leverages `i32.min_s` when compiling a module the developer wrote. The developer's WebAssembly module works correctly both on execution environments at MVP, as well as those updated on MVP + 1.
+
+2. In MVP + 1, module authors may now use [Threading](PostMVP.md#threads) APIs in the browser. A developer wants to leverage multithreading in her module.
+  * In one variant of the scenario, the developer does not want to pay the engineering cost of developing and supporting a threaded and non-threaded version of her code. She opts to not support MVP targets, and only support MVP + 1 targets. End-users (browser users) get some message indicating they need MVP support.
+  * In another variant, the developer explicitly authors both MVP-only and MVP + 1 (with threads) code.
+  
+3. [SIMD](PostMVP.md#fixed-width-simd) support is not universally equivalent on all targets. While polyfill variants of SIMD APIs are available, a developer prefers writing dedicated SIMD and non-SIMD versions of her compresion algorithm, because the non-SIMD version performs better in environments without SIMD support, when compared to the SIMD polyfill. She packages her compression code for reuse by third parties.
+
+4. A developer is assembling together an application reusing modules developed in the scenarios above. Their development environment is able to quickly and correctly identify the platform dependencies (e.g. threading, SIMD) and communicate to the developer the implications these dependencies have on the end-application. Some APIs exposed from the threading-aware module are only pertinent to environments supporting threading. As a consequence, our developer needs to write specialized code when threads are/are not supported.
+(Note: we should understand ghis scenario for both forms of WebAssembly reuse currently imagined - dynamic linking and static imports.)
+
+5. A module (for example the compression one), or the application described in the scenarios above, is deployed on a restrictive execution environment where a process may not change memory page access protection flags (certain gaming consoles, to investigate server side deployment scenarios). The module is compiled by the WebAssembly environment, enabling the configuration most specific to the target (i.e. with/without Threads, SIMD, etc).
+  * A variant of this scenario where the environment is additionally separating storage into system-visible and application-visible, the latter not being able to contain machine-executable code (certain phones, to investigate if gaming consoles or server side have a similar sandboxing mechanism).
+
 # Feature Test
 
 The [MVP](MVP.md) allows an application to query which post-MVP features are
