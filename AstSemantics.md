@@ -339,6 +339,10 @@ function that returns multiple values will likely have to be a statement that
 specifies multiple local variables to which to assign the corresponding return
 values.
 
+If a function with a non-void return type finishes evaluating and no `return`
+was issued during the evaluation, the value of the function node is
+returned.
+
 ## Constants
 
 These opcodes have an immediate operand of their associated type which is
