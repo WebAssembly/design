@@ -33,7 +33,7 @@ it can be constant-folded by WebAssembly engines.
 
 To illustrate, consider 4 examples:
 
-* [`i32.min_s`](FutureFeatures.md#additional-integer-operations) - Strategy 2
+* [`i32.min_s`](FutureFeatures.md#additional-integer-operators) - Strategy 2
   could be used to translate `(i32.min_s lhs rhs)` into an equivalent expression
   that stores `lhs` and `rhs` in locals then uses `i32.lt_s` and `conditional`.
 * [Threads](PostMVP.md#threads) - If an application uses `#ifdef` extensively
@@ -51,7 +51,7 @@ To illustrate, consider 4 examples:
   the application to test `(has_feature "mprotect")` to avoid calling the
   `abort()`. The `has_feature` query could be exposed to C++ code via
   the existing `__builtin_cpu_supports`.
-* [SIMD](PostMVP.md#fixed-width-simd) - When SIMD operations have a good-enough
+* [SIMD](PostMVP.md#fixed-width-simd) - When SIMD operators have a good-enough
   polyfill, e.g., `f32x4.fma` via `f32x4.mul`/`add`, Strategy 2 could be used 
   (similar to the `i32.min_s` example above). However, when a SIMD feature has no
   efficient polyfill (e.g., `f64x2`, which introduces both operators *and*
