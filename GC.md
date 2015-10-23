@@ -43,7 +43,7 @@ will define no a priori subtyping relationship.
 For reasons of safety and limiting nondeterminism, imported opaque reference
 types would not be able to be loaded from or stored to linear memory where they
 could otherwise be arbitrarily aliased as integers. Instead, a new set of
-operations would be added for allocating, deallocating, loading and storing
+operators would be added for allocating, deallocating, loading and storing
 from integer-indexed cells that could hold references and were not aliasable by
 linear memory.
 
