@@ -247,39 +247,43 @@ others, etc.
 
 ## Control flow structures
 
-WebAssembly offers basic structured control flow. All control flow structures
-are statements.
+WebAssembly offers basic structured control flow with the following constructs.
+All control flow structures, except `case`, are statements.
 
-  * `block`: a fixed-length sequence of statements
-  * `if`: if statement
-  * `do_while`: do while statement, basically a loop with a conditional branch
-    (back to the top of the loop)
-  * `forever`: infinite loop statement (like `while (1)`), basically an
-    unconditional branch (back to the top of the loop)
-  * `continue`: continue to start of nested loop
-  * `break`: break to end from nested loop or block
-  * `return`: return zero or more values from this function
-  * `switch`: switch statement with fallthrough
+ * `block`: a fixed-length sequence of statements with a label at the end
+ * `loop`: a fixed-length sequence of statements with a label at the end
+           and a loop header label at the top
+ * `if`: if statement with then body
+ * `if_else`: if statement with then and else bodies
+ * `br`: branch to a given label in an enclosing construct (see below)
+ * `br_if`: conditionally branch to a given label in an enclosing construct
+ * `tableswitch`: a jump table transferring which may jump either to enclosed
+                  `case` blocks or to labels in enclosing constructs (see below
+                  for a more detailed description)
+ * `case`: must be an immediate child of `tableswitch`; has a label declared
+           in the `tableswitch`'s table and a body (as above, see below)
+ * `return`: return zero or more values from this function
 
-Loops (`do_while` and `forever`) may only be entered via fallthrough at the top.
-In particular, loops may not be entered directly via a `break`, `continue`, or
-`switch` destination. Break and continue statements can only target blocks or
-loops in which they are nested. These rules guarantee that all control flow
-graphs are well-structured.
+References to labels must occur within an *enclosing construct* that defined
+the label. This means that references to an AST node's label can only happen
+within descendents of the node in the tree. For example, references to a
+`block`'s label can only happen from within the `block`'s body. In practice,
+one can arrange `block`s to put labels wherever one wants to jump to, except
+for one restriction: one can't jump into the middle of a loop from outside
+it. This restriction ensures the well-structured property discussed below.
 
-Structured control flow provides simple and size-efficient binary encoding and
-compilation. Any control flow—even irreducible—can be transformed into structured
-control flow with the
-[Relooper](https://github.com/kripken/emscripten/raw/master/docs/paper.pdf)
-[algorithm](http://dl.acm.org/citation.cfm?id=2048224&CFID=670868333&CFTOKEN=46181900),
-with guaranteed low code size overhead, and typically minimal throughput
-overhead (except for pathological cases of irreducible control
-flow). Alternative approaches can generate reducible control flow via node
-splitting, which can reduce throughput overhead, at the cost of increasing
-code size (potentially very significantly in pathological cases).
-Also,
-[more expressive control flow constructs](FutureFeatures.md#more-expressive-control-flow)
-may be added in the future.
+`tableswitch` instructions have a zero-based array of labels, a label index,
+a "default" label, an index operand, and a list of `case` nodes. A `tableswitch`
+selects which label to branch to by looking up the index value in the label
+array, and transferring control to that label. If the index is out of bounds,
+it transfers control to the "default" label.
+
+`case` nodes can only appear as immediate children of `tableswitch` statements.
+They have a label, which must be declared in the immediately enclosing
+`tableswitch`'s array, and a body which can contain arbitrary code. Control
+falls through the end of a `case` block into the following `case` block, or
+the end of the `tableswitch` in the case of the last `case`.
+
 
 ## Calls
 
