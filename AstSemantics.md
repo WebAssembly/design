@@ -44,24 +44,22 @@ on stack introspection.
 
 ## Types
 
-### Local Types
-
-The following types are called the *local types*:
+WebAssembly has the following *value types*:
 
   * `i32`: 32-bit integer
   * `i64`: 64-bit integer
   * `f32`: 32-bit floating point
   * `f64`: 64-bit floating point
 
-Note that the local types `i32` and `i64` are not inherently signed or
+Note that the value types `i32` and `i64` are not inherently signed or
 unsigned. The interpretation of these types is determined by individual
 operations.
 
-Parameters and local variables use local types.
+Parameters and local variables have value types.
 
 Also note that there is no need for a `void` type; function signatures use
-[sequences of types](#calls) to describe their return values, so a `void`
-return type is represented as an empty sequence.
+[sequences of types](AstSemantics.md#calls) to describe their return values, so
+a `void` return type is represented as an empty sequence.
 
 ## Linear Memory
 
@@ -233,7 +231,7 @@ implementation; it just needs to be a value suitable for use with
 Each function has a fixed, pre-declared number of local variables which occupy a single
 index space local to the function. Parameters are addressed as local variables. Local
 variables do not have addresses and are not aliased by linear memory. Local
-variables have local types and are initialized to the appropriate zero value for their
+variables have value types and are initialized to the appropriate zero value for their
 type at the beginning of the function, except parameters which are initialized to the values
 of the arguments passed to the function.
 
@@ -285,8 +283,8 @@ may be added in the future.
 
 Each function has a *signature*, which consists of:
 
-  * Return types, which are a sequence of local types
-  * Argument types, which are a sequence of local types
+  * Return types, which are a sequence of value types
+  * Argument types, which are a sequence of value types
 
 WebAssembly doesn't support variable-length argument lists (aka
 varargs). Compilers targetting WebAssembly can instead support them through
@@ -309,7 +307,7 @@ mismatched signature is a module verification error.
   * `call_import` : call imported function directly
 
 Indirect calls allow calling target functions that are unknown at compile time.
-The target function is an expression of local type `i32` and is always the first
+The target function is an expression of value type `i32` and is always the first
 input into the indirect call.
 
 A `call_indirect` specifies the *expected* signature of the target function with
