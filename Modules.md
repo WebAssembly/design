@@ -39,7 +39,8 @@ A module defines a set of functions in its
 these functions to be **exports**. The meaning of exports (how and when they are
 called) is defined by the host environment. For example, a minimal shell
 environment might only probe for and call a `_start` export when given a module
-to execute.
+to execute. Exports are exported by name, where the name is an arbitrary byte
+string of a given length. The host may need to mangle these names.
 
 A module can declare a set of **imports**. An import is a tuple containing a
 module name, the name of an exported function to import from the named module,
