@@ -85,7 +85,7 @@ tradeoffs.
     any outstanding JavaScript [ArrayBuffer][] aliasing the linear memory are
     detached.
     * This would primarily allow hoisting bounds checks above effectful
-      operations.
+      operators.
     * This can be viewed as a mild security measure under the assumption that
       while the sandbox is still ensuring safety, the instance's internal state
       is incoherent and further execution could lead to Bad Things (e.g., XSS
@@ -106,7 +106,7 @@ tradeoffs.
 
 ## Resizing
 
-Implementations provide a `page_size` operation which allows them to efficiently
+Implementations provide a `page_size` operator which allows them to efficiently
 map the underlying OS's capabilities to the WebAssembly application, as well as
 to communicate their own implementation details in a useful manner to the
 developer.
@@ -144,7 +144,7 @@ which targets WebAssembly) which can lead to some inefficiencies.
 
 Local variables are not in Static Single Assignment (SSA) form, meaning that
 multiple incoming SSA values which have separate liveness can "share" the
-storage represented by a local through the `set_local` operation. From an SSA
+storage represented by a local through the `set_local` operator. From an SSA
 perspective, this means that multiple independent values can share a local
 variable in WebAssembly, which is effectively a kind of pre-coloring that clever
 producers can use to pre-color variables and give hints to a WebAssembly VM's
@@ -203,7 +203,7 @@ WebAssembly-generators (including the JavaScript polyfill prototype).
 There are a few obvious cases where nondeterminism is essential to the API, such
 as random number generators, date/time functions or input events. The
 WebAssembly specification is strict when it comes to other sources of
-[limited local nondeterminism](Nondeterminism.md) of operations: it specifies
+[limited local nondeterminism](Nondeterminism.md) of operators: it specifies
 all possible corner cases, and specifies a single outcome when this can be done
 reasonably.
 
@@ -233,10 +233,10 @@ architectures there may be a need to revisit some of the decisions:
 
 * When all relevant hardware implement features the same way then there's no
   need to add nondeterminism to WebAssembly when realistically there's only one
-  mapping from WebAssenbly expression to ISA-specific operations. One such
+  mapping from WebAssenbly expression to ISA-specific operators. One such
   example is floating-point: at a high-level most basic instructions follow
   IEEE-754 semantics, it is therefore not necessary to specify WebAssembly's
-  floating-point operations differently from IEEE-754.
+  floating-point operators differently from IEEE-754.
 * When different languages have different expectations then it's unfortunate if
   WebAssembly measurably penalizes one's performance by enforcing determinism
   which that language doesn't care about, but which another language may want.
