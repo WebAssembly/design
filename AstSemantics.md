@@ -2,14 +2,14 @@
 
 WebAssembly code is represented as an Abstract Syntax Tree (AST) that has a
 basic division between statements and expressions. Each function body consists
-of exactly one statement. All expressions and operations are typed, with no
+of exactly one statement. All expressions and operators are typed, with no
 implicit conversions or overloading rules.
 
 Verification of WebAssembly code requires only a single pass with constant-time
 type checking and well-formedness checking.
 
-WebAssembly offers a set of operations that are language-independent but closely
-match operations in many programming languages and are efficiently implementable
+WebAssembly offers a set of operators that are language-independent but closely
+match operators in many programming languages and are efficiently implementable
 on all modern computers.
 
 The [rationale](Rationale.md) document details why WebAssembly is designed as
@@ -17,7 +17,7 @@ detailed in this document.
 
 ## Traps
 
-Some operations may *trap* under some conditions, as noted below. In the MVP,
+Some operators may *trap* under some conditions, as noted below. In the MVP,
 trapping means that execution in the WebAssembly instance is terminated and
 abnormal termination is reported to the outside environment. In a JavaScript
 environment such as a browser, a trap results in throwing a JavaScript exception.
@@ -39,7 +39,7 @@ functionality, in which case such optimizations would be directly observable.
 
 Support for explicit tail calls is planned in
 [the future](FutureFeatures.md#general-purpose-proper-tail-calls),
-which would add an explicit tail-call operation with well-defined effects
+which would add an explicit tail-call operator with well-defined effects
 on stack introspection.
 
 ## Types
@@ -53,7 +53,7 @@ WebAssembly has the following *value types*:
 
 Note that the value types `i32` and `i64` are not inherently signed or
 unsigned. The interpretation of these types is determined by individual
-operations.
+operators.
 
 Parameters and local variables have value types.
 
@@ -83,7 +83,7 @@ will be possible to share linear memory between threads of execution when
 
 ### Linear Memory Accesses
 
-Linear memory access is accomplished with explicit `load` and `store` operations.
+Linear memory access is accomplished with explicit `load` and `store` operators.
 Integer loads can specify a *storage size* which is smaller than the result type as
 well as a signedness which determines whether the bytes are sign- or zero-
 extended into the result type.
@@ -122,13 +122,13 @@ In addition to storing to memory, store instructions produce a value which is th
 
 ### Addressing
 
-Each linear memory access operation has an address operand and an unsigned 
+Each linear memory access operator has an address operand and an unsigned 
 integer byte offset immediate. The immediate is the same type as the address'
 index. The infinite-precision unsigned sum of the address operand's value with 
 the immediate offset's value is called the *effective address*, which is 
 interpreted as an unsigned byte index.
 
-Linear memory operations access the bytes starting at the effective address and
+Linear memory operators access the bytes starting at the effective address and
 extend for the number of bytes implied by the storage size. If any of the
 accessed bytes are beyond `memory_size`, the access is considered
 *out-of-bounds*. A module may optionally define that out-of-bounds includes
@@ -152,7 +152,7 @@ will add support for wasm64 and thus
 
 ### Alignment
 
-Each linear memory access operation also has an immediate positive integer power
+Each linear memory access operator also has an immediate positive integer power
 of 2 alignment attribute, which is the same type as the address' index. An
 alignment value which is the same as the memory attribute size is considered
 to be a *natural* alignment. The alignment applies to the effective address and
@@ -199,9 +199,9 @@ Out of bounds accesses trap.
 
 ### Resizing
 
-In the MVP, linear memory can be resized by a `grow_memory` operation. This
-operation requires its operand to be a multiple of the system
-page size. To determine page size, a nullary `page_size` operation is provided.
+In the MVP, linear memory can be resized by a `grow_memory` operator. This
+operator requires its operand to be a multiple of the system
+page size. To determine page size, a nullary `page_size` operator is provided.
 
  * `grow_memory` : grow linear memory by a given unsigned delta which
     must be a multiple of `page_size`
@@ -214,7 +214,7 @@ proposed to allow setting protection and creating mappings within the
 contiguous linear memory.
 
 In the MVP, memory can only be grown. After the MVP, a memory shrinking
-operation may be added. However, due to normal fragmentation, applications are
+operator may be added. However, due to normal fragmentation, applications are
 instead expected release unused physical pages from the working set using the
 [`discard`](FutureFeatures.md#finer-grained-control-over-memory) future feature.
 
@@ -326,7 +326,7 @@ In the MVP, indices into the indirect function table are local to a single
 module, so wasm modules may use `i32` constants to refer to entries in their own
 indirect function table. The [dynamic linking](DynamicLinking.md) feature is
 necessary for two modules to pass function pointers back and forth. This will
-mean concatenating indirect function tables and adding an operation `address_of`
+mean concatenating indirect function tables and adding an operator `address_of`
 that computes the absolute index into the concatenated table from an index in a
 module's local indirect table. JITing may also mean appending more functions to
 the end of the indirect function table.
@@ -339,7 +339,7 @@ values.
 
 ## Constants
 
-These opcodes have an immediate operand of their associated type which is
+These operators have an immediate operand of their associated type which is
 produced as their result value. All possible values of all types are
 supported (including NaN values of all possible bit patterns).
 
@@ -354,19 +354,19 @@ supported (including NaN values of all possible bit patterns).
     return the second operand
   * `conditional`: basically ternary `?:` operator
 
-New operations may be considered which allow measurably greater
+New operators may be considered which allow measurably greater
 expression-tree-building opportunities.
 
-## 32-bit Integer operations
+## 32-bit Integer operators
 
-Integer operations are signed, unsigned, or sign-agnostic. Signed operations
+Integer operators are signed, unsigned, or sign-agnostic. Signed operators
 use two's complement signed integer representation.
 
-Signed and unsigned operations trap whenever the result cannot be represented
+Signed and unsigned operators trap whenever the result cannot be represented
 in the result type. This includes division and remainder by zero, and signed
 division overflow (`INT32_MIN / -1`). Signed remainder with a non-zero
 denominator always returns the correct value, even when the corresponding
-division would trap. Sign-agnostic operations silently wrap overflowing
+division would trap. Sign-agnostic operators silently wrap overflowing
 results into the result type.
 
   * `i32.add`: sign-agnostic addition
@@ -401,27 +401,27 @@ count is at least the bitwidth of the shift, `shl` and `shr_u` produce `0`, and
 `shr_s` produces `0` if the value being shifted is non-negative, and `-1`
 otherwise.
 
-All comparison operations yield 32-bit integer results with `1` representing
+All comparison operators yield 32-bit integer results with `1` representing
 `true` and `0` representing `false`.
 
-## 64-bit integer operations
+## 64-bit integer operators
 
-The same operations are available on 64-bit integers as the those available for
+The same operators are available on 64-bit integers as the those available for
 32-bit integers.
 
-## Floating point operations
+## Floating point operators
 
 Floating point arithmetic follows the IEEE 754-2008 standard, except that:
  - The sign bit and significand bit pattern of any NaN value returned from a
-   floating point arithmetic operation other than `neg`, `abs`, and `copysign`
+   floating point arithmetic operator other than `neg`, `abs`, and `copysign`
    are not specified. In particular, the "NaN propagation"
    section of IEEE 754-2008 is not required. NaNs do propagate through
-   arithmetic operations according to IEEE 754-2008 rules, the difference here
+   arithmetic operators according to IEEE 754-2008 rules, the difference here
    is that they do so without necessarily preserving the specific bit patterns
    of the original NaNs.
  - WebAssembly uses "non-stop" mode, and floating point exceptions are not
    otherwise observable. In particular, neither alternate floating point
-   exception handling attributes nor the non-computational operations on status
+   exception handling attributes nor the non-computational operators on status
    flags are supported. There is no observable difference between quiet and
    signalling NaN. However, positive infinity, negative infinity, and NaN are
    still always produced as result values to indicate overflow, invalid, and
@@ -435,9 +435,9 @@ Floating point arithmetic follows the IEEE 754-2008 standard, except that:
 In the future, these limitations may be lifted, enabling
 [full IEEE 754-2008 support](FutureFeatures.md#full-ieee-754-2008-conformance).
 
-Note that not all operations required by IEEE 754-2008 are provided directly.
+Note that not all operators required by IEEE 754-2008 are provided directly.
 However, WebAssembly includes enough functionality to support reasonable library
-implementations of the remaining required operations.
+implementations of the remaining required operators.
 
   * `f32.add`: addition
   * `f32.sub`: subtraction
@@ -446,8 +446,8 @@ implementations of the remaining required operations.
   * `f32.abs`: absolute value
   * `f32.neg`: negation
   * `f32.copysign`: copysign
-  * `f32.ceil`: ceiling operation
-  * `f32.floor`: floor operation
+  * `f32.ceil`: ceiling operator
+  * `f32.floor`: floor operator
   * `f32.trunc`: round to nearest integer towards zero
   * `f32.nearest`: round to nearest integer, ties to even
   * `f32.eq`: compare ordered and equal
@@ -460,7 +460,7 @@ implementations of the remaining required operations.
   * `f32.min`: minimum (binary operator); if either operand is NaN, returns NaN
   * `f32.max`: maximum (binary operator); if either operand is NaN, returns NaN
 
-64-bit floating point operations are as follows:
+64-bit floating point operators:
 
   * `f64.add`: addition
   * `f64.sub`: subtraction
@@ -469,8 +469,8 @@ implementations of the remaining required operations.
   * `f64.abs`: absolute value
   * `f64.neg`: negation
   * `f64.copysign`: copysign
-  * `f64.ceil`: ceiling operation
-  * `f64.floor`: floor operation
+  * `f64.ceil`: ceiling operator
+  * `f64.floor`: floor operator
   * `f64.trunc`: round to nearest integer towards zero
   * `f64.nearest`: round to nearest integer, ties to even
   * `f64.eq`: compare ordered and equal
@@ -483,7 +483,7 @@ implementations of the remaining required operations.
   * `f64.min`: minimum (binary operator); if either operand is NaN, returns NaN
   * `f64.max`: maximum (binary operator); if either operand is NaN, returns NaN
 
-`min` and `max` operations treat `-0.0` as being effectively less than `0.0`.
+`min` and `max` operators treat `-0.0` as being effectively less than `0.0`.
 
 In floating point comparisons, the operands are *unordered* if either operand
 is NaN, and *ordered* otherwise.
@@ -529,7 +529,7 @@ Conversions from integer to floating point always succeed, and use
 round-to-nearest ties-to-even rounding.
 
 Truncation from floating point to integer where IEEE 754-2008 would specify an
-invalid operation exception (e.g. when the floating point value is NaN or
+invalid operator exception (e.g. when the floating point value is NaN or
 outside the range which rounds to an integer in range) traps.
 
 ## Feature test

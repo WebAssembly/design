@@ -117,7 +117,7 @@ rather than on the underlying platform. For those details that are dependent
 on the platform, on WebAssembly they follow naturally from having 8-bit bytes,
 32-bit and 64-bit two's complement integers, and
 [32-bit and 64-bit IEEE-754-2008-style floating point support]
-(AstSemantics.md#floating-point-operations).
+(AstSemantics.md#floating-point-operators).
 
 ## Portability of compiled code
 
