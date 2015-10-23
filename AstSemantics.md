@@ -124,11 +124,11 @@ In addition to storing to memory, store instructions produce a value which is th
 
 ### Addressing
 
-Each linear memory access operation also has an address operand and an immediate
-integer byte offset attribute. The immediate is the same type as the address'
-index. The infinite-precision sum of the address operand's value with the byte
-offset attribute's value is called the *effective address*, which is interpreted
-as an unsigned byte index.
+Each linear memory access operation has an address operand and an unsigned 
+integer byte offset immediate. The immediate is the same type as the address'
+index. The infinite-precision unsigned sum of the address operand's value with 
+the immediate offset's value is called the *effective address*, which is 
+interpreted as an unsigned byte index.
 
 Linear memory operations access the bytes starting at the effective address and
 extend for the number of bytes implied by the storage size. If any of the
