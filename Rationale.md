@@ -158,7 +158,7 @@ TODO
 
 The table-based scheme for indirect function calls was motivated by the need
 to represent function pointers as integer values that can be stored into the
-linear memory, as well as to enforce basic safety properties such as a
+linear memory, as well as to enforce basic safety properties such as
 calling a function with the wrong signature does not destroy the safety
 guarantees of WebAssembly. In particular, an exact signature match implies
 an internal machine-level ABI match, which some engines require to ensure safety.
