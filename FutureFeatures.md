@@ -18,11 +18,11 @@ This is covered in the [dynamic linking](DynamicLinking.md) section.
 ## Finer-grained control over memory
 
 Provide access to safe OS-provided functionality including:
-* `map_file(addr, length, Blob, file-offset)`: semantically, this operation
+* `map_file(addr, length, Blob, file-offset)`: semantically, this operator
    copies the specified range from `Blob` into the range `[addr, addr+length)`
    (where `addr+length <= memory_size`) but implementations are encouraged
    to `mmap(addr, length, MAP_FIXED | MAP_PRIVATE, fd)`
-* `discard(addr, length)`: semantically, this operation zeroes the given range
+* `discard(addr, length)`: semantically, this operator zeroes the given range
    but the implementation is encouraged to drop the zeroed physical pages from
    the process's working set (e.g., by calling `madvise(MADV_DONTNEED)` on
    POSIX)
@@ -34,7 +34,7 @@ Provide access to safe OS-provided functionality including:
   `[addr, addr+length)` (where `addr+length <= memory_size`)
 * `decommit(addr, length)`: equivalent to `mprotect(addr, length, PROT_NONE)`
   followed by `discard(addr, length)` and potentially more efficient than
-  performing these operations in sequence.
+  performing these operators in sequence.
 
 The `addr` and `length` parameters above would be required to be multiples of
 [`page_size`](AstSemantics.md#resizing).
@@ -84,7 +84,7 @@ subject to dynamic resource availability.
 It is likely that wasm64 will initially support only 64-bit linear memory
 indices, and wasm32 will leave 64-bit linear memory indices unsupported, so
 that implementations don't have to support multiple index sizes in the same
-instance. However, operators with 32-bit indices and operations with 64-bit
+instance. However, operators with 32-bit indices and operators with 64-bit
 indices will be given separate names to leave open the possibility of
 supporting both in the same instance in the future.
 
@@ -140,7 +140,7 @@ TODO
 ## "Long SIMD"
 
 The initial SIMD API will be a "short SIMD" API, centered around fixed-width
-128-bit types and explicit SIMD operations. This is quite portable and useful,
+128-bit types and explicit SIMD operators. This is quite portable and useful,
 but it won't be able to deliver the full performance capabilities of some of
 today's popular hardware. There is [a proposal in the SIMD.js repository][] for
 a "long SIMD" model which generalizes to wider hardware vector lengths, making
@@ -181,7 +181,7 @@ should support:
     * Code patching for polymorphic inline caching;
 	* Call patching to chain JIT-compiled functions together;
 	* Temporary halt-insertion within functions, to trap if a function start
-      executing while a JIT-compiler's runtime is performing operations
+      executing while a JIT-compiler's runtime is performing operators
       dangerous to that function.
 * Provide JITs access to profile feedback for their JIT-compiled code.
 * Code unloading capabilities, especially in the context of code garbage
@@ -215,7 +215,7 @@ use cases:
   division by zero and so on. It's possible for compilers to add explicit checks
   and handle such cases manually, though more direct support from the platform
   could have advantages:
-  * Non-trapping versions of some opcodes, such as an integer division
+  * Non-trapping versions of some operators, such as an integer division
     instruction that returns zero instead of trapping on division by zero, could
     potentially run faster on some platforms.
   * The ability to recover gracefully from traps in some way could make many
@@ -223,9 +223,9 @@ use cases:
     resuming execution at the trapping instruction with the execution state
     altered, if there can be a reasonable way to specify how that should work.
 
-## Additional integer operations
+## Additional integer operators
 
-* The following operations can be built from other operators already present,
+* The following operators can be built from other operators already present,
   however in doing so they read at least one non-constant input multiple times,
   breaking single-use expression tree formation.
   * `i32.rotr`: sign-agnostic bitwise rotate right
@@ -239,16 +239,16 @@ use cases:
   * `i32.bswap`: sign-agnostic reverse bytes (endian conversion)
   * `i32.bswap16`: sign-agnostic, `bswap16(x)` is `((x>>8)&255)|((x&255)<<8)`
 
-* The following operations are just potentially interesting.
+* The following operators are just potentially interesting.
   * `i32.clrs`: sign-agnostic count leading redundant sign bits (defined for
     all values, including 0)
   * `i32.floor_div_s`: signed division (result is [floored](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
 
-* The following 64-bit-only operations are potentially interesting as well.
+* The following 64-bit-only operators are potentially interesting as well.
   * `i64.mor`: sign-agnostic [8x8 bit-matrix multiply with or](http://mmix.cs.hm.edu/doc/instructions-en.html#MOR)
   * `i64.mxor`: sign-agnostic [8x8 bit-matrix multiply with xor](http://mmix.cs.hm.edu/doc/instructions-en.html#MXOR)
 
-## Additional floating point operations
+## Additional floating point operators
 
   * `f32.minnum`: minimum; if exactly one operand is NaN, returns the other operand
   * `f32.maxnum`: maximum; if exactly one operand is NaN, returns the other operand
@@ -257,28 +257,28 @@ use cases:
   * `f64.maxnum`: maximum; if exactly one operand is NaN, returns the other operand
   * `f64.fma`: fused multiply-add (results always conforming to IEEE 754-2008)
 
-`minnum` and `maxnum` operations would treat `-0.0` as being effectively less
+`minnum` and `maxnum` operators would treat `-0.0` as being effectively less
 than `0.0`.
 
-Note that some operations, like `fma`, may not be available or may not perform
+Note that some operators, like `fma`, may not be available or may not perform
 well on all platforms. These should be guarded by
 [feature tests](FeatureTest.md) so that if available, they behave consistently.
 
-## Floating point approximation operations
+## Floating point approximation operators
 
   * `f32.reciprocal_approximation`: reciprocal approximation
   * `f64.reciprocal_approximation`: reciprocal approximation
   * `f32.reciprocal_sqrt_approximation`: reciprocal sqrt approximation
   * `f64.reciprocal_sqrt_approximation`: reciprocal sqrt approximation
 
-These operations would not required to be fully precise, but the specifics
+These operators would not required to be fully precise, but the specifics
 would need clarification.
 
 ## 16-bit and 128-bit floating point support
 
 For 16-bit floating point support, it may make sense to split the feature
 into two parts: support for just converting between 16-bit and 32-bit or
-64-bit formats possibly folded into load and store operations, and full
+64-bit formats possibly folded into load and store operators, and full
 support for actual 16-bit arithmetic.
 
 128-bit is an interesting question because hardware support for it is very
@@ -294,7 +294,7 @@ quadruple precision.
 
 WebAssembly floating point conforms IEEE 754-2008 in most respects, but there
 are a few areas that are
-[not yet covered](AstSemantics.md#floating-point-operations).
+[not yet covered](AstSemantics.md#floating-point-operators).
 
 IEEE 754-2008 NaN bit pattern propagation is presently permitted but not
 required. It would be possible for WebAssembly to require it in the future.
@@ -302,11 +302,11 @@ required. It would be possible for WebAssembly to require it in the future.
 To support exceptions and alternate rounding modes, one option is to define an
 alternate form for each of `add`, `sub`, `mul`, `div`, `sqrt`, and `fma`. These
 alternate forms would have extra operands for rounding mode, masked traps, and
-old flags, and an extra result for a new flags value. These operations would be
+old flags, and an extra result for a new flags value. These operators would be
 fairly verbose, but it's expected that their use cases will specialized. This
 approach has the advantage of exposing no global (even if only per-thread)
 control and status registers to applications, and to avoid giving the common
-operations the possibility of having side effects.
+operators the possibility of having side effects.
 
 Debugging techniques are also important, but they don't necessarily need to be
 in the spec itself. Implementations are welcome (and encouraged) to support
@@ -329,7 +329,7 @@ There are two different use cases here, one where the application wishes to
 handle overflow locally, and one where it doesn't.
 
 When the application is prepared to handle overflow locally, it would be useful
-to have arithmetic operations which can indicate when overflow occurred. An
+to have arithmetic operators which can indicate when overflow occurred. An
 example of this is the checked arithmetic builtins available in compilers such
 as
 [clang](http://clang.llvm.org/docs/LanguageExtensions.html#checked-arithmetic-builtins)
@@ -340,12 +340,12 @@ be used instead of passing a pointer.
 
 There are also several use cases where an application does not wish to handle
 overflow locally. One family of examples includes implementing optimized bignum
-arithmetic, or optimizing JavaScript Numbers to use int32 operations. Another family
+arithmetic, or optimizing JavaScript Numbers to use int32 operators. Another family
 includes compiling code that doesn't expect overflow to occur, but which wishes
 to have overflow detected and reported if it does happen. These use cases would
 ideally like to have overflow trap, and to allow them to
 [handle trap specially][]. Following the rule that explicitly signed and
-unsigned operations trap whenever the result value can not be represented in the
+unsigned operators trap whenever the result value can not be represented in the
 result type, it would be possible to add explicitly signed and unsigned versions
 of integer `add`, `sub`, and `mul`, which would trap on overflow. The main
 reason we haven't added these already is that they're not efficient for
@@ -368,7 +368,7 @@ pass was otherwise necessary.
 
 In the MVP, there are no global variables; C/C++ global variables are stored in
 linear memory and thus accessed through normal
-[linear memory operations](AstSemantics.md#linear-memory-operations).
+[linear memory operators](AstSemantics.md#linear-memory-operators).
 [Dynamic linking](DynamicLinking.md) will add some form of immutable global
 variable analogous to "symbols" in native binaries. In some cases, though,
 it may be useful to have a fully mutable global variable which lives outside
