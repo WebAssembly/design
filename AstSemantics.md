@@ -532,7 +532,10 @@ outside the range which rounds to an integer in range) traps.
 
 ## Type-parameterized operators.
 
-  * `select`: select one of two operands according to a boolean condition
+  * `select`: a ternary operator with a boolean (i32) condition and two
+    additional operands with the parameterized type. `select` returns the
+    the first type-parameterized operand if the condition operand is non-zero,
+    or the second type-parameterized operand otherwise.
 
 ## Feature test
 
