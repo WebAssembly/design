@@ -2,7 +2,7 @@
 
 ## Why create a new standard when there is already asm.js?
 
-... especially since pthreads ([Mozilla pthreads][], [Chromimum pthreads][]) and
+... especially since pthreads ([Mozilla pthreads][], [Chromium pthreads][]) and
 SIMD ([simd.js][], [Chromium SIMD][], [simd.js in asm.js][]) are coming to
 JavaScript.
 
