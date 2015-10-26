@@ -267,7 +267,7 @@ All control flow structures, except `case`, are statements.
 References to labels must occur within an *enclosing construct* that defined
 the label. This means that references to an AST node's label can only happen
 within descendents of the node in the tree. For example, references to a
-`block`'s label can only happen from within the `block`'s body. In practice,
+`block`'s label can only occur within the `block`'s body. In practice,
 one can arrange `block`s to put labels wherever one wants to jump to, except
 for one restriction: one can't jump into the middle of a loop from outside
 it. This restriction ensures the well-structured property discussed below.
