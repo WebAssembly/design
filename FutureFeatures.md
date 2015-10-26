@@ -323,6 +323,14 @@ enabled only from developer tools, that would enable traps on selected floating
 point exceptions, however care should be taken, since not all floating point
 exceptions indicate bugs.
 
+## Flushing Subnormal Values to Zero
+
+Many popular CPUs have significant stalls when processing subnormal values,
+and support modes where subnormal values are flushed to zero which avoid
+these stalls. And, ARMv7 NEON has no support for subnormal values and always
+flushes them. A mode where floating point computations have subnormals flushed
+to zero in WebAssembly would address these two issues.
+
 ## Integer Overflow Detection
 
 There are two different use cases here, one where the application wishes to
