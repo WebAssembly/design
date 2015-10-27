@@ -1,3 +1,5 @@
+See [rationale](Rationale.md#feature-testing---motivating-scenarios) for motivating scenarios.
+
 # Feature Test
 
 The [MVP](MVP.md) allows an application to query which post-MVP features are
