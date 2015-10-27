@@ -8,7 +8,7 @@ how decisions were made, and where tradeoffs were made for the sake of language
 ergonomics, portability, performance, security, and Getting Things Done.
 
 WebAssembly was designed incrementally, with multiple implementations being
-pursued concurrently. As the MVP stablizes and we get experience from real-world
+pursued concurrently. As the MVP stabilizes and we get experience from real-world
 codebases, we'll revisit the alternatives listed below, reevaluate the tradeoffs
 and update the [design](AstSemantics.md) before the MVP is finalized.
 
@@ -261,7 +261,7 @@ architectures there may be a need to revisit some of the decisions:
 
 * When all relevant hardware implement features the same way then there's no
   need to add nondeterminism to WebAssembly when realistically there's only one
-  mapping from WebAssenbly expression to ISA-specific operators. One such
+  mapping from WebAssembly expression to ISA-specific operators. One such
   example is floating-point: at a high-level most basic instructions follow
   IEEE-754 semantics, it is therefore not necessary to specify WebAssembly's
   floating-point operators differently from IEEE-754.

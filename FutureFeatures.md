@@ -138,7 +138,7 @@ Useful properties of signature-restricted PTCs:
 General-purpose Proper Tail Calls would have no signature restrictions, and
 therefore be more broadly usable than
 [Signature-restricted Proper Tail Calls](AstSemantics.md#signature-restricted-proper-tail-calls),
-though there would be some different performance characataristics.
+though there would be some different performance characteristics.
 
 ## Asynchronous Signals
 
