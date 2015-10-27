@@ -246,7 +246,7 @@ architectures there may be a need to revisit some of the decisions:
 1. [Post-MVP](PostMVP.md), [`i32.min_s`](FutureFeatures.md#additional-integer-operations) is introduced. A WebAssembly developer updates their toolkit so that the compiler may leverage `i32.min_s`. The developer's WebAssembly module works correctly both on execution environments at MVP, as well as those supporting `i32.min_s`.
   * A variant of this, where a few more new opcodes are available, the compiler is updated to be able to leverage all of them, but not all execution targets support all of them. The developer wants to reach as many of their customers as possible, while at the same time providing them with the best experience possible. The developer has to balance the cost of the test matrix resulting from the combinations of possible feature configurations.
 
-2. PostMVP, module authors may now use [Threading](PostMVP.md#threads) APIs in the browser. A developer wants to leverage multithreading in their module.
+2. Post-MVP, module authors may now use [Threading](PostMVP.md#threads) APIs in the browser. A developer wants to leverage multithreading in their module.
   * In one variant of the scenario, our developer does not want to pay the engineering cost of developing and supporting a threaded and non-threaded version of their code. They opt not to support MVP targets, and only support post-MVP targets. End-users (browser users) get some message indicating they need MVP support.
   * In another variant, our developer explicitly authors both MVP-only and post-MVP (with threads) code.
   
