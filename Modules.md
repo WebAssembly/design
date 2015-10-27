@@ -8,7 +8,7 @@ is determined by the module it was loaded from.
 
 A module contains:
 * a set of [imports and exports](Modules.md#imports-and-exports);
-* a section defining the [initial state of linear memory](Modules.md#initial-state-of-linear-memory);
+* a section defining [linear memory](Modules.md#linear-memory-section);
 * a section containing [code](Modules.md#code-section);
 * after the MVP, sections containing [debugging/symbol information](Tooling.md) or
   a reference to separate files containing them; and
@@ -122,12 +122,22 @@ shared `malloc` and coordinated global address ranges). Instead, the
 [dynamic linking future feature](DynamicLinking.md) is intended
 to allow *explicitly* injecting multiple modules into the same instance.
 
-## Initial state of linear memory
+## Linear memory section
 
-A module will contain a section declaring the linear memory size (initial and
-maximum size allowed by [`grow_memory`](AstSemantics.md#resizing) and the
-initial contents of memory, analogous to `.data`, `.rodata`, `.bss` sections in
-native executables (see [binary encoding](BinaryEncoding.md#global-structure)).
+A module may contain an optional section declaring the use of linear memory
+by the module. If the section is absent, the linear memory operators
+`load`, `store`, `memory_size`, and `grow_memory` may not be used in the module.
+
+The linear memory section declares the initial [memory size](AstSemantics.md#linear-memory)
+(which may be subsequently increased by [`grow_memory`](AstSemantics.md#resizing)).
+
+The initial contents of linear memory are zero by default. However, the memory
+section contains a possibly-empty array of *segments* (analogous to `.data`)
+which can specify the initial contents of fixed ranges of memory.
+
+The linear memory section may also contain an optional hint declaring the maximum
+heap usage. This hint is not semantically visible but can help a WebAssembly engine
+to optimize `grow_memory`.
 
 ## Code section
 

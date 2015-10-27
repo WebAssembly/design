@@ -71,7 +71,7 @@ be an untyped array of bytes, and it is unspecified how embedders map this array
 into their process' own [virtual memory][]. The linear memory is sandboxed; it
 does not alias the execution engine's internal data structures, the execution
 stack, local variables, or other process memory. The initial state of linear
-memory is specified by the [module](Modules.md#initial-state-of-linear-memory).
+memory is specified by the [module](Modules.md#linear-memory-section).
 
   [virtual memory]: https://en.wikipedia.org/wiki/Virtual_memory
 
