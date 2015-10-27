@@ -243,7 +243,7 @@ architectures there may be a need to revisit some of the decisions:
 
 
 ## Feature Testing - Motivating Scenarios
-1. [PostMVP](PostMVP.md)), [`i32.min_s`](FutureFeatures.md#additional-integer-operations) is introduced. A WebAssembly developer updates their toolkit and targets the new features. The compiler leverages `i32.min_s` when compiling a module the developer wrote. The developer's WebAssembly module works correctly both on execution environments at MVP, as well as those able to target PostMVP features.
+1. [PostMVP](PostMVP.md), [`i32.min_s`](FutureFeatures.md#additional-integer-operations) is introduced. A WebAssembly developer updates their toolkit and targets the new features. The compiler leverages `i32.min_s` when compiling a module the developer wrote. The developer's WebAssembly module works correctly both on execution environments at MVP, as well as those able to target PostMVP features.
 
 2. PostMVP, module authors may now use [Threading](PostMVP.md#threads) APIs in the browser. A developer wants to leverage multithreading in their module.
   * In one variant of the scenario, our developer does not want to pay the engineering cost of developing and supporting a threaded and non-threaded version of their code. They opt not to support MVP targets, and only support MVP + 1 targets. End-users (browser users) get some message indicating they need MVP support.
