@@ -131,11 +131,7 @@ interpreted as an unsigned byte index.
 Linear memory operators access the bytes starting at the effective address and
 extend for the number of bytes implied by the storage size. If any of the
 accessed bytes are beyond `memory_size`, the access is considered
-*out-of-bounds*. A module may optionally define that out-of-bounds includes
-small effective addresses close to `0`
-(see [discussion](https://github.com/WebAssembly/design/issues/204)).
-The semantics of out-of-bounds accesses are discussed
-[below](AstSemantics.md#out-of-bounds).
+*out-of-bounds*.
 
 The use of infinite-precision in the effective address computation means that
 the addition of the offset to the address never causes wrapping, so if the

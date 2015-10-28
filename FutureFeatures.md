@@ -39,6 +39,13 @@ Provide access to safe OS-provided functionality including:
 The `addr` and `length` parameters above would be required to be multiples of
 [`page_size`](AstSemantics.md#resizing).
 
+The `mprotect` operator would require hardware memory protection to execute
+efficiently and thus may be added as an "optional" feature (requiring a
+[feature test](FeatureTest.md) to use). To support efficient execution even when
+no hardware memory protection is available, a restricted form of `mprotect`
+could be added which is declared statically and only protects low memory
+(providing the expected fault-on-low-memory behavior of native C/C++ apps).
+
 The above list of functionality mostly covers the set of functionality
 provided by the `mmap` OS primitive. One significant exception is that `mmap`
 can allocate noncontiguous virtual address ranges. See the
