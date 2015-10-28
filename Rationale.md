@@ -168,22 +168,33 @@ TODO
 
 ## Indirect Calls
 
-The exact semantics of indirect function calls, function pointers, and what
-happens when calling the wrong function, are still being discussed.
+The table-based scheme for indirect function calls was motivated by the need
+to represent function pointers as integer values that can be stored into the
+linear memory, as well as to enforce basic safety properties such as
+calling a function with the wrong signature does not destroy the safety
+guarantees of WebAssembly. In particular, an exact signature match implies
+an internal machine-level ABI match, which some engines require to ensure safety.
+An indirection also avoids a possible information leak through raw code addresses.
 
-Fundamentally linear memory is a simple collection of bytes, which means that
-some integral representation of function pointers must exist. It's desirable to
-hide the actual address of generated code from untrusted code because that would
-be an unfortunate information leak which could have negative security
-implications. Indirection is therefore desired.
+Languages like C and C++ that compile to WebAssembly also imposed
+requirements, such as the uniqueness of function pointers and the ability
+to compare function pointers to data pointers, or treat data as function
+pointers.
 
-One extra concern is that existing C++ code sometimes stores data inside of what
-is usually a function pointer. This is expected to keep working.
+Several alternatives to direct indices with a heterogeneous indirect function table
+were considered, from alternatives with multiple tables to statically typed function
+pointers that can be mapped back and forth to integers. With the added complication
+of dynamic linking and dynamic code generation, none of these alternatives perfectly
+fit the requirements.
 
-Dynamic linking further complicates this: WebAssembly cannot simply standardize
-on fixed-size function tables since dynamically linked code can add new
-functions, as well as remove them.
-
+The current design requires two dynamic checks when invoking a function pointer:
+a bounds check against the size of the indirect function table and a signature check
+for the function at that index against an expected signature. Some dynamic optimization
+techniques (e.g. inline caches, or a one-element cache), can reduce the number of
+checks in common cases. Other techniques such as trading a bounds check for a mask or
+segregating the table per signature to require only a bounds check could be considered
+in the future. Also, if tables are small enough, an engine can internally use per-signature
+tables filled with failure handlers to avoid one check.
 
 ## Expressions with Control Flow
 
