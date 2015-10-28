@@ -133,11 +133,12 @@ The linear memory section declares the initial [memory size](AstSemantics.md#lin
 
 The initial contents of linear memory are zero by default. However, the memory
 section contains a possibly-empty array of *segments* (analogous to `.data`)
-which can specify the initial contents of fixed ranges of memory.
+which can specify the initial contents of fixed `(offset, length)` ranges of
+memory.
 
-The linear memory section may also contain an optional hint declaring the maximum
-heap usage. This hint is not semantically visible but can help a WebAssembly engine
-to optimize `grow_memory`.
+The linear memory section may also contain an optional hint declaring the expected
+maximum heap usage. This hint is not semantically visible but can help a
+WebAssembly engine to optimize `grow_memory`.
 
 ## Code section
 
