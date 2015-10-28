@@ -15,6 +15,21 @@ on all modern computers.
 The [rationale](Rationale.md) document details why WebAssembly is designed as
 detailed in this document.
 
+## Order of evaluation
+
+The evaluation order of child nodes is deterministic.
+
+All nodes other than control flow constructs need to evaluate their child nodes
+in the order they appear in the serialized AST.
+
+For example, the s-expression presentation of the `i32.add` node
+`(i32.add (set_local $x (i32.const 1)) (set_local $x (i32.const 2)))`
+would first evaluate the child node  `(set_local $x (i32.const 1))` and
+afterwards the child node `(set_local $x (i32.const 2))`.
+
+The value of the local variable $x will be `2` after the `i32.add` node is fully
+evaluated.
+
 ## Traps
 
 Some operators may *trap* under some conditions, as noted below. In the MVP,
@@ -149,7 +164,6 @@ offsets have type `i64`. The MVP only includes wasm32; subsequent versions
 will add support for wasm64 and thus
 [>4 GiB linear memory](FutureFeatures.md#linear-memory-bigger-than-4-gib).
 
-
 ### Alignment
 
 Each linear memory access operator also has an immediate positive integer power
@@ -177,25 +191,9 @@ Thus, it is recommend that WebAssembly producers align frequently-used data to
 permit the use of natural alignment access, and use loads and stores with the
 greatest alignment values practical, while always avoiding misaligned accesses.
 
-### Order of evaluation
-
-The evaluation order of child nodes is deterministic.
-
-All nodes other than control flow constructs need to evaluate their child nodes
-in the order they appear in the serialized AST.
-
-For example, the s-expression presentation of the `i32.add` node
-`(i32.add (set_local $x (i32.const 1)) (set_local $x (i32.const 2)))`
-would first evaluate the child node  `(set_local $x (i32.const 1))` and
-afterwards the child node `(set_local $x (i32.const 2))`.
-
-The value of the local variable $x will be `2` after the `i32.add` node is fully
-evaluated.
-
 ### Out of Bounds
 
 Out of bounds accesses trap.
-
 
 ### Resizing
 
@@ -225,7 +223,6 @@ The `page_size` value need not reflect the actual internal page size of the
 implementation; it just needs to be a value suitable for use with
 `grow_memory`.
 
-
 ## Local variables
 
 Each function has a fixed, pre-declared number of local variables which occupy a single
@@ -241,7 +238,6 @@ of the arguments passed to the function.
 The details of index space for local variables and their types will be further clarified,
 e.g. whether locals with type `i32` and `i64` must be contiguous and separate from
 others, etc.
-
 
 ## Control flow structures
 
