@@ -273,3 +273,11 @@ architectures there may be a need to revisit some of the decisions:
 
 5. The compression algorithm described in scenario 3 is deployed on a restrictive execution environment, as part of an application. In this environment, a process may not change memory page access protection flags (e.g. certain gaming consoles, to investigate server side deployment scenarios). The compression module is compiled by the WebAssembly environment, enabling the configuration most specific to the target (i.e. with/without Threads, SIMD, etc).
   * A variant of this scenario where the environment is additionally separating storage into system-visible and application-visible, the latter not being able to contain machine-executable code (certain phones, to investigate if gaming consoles or server side have a similar sandboxing mechanism).
+
+## Application Development Scenarios
+- why develop in-house on WA
+## Code Reuse Scenarios
+- why reuse; what type of reuse, and what motivates each
+## Deployment Scenarios
+- where would WA be deployed, and why.
+- various constrained environments.
