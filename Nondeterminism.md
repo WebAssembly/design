@@ -23,21 +23,24 @@ The limited, local, nondeterministic model implies:
 The following is a list of the places where the WebAssembly specification
 currently admits nondeterminism:
 
+ * New features will be added to WebAssembly, which means different implementations
+   will have different support for each feature. This can be detected with
+   `has_feature`, but is still a source of differences between executions.
  * [When threads are added as a feature](PostMVP.md#threads), even without
    shared memory, nondeterminism will be visible through the global sequence of
-   API calls. With shared memory, the result of load operations is
+   API calls. With shared memory, the result of load operators is
    nondeterministic.
  * The value returned by `page_size` is system-dependent. The arguments to the
    [`grow_memory`](AstSemantics.md#resizing) and other 
-   [future memory management builtins](FutureFeatures.md#finer-grained-control-over-memory)
+   [future memory management operators](FutureFeatures.md#finer-grained-control-over-memory)
    are required to be multiples of `page_size`.
  * NaN bit patterns in floating point
-   [operations](AstSemantics.md#floating-point-operations) and
+   [operators](AstSemantics.md#floating-point-operators) and
    [conversions](AstSemantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions)
  * [Fixed-width SIMD may want some flexibility](PostMVP.md#fixed-width-simd)
    - In SIMD.js, floating point values may or may not have subnormals flushed to
      zero.
-   - In SIMD.js, operations ending in "Approximation" return approximations that
+   - In SIMD.js, operators ending in "Approximation" return approximations that
      may vary between platforms.
  * Environment-dependent resource limits may be exhausted. A few examples:
    - Memory allocation may fail.
@@ -46,7 +49,7 @@ currently admits nondeterminism:
      isn't located in the program-accessible linear memory.
    - Resources such as handles may get exhausted.
 
-Users of C, C++, and similar languages should be aware that operations which
+Users of C, C++, and similar languages should be aware that operators which
 have defined or constrained behavior in WebAssembly itself may nonetheless still
 have undefined behavior
 [at the source code level](CAndC++.md#undefined-behavior).
