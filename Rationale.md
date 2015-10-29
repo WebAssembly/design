@@ -112,6 +112,11 @@ to communicate their own implementation details in a useful manner to the
 developer.
 
 
+## Linear memory disabled if no linear memory section
+
+See [#107](https://github.com/WebAssembly/spec/pull/107).
+
+
 ## Control Flow
 
 See [#299](https://github.com/WebAssembly/design/pull/299).
