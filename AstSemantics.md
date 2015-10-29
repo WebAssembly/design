@@ -241,7 +241,7 @@ WebAssembly offers basic structured control flow. All control flow structures
 are statements.
 
   * `block`: a fixed-length sequence of statements
-  * `if`: if statement
+  * `if`: if statement with `then` and `else` children
   * `do_while`: do while statement, basically a loop with a conditional branch
     (back to the top of the loop)
   * `forever`: infinite loop statement (like `while (1)`), basically an
