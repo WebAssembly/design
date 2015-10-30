@@ -44,6 +44,10 @@ The tooling we expect to support includes:
   - Instrumentation-based.
 * Process dump: local variables, call stack, heap, global variables, list of
   threads.
+* JavaScript+WebAssembly size optimization tool: huge WebAssembly+JavaScript
+  mixed applications, WebAssembly calling to JavaScript libraries which
+  communicate with the rest of the Web platform, need tooling to perform
+  dead code stripping and global optimization across the API boundary.
 
 In many cases, the tooling will be pure WebAssembly without any tool-specific
 support from WebAssembly. This won't be possible for debugging, but should be
