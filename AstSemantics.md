@@ -522,6 +522,13 @@ Truncation from floating point to integer where IEEE 754-2008 would specify an
 invalid operator exception (e.g. when the floating point value is NaN or
 outside the range which rounds to an integer in range) traps.
 
+## Type-parameterized operators.
+
+  * `select`: a ternary operator with a boolean (i32) condition and two
+    additional operands, which must have the same type as each other. `select`
+    returns the the first of these two operands if the condition operand is
+    non-zero, or the second otherwise.
+
 ## Feature test
 
 To support [feature testing](FeatureTest.md), an AST node would be provided:
