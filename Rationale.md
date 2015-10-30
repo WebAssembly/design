@@ -259,17 +259,59 @@ architectures there may be a need to revisit some of the decisions:
 
 
 ## Motivating Scenarios for Feature Testing
-1. [Post-MVP](PostMVP.md), [`i32.min_s`](FutureFeatures.md#additional-integer-operations) is introduced. A WebAssembly developer updates their toolkit so that the compiler may leverage `i32.min_s`. The developer's WebAssembly module works correctly both on execution environments at MVP, as well as those supporting `i32.min_s`.
-  * A variant of this, where a few more new opcodes are available, the compiler is updated to be able to leverage all of them, but not all execution targets support all of them. The developer wants to reach as many of their customers as possible, while at the same time providing them with the best experience possible. The developer has to balance the cost of the test matrix resulting from the combinations of possible feature configurations.
 
-2. Post-MVP, module authors may now use [Threading](PostMVP.md#threads) APIs in the browser. A developer wants to leverage multithreading in their module.
-  * In one variant of the scenario, our developer does not want to pay the engineering cost of developing and supporting a threaded and non-threaded version of their code. They opt not to support MVP targets, and only support post-MVP targets. End-users (browser users) get some message indicating they need MVP support.
-  * In another variant, our developer explicitly authors both MVP-only and post-MVP (with threads) code.
-  
-3. [SIMD](PostMVP.md#fixed-width-simd) support is not universally equivalent on all targets. While polyfill variants of SIMD APIs are available, a developer prefers writing dedicated SIMD and non-SIMD versions of their compression algorithm, because the non-SIMD version performs better in environments without SIMD support, when compared to the SIMD polyfill. They package their compression code for reuse by third parties.
+1. [Post-MVP](PostMVP.md),
+[`i32.min_s`](FutureFeatures.md#additional-integer-operations) is introduced. A
+WebAssembly developer updates their toolkit so that the compiler may leverage
+`i32.min_s`. The developer's WebAssembly module works correctly both on
+execution environments at MVP, as well as those supporting `i32.min_s`.
 
-4. An application author is assembling together an application by reusing modules such as those developed in the scenarios above. The application author's development environment is able to quickly and correctly identify the platform dependencies (e.g. threading, SIMD) and communicate back to the application author the implications these dependencies have on the end-application. Some APIs exposed from the threading-aware module are only pertinent to environments supporting threading. As a consequence, the application author needs to write specialized code when threads are/are not supported.
-(Note: we should understand this scenario for both forms of WebAssembly reuse currently imagined: dynamic linking and static imports.)
+  * A variant of this, where a few more new opcodes are available, the compiler
+is updated to be able to leverage all of them, but not all execution targets
+support all of them. The developer wants to reach as many of their customers as
+possible, while at the same time providing them with the best experience
+possible. The developer has to balance the cost of the test matrix resulting
+from the combinations of possible feature configurations.
 
-5. The compression algorithm described in scenario 3 is deployed on a restrictive execution environment, as part of an application. In this environment, a process may not change memory page access protection flags (e.g. certain gaming consoles, to investigate server side deployment scenarios). The compression module is compiled by the WebAssembly environment, enabling the configuration most specific to the target (i.e. with/without Threads, SIMD, etc).
-  * A variant of this scenario where the environment is additionally separating storage into system-visible and application-visible, the latter not being able to contain machine-executable code (certain phones, to investigate if gaming consoles or server side have a similar sandboxing mechanism).
+2. Post-MVP, module authors may now use [Threading](PostMVP.md#threads) APIs in
+the browser. A developer wants to leverage multithreading in their module.
+
+  * In one variant of the scenario, our developer does not want to pay the
+engineering cost of developing and supporting a threaded and non-threaded
+version of their code. They opt not to support MVP targets, and only support
+post-MVP targets. End-users (browser users) get some message indicating they
+need MVP support.
+
+  * In another variant, our developer explicitly authors both MVP-only and post-
+MVP (with threads) code.
+
+3. [SIMD](PostMVP.md#fixed-width-simd) support is not universally equivalent on
+all targets. While polyfill variants of SIMD APIs are available, a developer
+prefers writing dedicated SIMD and non-SIMD versions of their compression
+algorithm, because the non-SIMD version performs better in environments without
+SIMD support, when compared to the SIMD polyfill. They package their compression
+code for reuse by third parties.
+
+4. An application author is assembling together an application by reusing
+modules such as those developed in the scenarios above. The application author's
+development environment is able to quickly and correctly identify the platform
+dependencies (e.g. threading, SIMD) and communicate back to the application
+author the implications these dependencies have on the end-application. Some
+APIs exposed from the threading-aware module are only pertinent to environments
+supporting threading. As a consequence, the application author needs to write
+specialized code when threads are/are not supported. (Note: we should understand
+this scenario for both forms of WebAssembly reuse currently imagined: dynamic
+linking and static imports.)
+
+5. The compression algorithm described in scenario 3 is deployed on a
+restrictive execution environment, as part of an application. In this
+environment, a process may not change memory page access protection flags (e.g.
+certain gaming consoles, to investigate server side deployment scenarios). The
+compression module is compiled by the WebAssembly environment, enabling the
+configuration most specific to the target (i.e. with/without Threads, SIMD,
+etc).
+
+  * A variant of this scenario where the environment is additionally separating
+storage into system-visible and application-visible, the latter not being able
+to contain machine-executable code (certain phones, to investigate if gaming
+consoles or server side have a similar sandboxing mechanism).
