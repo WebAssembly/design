@@ -242,7 +242,9 @@ All control flow structures, except `case`, are statements.
 
  * `block`: a fixed-length sequence of statements with a label at the end
  * `loop`: a fixed-length sequence of statements with a label at the end
-           and a loop header label at the top
+           and a loop header label at the top (note: this does not loop by
+           itself, so one would often combine this with a br_if at the end
+           to form a branch back to the top)
  * `if`: if statement with then body
  * `if_else`: if statement with then and else bodies
  * `br`: branch to a given label in an enclosing construct (see below)
@@ -262,8 +264,8 @@ one can arrange `block`s to put labels wherever one wants to jump to, except
 for one restriction: one can't jump into the middle of a loop from outside
 it. This restriction ensures the well-structured property discussed below.
 
-`tableswitch` instructions have a zero-based array of labels, a label index,
-a "default" label, an index operand, and a list of `case` nodes. A `tableswitch`
+`tableswitch` instructions have a zero-based array of labels, a "default"
+label, an index operand, and a list of `case` nodes. A `tableswitch`
 selects which label to branch to by looking up the index value in the label
 array, and transferring control to that label. If the index is out of bounds,
 it transfers control to the "default" label.
