@@ -18,7 +18,7 @@ There are two main benefits WebAssembly provides:
    decoded much faster than JavaScript can be parsed ([experiments][] show more
    than 20× faster).  On mobile, large compiled codes can easily take 20–40
    seconds *just to parse*, so native decoding (especially when combined with
-   other techniques like [streaming][]) for better-than-gzip compression) is
+   other techniques like [streaming][] for better-than-gzip compression) is
    critical to providing a good cold-load user experience.
 
 2. By avoiding the simultaneous asm.js constraints of [AOT][]-[compilability][]
