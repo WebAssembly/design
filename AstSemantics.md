@@ -195,7 +195,8 @@ Out of bounds accesses trap.
 
 In the MVP, linear memory can be resized by a `grow_memory` operator. This
 operator requires its operand to be a multiple of the WebAssembly page size,
-which is 64KiB on all engines.
+which is 64KiB on all engines (though large page support may be added in 
+the [future](FutureFeatures.md#large-page-support).
 
  * `grow_memory` : grow linear memory by a given unsigned delta which
     must be a multiple of the page size.
