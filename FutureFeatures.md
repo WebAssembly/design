@@ -53,7 +53,7 @@ can allocate noncontiguous virtual address ranges. See the
 
 ## Large page support
 
-Some platforms offer support for memory pages as large as 16GiB, which in some
+Some platforms offer support for memory pages as large as 16GiB, which 
 can improve  the efficiency of memory management in some situations. WebAssembly
 may offer programs the option to specify a larger page size than the [default] (AstSemantics.md#resizing).
 
