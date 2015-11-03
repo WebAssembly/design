@@ -247,12 +247,18 @@ All control flow structures, except `case`, are statements.
  * `if_else`: if statement with then and else bodies
  * `br`: branch to a given label in an enclosing construct (see below)
  * `br_if`: conditionally branch to a given label in an enclosing construct
- * `tableswitch`: a jump table transferring which may jump either to enclosed
-                  `case` blocks or to labels in enclosing constructs (see below
-                  for a more detailed description)
- * `case`: must be an immediate child of `tableswitch`; has a label declared
-           in the `tableswitch`'s table and a body (as above, see below)
- * `return`: return zero or more values from this function
+ * `tableswitch`: a jump table with an index operand selecting one of the
+   targets described by the following enclosed pseudo operators:
+   * `case` or `case_br`: carries the index constant for which it is selected
+   * `default` or `default_br`: selected when the index is larger than any
+     occurring constant
+
+   The regular variants of these have an immediate body that is executed and
+   then fall through to the next target (or the end of the `tableswitch`),
+   whereas the `_br` variants just contain a reference to a label that control
+   is transferred to directly.
+
+ * `return`: return zero or one value from this function
 
 References to labels must occur within an *enclosing construct* that defined
 the label. This means that references to an AST node's label can only happen
@@ -262,18 +268,11 @@ one can arrange `block`s to put labels wherever one wants to jump to, except
 for one restriction: one can't jump into the middle of a loop from outside
 it. This restriction ensures the well-structured property discussed below.
 
-`tableswitch` instructions have a zero-based array of labels, a label index,
-a "default" label, an index operand, and a list of `case` nodes. A `tableswitch`
-selects which label to branch to by looking up the index value in the label
-array, and transferring control to that label. If the index is out of bounds,
-it transfers control to the "default" label.
-
-`case` nodes can only appear as immediate children of `tableswitch` statements.
-They have a label, which must be declared in the immediately enclosing
-`tableswitch`'s array, and a body which can contain arbitrary code. Control
-falls through the end of a `case` block into the following `case` block, or
-the end of the `tableswitch` in the case of the last `case`.
-
+A `tableswitch` represents a jump table. For that reason, its case constants
+must form a zero-based and dense range, i.e., be distinct and cover all values
+from 0 to the maximum occurring constant.
+There must be exactly one default target as well. The ordering among these
+targets is unconstrained, however.
 
 ## Calls
 
