@@ -106,13 +106,12 @@ tradeoffs.
 
 ## Resizing
 
-To allow efficient virtual-memory based techniques for bounds checking, memory
-sizes are required to be page-aligned.
+To allow efficient engines to employ virtual-memory based techniques for bounds
+checking, memory sizes are required to be page-aligned.
 For portability across a range of CPU architectures and operating systems,
 WebAssembly defines a fixed page size.
 Programs can depend on this fixed page size and still remain portable across all
-WebAssembly engines which employ efficient virtual memory techniques for bounds\
-checking.
+WebAssembly engines.
 64KiB represents the least common multiple of many platforms and CPUs.
 In the future, WebAssembly may offer the ability to use larger page sizes on
 some platforms for increased TLB efficiency.
