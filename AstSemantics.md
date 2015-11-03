@@ -269,8 +269,8 @@ array, or the default if the index is out of bounds. `tableswitch` targets may
 be either labels or `case` nodes.
 
 A `case` node consists of a statement, and may be referenced in the parent
-`tableswitch`'s array. Control falls through into the next `case` (or the end
-of the `tableswitch`).
+`tableswitch`'s array. Unless exited explicitly, control falls through into the
+next `case` or the end of the `tableswitch`.
 
 
 ## Calls
