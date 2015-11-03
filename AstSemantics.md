@@ -249,9 +249,9 @@ All control flow structures, except `case`, are statements.
  * `if_else`: if statement with then and else bodies
  * `br`: branch to a given label in an enclosing construct (see below)
  * `br_if`: conditionally branch to a given label in an enclosing construct
- * `tableswitch`: a jump table transferring which may jump either to enclosed
-                  `case` blocks or to labels in enclosing constructs (see below
-                  for a more detailed description)
+ * `tableswitch`: a jump table which may jump either to enclosed `case` blocks
+                  or to labels in enclosing constructs (see below for a more
+                  detailed description)
  * `case`: must be an immediate child of `tableswitch`; has a label declared
            in the `tableswitch`'s table and a body (as above, see below)
  * `return`: return zero or more values from this function
