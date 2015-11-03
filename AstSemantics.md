@@ -194,12 +194,11 @@ Out of bounds accesses trap.
 ### Resizing
 
 In the MVP, linear memory can be resized by a `grow_memory` operator. This
-operator requires its operand to be a multiple of the system
-page size. To determine page size, a nullary `page_size` operator is provided.
+operator requires its operand to be a multiple of the WebAssembly page size,
+which is 64KiB on all engines.
 
  * `grow_memory` : grow linear memory by a given unsigned delta which
-    must be a multiple of `page_size`
- * `page_size` : nullary constant function returning page size in bytes
+    must be a multiple of 64KiB.
 
 As stated [above](AstSemantics.md#linear-memory), linear memory is contiguous,
 meaning there are no "holes" in the linear address space. After the
@@ -211,13 +210,6 @@ In the MVP, memory can only be grown. After the MVP, a memory shrinking
 operator may be added. However, due to normal fragmentation, applications are
 instead expected release unused physical pages from the working set using the
 [`discard`](FutureFeatures.md#finer-grained-control-over-memory) future feature.
-
-The result type of `page_size` is `int32` for wasm32 and `int64` for wasm64.
-The result value of `page_size` is an unsigned integer which is a power of 2.
-
-The `page_size` value need not reflect the actual internal page size of the
-implementation; it just needs to be a value suitable for use with
-`grow_memory`.
 
 ## Local variables
 
