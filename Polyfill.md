@@ -70,6 +70,10 @@ Some divergences that we've identified as potentially desirable:
   standard behavior:
   - Return zero when conversion from floating point to integer fails;
   - Optionally canonicalize NaN values.
+* **[NaN bit-pattern propagation](AstSemantics.md#floating-point-operators)**:
+  Regardless of WebAssembly behavior, an asm.js polyfill will follow its
+  standard behavior:
+  - Optionally canonicalize NaN values.
 
 ## Polyfill Evolution
 
