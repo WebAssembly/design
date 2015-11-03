@@ -198,7 +198,7 @@ operator requires its operand to be a multiple of the WebAssembly page size,
 which is 64KiB on all engines.
 
  * `grow_memory` : grow linear memory by a given unsigned delta which
-    must be a multiple of 64KiB.
+    must be a multiple of the page size.
 
 As stated [above](AstSemantics.md#linear-memory), linear memory is contiguous,
 meaning there are no "holes" in the linear address space. After the
