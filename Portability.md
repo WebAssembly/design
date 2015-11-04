@@ -46,7 +46,7 @@ characteristics:
 ## API
 
 WebAssembly does not specify any APIs or syscalls, only an 
-[import mechanism](MVP.md#modules) where the set of available imports is defined
+[import mechanism](Modules.md) where the set of available imports is defined
 by the host environment. In a [Web](Web.md) environment, functionality is
 accessed through the Web APIs defined by the
 [Web Platform](https://en.wikipedia.org/wiki/Open_Web_Platform).

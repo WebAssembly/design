@@ -194,12 +194,12 @@ Out of bounds accesses trap.
 ### Resizing
 
 In the MVP, linear memory can be resized by a `grow_memory` operator. This
-operator requires its operand to be a multiple of the system
-page size. To determine page size, a nullary `page_size` operator is provided.
+operator requires its operand to be a multiple of the WebAssembly page size,
+which is 64KiB on all engines (though large page support may be added in 
+the [future](FutureFeatures.md#large-page-support).
 
  * `grow_memory` : grow linear memory by a given unsigned delta which
-    must be a multiple of `page_size`
- * `page_size` : nullary constant function returning page size in bytes
+    must be a multiple of the page size.
 
 As stated [above](AstSemantics.md#linear-memory), linear memory is contiguous,
 meaning there are no "holes" in the linear address space. After the
@@ -211,13 +211,6 @@ In the MVP, memory can only be grown. After the MVP, a memory shrinking
 operator may be added. However, due to normal fragmentation, applications are
 instead expected release unused physical pages from the working set using the
 [`discard`](FutureFeatures.md#finer-grained-control-over-memory) future feature.
-
-The result type of `page_size` is `int32` for wasm32 and `int64` for wasm64.
-The result value of `page_size` is an unsigned integer which is a power of 2.
-
-The `page_size` value need not reflect the actual internal page size of the
-implementation; it just needs to be a value suitable for use with
-`grow_memory`.
 
 ## Local variables
 
@@ -237,39 +230,45 @@ others, etc.
 
 ## Control flow structures
 
-WebAssembly offers basic structured control flow. All control flow structures
-are statements.
+WebAssembly offers basic structured control flow with the following constructs.
+All control flow structures, except `case`, are statements.
 
-  * `block`: a fixed-length sequence of statements
-  * `if`: if statement
-  * `do_while`: do while statement, basically a loop with a conditional branch
-    (back to the top of the loop)
-  * `forever`: infinite loop statement (like `while (1)`), basically an
-    unconditional branch (back to the top of the loop)
-  * `continue`: continue to start of nested loop
-  * `break`: break to end from nested loop or block
-  * `return`: return zero or more values from this function
-  * `switch`: switch statement with fallthrough
+ * `block`: a fixed-length sequence of statements with a label at the end
+ * `loop`: a fixed-length sequence of statements with a label at the end
+           and a loop header label at the top (note: this does not loop by
+           itself, so one would often combine this with a br_if at the end
+           to form a branch back to the top)
+ * `if`: if statement with then body
+ * `if_else`: if statement with then and else bodies
+ * `br`: branch to a given label in an enclosing construct (see below)
+ * `br_if`: conditionally branch to a given label in an enclosing construct
+ * `tableswitch`: a jump table which may jump either to enclosed `case` blocks
+                  or to labels in enclosing constructs (see below for a more
+                  detailed description)
+ * `case`: must be an immediate child of `tableswitch`; has a label declared
+           in the `tableswitch`'s table and a body (as above, see below)
+ * `return`: return zero or more values from this function
 
-Loops (`do_while` and `forever`) may only be entered via fallthrough at the top.
-In particular, loops may not be entered directly via a `break`, `continue`, or
-`switch` destination. Break and continue statements can only target blocks or
-loops in which they are nested. These rules guarantee that all control flow
-graphs are well-structured.
+References to labels must occur within an *enclosing construct* that defined
+the label. This means that references to an AST node's label can only happen
+within descendents of the node in the tree. For example, references to a
+`block`'s label can only occur within the `block`'s body. In practice,
+one can arrange `block`s to put labels wherever one wants to jump to, except
+for one restriction: one can't jump into the middle of a loop from outside
+it. This restriction ensures the well-structured property discussed below.
 
-Structured control flow provides simple and size-efficient binary encoding and
-compilation. Any control flow—even irreducible—can be transformed into structured
-control flow with the
-[Relooper](https://github.com/kripken/emscripten/raw/master/docs/paper.pdf)
-[algorithm](http://dl.acm.org/citation.cfm?id=2048224&CFID=670868333&CFTOKEN=46181900),
-with guaranteed low code size overhead, and typically minimal throughput
-overhead (except for pathological cases of irreducible control
-flow). Alternative approaches can generate reducible control flow via node
-splitting, which can reduce throughput overhead, at the cost of increasing
-code size (potentially very significantly in pathological cases).
-Also,
-[more expressive control flow constructs](FutureFeatures.md#more-expressive-control-flow)
-may be added in the future.
+`tableswitch` instructions have a zero-based array of labels, a "default"
+label, an index operand, and a list of `case` nodes. A `tableswitch`
+selects which label to branch to by looking up the index value in the label
+array, and transferring control to that label. If the index is out of bounds,
+it transfers control to the "default" label.
+
+`case` nodes can only appear as immediate children of `tableswitch` statements.
+They have a label, which must be declared in the immediately enclosing
+`tableswitch`'s array, and a body which can contain arbitrary code. Control
+falls through the end of a `case` block into the following `case` block, or
+the end of the `tableswitch` in the case of the last `case`.
+
 
 ## Calls
 
@@ -279,7 +278,7 @@ Each function has a *signature*, which consists of:
   * Argument types, which are a sequence of value types
 
 WebAssembly doesn't support variable-length argument lists (aka
-varargs). Compilers targetting WebAssembly can instead support them through
+varargs). Compilers targeting WebAssembly can instead support them through
 explicit accesses to linear memory.
 
 In the MVP, the length of the return types sequence may only be 0 or 1. This
@@ -521,6 +520,13 @@ round-to-nearest ties-to-even rounding.
 Truncation from floating point to integer where IEEE 754-2008 would specify an
 invalid operator exception (e.g. when the floating point value is NaN or
 outside the range which rounds to an integer in range) traps.
+
+## Type-parameterized operators.
+
+  * `select`: a ternary operator with a boolean (i32) condition and two
+    additional operands, which must have the same type as each other. `select`
+    returns the the first of these two operands if the condition operand is
+    non-zero, or the second otherwise.
 
 ## Feature test
 

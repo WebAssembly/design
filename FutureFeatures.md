@@ -51,6 +51,12 @@ provided by the `mmap` OS primitive. One significant exception is that `mmap`
 can allocate noncontiguous virtual address ranges. See the
 [FAQ](FAQ.md#what-about-mmap) for rationale.
 
+## Large page support
+
+Some platforms offer support for memory pages as large as 16GiB, which 
+can improve  the efficiency of memory management in some situations. WebAssembly
+may offer programs the option to specify a larger page size than the [default] (AstSemantics.md#resizing).
+
 ## More expressive control flow
 
 Some types of control flow (especially irreducible and indirect) cannot be
@@ -138,7 +144,7 @@ Useful properties of signature-restricted PTCs:
 General-purpose Proper Tail Calls would have no signature restrictions, and
 therefore be more broadly usable than
 [Signature-restricted Proper Tail Calls](AstSemantics.md#signature-restricted-proper-tail-calls),
-though there would be some different performance characataristics.
+though there would be some different performance characteristics.
 
 ## Asynchronous Signals
 
