@@ -2,7 +2,7 @@
 
 ## Why create a new standard when there is already asm.js?
 
-... especially since pthreads ([Mozilla pthreads][], [Chromimum pthreads][]) and
+... especially since pthreads ([Mozilla pthreads][], [Chromium pthreads][]) and
 SIMD ([simd.js][], [Chromium SIMD][], [simd.js in asm.js][]) are coming to
 JavaScript.
 
@@ -18,7 +18,7 @@ There are two main benefits WebAssembly provides:
    decoded much faster than JavaScript can be parsed ([experiments][] show more
    than 20× faster).  On mobile, large compiled codes can easily take 20–40
    seconds *just to parse*, so native decoding (especially when combined with
-   other techniques like [streaming][]) for better-than-gzip compression) is
+   other techniques like [streaming][] for better-than-gzip compression) is
    critical to providing a good cold-load user experience.
 
 2. By avoiding the simultaneous asm.js constraints of [AOT][]-[compilability][]
@@ -258,7 +258,7 @@ relax the rules around floating point in order to optimize more
 aggressively. This can including assuming that NaNs or infinities don't occur,
 ignoring the difference between negative zero and positive zero, making
 algebraic manipulations which change how rounding is performed or when overflow
-might occur, or replacing operations with approximations that are cheaper to
+might occur, or replacing operators with approximations that are cheaper to
 compute.
 
 These optimizations effectively introduce nondeterminism; it isn't possible to
@@ -293,7 +293,7 @@ it, but fast-math flags are not believed to be important enough:
    would be feature tests allowing WebAssembly code to determine which SIMD
    types to use on a given platform.
  * When WebAssembly
-   [adds an FMA operation](FutureFeatures.md#additional-floating-point-operations),
+   [adds an FMA operator](FutureFeatures.md#additional-floating-point-operators),
    folding multiply and add sequences into FMA operators will be possible.
  * WebAssembly doesn't include its own math functions like `sin`, `cos`, `exp`,
    `pow`, and so on. WebAssembly's strategy for such functions is to allow them
@@ -302,7 +302,7 @@ it, but fast-math flags are not believed to be important enough:
    these days anyway). Users wishing to use faster and less precise math
    functions on WebAssembly can simply select a math library implementation
    which does so.
- * Most of the individual floating point operations that WebAssembly does have
+ * Most of the individual floating point operators that WebAssembly does have
    already map to individual fast instructions in hardware. Telling `add`,
    `sub`, or `mul` they don't have to worry about NaN for example doesn't make
    them any faster, because NaN is handled quickly and transparently in hardware
@@ -316,10 +316,11 @@ it, but fast-math flags are not believed to be important enough:
 
 The [`mmap`](http://pubs.opengroup.org/onlinepubs/009695399/functions/mmap.html)
 syscall has many useful features. While these are all packed into one overloaded
-syscall in POSIX, WebAssembly unpacks this functionality into multiple builtins:
+syscall in POSIX, WebAssembly unpacks this functionality into multiple
+operators:
 
 * the MVP starts with the ability to grow linear memory via a
-  [`grow_memory`](AstSemantics.md#resizing) builtin operation;
+  [`grow_memory`](AstSemantics.md#resizing) operator;
 * proposed
   [future features](FutureFeatures.md#finer-grained-control-over-memory) would
   allow the application to change the protection and mappings for pages in the

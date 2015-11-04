@@ -27,7 +27,7 @@ characteristics:
   emulation thereof.
 * Two's complement signed integers in 32 bits and optionally 64 bits.
 * IEEE 754-2008 32-bit and 64-bit floating point, except for
-  [a few exceptions](AstSemantics.md#floating-point-operations).
+  [a few exceptions](AstSemantics.md#floating-point-operators).
 * Little-endian byte ordering.
 * Memory regions which can be efficiently addressed with 32-bit
   pointers or indices.
@@ -37,16 +37,16 @@ characteristics:
   processes executing on the same machine.
 * An execution environment which offers forward progress guarantees to all
   threads of execution (even when executing in a non-parallel manner).
-* Availability of lock-free atomic memory operations, when naturally aligned, for
+* Availability of lock-free atomic memory operators, when naturally aligned, for
   8- 16- and 32-bit accesses. At a minimum this must include an atomic
-  compare-and-exchange operation (or equivalent load-linked/store-conditional).
-* wasm64 additionally requires lock-free atomic memory operations, when naturally
+  compare-and-exchange operator (or equivalent load-linked/store-conditional).
+* wasm64 additionally requires lock-free atomic memory operators, when naturally
   aligned, for 64-bit accesses.
 
 ## API
 
 WebAssembly does not specify any APIs or syscalls, only an 
-[import mechanism](MVP.md#modules) where the set of available imports is defined
+[import mechanism](Modules.md) where the set of available imports is defined
 by the host environment. In a [Web](Web.md) environment, functionality is
 accessed through the Web APIs defined by the
 [Web Platform](https://en.wikipedia.org/wiki/Open_Web_Platform).

@@ -53,9 +53,9 @@ themselves include:
     * A higher-level type system, which could include basic polymorphism of
       various kinds (either with true dynamism or with monomorphisation).
     * Richer control flow constructs.
-    * A broader set of operations, such as string-handling operations,
+    * A broader set of operators, such as string-handling operators,
       data type serialization, testing facilities, and linear algebra
-      operations, all of which can benefit from being integrated at the
+      operators, all of which can benefit from being integrated at the
       language level.
    Since every feature required in the spec itself will need to be implemented
    by all implementations, domain-specific features run the risk of making

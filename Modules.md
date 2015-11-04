@@ -8,7 +8,7 @@ is determined by the module it was loaded from.
 
 A module contains:
 * a set of [imports and exports](Modules.md#imports-and-exports);
-* a section defining the [initial state of linear memory](Modules.md#initial-state-of-linear-memory);
+* a section defining [linear memory](Modules.md#linear-memory-section);
 * a section containing [code](Modules.md#code-section);
 * after the MVP, sections containing [debugging/symbol information](Tooling.md) or
   a reference to separate files containing them; and
@@ -20,8 +20,8 @@ An instance contains:
 * the code of the module from which the instance was loaded;
 * a [linear memory](AstSemantics.md#linear-memory);
 * fully resolved imports;
-* host-specific state (for example, the JS function objects that reflect
-  exported functions to JS);
+* host-specific state (for example, the JavaScript function objects that reflect
+  exported functions to JavaScript);
 * (when [threading](PostMVP.md#threads) is added) TLS variable state;
 * (when [dynamic linking](DynamicLinking.md) is added) the code of multiple modules
   that have been dynamically linked into the same instance;
@@ -39,7 +39,8 @@ A module defines a set of functions in its
 these functions to be **exports**. The meaning of exports (how and when they are
 called) is defined by the host environment. For example, a minimal shell
 environment might only probe for and call a `_start` export when given a module
-to execute.
+to execute. Exports are exported by name, where the name is an arbitrary byte
+string of a given length. The host may need to mangle these names.
 
 A module can declare a set of **imports**. An import is a tuple containing a
 module name, the name of an exported function to import from the named module,
@@ -121,12 +122,23 @@ shared `malloc` and coordinated global address ranges). Instead, the
 [dynamic linking future feature](DynamicLinking.md) is intended
 to allow *explicitly* injecting multiple modules into the same instance.
 
-## Initial state of linear memory
+## Linear memory section
 
-A module will contain a section declaring the linear memory size (initial and
-maximum size allowed by [`grow_memory`](AstSemantics.md#resizing) and the
-initial contents of memory, analogous to `.data`, `.rodata`, `.bss` sections in
-native executables (see [binary encoding](BinaryEncoding.md#global-structure)).
+A module may contain an optional section declaring the use of linear memory
+by the module. If the section is absent, the linear memory operators
+`load`, `store`, `memory_size`, and `grow_memory` may not be used in the module.
+
+The linear memory section declares the initial [memory size](AstSemantics.md#linear-memory)
+(which may be subsequently increased by [`grow_memory`](AstSemantics.md#resizing)).
+
+The initial contents of linear memory are zero by default. However, the memory
+section contains a possibly-empty array of *segments* (analogous to `.data`)
+which can specify the initial contents of fixed `(offset, length)` ranges of
+memory.
+
+The linear memory section may also contain an optional hint declaring the expected
+maximum heap usage. This hint is not semantically visible but can help a
+WebAssembly engine to optimize `grow_memory`.
 
 ## Code section
 

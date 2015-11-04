@@ -5,7 +5,7 @@ of (1) integrating well with the existing Web platform and (2) supporting
 languages other than C++, WebAssembly needs to be able to:
 * reference DOM and other Web API objects directly from WebAssembly code;
 * call Web APIs (passing primitives or DOM/GC/Web API objects) directly from
-  WebAssembly without calling through JS; and
+  WebAssembly without calling through JavaScript; and
 * efficiently allocate and manipulate GC objects directly from WebAssembly
   code.
 
@@ -18,7 +18,7 @@ integration with the [Web](Web.md), it should not bake in details
 or Web standards dependencies that prevent execution in a 
 [non-Web embedding](NonWeb.md). This suggests a design (called
 [opaque reference types](GC.md#opaque-reference-types) below) that hides the
-details of JS and WebIDL behind Web-embedding-specific builtin modules.
+details of JavaScript and WebIDL behind Web-embedding-specific builtin modules.
 On the other hand, WebAssembly can define a set of [native GC](GC.md#native-gc)
 primitives that allowed portable GC code to be written regardless of the
 host environment.
@@ -43,21 +43,21 @@ will define no a priori subtyping relationship.
 For reasons of safety and limiting nondeterminism, imported opaque reference
 types would not be able to be loaded from or stored to linear memory where they
 could otherwise be arbitrarily aliased as integers. Instead, a new set of
-operations would be added for allocating, deallocating, loading and storing
+operators would be added for allocating, deallocating, loading and storing
 from integer-indexed cells that could hold references and were not aliasable by
 linear memory.
 
 With opaque reference types expressed as imports, host environments can provide
 access to various kinds of reference-counted or garbage-collected host-defined
-objects via builtin modules. While this design does not mandate a JS VM or
-browser, it does allow natural integration with both
-[JS](GC.md#js-integration) and [WebIDL](GC.md#webidl-integration)
+objects via builtin modules. While this design does not mandate a JavaScript VM
+or browser, it does allow natural integration with both
+[JavaScript](GC.md#js-integration) and [WebIDL](GC.md#webidl-integration)
 in a Web environment.
 
-### JS integration
+### JavaScript integration
 
 Using [opaque reference types](GC.md#opaque-reference-types),
-JS values could be made accessible to WebAssembly code through a builtin
+JavaScript values could be made accessible to WebAssembly code through a builtin
 `js` module providing:
 * an exported `string` opaque reference type and exported functions
   to allocate, query length, and index `string` values;
@@ -73,7 +73,7 @@ JS values could be made accessible to WebAssembly code through a builtin
 
 Since a browser's WebAssembly engine would have full knowledge of the `js`
 builtin module, it should be able to optimize string/object accesses as well as
-a normal JS JIT (perhaps even using the same JIT compiler).
+a normal JavaScript JIT compiler (perhaps even using the same JIT compiler).
 
 ### WebIDL integration
 
@@ -87,7 +87,7 @@ signatures. In particular:
   would map to exported [opaque reference types](GC.md#opaque-reference-types);
 * methods of WebIDL interfaces would map to exported functions where the
   receiver was translated into an explicit argument and WebIDL value
-  types were mapped to appropriate [local types](AstSemantics.md#local-types)
+  types were mapped to appropriate [value types](AstSemantics.md#types)
   (e.g., [bindTexture](https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14)
   would translate to `void (WebGLRenderingContextBase, int32, WebGLTexture?)`).
 
@@ -112,7 +112,7 @@ Another important issue is mapping WebIDL values types that aren't simple
 [primitive types](http://www.w3.org/TR/WebIDL/#dfn-primitive-type):
 * [Dictionary types](http://www.w3.org/TR/WebIDL/#idl-dictionary)
   would [appear](http://www.w3.org/TR/WebIDL/#es-dictionary) to require
-  JS objects but are actually defined as values such that they can
+  JavaScript objects but are actually defined as values such that they can
   be (and are, in various browser implementations) flattened to C structs.
   Thus, a natural WebAssembly binding would be to map dictionaries to structs
   in linear memory passed by reference (integer offset).
@@ -134,11 +134,11 @@ practice, some WebIDL patterns may have an unnatural or inefficient mapping
 into WebAssembly such that new overloads and best practices would need to be
 adopted. Over time, though, these rough edges would be ironed out leaving the
 long term benefit of defining Web APIs with a single interface and ensuring
-that JS and WebAssembly always had access to the same raw functionality.
+that JavaScript and WebAssembly always had access to the same raw functionality.
 
 ## Native GC
 
-In contract to *opaque* reference types, a second feature would be to allow
+In contrast to *opaque* reference types, a second feature would be to allow
 direct GC allocation and field access from WebAssembly code through
 *non-opaque* reference types.
 
