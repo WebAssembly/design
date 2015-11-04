@@ -335,7 +335,39 @@ consoles or server side have a similar sandboxing mechanism).
 
 
 ## Application Development Scenarios
-- why develop in-house on WA
+A startup wants to offer a new 4K video streaming service to a great breadth of
+consumers, across any device - from mobile, to browser, to TV appliance. Their
+key technological advantage that enables their value proposition is a
+proprietary codec.   
+
+Given the breadth of devices needing targeting, and their diverse resource
+constraints, and balancing business constraints (time to market, cost of
+development and funding runway), the engineers at the startup decide to
+implement the codec in C/C++, because it offers precise control over
+resource utilization, and because of the language's portability - the C/C++
+source can be easily compiled to target the various OSes and ISAs the startup
+needs to target.
+
+This decision lets them easily target mobile device consumers. When trying to
+extend to browser consumers, traditionally their options would have been:
+
+1. Develop a custom plugin. This means taking on servicing costs and the risk of
+bad PR due to security holes.
+
+2. Work out a JavaScript implementation. This means additional development cost
+and carries the risk of failing to deliver, given the nature of the language and
+its performance SLA.  
+
+3. Offer a degraded service to browser users, by streaming content in one of the
+supported codecs (HTML 5). This carries a cost on the server side, as well as
+counters one of the value propositions of the startups' value propositions -
+broad reaching 4K streaming.
+
+4. Use (P)NaCl or asm.js. The former is only supported on Chrome, and the latter
+has inconsistent support and performance characteristics over the various
+browsers.
+
+
 ## Code Reuse Scenarios
 - why reuse; what type of reuse, and what motivates each
 ## Deployment Scenarios
