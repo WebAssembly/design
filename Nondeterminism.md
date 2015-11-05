@@ -31,7 +31,7 @@ currently admits nondeterminism:
    API calls. With shared memory, the result of load operators is
    nondeterministic.
  * Except when otherwise specified, when an arithmetic operator with multiple
-   floating point operand types and a floating point result type recieves
+   floating point operand types and a floating point result type receives
    multiple NaN input values with differing bit patterns, it is nondeterminsitic
    which bit pattern is used as the basis for the result.
  * [Fixed-width SIMD may want some flexibility](PostMVP.md#fixed-width-simd)
