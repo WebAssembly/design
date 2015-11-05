@@ -325,7 +325,9 @@ broad reaching 4K streaming.
 
 4. Use (P)NaCl or asm.js. The former is only supported on Chrome, and the latter
 has inconsistent support and performance characteristics over the various
-browsers.
+browsers. Neither comprehensively addresses the goal of reaching a breadth of
+consumers with a 4K video experience.
+
 
 ## Motivating Scenarios for Feature Testing
 
