@@ -35,7 +35,7 @@ and the rest of the Web platform that have been considered:
   - Reuse specification of operation semantics (with TC39);
   - Reuse backend implementation (same IR nodes).
 * Once [GC is supported](GC.md), WebAssembly code would be able to reference
-  and access and JavaScript, DOM, and general WebIDL-defined objects.
+  and access JavaScript, DOM, and general WebIDL-defined objects.
 
   [CORS]: https://www.w3.org/TR/cors/
   [subresource integrity]: https://www.w3.org/TR/SRI/
