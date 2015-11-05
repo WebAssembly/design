@@ -33,7 +33,8 @@ currently admits nondeterminism:
  * Except when otherwise specified, when an arithmetic operator with multiple
    floating point operand types and a floating point result type receives
    multiple NaN input values with differing bit patterns, it is nondeterminsitic
-   which bit pattern is used as the basis for the result.
+   which bit pattern is used as the basis for the result (as it is in
+   IEEE 754-2008).
  * [Fixed-width SIMD may want some flexibility](PostMVP.md#fixed-width-simd)
    - In SIMD.js, floating point values may or may not have subnormals flushed to
      zero.
