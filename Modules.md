@@ -1,6 +1,6 @@
 # Modules
 
-The distributable, loadable, and executable unit of code in WebAssembly
+The distributable, loadable and executable unit of code in WebAssembly
 is called a **module**. At runtime, a module can be loaded by a runtime
 to produce an **instance** which encapsulates all the state directly
 manipulated by running WebAssembly code. A WebAssembly instance's initial state
