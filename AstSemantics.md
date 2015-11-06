@@ -540,3 +540,13 @@ returning the same value for the same string over the lifetime of a single
 instance and other related (as defined by the host environment) instances.
 See also [feature testing](FeatureTest.md) and
 [better feature testing](FutureFeatures.md#better-feature-testing-support).
+
+## Unreachable
+
+  * `unreachable`: An expression which can take on any type, and which, if
+    executed, always traps. It is intended to be used for example after
+    calls to functions which are known by the producer not to return (otherwise
+    the producer would have to create another expression with an unused value
+    to satisfy the type check). This trap is intended to be impossible for user
+    code to catch or handle, even in the future when it may be possible to
+    handle some other kinds of traps or exceptions.
