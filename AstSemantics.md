@@ -242,11 +242,10 @@ All control flow structures, except `case`, are statements.
  * `if_else`: if statement with then and else bodies
  * `br`: branch to a given label in an enclosing construct (see below)
  * `br_if`: conditionally branch to a given label in an enclosing construct
- * `tableswitch`: a jump table which may jump either to enclosed `case` blocks
-                  or to labels in enclosing constructs (see below for a more
-                  detailed description)
- * `case`: must be an immediate child of `tableswitch`; has a label declared
-           in the `tableswitch`'s table and a body (as above, see below)
+ * `tableswitch`: a jump table which may jump either to an immediate `case`
+                  child or to a label in an enclosing construct (see below for
+                  a more detailed description)
+ * `case`: must be an immediate child of `tableswitch` (as above, see below)
  * `return`: return zero or more values from this function
 
 References to labels must occur within an *enclosing construct* that defined
@@ -257,17 +256,14 @@ one can arrange `block`s to put labels wherever one wants to jump to, except
 for one restriction: one can't jump into the middle of a loop from outside
 it. This restriction ensures the well-structured property discussed below.
 
-`tableswitch` instructions have a zero-based array of labels, a "default"
-label, an index operand, and a list of `case` nodes. A `tableswitch`
-selects which label to branch to by looking up the index value in the label
-array, and transferring control to that label. If the index is out of bounds,
-it transfers control to the "default" label.
+A `tableswitch` has a zero-based array of targets, a "default" target, an index
+operand, and a list of `case` nodes. It jumps to the target indexed in the
+array, or the default if the index is out of bounds. `tableswitch` targets may
+be either labels or `case` nodes.
 
-`case` nodes can only appear as immediate children of `tableswitch` statements.
-They have a label, which must be declared in the immediately enclosing
-`tableswitch`'s array, and a body which can contain arbitrary code. Control
-falls through the end of a `case` block into the following `case` block, or
-the end of the `tableswitch` in the case of the last `case`.
+A `case` node consists of a statement, and may be referenced in the parent
+`tableswitch`'s array. Unless exited explicitly, control falls through into the
+next `case` or the end of the `tableswitch`.
 
 
 ## Calls
