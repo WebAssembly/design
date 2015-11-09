@@ -383,10 +383,10 @@ results into the result type.
   * `i32.ctz`: sign-agnostic count trailing zero bits (All zero bits are considered trailing if the value is zero)
   * `i32.popcnt`: sign-agnostic count number of one bits
 
-Shifts interpret their shift count operand as an unsigned value. When the shift
-count is at least the bitwidth of the shift, `shl` and `shr_u` produce `0`, and
-`shr_s` produces `0` if the value being shifted is non-negative, and `-1`
-otherwise.
+Shifts counts are wrapped to be less than the log-base-2 of the number of bits
+in the value to be shifted, as an unsigned quantity. For example, in a 32-bit
+shift, only the least 5 significant bits of the count affect the result. In a
+64-bit shift, only the least 6 significant bits of the count affect the result.
 
 All comparison operators yield 32-bit integer results with `1` representing
 `true` and `0` representing `false`.

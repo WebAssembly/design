@@ -292,6 +292,27 @@ However, since the publication of IEEE 754-2008, MIPS has added a configuration
 mode (NAN2008) which enables support for the new rules.
 
 
+## Integer operations
+
+WebAssembly's signed integer divide rounds its result toward zero. This is not
+because of a lack of sympathy for
+[better alternatives](https://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html),
+but out of practicality. Because all popular hardware today implements
+rounding toward zero, and because C and many other languages now specify
+rounding to zero, having WebAssembly in the middle doing something different
+would mean divisions would have to be doubly complicated.
+
+Similarly, WebAssembly's shift operators mask their shift counts to the number
+of bits in the shifted value. Confusingly, this means that shifting a 32-bit
+value by 32 bits is an identity operation, and that a left shift is not
+equivalent to a multiplication by a power of 2 because the overflow behavior
+is different. Nevertheless, because several popular hardware architectures
+today implement this masking behavior, and those that don't can typically
+emulate it with a single extra mask instruction, and because several popular
+source languages, including JavaScript, have come to specify this behavior
+too, we reluctantly adopt this behavior as well.
+
+
 ## Motivating Scenarios for Feature Testing
 
 1. [Post-MVP](PostMVP.md),
