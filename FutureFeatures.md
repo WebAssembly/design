@@ -399,3 +399,13 @@ significant portions of memory could be moved out of linear memory which could
 reduce fragmentation issues. Languages like Fortran which limit aliasing would be
 one use case. C/C++ compilers could also determine that some global variables never
 have their address taken.
+
+## Importing linear memory
+
+In the MVP, functions and [linear memory](Modules.md#linear-memory-section) can
+be exported, but only functions can be imported. This feature would additionally
+allow importing linear memory. One use case is sharing linear memories between
+separate WebAssembly [instances](Modules.md). Another use case is allowing, on
+the Web platform, importing a JS `ArrayBuffer` as a linear memory. This would
+allow highly efficient, specialized code to be generated for accessing the
+`ArrayBuffer`.

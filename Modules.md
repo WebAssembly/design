@@ -140,6 +140,14 @@ The linear memory section may also contain an optional hint declaring the expect
 maximum heap usage. This hint is not semantically visible but can help a
 WebAssembly engine to optimize `grow_memory`.
 
+The linear memory section may optionally declare that the instance's
+linear memory is *externally aliasable*. How linear memory is aliased is up
+to the host environment (as with all module exports). The 
+[Web](Web.md#aliasing-linear-memory-from-JS) would reflect exported linear
+memory to JS as an `ArrayBuffer`. The MVP does not currently provide for
+*importing* linear memory though this may be added 
+[in the future](FutureFeatures.md#importing-linear-memory).
+
 ## Code section
 
 The WebAssembly spec defines the code section of a module in terms of an
