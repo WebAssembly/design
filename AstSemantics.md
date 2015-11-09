@@ -399,13 +399,9 @@ The same operators are available on 64-bit integers as the those available for
 ## Floating point operators
 
 Floating point arithmetic follows the IEEE 754-2008 standard, except that:
- - The sign bit and significand bit pattern of any NaN value returned from a
-   floating point arithmetic operator other than `neg`, `abs`, and `copysign`
-   are not specified. In particular, the "NaN propagation"
-   section of IEEE 754-2008 is not required. NaNs do propagate through
-   arithmetic operators according to IEEE 754-2008 rules, the difference here
-   is that they do so without necessarily preserving the specific bit patterns
-   of the original NaNs.
+ - The sign bit and fraction field of any NaN value returned from a floating
+   point arithmetic operator are deterministic under more circumstances than
+   required by IEEE 754-2008.
  - WebAssembly uses "non-stop" mode, and floating point exceptions are not
    otherwise observable. In particular, neither alternate floating point
    exception handling attributes nor the non-computational operators on status
@@ -423,6 +419,23 @@ In the future, these limitations may be lifted, enabling
 Note that not all operators required by IEEE 754-2008 are provided directly.
 However, WebAssembly includes enough functionality to support reasonable library
 implementations of the remaining required operators.
+
+When the result of any arithemtic operation other than `neg`, `abs`, or
+`copysign` is a NaN, the sign bit and the fraction field (which does not include
+the implicit leading digit of the significand) of the NaN are computed as
+follows:
+
+ - If the operation has exactly one NaN operand, the result NaN has the same
+   bits as that operand, except that the most significant bit of the
+   fraction field is 1.
+ - If the operation has multiple NaN input values, the result value is computed
+   as if one of the operands, selected nondeterministically, is the only NaN
+   operand (as described in the previous rule).
+ - If the operation has no NaN input values, the result value has a sign bit of
+   0 and a fraction field with 1 in the most significant bit and 0 in the
+   remaining bits.
+
+32-bit floating point operations are as follows:
 
   * `f32.add`: addition
   * `f32.sub`: subtraction
@@ -505,8 +518,16 @@ Wrapping and extension of integer values always succeed.
 Promotion and demotion of floating point values always succeed.
 Demotion of floating point values uses round-to-nearest ties-to-even rounding,
 and may overflow to infinity or negative infinity as specified by IEEE 754-2008.
-If the operand of promotion or demotion is NaN, the sign bit and significand
-of the result are not specified.
+
+If the operand of promotion is a NaN, the result is a NaN with the sign bit
+of the operand and a fraction field consisting of 1 in the most significant bit,
+followed by all but the most significant bits of the fraction field of the
+operand, followed by all 0s.
+
+If the operand of demotion is a NaN, the result is a NaN with the sign bit
+of the operand and a fraction field consisting of 1 in the most significant bit,
+followed by as many of all but the most significant bit of the fraction field of
+the operand as fit.
 
 Reinterpretations always succeed.
 

@@ -275,6 +275,23 @@ architectures there may be a need to revisit some of the decisions:
   which that language doesn't care about, but which another language may want.
 
 
+## NaN bit pattern propagation
+
+In general, WebAssembly's floating point operations propagate NaN bit patterns.
+When an operation has a NaN operand, it returns a NaN result with the same bit
+pattern. This is done in accordance with IEEE 754-2008, and it also has the
+desirable property of making it easier to port interpreters to WebAssembly that
+use NaN-boxing, because they can rely on the property that if an arithmetic
+operation has no non-canonical NaNs as input, its output is also canonical.
+
+The specific bit-pattern rules are modeled after what numerous popular
+hardware architectures do. Note that IEEE 754-1985 had looser rules for NaN
+bit pattern encodings than IEEE 754-2008, and some hardware architectures,
+notably MIPS, historically behaved differently than other architectures.
+However, since the publication of IEEE 754-2008, MIPS has added a configuration
+mode (NAN2008) which enables support for the new rules.
+
+
 ## Motivating Scenarios for Feature Testing
 
 1. [Post-MVP](PostMVP.md),
