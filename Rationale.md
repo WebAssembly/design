@@ -309,8 +309,8 @@ equivalent to a multiplication by a power of 2 because the overflow behavior
 is different. Nevertheless, because several popular hardware architectures
 today implement this masking behavior, and those that don't can typically
 emulate it with a single extra mask instruction, and because several popular
-source languages, including JavaScript, have come to specify this behavior
-too, we reluctantly adopt this behavior as well.
+source languages, including JavaScript and C#, have come to specify this
+behavior too, we reluctantly adopt this behavior as well.
 
 
 ## Motivating Scenarios for Feature Testing
