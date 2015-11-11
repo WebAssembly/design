@@ -16,14 +16,6 @@ The text format will be standardized, but only for tooling purposes:
 * Browsers will not parse the textual format on regular web content in order to
   implement WebAssembly semantics.
 
-Given that the code representation is actually an
-[Abstract Syntax Tree](AstSemantics.md), the syntax would contain nested
-statements and expressions (instead of the linear list of instructions most
-assembly languages have).
-
-There is no requirement to use JavaScript syntax; this format is not intended to
-be evaluated or translated directly into JavaScript.
-
 The text format isn't uniquely representable. Multiple textual files can assemble
 to the same binary file, for example whitespace isn't relevant and memory initialization
 can be broken out into smaller pieces in the text format.
@@ -34,7 +26,39 @@ represented as hexadecimal floating-point as specified by the C99 standard, whic
 IEEE-754-2008 section 5.12.3 also specifies. The textual format may be improved to also
 support more human-readable representations, but never at the cost of accurate representation.
 
-# Official Text Format
+# Lower and Higher text formats
+
+Note that there is some tension in the above purposes and goals: On the one
+hand, WebAssembly is designed for the **Web**, and should allow View Source to
+let people inspect code on the sites they visit in as clear and as natural
+a way as possible. On the other hand, WebAssembly is an **assembly** language,
+low-level and designed as a compiler-target; it is not a high-level language
+intended for ease of human readability.
+
+To bridge that gap, we plan to have *two* text formats:
+
+ * "Lower" or "Assembly" text format: A close parallel to the binary format,
+   very assembly-like. This is what compiler writers targeting WebAssembly
+   would look at.
+ * "Higher" or "Web" text format: Designed to maximize readability,
+   this format can include various forms of syntax sugar. This is
+   what would be used in browsers' View Source.
+
+The two text formats will be directly translatable beween each other, and
+hence concepts in each must must have direct parallels in the other. However,
+they may differ in how they represent those concepts. For example, in the
+Higher/Web text format we might have loops, breaks and continues, while in
+the Lower/Assembly text format breaks and continues might be replaced with
+branches and labels; given that the code representation is actually an
+[Abstract Syntax Tree](AstSemantics.md), translating between breaks and
+branches is straightforward.
+
+There is no requirement to use JavaScript syntax; these formats are not intended to
+be evaluated or translated directly into JavaScript. However, where possible,
+it is beneficial to remain as familiar as possible in the Higher/Web text
+format for web developers.
+
+# Status
 
 WebAssembly currently doesn't have a final, official, text format. As detailed above the
 main purpose of the text format will be for human consumption, feedback from humans on

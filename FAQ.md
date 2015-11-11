@@ -142,17 +142,21 @@ work with them on ABI matters.
 
 ## Will WebAssembly support View Source on the Web?
 
-Yes! WebAssembly defines a [text format](TextFormat.md) to be rendered when
-developers view the source of a WebAssembly module in any developer tool. Also,
-a specific goal of the text format is to allow developers to write WebAssembly
-modules by hand for testing, experimenting, optimizing, learning and teaching
-purposes. In fact, by dropping all the
+Yes, WebAssembly will define a [text format](TextFormat.md) to be rendered when
+developers view the source of a WebAssembly module in any developer tool. There
+are some interesting questions still being sorted out as to how that will
+look, see the [text format](TextFormat.md) page for more details. But in
+general, it is a goal to improve on the current readability of View Source on
+the web, in particular in comparison to asm.js (dropping the
 [coercions required by asm.js validation](http://asmjs.org/spec/latest/#introduction),
-the WebAssembly text format should be much more natural to read and write than
-asm.js. Outside the browser, command-line and online tools that convert between
-text and binary will also be made readily available.  Lastly, a scalable form of
-source maps is also being considered as part of the WebAssembly
-[tooling story](Tooling.md).
+etc.), and keeping the notation as natural as possible.
+
+In addition, outside the browser, command-line and online tools that convert between
+text and binary will also be made readily available.  Lastly, for developers
+debugging their own code, a scalable form of source maps is also being
+considered as part of the WebAssembly [tooling story](Tooling.md), which would
+allow developers to debug in the language they are writing, without needing
+to read WebAssembly (unless they want to), just like in native development.
 
 
 ## What's the story for Emscripten users?
