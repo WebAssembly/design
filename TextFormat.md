@@ -22,7 +22,14 @@ statements and expressions (instead of the linear list of instructions most
 assembly languages have).
 
 There is no requirement to use JavaScript syntax; this format is not intended to
-be evaluated or translated directly into JavaScript.
+be evaluated or translated directly into JavaScript. There may also be
+substantive reasons to use notation that is different than JavaScript (for
+example, WebAssembly has a 32-bit integer type, and it should be represented
+in the text format, since that is the natural thing to do for WebAssembly,
+regardless of JavaScript not having such a type). On the other hand,
+when there are no substantive reasons and the options are basically
+bikeshedding, then it does make sense for the text format to match existing
+conventions on the Web (for example, curly braces, as in JavaScript and CSS).
 
 The text format isn't uniquely representable. Multiple textual files can assemble
 to the same binary file, for example whitespace isn't relevant and memory initialization
