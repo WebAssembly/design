@@ -241,8 +241,6 @@ use cases:
 * The following operators can be built from other operators already present,
   however in doing so they read at least one non-constant input multiple times,
   breaking single-use expression tree formation.
-  * `i32.rotr`: sign-agnostic bitwise rotate right
-  * `i32.rotl`: sign-agnostic bitwise rotate left
   * `i32.min_s`: signed minimum
   * `i32.max_s`: signed maximum
   * `i32.min_u`: unsigned minimum

@@ -369,6 +369,8 @@ results into the result type.
   * `i32.shl`: sign-agnostic shift left
   * `i32.shr_u`: zero-replicating (logical) shift right
   * `i32.shr_s`: sign-replicating (arithmetic) shift right
+  * `i32.rotl`: sign-agnostic rotate left
+  * `i32.rotr`: sign-agnostic rotate right
   * `i32.eq`: sign-agnostic compare equal
   * `i32.ne`: sign-agnostic compare unequal
   * `i32.lt_s`: signed less than
@@ -387,6 +389,11 @@ Shifts counts are wrapped to be less than the log-base-2 of the number of bits
 in the value to be shifted, as an unsigned quantity. For example, in a 32-bit
 shift, only the least 5 significant bits of the count affect the result. In a
 64-bit shift, only the least 6 significant bits of the count affect the result.
+
+Rotate counts are treated as unsigned.  A count value greater than or equal
+to the number of bits in the value to be rotated yields the same result as
+if the count was wrapped to its least significant N bits, where N is 5 for
+an i32 value or 6 for an i64 value.
 
 All comparison operators yield 32-bit integer results with `1` representing
 `true` and `0` representing `false`.
