@@ -57,6 +57,7 @@ official format may look entirely different:
 * [LLVM backend][] (the `CHECK:` parts of these tests) emits compatible s-expressions.
 * [ilwasm][] emits compatible s-expressions.
 * [wassembler][] consumes a different syntax, and works closely with the [V8 prototype][].
+* [binaryen][] can consume compatible s-expressions.
 
   [prototype specification]: https://github.com/WebAssembly/spec/tree/master/ml-proto/test
   [LLVM backend]: https://github.com/llvm-mirror/llvm/tree/master/test/CodeGen/WebAssembly
@@ -65,6 +66,7 @@ official format may look entirely different:
   [V8 prototype]: https://github.com/WebAssembly/v8-native-prototype
   [ilwasm]: https://github.com/WebAssembly/ilwasm
   [sexpr-wasm prototype]: https://github.com/WebAssembly/sexpr-wasm-prototype
+  [binaryen]: https://github.com/WebAssembly/binaryen
 
 # Debug symbol integration
 
