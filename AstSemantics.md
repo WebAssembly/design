@@ -65,9 +65,9 @@ WebAssembly has the following *value types*:
   * `f32`: 32-bit floating point
   * `f64`: 64-bit floating point
 
-Each parameter and local variable has exactly one value type. Function signatures
-consist of a sequence of zero or more parameter types and a sequence zero or more return
-types. (In the MVP, a function can have at most one return type).
+Each parameter and local variable has exactly one [value type](AstSemantics.md#types). Function signatures
+consist of a sequence of zero or more parameter types and a sequence of zero or more return
+types. (Note: in the MVP, a function can have at most one return type).
 
 Note that the value types `i32` and `i64` are not inherently signed or
 unsigned. The interpretation of these types is determined by individual
