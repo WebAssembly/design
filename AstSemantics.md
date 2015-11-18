@@ -1,14 +1,13 @@
 # Abstract Syntax Tree Semantics
 
-WebAssembly code is represented as an Abstract Syntax Tree (AST) that has a
-basic division between statements and expressions. Each function body consists
-of exactly one statement. All expressions and operators are typed, with no
-implicit conversions or overloading rules.
+WebAssembly code is represented as an Abstract Syntax Tree (AST) where each node
+represents an expression. Each function body consists of exactly one expression. 
+All expressions and operators are typed, with no implicit conversions or overloading rules.
 
 Verification of WebAssembly code requires only a single pass with constant-time
 type checking and well-formedness checking.
 
-WebAssembly offers a set of operators that are language-independent but closely
+WebAssembly offers a set of language-independent operators that closely
 match operators in many programming languages and are efficiently implementable
 on all modern computers.
 
@@ -66,15 +65,13 @@ WebAssembly has the following *value types*:
   * `f32`: 32-bit floating point
   * `f64`: 64-bit floating point
 
+Each parameter and local variable has exactly one value type. Function signatures
+consist of a sequence of zero or more parameter types and a sequence zero or more return
+types. (In the MVP, a function can have at most one return type).
+
 Note that the value types `i32` and `i64` are not inherently signed or
 unsigned. The interpretation of these types is determined by individual
 operators.
-
-Parameters and local variables have value types.
-
-Also note that there is no need for a `void` type; function signatures use
-[sequences of types](AstSemantics.md#calls) to describe their return values, so
-a `void` return type is represented as an empty sequence.
 
 ## Linear Memory
 
@@ -231,22 +228,21 @@ others, etc.
 ## Control flow structures
 
 WebAssembly offers basic structured control flow with the following constructs.
-All control flow structures, except `case`, are statements.
+Since all AST nodes are expressions in WebAssembly, control constructs may yield
+a value and appear as children of other expressions.
 
- * `block`: a fixed-length sequence of statements with a label at the end
- * `loop`: a fixed-length sequence of statements with a label at the end
-           and a loop header label at the top (note: this does not loop by
-           itself, so one would often combine this with a br_if at the end
-           to form a branch back to the top)
- * `if`: if statement with then body
- * `if_else`: if statement with then and else bodies
- * `br`: branch to a given label in an enclosing construct (see below)
+ * `block`: a fixed-length sequence of expressions with a label at the end
+ * `loop`: a block with an additional label at the beginning which may be used to form loops
+ * `if`: if expression with a *then* expression
+ * `if_else`: if expression with *then* and *else* expressions
+ * `br`: branch to a given label in an enclosing construct
  * `br_if`: conditionally branch to a given label in an enclosing construct
  * `tableswitch`: a jump table which may jump either to an immediate `case`
-                  child or to a label in an enclosing construct (see below for
-                  a more detailed description)
- * `case`: must be an immediate child of `tableswitch` (as above, see below)
+                  child or to a label in an enclosing construct
+ * `case`: a case which must be an immediate child of `tableswitch`
  * `return`: return zero or more values from this function
+
+### Nesting of branches
 
 References to labels must occur within an *enclosing construct* that defined
 the label. This means that references to an AST node's label can only happen
@@ -256,14 +252,25 @@ one can arrange `block`s to put labels wherever one wants to jump to, except
 for one restriction: one can't jump into the middle of a loop from outside
 it. This restriction ensures the well-structured property discussed below.
 
-A `tableswitch` has a zero-based array of targets, a "default" target, an index
-operand, and a list of `case` nodes. It jumps to the target indexed in the
-array, or the default if the index is out of bounds. `tableswitch` targets may
-be either labels or `case` nodes.
+### Yielding values from control constructs
 
-A `case` node consists of a statement, and may be referenced in the parent
-`tableswitch`'s array. Unless exited explicitly, control falls through into the
-next `case` or the end of the `tableswitch`.
+The `if`, `br`, `br_if`, `case`, and `return` constructs do not yield values.
+Other control constructs may yield values if their subexpressions yield values:
+
+* `block`: yields either the value of the last expression in the block or the result of an inner `br` that targeted the label of the block
+* `loop`: yields either the value of the last expression in the loop or the result of an inner `br` that targeted the end label of the loop
+* `if_else`: yields either the value of the true expression or the false expression
+* `tableswitch`: yields either the value of the last case or the result of an inner `br` that targeted the tableswitch
+
+### Tableswitch
+
+A `tableswitch` consists of a zero-based array of targets, a *default* target, an index
+operand, and a list of `case` nodes. Targets may be either labels or `case` nodes.
+A `tableswitch` jumps to the target indexed in the array or the default target if the index is out of bounds. 
+
+A `case` node consists of an expression and may be referenced multiple times
+by the parent `tableswitch`. Unless exited explicitly, control falls through a `case` 
+to the next `case` or the end of the `tableswitch`.
 
 
 ## Calls
