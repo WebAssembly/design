@@ -256,7 +256,7 @@ loop from outside it. This restriction ensures all control flow graphs are well-
 
 ### Yielding values from control constructs
 
-The `if`, `br`, `br_if`, `case`, and `return` constructs do not yield values.
+The `nop`, `if`, `br`, `br_if`, `case`, and `return` constructs do not yield values.
 Other control constructs may yield values if their subexpressions yield values:
 
 * `block`: yields either the value of the last expression in the block or the result of an inner `br` that targeted the label of the block
