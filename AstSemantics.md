@@ -231,6 +231,7 @@ WebAssembly offers basic structured control flow with the following constructs.
 Since all AST nodes are expressions in WebAssembly, control constructs may yield
 a value and may appear as children of other expressions.
 
+ * `nop`: an empty operator that does not yield a value 
  * `block`: a fixed-length sequence of expressions with a label at the end
  * `loop`: a block with an additional label at the beginning which may be used to form loops
  * `if`: if expression with a *then* expression
