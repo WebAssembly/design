@@ -233,7 +233,7 @@ a value and may appear as children of other expressions.
 
  * `nop`: an empty operator that does not yield a value 
  * `block`: a fixed-length sequence of expressions with a label at the end
- * `loop`: a block with an additional label at the beginning which may be used to form loops
+ * `do`: a block with an additional label at the beginning which may be used to form loops
  * `if`: if expression with a *then* expression
  * `if_else`: if expression with *then* and *else* expressions
  * `br`: branch to a given label in an enclosing construct
@@ -246,7 +246,7 @@ a value and may appear as children of other expressions.
 ### Branches and nesting
 
 The `br` and `br_if` constructs express low-level branching.
-Branches that exit a `block`, `loop`, or `tableswitch` may take a subexpression
+Branches that exit a `block`, `do`, or `tableswitch` may take a subexpression
 that yields a value for the exited construct.
 Branches may only reference labels defined by an outer *enclosing construct*.
 This means that, for example, references to a `block`'s label can only occur 
@@ -260,7 +260,7 @@ The `nop`, `if`, `br`, `br_if`, `case`, and `return` constructs do not yield val
 Other control constructs may yield values if their subexpressions yield values:
 
 * `block`: yields either the value of the last expression in the block or the result of an inner `br` that targeted the label of the block
-* `loop`: yields either the value of the last expression in the loop or the result of an inner `br` that targeted the end label of the loop
+* `do`: yields either the value of the last expression in the block or the result of an inner `br` that targeted the end label of the block
 * `if_else`: yields either the value of the true expression or the false expression
 * `tableswitch`: yields either the value of the last case or the result of an inner `br` that targeted the tableswitch
 
