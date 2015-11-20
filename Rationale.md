@@ -370,3 +370,12 @@ etc).
 storage into system-visible and application-visible, the latter not being able
 to contain machine-executable code (certain phones, to investigate if gaming
 consoles or server side have a similar sandboxing mechanism).
+
+
+## ```nop```
+
+Nop remains in the instruction set for mostly utilitarian reasons. Many compilers and tools that transform/generate code will need to replace instructions with a ```nop```, and the alternative would be for them to alter entire subtrees of nodes to eliminate the hole that this instruction would otherwise fill. Tree transforms of this type are more complex (thus, error prone) and more expensive (thus, inappropriate for JIT and debug builds).
+
+Without a ```nop``` instruction, code generators would use alternative *does-nothing* opcode patterns that take up space in a module and potentially aren't 0-cost at runtime. Finding an appropriate opcode that does nothing but has the appropriate type for the node's location is nontrivial. The existence of many different ways to encode ```nop``` - often mixed in the same module - would reduce the efficiency of compression algorithms.
+
+The history of ```nop``` instructions is long and there are numerous examples of their use in production software.
