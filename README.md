@@ -31,7 +31,11 @@ WebAssembly is currently being designed as an open standard by a [W3C Community 
 
 The actual WebAssembly specification is being developed in the [spec repository](https://github.com/WebAssembly/spec/). For now, high-level design discussions should continue to be held in the design repository, via issues and pull requests, so that the spec work can remain focused.
 
-We've mapped out features we expect to ship: 1. In [the Minimum Viable Product (MVP)](MVP.md); 2. Closely [after the MVP](PostMVP.md); 3. In [future versions](FutureFeatures.md).
+We've mapped out features we expect to ship:
+
+ 1. In [the Minimum Viable Product (MVP)](MVP.md);
+ 2. Closely [after the MVP](PostMVP.md);
+ 3. In [future versions](FutureFeatures.md).
 
 Join us:
 
