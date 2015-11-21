@@ -14,9 +14,9 @@ WebAssembly is currently being designed as an open standard by a [W3C Community 
 
 - **WebAssembly is safe**: WebAssembly describes a memory-safe, sandboxed [execution environment](AstSemantics.md#linear-memory) that may even be implemented inside existing JavaScript virtual machines.  When [embedded in the web](Web.md), WebAssembly will enforce the same-origin and permissions security policies of the browser.
 
-- **WebAssembly is open and debuggable**: WebAssembly is designed to by pretty-printed in a [textual format](TextFormat.md) for debugging, testing, experimenting, optimizing, learning, teaching, and writing programs by hand. The textual format will be used when [viewing the source](FAQ.md#will-webassembly-support-view-source-on-the-web) of wasm modules on the web.
+- **WebAssembly is open and debuggable**: WebAssembly is designed to be pretty-printed in a [textual format](TextFormat.md) for debugging, testing, experimenting, optimizing, learning, teaching, and writing programs by hand. The textual format will be used when [viewing the source](FAQ.md#will-webassembly-support-view-source-on-the-web) of wasm modules on the web.
 
-- **WebAssembly is part of the open web platform**: WebAssembly is designed to maintain the versionless, feature-tested, and backwards-compatible [nature of the web](Web.md). WebAssembly modules will be able to call into and out of the JavaScript context and access browser functionality through the same Web APIs accessible from JavaScript. (WebAssembly also supports [non-web](NonWeb.md) embeddings.)
+- **WebAssembly is part of the open web platform**: WebAssembly is designed to maintain the versionless, feature-tested, and backwards-compatible [nature of the web](Web.md). WebAssembly modules will be able to call into and out of the JavaScript context and access browser functionality through the same Web APIs accessible from JavaScript. WebAssembly also supports [non-web](NonWeb.md) embeddings.
 
 ## More Information
 
