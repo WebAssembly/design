@@ -267,9 +267,9 @@ Other control constructs may yield values if their subexpressions yield values:
 
 ### Tableswitch
 
-A `tableswitch` consists of a zero-based array of targets, a *default* target, an index
+A `tableswitch` consists of a zero-based array of targets, an index
 operand, and a list of `case` nodes. Targets may be either labels or `case` nodes.
-A `tableswitch` jumps to the target indexed in the array or the default target if the index is out of bounds. 
+A `tableswitch` jumps to the target indexed in the array, or traps if the index is out of bounds.
 
 A `case` node consists of an expression and may be referenced multiple times
 by the parent `tableswitch`. Unless exited explicitly, control falls through a `case` 
