@@ -252,8 +252,9 @@ Branches may only reference labels defined by an outer *enclosing construct*.
 This means that, for example, references to a `block`'s label can only occur 
 within the `block`'s body.
 
-In practice, outer `block`s can be used to place labels for any given branching
-pattern, except for one restriction: one can't branch into the middle of a loop
+In practice, outer `block`s can be used to place labels for
+[any given branching pattern](Rational.md#control-flow),
+except for one restriction: one can't branch into the middle of a loop
 from outside it. This restriction ensures all control flow graphs are well-structured
 in the exact sense as in high-level languages like Java and JavaScript. To
 further see the parallel, note that a `br` to a `block`'s label is functionally
