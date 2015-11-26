@@ -6,7 +6,7 @@
 
 ## Overview
 
-WebAssembly or wasm is a portable, low-level, binary-format abstract syntax tree designed as an efficient target language for compilers.
+WebAssembly or wasm is a new, portable, size- and load-time-efficient format suitable for compilation to the web.
 
 WebAssembly is currently being designed as an open standard by a [W3C Community Group](https://www.w3.org/community/webassembly/) that includes representatives from all major browsers. *Expect the contents of this repository to be in flux: everything is still under discussion.*
 
