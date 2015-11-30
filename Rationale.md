@@ -130,12 +130,34 @@ control flow with the
 [Relooper](https://github.com/kripken/emscripten/raw/master/docs/paper.pdf)
 [algorithm](http://dl.acm.org/citation.cfm?id=2048224&CFID=670868333&CFTOKEN=46181900),
 with guaranteed low code size overhead, and typically minimal throughput
-overhead (except for pathological cases of irreducible control
+overhead (due to using a label threading variable for irreducible control
 flow). Alternative approaches can generate reducible control flow via node
 splitting, which can reduce throughput overhead, at the cost of increasing
 code size (potentially very significantly in pathological cases).
-Also,
-[more expressive control flow constructs](FutureFeatures.md#more-expressive-control-flow)
+
+More specifically, control flow in WebAssembly has the same restrictions as in
+high-level languages such as Java and JavaScript, which do not have arbitrary
+`goto`s, but do have labeled `break`: WebAssembly's `br` control flow construct is
+in fact
+[functionally equivalent to a labeled `break`](AstSemantics.md#branches-and-nesting).
+The main limitation that such control flow has over completely arbitrary control
+flow is that it is not possible to
+[jump into the middle of loops](https://en.wikipedia.org/wiki/Duff's_device)
+(unless you introduce a label threading variable, of course, which allows any
+CFG to be represented, as in the Relooper algorithm). And the relationship
+is bidirectional, as it is in fact possible to represent any control flow having
+that limitation by using just `block`s, `loop`s, and labeled `break`s: create a
+`loop`s where necessary, and then you are left with sections in which control
+flow can only branch forward, in which you can sort and create nested `blocks`.
+Branches forward are then simply labeled `break`s, which can go as forward as
+necessary in that section.
+
+In summary, we know that structured control flow can be represented in the
+WebAssembly AST in a guaranteed manner. Arbitrary control flow can also be
+represented there, with overhead that experience has shown is acceptable
+especially given the rarity of irreducible control flow.
+
+[More expressive control flow constructs](FutureFeatures.md#more-expressive-control-flow)
 may be added in the future.
 
 
