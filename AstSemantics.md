@@ -261,18 +261,11 @@ Other control constructs may yield values if their subexpressions yield values:
 
 * `block`: yields either the value of the last expression in the block or the result of an inner `br` or `br_if` that targets the label of the block
 * `loop`: yields either the value of the last expression in the loop or the result of an inner `br` or `br_if` that targets the end label of the loop
-* `if_else`: yields either the value of the true expression or the false expression. If both expressions yield values of different types, the `if_else` will not yield a value
+* `if_else`: yields either the value of the true expression or the false expression
 * `tableswitch`: yields either the value of the last case or the result of an inner `br` or `br_if` that targets the tableswitch
 
-Note that the yield value types of all inner `br` or `br_if` that target a control construct and the types of all yielding subexpressions of said control construct have to match. Subexpressions that consist of only a `return`, `br`, `br_if`, `return` or `unreachable` are exempt from this type check.
-
-This means for example that a block whose last expression is an `(i32.const 1)` can only be the target of a `br` and `br_if`
-with results of the type `i32`. A block whose last expression is an `(unreachable)` can be the target of a `br` and `br_if`
-with results from any type. 
-
-The expression `(if (i32.const 1) (i32.const 2) (f32.const 3.0))` will *not* yield a value while
-the expression `(if (i32.const 1) (unreachable) (f32.const 3.0))` will yield a value. The expression 
-`(if (i32.const 1) (block (unreachable)) (f32.const 3.0))` will not yield a value because the true expression is considered to be a `block` statement.
+Every yielding control structure with an expected type has to ensure that all possible yield values match
+its expected type.
 
 ### Tableswitch
 
