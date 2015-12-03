@@ -35,6 +35,9 @@ currently admits nondeterminism:
    multiple NaN input values with differing bit patterns, it is nondeterminsitic
    which bit pattern is used as the basis for the result (as it is in
    IEEE 754-2008).
+ * Except when otherwise specified, when an arithmetic operator with a floating
+   point result type receives no NaN input values and produces a NaN result
+   value, the sign bit of the NaN result value is nondeterministic.
  * [Fixed-width SIMD may want some flexibility](PostMVP.md#fixed-width-simd)
    - In SIMD.js, floating point values may or may not have subnormals flushed to
      zero.

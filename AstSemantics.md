@@ -447,9 +447,9 @@ follows:
  - If the operation has multiple NaN input values, the result value is computed
    as if one of the operands, selected nondeterministically, is the only NaN
    operand (as described in the previous rule).
- - If the operation has no NaN input values, the result value has a sign bit of
-   0 and a fraction field with 1 in the most significant bit and 0 in the
-   remaining bits.
+ - If the operation has no NaN input values, the result value has a
+   nondeterministic sign bit, a fraction field with 1 in the most significant
+   bit and 0 in the remaining bits.
 
 32-bit floating point operations are as follows:
 
