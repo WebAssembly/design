@@ -265,7 +265,7 @@ Other control constructs may yield values if their subexpressions yield values:
 * `tableswitch`: yields either the value of the last case or the result of an inner `br` or `br_if` that targets the tableswitch
 
 Every yielding control structure with an expected type has to ensure that all possible yield values match
-its expected type.
+its expected type. The expected type of a operand is the type that the parent operator demands from a operand. If a operand is the top-level construct in a function, the expected type is the return type of the function.
 
 ### Tableswitch
 
