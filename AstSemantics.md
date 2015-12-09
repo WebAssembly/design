@@ -213,10 +213,11 @@ instead expected release unused physical pages from the working set using the
 
 Each function has a fixed, pre-declared number of local variables which occupy a single
 index space local to the function. Parameters are addressed as local variables. Local
-variables do not have addresses and are not aliased by linear memory. Local
-variables have value types and are initialized to the appropriate zero value for their
-type at the beginning of the function, except parameters which are initialized to the values
-of the arguments passed to the function.
+variables do not have addresses and are not aliased by linear memory. By doing so, local
+variables become in essence virtual registers that may or not require a stack slot when
+lowering to machine code. Local variables have value types and are initialized to the
+appropriate zero value for their type at the beginning of the function, except parameters
+which are initialized to the values of the arguments passed to the function.
 
   * `get_local`: read the current value of a local variable
   * `set_local`: set the current value of a local variable
@@ -224,6 +225,9 @@ of the arguments passed to the function.
 The details of index space for local variables and their types will be further clarified,
 e.g. whether locals with type `i32` and `i64` must be contiguous and separate from
 others, etc.
+
+Finally, because local variables can be seen as virtual registers, `get_local` and
+`set_local` are not automatically going to be translated into load/store instructions.
 
 ## Control flow structures
 
