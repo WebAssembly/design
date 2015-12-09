@@ -1,7 +1,8 @@
 # Guide for C/C++ developers
 
 WebAssembly is being designed to support C and C++ code well, right from
-the start in [the MVP](MVP.md). The following explains the outlook for
+the start in [the MVP](MVP.md). The intent is to have the full C/C++ code
+ported into a single [module](Modules.md). The following explains the outlook for
 C and C++ developers.
 
 ## Porting C and C++ code to WebAssembly
