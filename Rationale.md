@@ -292,7 +292,8 @@ However, since the publication of IEEE 754-2008, MIPS has added a configuration
 mode (NAN2008) which enables support for the new rules.
 
 In particular, the sign bit of generated NaNs is nondeterministic since x86
-NaNs with it set to 1 while other architectures generate NaNs with it set to 0.
+generates NaNs with it set to 1 while other architectures generate NaNs with it
+set to 0.
 
 
 ## Integer operations
