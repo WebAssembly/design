@@ -33,6 +33,6 @@
 4. Design to support [non-browser embeddings](NonWeb.md) as well.
 5. Make a great platform:
     * build a new LLVM backend for WebAssembly and an accompanying
-      clang port;
+      clang port ([why LLVM first?](FAQ.md#which-compilers-can-i-use-to-build-webassembly-programs));
     * promote other compilers and tools targeting WebAssembly; and
     * enable other useful [tooling](Tooling.md).
