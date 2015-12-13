@@ -374,3 +374,76 @@ etc).
 storage into system-visible and application-visible, the latter not being able
 to contain machine-executable code (certain phones, to investigate if gaming
 consoles or server side have a similar sandboxing mechanism).
+
+
+## Binary and Text Format
+
+It is recognized as technically plausible for the purpose of ongoing discussions
+that the [binary format](BinaryEncoding.md) can be a lossless and one-to-one
+encoding of the [textual format](TextFormat.md) without significantly
+compromising the current high level goal to define a 'size and load time
+efficient [binary format](MVP.md#binary-format) to serve as a compilation
+target', while including at least text annotations, user specified white space,
+and label and variable names.
+
+This recognition is qualified with the reservation that the [binary
+format](BinaryEncoding.md) and [textual format](TextFormat.md) are yet to be
+defined so the technical burden is not yet certain.
+
+A lossless one-to-one encoding is expected to help make the code readable and
+writable but is not sufficient to ensure these properties.
+
+The [textual format](TextFormat.md) is currently specified to be equivalent and
+isomorphic to the [binary format](BinaryEncoding.md), and the [binary
+format](BinaryEncoding.md) is designed to be pretty-printed in a [textual
+format](TextFormat.md), and the specification currently defines debug symbol
+integration to name 'functions, locals, globals, etc,'. Together this already
+defines a binary encoding and its pretty-printed `text` as being capable of
+being lossless one-to-one encodings of each other with a range of annotations,
+when `text = to_text(to_binary(text))`
+
+Adding text blobs between functions and sections that are valid white space or
+comments would support a good deal of textual annotation, and this is recognized
+as being relatively trivial to implement by optional sections or opcodes
+etc. Extending this to white space and comments within functions also seems
+practical, but there is still a lot to settle in this area.
+
+The importance of minimizing the burden on implementations is recognized and
+this support would be implement with optional sections and opcodes etc that
+could be ignored by a runtime to minimize the runtime complexity, and could be
+stripped from the deployment code as it streams in if the storage overhead was
+an issue.
+
+Minimizing the clutter and complexity of the specification is recognized and if
+deemed to be significant then encodings to support this could be specified
+separately with only reserved sections and opcodes etc noted in the main
+specification.
+
+Duplicate information in the binary encoding creates potential conflicts that
+would break the semantic 'equivalent and isomorphic' property between the binary
+format and textual format. For example, the 'source map' solution of simply
+attaching the textual format file to the binary format file with a source map
+would be one extreme limiting example capable of completely redundant
+information. Encoding only the non-semantic differences avoids conflicting
+information by design.
+
+The extent of flexibility in the white space and annotations supported can be
+limited by limiting the range of text source code that validates. For example,
+if it were deemed unnecessary to support arbitrary white space and comments
+between function arguments then the valid text source code definition could
+simply limit the white space and comments here.
+
+Blobs encoding white space and comments would need to contain valid white space
+and comments and not text that affected the code semantics, otherwise it would
+not re-parse to code with the same semantics. This could be achieved by design
+with separate white space and comment blobs. The white space blobs can be
+restricted to only encode valid white space. The comment blobs can be defined to
+hold text that is placed within comments so could never affect the code
+semantics, and having the comments in distinct blobs might even help translation
+between languages where the white space and comment conventions differ.
+
+Text format source code that does not validate could still be encoded losslessly
+by encoding it as opaque text blobs. To re-parse to the same code the content of
+these blobs would need to be actually be invalid. The consumer would not be
+expected to check this property in this case and the blobs could be flagged as
+invalid code to alert the consumer.
