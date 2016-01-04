@@ -238,9 +238,7 @@ a value and may appear as children of other expressions.
  * `if_else`: if expression with *then* and *else* expressions
  * `br`: branch to a given label in an enclosing construct
  * `br_if`: conditionally branch to a given label in an enclosing construct
- * `tableswitch`: a jump table which may jump either to an immediate `case`
-                  child or to a label in an enclosing construct
- * `case`: a case which must be an immediate child of `tableswitch`
+ * `tableswitch`: a jump table which jumps to a label in an enclosing construct
  * `return`: return zero or more values from this function
 
 ### Branches and nesting
@@ -262,24 +260,20 @@ breaks out of a `block`.
 
 ### Yielding values from control constructs
 
-The `nop`, `if`, `br`, `br_if`, `case`, and `return` constructs do not yield values.
+The `nop`, `if`, `br`, `br_if`, and `return` constructs do not yield values.
 Other control constructs may yield values if their subexpressions yield values:
 
 * `block`: yields either the value of the last expression in the block or the result of an inner `br` that targeted the label of the block
 * `loop`: yields either the value of the last expression in the loop or the result of an inner `br` that targeted the end label of the loop
 * `if_else`: yields either the value of the true expression or the false expression
-* `tableswitch`: yields either the value of the last case or the result of an inner `br` that targeted the tableswitch
+* `tableswitch`: yields the result of an inner `br` that targeted the tableswitch
 
 
 ### Tableswitch
 
-A `tableswitch` consists of a zero-based array of targets, a *default* target, an index
-operand, and a list of `case` nodes. Targets may be either labels or `case` nodes.
-A `tableswitch` jumps to the target indexed in the array or the default target if the index is out of bounds. 
-
-A `case` node consists of an expression and may be referenced multiple times
-by the parent `tableswitch`. Unless exited explicitly, control falls through a `case` 
-to the next `case` or the end of the `tableswitch`.
+A `tableswitch` consists of a zero-based array of labels, a *default* label,
+and an index operand. A `tableswitch` jumps to the label indexed in the array
+or the default label if the index is out of bounds.
 
 
 ## Calls
