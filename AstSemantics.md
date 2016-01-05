@@ -5,9 +5,9 @@ represents an expression. Each function body consists of exactly one expression.
 All expressions and operators are typed, with no implicit conversions or overloading rules.
 
 This document explains the high-level design of the AST: its types, constructs, and
-semantics. For full details consult [the formal spec](https://github.com/WebAssembly/spec),
-for file-level encoding details consult [binary encoding](BinaryEncoding.md),
-and for the human-readable text representation consult [text format](TextFormat.md).
+semantics. For full details consult [the formal Specification](https://github.com/WebAssembly/spec),
+for file-level encoding details consult [Binary Encoding](BinaryEncoding.md),
+and for the human-readable text representation consult [Text Format](TextFormat.md).
 
 Verification of WebAssembly code requires only a single pass with constant-time
 type checking and well-formedness checking.
