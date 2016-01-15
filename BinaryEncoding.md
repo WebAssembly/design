@@ -3,120 +3,143 @@
 This document describes the [portable](Portability.md) binary encoding of the
 [Abstract Syntax Tree](AstSemantics.md) nodes.
 
-The binary encoding is designed to allow fast startup, which includes reducing
-download size and allow for quick decoding. For more information, see the 
-[rationale document](Rationale.md#why-a-binary-encoding)
+The binary encoding is a general representation of syntax trees and module
+information that enables small files, fast decoding, and reduced memory usage.
+See the [rationale document](Rationale.md#why-a-binary-encoding) for more detail.
 
-Reducing download size, is achieved through three layers:
+The encoding is split into three layers:
 
- * The **raw** binary encoding itself, natively decoded by the browser, and to
-   be standardized in the [MVP](MVP.md).
- * **Specific** compression to the binary encoding, that is unreasonable to
-   expect a generic compression algorithm like gzip to achieve.
-   * This is not meant to be standardized, at least not initially, as it can be
-     done with a downloaded decompressor that runs as web content on the client,
-     and in particular can be implemented in a [polyfill](Polyfill.md).
- * **Generic** compression, such as gzip, already supported in browsers. Other
-   compression algorithms being considered and which might be standardized
-   include: LZMA, [LZHAM](https://github.com/richgel999/lzham_codec),
-    [Brotli](https://datatracker.ietf.org/doc/draft-alakuijala-brotli/).
+* **Layer 0** is a simple pre-order encoding of the AST and related data structures.
+  The encoding is dense and trivial to interact with, making it suitable for
+  scenarios like JIT, instrumentation tools, and debugging.
+* **Layer 1** provides structural compression on top of layer 0, exploiting
+  specific knowledge about the nature of the syntax tree and its nodes.
+  The structural compression introduces more efficient encoding of values, 
+  rearranges values within the module, and prunes structurally identical
+  tree nodes.
+* **Layer 2** applies generic compression techniques, already available
+  in browsers and other tooling. Algorithms as simple as gzip can deliver
+  good results, but more sophisticated algorithms like 
+  [LZHAM](https://github.com/richgel999/lzham_codec) and
+  [Brotli](https://datatracker.ietf.org/doc/draft-alakuijala-brotli/) are able
+  to deliver dramatically smaller files.
 
-## Variable-length integers
- * [Polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1) shows significant size savings before (31%) and after (7%) compression.
- * [LEB128](https://en.wikipedia.org/wiki/LEB128) except limited to uint32_t payloads.
+Most importantly, the layering approach allows development and standardization to
+occur incrementally, even though production-quality implementations will need to
+implement all of the layers.
 
-## Global structure
+# Primitives and key terminology
 
-* A module contains (in this order):
-  - A header, containing:
-    + The [magic number](https://en.wikipedia.org/wiki/Magic_number_%28programming%29)
-    + Other data TBD
-  - A table (sorted by offset) containing, for each section:
-    + A string literal section type name
-    + 64-bit offset within the module
-  - A sequence of sections
-* A section contains:
-  - A header followed by
-  - The section contents (specific to the section type)
-* A `definitions` section contains (in this order):
-  - The generic section header
-  - A table (sorted by offset) containing, for each type which has operators:
-    + A standardized string literal [type name](AstSemantics.md#expression-types).
-      The index of a type name in this table is referred to as a type ID
-    + 64-bit offset of its operator table within the section
-  - A sequence of operator tables
-  - An operator table contains:
-    + A sequence of standardized string literal [operator names](AstSemantics.md),
-      where order determines operator index
-* A `code` section contains (in this order):
-  - The generic section header
-  - A table (sorted by offset) containing, for each function:
-     + Signature
-     + Function attributes, valid attributes TBD (could include hot/cold, optimization level, noreturn, read/write/pure, ...)
-     + 64-bit offset within the section
-  - A sequence of functions
-  - A function contains:
-    + A table containing, for each type ID that has [locals](AstSemantics.md#local-variables):
-      * Type ID
-      * Count of locals
-    + The serialized AST
-* A `data` section contains (in this order):
-   - The generic section header
-   - A sequence of byte ranges within the binary and corresponding addresses in the linear memory
+### varuint32
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32_t payloads. Provides considerable size reduction.
 
+### Pre-order encoding
+Refers to an approach for encoding syntax trees, where each node begins with an identifier, followed by any arguments or child nodes.
+Pre-order trees can be decoded iteratively or recursively. Alternative approaches include post-order trees and table representations.
 
-All strings are encoded as null-terminated UTF8. Data segments represent
-initialized data that is loaded directly from the binary into the linear memory
-when the program starts (see [modules](Modules.md#linear-memory-section)).
-
-## Serialized AST
-
-* Use a preorder encoding of the AST
-  * Efficient single-pass validation+compilation and polyfill
-* The data of a node (if there is any), is written immediately after the operator and before child nodes
-  * The operator statically determines what follows, so no generic metadata is necessary.
 * Examples
   * Given a simple AST node: `struct I32Add { AstNode *left, *right; }`
     * First write the operator of `I32Add` (1 byte)
     * Then recursively write the left and right nodes.
+
   * Given a call AST node: `struct Call { uint32_t callee; vector<AstNode*> args; }`
     * First write the operator of `Call` (1 byte)
     * Then write the (variable-length) integer `Call::callee` (1-5 bytes)
     * Then recursively write each arg node (arity is determined by looking up `callee` in table of signatures)
 
-## Backwards Compatibility
+### Stream splitting
+Refers to splitting the single encoded binary stream out into smaller streams, partitioned based on element type or semantic information.
+Research has shown that splitting constants, names, and opcodes into their own streams increases the effectiveness of generic compression.
 
-As explained above, for size- and decode-efficiency, the binary format will serialize AST nodes,
-their contents and children using dense integer indices and without any kind of embedded metadata 
-or tagging. This raises the question of how to reconcile the efficient encoding with the 
-backwards-compatibility goals.
+### Subtree deduplication / nullary macros
+Identifies and prunes structurally identical nodes and trees of nodes. Most applications contain significant amounts of structural 
+duplication that is not completely erased by generic compression.
+**Non-nullary macros** are an extension of this technique that enables further compression at the cost of additional complexity.
 
-Specifically, we'd like to avoid the situation where a future version of WebAssembly has features 
-F1 and F2 and vendor V1 implements F1, assigning the next logical operator indices to F1's new
-operators, and V2 implements F2, assigning the same next logical operator indices to F2's new operators 
-and now a single binary has ambiguous semantics if it tries to use either F1 or F2. This type of 
-non-linear feature addition is commonplace in JavaScript and Web APIs and is guarded against by 
-having unique names for unique features (and associated [conventions](https://hsivonen.fi/vendor-prefixes/)).
+### Index tables
+Modules contain multiple index tables that assign indexes to key pieces of information like opcodes or data types. This enables
+compatibility between implementations and allows information to be represented more efficiently.
 
-The current proposal is to maintain both the efficiency of indices in the [serialized AST](BinaryEncoding.md#serialized-ast) and the established
-conflict-avoidance practices surrounding string names:
-  * The WebAssembly spec doesn't define any global index spaces
-    * So, as a general rule, no magic numbers in the spec (other than the literal [magic number](https://en.wikipedia.org/wiki/Magic_number_%28programming%29)).
-  * Instead, a module defines its *own* local index spaces of operators by providing tables *of names*. 
-    * So what the spec *would* define is a set of names and their associated semantics.
-  * To avoid (over time) large index-space declaration sections that are largely the same
-    between modules, finalized versions of standards would define named baseline index spaces
-    that modules could optionally use as a starting point to further refine.
-    * For example, to use all of [the MVP](MVP.md) plus
-      [SIMD](PostMVP.md#fixed-width-simd) the declaration could be "base"
-      followed by the list of SIMD operators used.
-    * This feature would also be most useful for people handwriting the [text format](TextFormat.md).
-    * However, such a version declaration does not establish a global "version" for the module
-      or affect anything outside of the initialization of the index spaces; decoders would
-      remain versionless and simply add cases for new *names* (as with current JavaScript parsers).
+### Sections
+Modules are split up into sections with well-defined contents that can refer to each other and are identified by name.
+The use of names allows new section types to be introduced in the future.
 
-## Proposals
+### Strings
+Strings are encoded as null-terminated [UTF8](http://unicode.org/faq/utf_bom.html#UTF8).
 
-The native prototype built for [V8](https://github.com/WebAssembly/v8-native-prototype)
-implements a binary format that embodies most, but not all of the ideas in this document.
-It is described in detail in a [public design doc](https://docs.google.com/a/google.com/document/d/1761v1AfhFM5kE8NArF_PyXcl-iVh0Dx3InOrmcyIoiI/pub) and a [copy of the original](https://docs.google.com/document/d/1-G11CnMA0My20KI9D7dBR6ZCPOBCRD0oCH6SHCPFGx0/edit?usp=sharing).
+# v8-native module structure
+
+The following documents the current v8-native prototype format, not the binary encoding intended for standardization.
+
+## High-level structure
+A module contains (in this order):
+* A stream of sections, containing for each section:
+  - ```uint8```: A [section type identifier](https://github.com/v8/v8/blob/master/src/wasm/wasm-module.h#L26) for the section
+  - The section body (defined below by section type)
+
+### Memory section
+* ```uint8```: The minimum size of the module heap in bytes, as a power of two
+* ```uint8```: The maximum size of the module heap in bytes, as a power of two
+* ```uint8```: ```1``` if the module's memory is externally visible
+
+### Signatures section
+* [```varuint32```](#varuint32): The number of function signatures in the section
+* For each function signature:
+  - ```uint8```: The number of parameters
+  - ```uint8```: The function return type, as a [LocalType](https://github.com/v8/v8/blob/master/src/wasm/wasm-opcodes.h#L16)
+  - For each parameter:
+    + ```uint8```: The parameter type, as a LocalType
+
+### Functions section
+This section must be preceded by a [Signatures](#signatures-section) section.
+
+* ```varuint32```: The number of functions in the section
+* For each function:
+  - ```uint8```: The [function declaration bits](https://github.com/v8/v8/blob/master/src/wasm/wasm-module.h#L39)
+  - ```uint16```: The function signature (as an index into the Signatures section)
+  - If the ```kDeclFunctionName``` bit is set:
+    + ```uint32```: The offset of the function name in the file.
+  - If the ```kDeclFunctionImport``` bit is set, **the function entry ends here**
+  - If the ```kDeclFunctionLocals``` bit is set:
+    + ```uint16```: The number of i32 locals
+    + ```uint16```: The number of i64 locals
+    + ```uint16```: The number of f32 locals
+    + ```uint16```: The number of f64 locals
+  - ```uint16```: The size of the function body, in bytes
+  - The function body
+
+### Globals section
+* ```varuint32```: The number of global variable declarations in the section.
+* For each global variable:
+  - ```uint32```: The offset of the global variable name in the file.
+  - ```uint8```: The type of the global, as a [MemType](https://github.com/v8/v8/blob/master/src/wasm/wasm-opcodes.h#L25)
+  - ```uint8```: ```1``` if the global is exported
+
+### Data Segments section
+* ```varuint32```: The number of data segments in the section.
+* For each data segment:
+  - ```uint32```: The base address of the data segment in memory.
+  - ```uint32```: The offset of the data segment's data in the file.
+  - ```uint32```: The size of the data segment (in bytes)
+  - ```uint8```: ```1``` if the segment's data should be automatically loaded into memory at module load time.
+
+### Function Table section
+This section must be preceded by a [Functions](#functions-section) section.
+
+* ```varuint32```: The number of function table entries in the section
+* For each function table entry:
+  - ```uint16```: The index of the function (in the [Functions](#functions-section) section's index space)
+
+### WLL section
+
+* ```varuint32```: The size of the section body, in bytes
+* The section body (contents currently undefined)
+
+### End section
+This indicates the end of the module's sections. Additional data can follow this section marker (for example, to store function names or data segment bodies) but it is not explicitly handled by the decoder.
+
+# v8-native prototype format
+
+The native prototype built for [V8](https://github.com/v8/v8/blob/master/src/wasm)
+implements a binary format that embodies many of the ideas described in this document.
+It is described in detail in a [public design doc](https://docs.google.com/document/d/1-G11CnMA0My20KI9D7dBR6ZCPOBCRD0oCH6SHCPFGx0/edit?usp=sharing).
