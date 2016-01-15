@@ -153,3 +153,8 @@ conflict-avoidance practices surrounding string names:
       or affect anything outside of the initialization of the index spaces; decoders would
       remain versionless and simply add cases for new *names* (as with current JavaScript parsers).
 
+## Proposals
+
+The native prototype built for [V8](https://github.com/WebAssembly/v8-native-prototype)
+implements a binary format that embodies most, but not all of the ideas in this document.
+It is described in detail in a [public design doc](https://docs.google.com/a/google.com/document/d/1761v1AfhFM5kE8NArF_PyXcl-iVh0Dx3InOrmcyIoiI/pub) and a [copy of the original](https://docs.google.com/document/d/1-G11CnMA0My20KI9D7dBR6ZCPOBCRD0oCH6SHCPFGx0/edit?usp=sharing).
