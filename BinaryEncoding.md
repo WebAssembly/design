@@ -4,7 +4,8 @@ This document describes the [portable](Portability.md) binary encoding of the
 [Abstract Syntax Tree](AstSemantics.md) nodes.
 
 The binary encoding is designed to allow fast startup, which includes reducing
-download size and allow for quick decoding.
+download size and allow for quick decoding. For more information, see the 
+[rationale document](Rationale.md#why-a-binary-encoding)
 
 Reducing download size, is achieved through three layers:
 
@@ -15,49 +16,10 @@ Reducing download size, is achieved through three layers:
    * This is not meant to be standardized, at least not initially, as it can be
      done with a downloaded decompressor that runs as web content on the client,
      and in particular can be implemented in a [polyfill](Polyfill.md).
-   * We can do better than generic compression because we are aware of the AST
-     structure and other details:
-     * For example, macro compression that
-       [deduplicates AST trees](https://github.com/WebAssembly/design/issues/58#issuecomment-101863032)
-       can focus on AST nodes + their children, thus having `O(nodes)` entities
-       to worry about, compared to generic compression which in principle would
-       need to look at `O(bytes*bytes)` entities.  Such macros would allow the
-       logical equivalent of `#define ADD1(x) (x+1)`, i.e., to be
-       parametrized. Simpler macros (`#define ADDX1 (x+1)`) can implement useful
-       features like constant pools.
-     * Another example is reordering of functions and some internal nodes, which
-       we know does not change semantics, but
-       [can improve general compression](https://www.rfk.id.au/blog/entry/cromulate-improve-compressibility/).
  * **Generic** compression, such as gzip, already supported in browsers. Other
    compression algorithms being considered and which might be standardized
    include: LZMA, [LZHAM](https://github.com/richgel999/lzham_codec),
     [Brotli](https://datatracker.ietf.org/doc/draft-alakuijala-brotli/).
-
-Each of the three layers work to find compression opportunities to the best of
-its abilities, without encroaching upon the subsequent layer's compression
-opportunities.
-
-## Why a binary encoding instead of a text-only representation
-
-Given that text is so compressible and it is well known that it is hard to beat
-gzipped source, is there any win from having a binary format over a text format?
-Yes:
-* Large reductions in payload size can still significantly decrease the
-  compressed file size.
-  * Experimental results from a
-    [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1) show the
-    gzipped binary format to be about 20-30% smaller than the corresponding
-    gzipped asm.js.
-* A binary format that represents the names of variables and functions with raw
-  indices instead of strings is much faster to decode: array indexing
-  vs. dictionary lookup.
-   * Experimental results from a
-     [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1) show that
-     decoding the binary format is about 23× faster than parsing the
-     corresponding asm.js source (using
-     [this demo](https://github.com/lukewagner/AngryBotsPacked), comparing
-     *just* parsing in SpiderMonkey (no validation, IR generation) to *just*
-     decoding in the polyfill (no asm.js code generation).
 
 ## Variable-length integers
  * [Polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1) shows significant size savings before (31%) and after (7%) compression.

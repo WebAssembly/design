@@ -374,3 +374,51 @@ etc).
 storage into system-visible and application-visible, the latter not being able
 to contain machine-executable code (certain phones, to investigate if gaming
 consoles or server side have a similar sandboxing mechanism).
+
+
+## Why a binary encoding?
+
+Given that text is so compressible and it is well known that it is hard to beat
+gzipped source, is there any win from having a binary format over a text format?
+Yes:
+* Large reductions in payload size can still significantly decrease the
+  compressed file size.
+  * Experimental results from a
+    [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1) show the
+    gzipped binary format to be about 20-30% smaller than the corresponding
+    gzipped asm.js.
+* A binary format that represents the names of variables and functions with raw
+  indices instead of strings is much faster to decode: array indexing
+  vs. dictionary lookup.
+  * Experimental results from a
+    [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1) show that
+    decoding the binary format is about 23× faster than parsing the
+    corresponding asm.js source (using
+    [this demo](https://github.com/lukewagner/AngryBotsPacked), comparing
+    *just* parsing in SpiderMonkey (no validation, IR generation) to *just*
+    decoding in the polyfill (no asm.js code generation).
+* A binary format enables optimizations that reduce the memory usage of decoded
+  ASTs without increasing size or reducing decode speed.
+
+
+## Why a layered binary encoding?
+* We can do better than generic compression because we are aware of the AST
+  structure and other details:
+  * For example, macro compression that
+    [deduplicates AST trees](https://github.com/WebAssembly/design/issues/58#issuecomment-101863032)
+    can focus on AST nodes + their children, thus having `O(nodes)` entities
+    to worry about, compared to generic compression which in principle would
+    need to look at `O(bytes*bytes)` entities.  Such macros would allow the
+    logical equivalent of `#define ADD1(x) (x+1)`, i.e., to be
+    parametrized. Simpler macros (`#define ADDX1 (x+1)`) can implement useful
+    features like constant pools.
+  * Another example is reordering of functions and some internal nodes, which
+    we know does not change semantics, but
+    [can improve general compression](https://www.rfk.id.au/blog/entry/cromulate-improve-compressibility/).
+* JITs and simple developer tooling do not benefit from compression, so layering allows
+  the related development and maintenance burden to be offloaded to reusable tools/libraries.
+* Each of the layers works to find compression opportunities to the best of
+  its abilities, without encroaching upon the subsequent layer's compression
+  opportunities.
+* [Existing web standards](https://www.w3.org/TR/PNG/) demonstrate many of
+  the advantages of a layered encoding strategy.
