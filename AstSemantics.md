@@ -564,7 +564,9 @@ outside the range which rounds to an integer in range) traps.
   * `select`: a ternary operator with a boolean (i32) condition and two
     additional operands, which must have the same type as each other. `select`
     returns the the first of these two operands if the condition operand is
-    non-zero, or the second otherwise.
+    non-zero, or the second otherwise.  Note that, both of
+    the two operands are evaluated before the condition is evaluated and the
+    return of the final result.
 
 ## Feature test
 
