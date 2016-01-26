@@ -64,8 +64,7 @@ Strings referenced by the module (i.e. function names) are encoded as null-termi
 The following documents the current prototype format. This format is based on and supersedes the v8-native prototype format, originally in a [public design doc](https://docs.google.com/document/d/1-G11CnMA0My20KI9D7dBR6ZCPOBCRD0oCH6SHCPFGx0/edit?usp=sharing).
 
 ## High-level structure
-A module contains (in this order):
-* A stream of sections, containing for each section:
+A module contains a stream of sections, containing for each section:
   - ```uint8```: A [section type identifier](https://github.com/v8/v8/blob/master/src/wasm/wasm-module.h#L26) for the section
   - The section body (defined below by section type)
 
@@ -137,4 +136,3 @@ This section must be preceded by a [Functions](#functions-section) section.
 
 ### End section
 This indicates the end of the module's sections. Additional data can follow this section marker (for example, to store function names or data segment bodies) but it is not parsed by the decoder.
-
