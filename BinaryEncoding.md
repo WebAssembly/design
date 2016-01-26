@@ -30,8 +30,17 @@ implement all of the layers.
 
 # Primitives and key terminology
 
+### uint8
+A single-byte unsigned integer.
+
+### uint16
+A two-byte little endian unsigned integer.
+
+### uint32
+A four-byte little endian unsigned integer.
+
 ### varuint32
-A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32_t payloads. Provides considerable size reduction.
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 payloads. Provides considerable size reduction.
 
 ### Pre-order encoding
 Refers to an approach for encoding syntax trees, where each node begins with an identifier, followed by any arguments or child nodes.
@@ -47,29 +56,12 @@ Pre-order trees can be decoded iteratively or recursively. Alternative approache
     * Then write the (variable-length) integer `Call::callee` (1-5 bytes)
     * Then recursively write each arg node (arity is determined by looking up `callee` in table of signatures)
 
-### Stream splitting
-Refers to splitting the single encoded binary stream out into smaller streams, partitioned based on element type or semantic information.
-Research has shown that splitting constants, names, and opcodes into their own streams increases the effectiveness of generic compression.
-
-### Subtree deduplication / nullary macros
-Identifies and prunes structurally identical nodes and trees of nodes. Most applications contain significant amounts of structural 
-duplication that is not completely erased by generic compression.
-**Non-nullary macros** are an extension of this technique that enables further compression at the cost of additional complexity.
-
-### Index tables
-Modules contain multiple index tables that assign indexes to key pieces of information like opcodes or data types. This enables
-compatibility between implementations and allows information to be represented more efficiently.
-
-### Sections
-Modules are split up into sections with well-defined contents that can refer to each other and are identified by name.
-The use of names allows new section types to be introduced in the future.
-
 ### Strings
-Strings are encoded as null-terminated [UTF8](http://unicode.org/faq/utf_bom.html#UTF8).
+Strings referenced by the module (i.e. function names) are encoded as null-terminated [UTF8](http://unicode.org/faq/utf_bom.html#UTF8).
 
-# v8-native module structure
+# Module structure
 
-The following documents the current v8-native prototype format, not the binary encoding intended for standardization.
+The following documents the current prototype format. This format is based on and supersedes the v8-native prototype format, originally in a [public design doc](https://docs.google.com/document/d/1-G11CnMA0My20KI9D7dBR6ZCPOBCRD0oCH6SHCPFGx0/edit?usp=sharing).
 
 ## High-level structure
 A module contains (in this order):
@@ -78,11 +70,15 @@ A module contains (in this order):
   - The section body (defined below by section type)
 
 ### Memory section
+A module may only contain one memory section.
+
 * ```uint8```: The minimum size of the module heap in bytes, as a power of two
 * ```uint8```: The maximum size of the module heap in bytes, as a power of two
 * ```uint8```: ```1``` if the module's memory is externally visible
 
 ### Signatures section
+A module may only contain one signatures section.
+
 * [```varuint32```](#varuint32): The number of function signatures in the section
 * For each function signature:
   - ```uint8```: The number of parameters
@@ -91,7 +87,7 @@ A module contains (in this order):
     + ```uint8```: The parameter type, as a LocalType
 
 ### Functions section
-This section must be preceded by a [Signatures](#signatures-section) section.
+This section must be preceded by a [Signatures](#signatures-section) section. A module may only contain one functions section.
 
 * ```varuint32```: The number of functions in the section
 * For each function:
@@ -109,6 +105,8 @@ This section must be preceded by a [Signatures](#signatures-section) section.
   - The function body
 
 ### Globals section
+A module may only contain one globals section. This section is currently for V8 internal use.
+
 * ```varuint32```: The number of global variable declarations in the section.
 * For each global variable:
   - ```uint32```: The offset of the global variable name in the file.
@@ -116,6 +114,8 @@ This section must be preceded by a [Signatures](#signatures-section) section.
   - ```uint8```: ```1``` if the global is exported
 
 ### Data Segments section
+A module may only contain one data segments section.
+
 * ```varuint32```: The number of data segments in the section.
 * For each data segment:
   - ```uint32```: The base address of the data segment in memory.
@@ -136,10 +136,5 @@ This section must be preceded by a [Functions](#functions-section) section.
 * The section body (contents currently undefined)
 
 ### End section
-This indicates the end of the module's sections. Additional data can follow this section marker (for example, to store function names or data segment bodies) but it is not explicitly handled by the decoder.
+This indicates the end of the module's sections. Additional data can follow this section marker (for example, to store function names or data segment bodies) but it is not parsed by the decoder.
 
-# v8-native prototype format
-
-The native prototype built for [V8](https://github.com/v8/v8/blob/master/src/wasm)
-implements a binary format that embodies many of the ideas described in this document.
-It is described in detail in a [public design doc](https://docs.google.com/document/d/1-G11CnMA0My20KI9D7dBR6ZCPOBCRD0oCH6SHCPFGx0/edit?usp=sharing).
