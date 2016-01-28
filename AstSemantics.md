@@ -251,8 +251,6 @@ a value and may appear as children of other expressions.
 ### Branches and nesting
 
 The `br` and `br_if` constructs express low-level branching.
-Branches that exit a `block`, `loop`, or `tableswitch` may take a subexpression
-that yields a value for the exited construct.
 Branches may only reference labels defined by an outer *enclosing construct*.
 This means that, for example, references to a `block`'s label can only occur 
 within the `block`'s body.
@@ -264,6 +262,10 @@ in the exact sense as in high-level languages like Java, JavaScript, Rust and Go
 further see the parallel, note that a `br` to a `block`'s label is functionally
 equivalent to a labeled `break` in high-level languages in that a `br` simply
 breaks out of a `block`.
+
+Branches that exit a `block`, `loop`, or `tableswitch` may take a subexpression
+that yields a value for the exited construct. If present, it is the first operand
+before any others.
 
 ### Yielding values from control constructs
 
@@ -561,10 +563,9 @@ outside the range which rounds to an integer in range) traps.
 
 ## Type-parameterized operators.
 
-  * `select`: a ternary operator with a boolean (i32) condition and two
-    additional operands, which must have the same type as each other. `select`
-    returns the the first of these two operands if the condition operand is
-    non-zero, or the second otherwise.
+  * `select`: a ternary operator with two operands, which have the same type as
+    each other, plus a boolean (i32) condition. `select` returns the first
+    operand if the condition operand is non-zero, or the second otherwise.
 
 ## Feature test
 
