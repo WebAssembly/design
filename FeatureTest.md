@@ -37,7 +37,7 @@ To illustrate, consider 4 examples:
 
 * [`i32.min_s`](FutureFeatures.md#additional-integer-operators) - Strategy 2
   could be used to translate `(i32.min_s lhs rhs)` into an equivalent expression
-  that stores `lhs` and `rhs` in locals then uses `i32.lt_s` and `conditional`.
+  that stores `lhs` and `rhs` in locals then uses `i32.lt_s` and `select`.
 * [Threads](PostMVP.md#threads) - If an application uses `#ifdef` extensively
   to produce thread-enabled/disabled builds, Strategy 1 would be appropriate.
   However, if the application was able to abstract use of threading to a few

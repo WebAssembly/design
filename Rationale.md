@@ -221,9 +221,9 @@ tables filled with failure handlers to avoid one check.
 ## Expressions with Control Flow
 
 Expression trees offer significant size reduction by avoiding the need for
-`set_local`/`get_local` pairs in the common case of an expression with only one,
-immediate use. The `comma` and `conditional` primitives provide AST nodes that
-express control flow and thus allow more opportunities to build bigger
+`set_local`/`get_local` pairs in the common case of an expression with only one
+immediate use. Control flow "statements" are in fact expressions with result
+values, thus allowing even more opportunities to build bigger
 expression trees and further reduce `set_local`/`get_local` usage (which
 constitute 30-40% of total bytes in the
 [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1)).
