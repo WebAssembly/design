@@ -358,15 +358,6 @@ supported (including NaN values of all possible bit patterns).
   * `f32.const`: produce the value of an f32 immediate
   * `f64.const`: produce the value of an f64 immediate
 
-## Expressions with Control Flow
-
-  * `comma`: evaluate and ignore the result of the first operand, evaluate and
-    return the second operand
-  * `conditional`: basically ternary `?:` operator
-
-New operators may be considered which allow measurably greater
-expression-tree-building opportunities.
-
 ## 32-bit Integer operators
 
 Integer operators are signed, unsigned, or sign-agnostic. Signed operators
