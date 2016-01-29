@@ -34,8 +34,8 @@ type is to be passed to and returned from exported functions.
 
 Reference types are allowed to be used as the types of locals, parameters
 and return types. Additionally, references would be allowed as operands to
-operators that treat their values as black boxes (`conditional`, `comma`, 
-`eq`, etc.). A new `dynamic_cast` operator would be added to allow checked
+operators that treat their values as black boxes (`br`, `block`, etc.).
+A new `dynamic_cast` operator would be added to allow checked
 casting from any opaque reference type to any other opaque reference type.
 Whether the cast succeeds is up to the host environment; WebAssembly itself
 will define no a priori subtyping relationship.
