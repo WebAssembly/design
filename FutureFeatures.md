@@ -11,10 +11,6 @@ available under [feature tests](FeatureTest.md).
 
 This is covered in the [tooling](Tooling.md) section.
 
-## Dynamic linking
-
-This is covered in the [dynamic linking](DynamicLinking.md) section.
-
 ## Finer-grained control over memory
 
 Provide access to safe OS-provided functionality including:

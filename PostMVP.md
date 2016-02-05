@@ -32,6 +32,10 @@ and can thus be represented efficiently by the engine.
   [PNaCl atomic support]: https://developer.chrome.com/native-client/reference/pnacl-c-cpp-language-support#memory-model-and-atomics
   [SharedArrayBuffer]: https://docs.google.com/document/d/1NDGA_gZJ7M7w1Bh8S0AoDyEqwDdRh4uSoTPSNn77PFk
 
+## Dynamic linking
+
+This is covered in the [dynamic linking](DynamicLinking.md) section.
+
 ## Fixed-width SIMD
 
 Support fixed-width SIMD vectors, initially only for 128-bit wide vectors as
