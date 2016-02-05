@@ -309,7 +309,7 @@ To support exceptions and alternate rounding modes, one option is to define an
 alternate form for each of `add`, `sub`, `mul`, `div`, `sqrt`, and `fma`. These
 alternate forms would have extra operands for rounding mode, masked traps, and
 old flags, and an extra result for a new flags value. These operators would be
-fairly verbose, but it's expected that their use cases will specialized. This
+fairly verbose, but it's expected that their use cases will be specialized. This
 approach has the advantage of exposing no global (even if only per-thread)
 control and status registers to applications, and to avoid giving the common
 operators the possibility of having side effects.
