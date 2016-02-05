@@ -140,11 +140,11 @@ For example, a start node in a module will be:
 
 or
 
-```(start 0)```
+```(start 42)```
 
 In the first example, the environment is expected to call the function $start_function
 before calling any other module function. In the second case, the environment is
-expected to call the module function indexed 0.
+expected to call the module function indexed 42. This number is the function index starting from 0 (same as for `export`).
 
 A module can:
 * Only have at most a start node
