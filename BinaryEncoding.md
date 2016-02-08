@@ -194,7 +194,7 @@ Each node in the abstract syntax tree corresponds to an operator, such as `i32.a
 Most operators encode as a single `uint8`, but some require *immediates* which immediately follow the
 first byte, before the child nodes.
 
-## Control flow operators
+## Control flow operators ([described here](AstSemantics.md#control-flow-structures))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
@@ -220,7 +220,7 @@ The `tableswitch` operator has as complex immediate operand which is encoded as 
 
 The table switch operator is then immediately followed by `case_count` case expressions which by default fall through to each other.
 
-## Basic operators
+## Basic operators ([described here](AstSemantics.md#constants))
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
 | `i8.const` | `0x09` | value = `uint8` | a constant value, signed extended to type `i32`  |
@@ -235,7 +235,7 @@ The table switch operator is then immediately followed by `case_count` case expr
 | `call_function` | `0x12` | function_index = `varuint32` | call a function by its index |
 | `call_indirect` | `0x13` | signature_index = `varuint32` | call a function indirect with an expected signature |
 
-## Memory-related operators
+## Memory-related operators ([described here](AstSemantics.md#linear-memory-accesses))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
@@ -272,7 +272,7 @@ The `memory_immediate` type is encoded as follows:
 | flags | `uint8` | always | a bitfield where<br>bit `4` indicates an offset follows<br>bit `7` indicates natural alignment |
 | offset | `varuint32` | `flags[4] == 1` | the value of the offset |
 
-## Simple operators
+## Simple operators ([described here](AstSemantics#32-bit-integer-operators))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
