@@ -216,7 +216,7 @@ The `tableswitch` operator has as complex immediate operand which is encoded as 
 | ---- | ---- | ---- |
 | case_count | `uint16` | number of cases in the case_table |
 | target_count | `uint16` | number of targets in the target_table |
-| target_table | `uint16*` | target entries where<br>`>= 0x800` indicates an outer block to which to break<br>`<= 0x8000` indicates a case to which to jump |
+| target_table | `uint16*` | target entries where<br>`>= 0x8000` indicates an outer block to which to break<br>`<= 0x8000` indicates a case to which to jump |
 
 The table switch operator is then immediately followed by `case_count` case expressions which by default fall through to each other.
 
@@ -235,5 +235,164 @@ The table switch operator is then immediately followed by `case_count` case expr
 | `call_function` | `0x12` | function_index = `varuint32` | call a function by its index |
 | `call_indirect` | `0x13` | signature_index = `varuint32` | call a function indirect with an expected signature |
 
+## Memory-related operators
+
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
+| `i32.load8_s` | `0x20` | `memory_immediate` | load from memory |
+| `i32.load8_u` | `0x21` | `memory_immediate` | load from memory  |
+| `i32.load16_s` | `0x22` | `memory_immediate` | load from memory |
+| `i32.load16_u` | `0x23` | `memory_immediate` | load from memory |
+| `i64.load8_s` | `0x24` | `memory_immediate` | load from memory |
+| `i64.load8_u` | `0x25` | `memory_immediate` | load from memory |
+| `i64.load16_s` | `0x26` | `memory_immediate` | load from memory |
+| `i64.load16_u` | `0x27` | `memory_immediate` | load from memory |
+| `i64.load32_s` | `0x28` | `memory_immediate` | load from memory |
+| `i64.load32_u` | `0x29` | `memory_immediate` | load from memory |
+| `i32.load` | `0x2a` | `memory_immediate` | load from memory |
+| `i64.load` | `0x2b` | `memory_immediate` | load from memory |
+| `f32.load` | `0x2c` | `memory_immediate` | load from memory |
+| `f64.load` | `0x2d` | `memory_immediate` | load from memory |
+| `i32.store8` | `0x2e` | `memory_immediate` | store to memory |
+| `i32.store16` | `0x2f` | `memory_immediate` | store to memory |
+| `i64.store8` | `0x30` | `memory_immediate` | store to memory |
+| `i64.store16` | `0x31` | `memory_immediate` | store to memory |
+| `i64.store32` | `0x32` | `memory_immediate` | store to memory |
+| `i32.store` | `0x33` | `memory_immediate` | store to memory |
+| `i64.store` | `0x34` | `memory_immediate` | store to memory |
+| `f32.store` | `0x35` | `memory_immediate` | store to memory |
+| `f64.store` | `0x36` | `memory_immediate` | store to memory |
+| `memory_size` | `0x3b` |  | query the size of memory |
+| `grow_memory` | `0x39` |  | grow the size of memory |
+
+The `memory_immediate` type is encoded as follows:
+
+| Name | Type | Present? | Description |
+| ---- | ---- | ---- | ---- |
+| flags | `uint8` | always | a bitfield where<br>bit `4` indicates an offset follows<br>bit `7` indicates natural alignment |
+| offset | `varuint32` | `flags[4] == 1` | the value of the offset |
+
+## Simple operators
+
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
+| `i32.add` | `0x40` | | |
+| `i32.sub` | `0x41` | | |
+| `i32.mul` | `0x42` | | |
+| `i32.div_s` | `0x43` | | |
+| `i32.div_u` | `0x44` | | |
+| `i32.rem_s` | `0x45` | | |
+| `i32.rem_u` | `0x46` | | |
+| `i32.and` | `0x47` | | |
+| `i32.ior` | `0x48` | | |
+| `i32.xor` | `0x49` | | |
+| `i32.shl` | `0x4a` | | |
+| `i32.shr_u` | `0x4b` | | |
+| `i32.shr_s` | `0x4c` | | |
+| `i32.eq` | `0x4d` | | |
+| `i32.ne` | `0x4e` | | |
+| `i32.lt_s` | `0x4f` | | |
+| `i32.le_s` | `0x50` | | |
+| `i32.lt_u` | `0x51` | | |
+| `i32.le_u` | `0x52` | | |
+| `i32.gt_s` | `0x53` | | |
+| `i32.ge_s` | `0x54` | | |
+| `i32.gt_u` | `0x55` | | |
+| `i32.ge_u` | `0x56` | | |
+| `i32.clz` | `0x57` | | |
+| `i32.ctz` | `0x58` | | |
+| `i32.popcnt` | `0x59` | | |
+| `bool.not` | `0x5a` | | |
+| `i64.add` | `0x5b` | | |
+| `i64.sub` | `0x5c` | | |
+| `i64.mul` | `0x5d` | | |
+| `i64.div_s` | `0x5e` | | |
+| `i64.div_u` | `0x5f` | | |
+| `i64.rem_s` | `0x60` | | |
+| `i64.rem_u` | `0x61` | | |
+| `i64.and` | `0x62` | | |
+| `i64.ior` | `0x63` | | |
+| `i64.xor` | `0x64` | | |
+| `i64.shl` | `0x65` | | |
+| `i64.shr_u` | `0x66` | | |
+| `i64.shr_s` | `0x67` | | |
+| `i64.eq` | `0x68` | | |
+| `i64.ne` | `0x69` | | |
+| `i64.lt_s` | `0x6a` | | |
+| `i64.le_s` | `0x6b` | | |
+| `i64.lt_u` | `0x6c` | | |
+| `i64.le_u` | `0x6d` | | |
+| `i64.gt_s` | `0x6e` | | |
+| `i64.ge_s` | `0x6f` | | |
+| `i64.gt_u` | `0x70` | | |
+| `i64.ge_u` | `0x71` | | |
+| `i64.clz` | `0x72` | | |
+| `i64.ctz` | `0x73` | | |
+| `i64.popcnt` | `0x74` | | |
+| `f32.add` | `0x75` | | |
+| `f32.sub` | `0x76` | | |
+| `f32.mul` | `0x77` | | |
+| `f32.div` | `0x78` | | |
+| `f32.min` | `0x79` | | |
+| `f32.max` | `0x7a` | | |
+| `f32.abs` | `0x7b` | | |
+| `f32.neg` | `0x7c` | | |
+| `f32.copysign` | `0x7d` | | |
+| `f32.ceil` | `0x7e` | | |
+| `f32.floor` | `0x7f` | | |
+| `f32.trunc` | `0x80` | | |
+| `f32.nearestint` | `0x81` | | |
+| `f32.sqrt` | `0x82` | | |
+| `f32.eq` | `0x83` | | |
+| `f32.ne` | `0x84` | | |
+| `f32.lt` | `0x85` | | |
+| `f32.le` | `0x86` | | |
+| `f32.gt` | `0x87` | | |
+| `f32.ge` | `0x88` | | |
+| `f64.add` | `0x89` | | |
+| `f64.sub` | `0x8a` | | |
+| `f64.mul` | `0x8b` | | |
+| `f64.div` | `0x8c` | | |
+| `f64.min` | `0x8d` | | |
+| `f64.max` | `0x8e` | | |
+| `f64.abs` | `0x8f` | | |
+| `f64.neg` | `0x90` | | |
+| `f64.copysign` | `0x91` | | |
+| `f64.ceil` | `0x92` | | |
+| `f64.floor` | `0x93` | | |
+| `f64.trunc` | `0x94` | | |
+| `f64.nearestint` | `0x95` | | |
+| `f64.sqrt` | `0x96` | | |
+| `f64.eq` | `0x97` | | |
+| `f64.ne` | `0x98` | | |
+| `f64.lt` | `0x99` | | |
+| `f64.le` | `0x9a` | | |
+| `f64.gt` | `0x9b` | | |
+| `f64.ge` | `0x9c` | | |
+| `i32.sconvertf32` | `0x9d` | | |
+| `i32.sconvertf64` | `0x9e` | | |
+| `i32.uconvertf32` | `0x9f` | | |
+| `i32.uconvertf64` | `0xa0` | | |
+| `i32.converti64` | `0xa1` | | |
+| `i64.sconvertf32` | `0xa2` | | |
+| `i64.sconvertf64` | `0xa3` | | |
+| `i64.uconvertf32` | `0xa4` | | |
+| `i64.uconvertf64` | `0xa5` | | |
+| `i64.sconverti32` | `0xa6` | | |
+| `i64.uconverti32` | `0xa7` | | |
+| `f32.sconverti32` | `0xa8` | | |
+| `f32.uconverti32` | `0xa9` | | |
+| `f32.sconverti64` | `0xaa` | | |
+| `f32.uconverti64` | `0xab` | | |
+| `f32.convertf64` | `0xac` | | |
+| `f32.reinterpreti32` | `0xad` | | |
+| `f64.sconverti32` | `0xae` | | |
+| `f64.uconverti32` | `0xaf` | | |
+| `f64.sconverti64` | `0xb0` | | |
+| `f64.uconverti64` | `0xb1` | | |
+| `f64.convertf32` | `0xb2` | | |
+| `f64.reinterpreti64` | `0xb3` | | |
+| `i32.reinterpretf32` | `0xb4` | | |
+| `i64.reinterpretf64` | `0xb5` | | |
 
 
