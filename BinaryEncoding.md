@@ -28,7 +28,7 @@ Most importantly, the layering approach allows development and standardization t
 occur incrementally, even though production-quality implementations will need to
 implement all of the layers.
 
-# Primitives and key terminology
+# Data types
 
 ### uint8
 A single-byte unsigned integer.
@@ -41,6 +41,8 @@ A four-byte little endian unsigned integer.
 
 ### varuint32
 A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 payloads. Provides considerable size reduction.
+
+# Definitions
 
 ### Pre-order encoding
 Refers to an approach for encoding syntax trees, where each node begins with an identifier
@@ -65,18 +67,22 @@ Strings referenced by the module (i.e. function names) are encoded as null-termi
 The following documents the current prototype format. This format is based on and supersedes the v8-native prototype format, originally in a [public design doc](https://docs.google.com/document/d/1-G11CnMA0My20KI9D7dBR6ZCPOBCRD0oCH6SHCPFGx0/edit?usp=sharing).
 
 ## High-level structure
-A module contains a sequence of sections, containing for each section:
-  - ```uint8```: A [section type identifier](https://github.com/v8/v8/blob/master/src/wasm/wasm-module.h#L26) for the section
-  - The section body, which is defined below by section type
+A module contains a sequence of sections, each identified by a *section identifier byte* whose encodings
+are listed below.
 
 ### Memory section
+The memory section declares the size and characteristics of the memory associated with the module.
 A module may contain at most one memory section.
 
-* ```uint8```: The minimum size of the module heap in bytes, as a power of two
-* ```uint8```: The maximum size of the module heap in bytes, as a power of two
-* ```uint8```: ```1``` if the module's memory is externally visible
+| Field | Type | Description |
+| ----- |  ----- | ----- | 
+| id = `0x00` | `uint8` | section identifier for memory |
+| min_mem_size | `uint8` | minimize memory size as a power of `2` |
+| max_mem_size | `uint8` | maximum memory size as a power of `2` |
+| exported | `uint8` | `1` if the memory is visible outside the module |
 
 ### Signatures section
+The signatures section declares all function signatures that will be used in the module.
 A module may contain at most one signatures section.
 
 | Field | Type | Description |
@@ -85,22 +91,15 @@ A module may contain at most one signatures section.
 | count | `varuint32` | count of signature entries to follow | 
 | entries | `signature_entry*` | repeated signature entries as described below |
 
-* [```varuint32```](#varuint32): The number of function signatures in the section
-* For each function signature:
-  - ```uint8```: The number of parameters
-  - ```uint8```: The function return type, as a [LocalType](https://github.com/v8/v8/blob/master/src/wasm/wasm-opcodes.h#L16)
-  - For each parameter:
-    + ```uint8```: The parameter type, as a LocalType
-
-Local types are encoded with these values:
-* `0` indicates the lack of a return type
-* `1` type `i32`
-* `2` type `i64`
-* `3` type `f32`
-* `4` type `f64`
+#### Signature entry
+| Field | Type | Description |
+| ----- |  ----- | ----- | 
+| param_count | `uint8` | the number of parameters to the function |
+| return_type | `local_type?` | the return type of the function, with `0` indicating no return type |
+| param_types | `local_type*` | the parameter types of the function, with<br>`1` indicating type `i32`<br>`2` indicating type `i64`<br>`3` indicating type `f32`<br>`4` indicating type `f64` |
 
 ### Functions section
-The Functions section declares the functions in the module and must be preceded by a [Signatures](#signatures-section) section. A module may contain at most one functions section. It consists of a count of entries followed immediately by those entries.
+The Functions section declares the functions in the module and must be preceded by a [Signatures](#signatures-section) section. A module may contain at most one functions section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- | 
@@ -126,6 +125,7 @@ must contain a function body.
 | body | `bytes` | `flags[0] == 0` | function body |
 
 ### Data Segments section
+The data segemnts section declares the initialized data that should be loaded into the linear memory.
 A module may only contain one data segments section.
 
 | Field | Type | Description |
@@ -142,6 +142,8 @@ A module may only contain one data segments section.
   - ```uint8```: ```1``` if the segment's data should be automatically loaded into memory at module load time.
 
 ### Indirect Function Table section
+The indirect function table section declares the size and entries of the indirect function table, which consist
+of indexes into the [Functions](#functions-section) section.
 This section must be preceded by a [Functions](#functions-section) section.
 
 | Field | Type | Description |
@@ -150,13 +152,13 @@ This section must be preceded by a [Functions](#functions-section) section.
 | count | `varuint32` | count of entries to follow | 
 | entries | `uint16*` | repeated indexes into the function table |
 
-### WLL section
-
-* ```varuint32```: The size of the section body, in bytes
-* The section body (contents currently undefined)
-
 ### End section
-This indicates the end of the module's sections. Additional data can follow this section marker (for example, to store function names or data segment bodies) but it is not parsed by the decoder.
+This indicates the end of the sections. Additional data that follows this section marker is not interpreted
+by the decoder. It can used, for example, to store function names or data segment bodies.
+
+| Field | Type | Description |
+| ----- |  ----- | ----- | 
+| id = `0x06` | `uint8` | section identifier for end of sections |
 
 
 ### Nonstandard: Globals section
@@ -170,7 +172,7 @@ A module may only contain one globals section. This section is currently for V8 
 
 #### Global Variable entry
 
-A global variable entry describes a variable outside the WASM lineary memory. It can only be loaded and
+A global variable entry describes a variable outside the WASM linear memory. A Global variable can only be loaded and
 stored to from dedicated instructions.
 
 | Field | Type | Description |
@@ -179,4 +181,10 @@ stored to from dedicated instructions.
 | type | `uint8` | the type of the global, as a memory type |
 | exported | `uint8` | a boolean indicating whether the global variable is exported |
 
+### WorkInProgress: WLL section
 
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| id = `0x11` | `uint8` | section identifier for globals |
+| size | `varuint32` | size of this section in bytes | 
+| body | `bytes` | contents of this section |
