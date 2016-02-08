@@ -199,13 +199,41 @@ first byte, before the child nodes.
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
 | `nop` | `0x00` | | no operation |
-| `block` | `0x01` | count = `varuint32` | a sequence of expressions, the last of which yields a value |
-| `loop` | `0x02` | count = `varuint32` | a block which can also form control flow loops |
+| `block` | `0x01` | count = `uint8` | a sequence of expressions, the last of which yields a value |
+| `loop` | `0x02` | count = `uint8` | a block which can also form control flow loops |
 | `if` | `0x03` | | high-level one-armed if |
 | `if_else` | `0x04` | | high-level two-armed if |
 | `select` | `0x05` | | select one of two values based on condition |
 | `br` | `0x06` | relative_depth = `uint8` | break that targets a outer nested block |
 | `br_if` | `0x07` | relative_depth = `uint8` | conditional break that targets a outer nested block |
-| `tableswitch` | 0x08 | `tableswitch_operand` | tableswitch control flow construct |
-| `return` | 0x14 | | return zero or one value from this function |
-| `unreachable` | 0x15 | | trap immediately |
+| `tableswitch` | `0x08` | see below | tableswitch control flow construct |
+| `return` | `0x14` | | return zero or one value from this function |
+| `unreachable` | `0x15` | | trap immediately |
+
+The `tableswitch` operator has as complex immediate operand which is encoded as follows:
+
+| Field | Type | Description |
+| ---- | ---- | ---- |
+| case_count | `uint16` | number of cases in the case_table |
+| target_count | `uint16` | number of targets in the target_table |
+| target_table | `uint16*` | target entries where<br>`>= 0x800` indicates an outer block to which to break<br>`<= 0x8000` indicates a case to which to jump |
+
+The table switch operator is then immediately followed by `case_count` case expressions which by default fall through to each other.
+
+## Basic operators
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
+| `i8.const` | `0x09` | value = `uint8` | a constant value, signed extended to type `i32`  |
+| `i32.const` | `0x0a` | value = `uint32` | a constant value interpreted as `i32` |
+| `i64.const` | `0x0b` | value = `uint64` | a constant value interpreted as `i64` |
+| `f64.const` | `0x0c` | value = `uint64` | a constant value interpreted as `f64` |
+| `f32.const` | `0x0d` | value = `uint32` | a constant value interpreted as `f32` |
+| `get_local` | `0x0e` | local_index = `varuint32` | read a local variable or parameter |
+| `set_local` | `0x0f` | local_index = `varuint32` | write a local variable or parameter |
+| `load_global` | `0x10` | index = `varuint32` | * nonstandard internal opcode |
+| `store_global` | `0x11` | index = `varuint32` | * nonstandard internal opcode |
+| `call_function` | `0x12` | function_index = `varuint32` | call a function by its index |
+| `call_indirect` | `0x13` | signature_index = `varuint32` | call a function indirect with an expected signature |
+
+
+
