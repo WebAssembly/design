@@ -1,7 +1,6 @@
 # Binary Encoding
 
-This document describes the [portable](Portability.md) binary encoding of the
-[Abstract Syntax Tree](AstSemantics.md) nodes.
+This document describes the [portable](Portability.md) binary encoding of the WebAssembly modules.
 
 The binary encoding is a dense representation of module information that enables 
 small files, fast decoding, and reduced memory usage.
@@ -40,24 +39,23 @@ A two-byte little endian unsigned integer.
 A four-byte little endian unsigned integer.
 
 ### varuint32
-A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 payloads. Provides considerable size reduction.
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values.
 
 # Definitions
 
 ### Pre-order encoding
-Refers to an approach for encoding syntax trees, where each node begins with an identifier
-followed by any arguments or child nodes. Pre-order trees can be decoded iteratively or 
-recursively. Alternative approaches include post-order trees and table representations.
+Refers to an approach for encoding syntax trees, where each node begins with an identifying binary
+sequence, then followed recursively by any child nodes. 
 
 * Examples
   * Given a simple AST node: `struct I32Add { AstNode *left, *right; }`
-    * First write the opcode of `I32Add` (uint8)
+    * First write the binary sequence for `I32Add` (uint8)
     * Then recursively write the left and right nodes.
 
-  * Given a call AST node: `struct Call { uint32_t callee; vector<AstNode*> args; }`
-    * First write the opcode of `Call` (uint8)
-    * Then write the (variable-length) integer `Call::callee` (varuint32)
-    * Then recursively write each argument node, where arity is determined by looking up `callee` in a table of signatures
+  * Given a call AST node: `struct Call { uint32_t callee_index; vector<AstNode*> args; }`
+    * First write the binary sequence of `Call` (uint8)
+    * Then write the (variable-length) integer `Call::callee_index` (varuint32)
+    * Then recursively write each argument node, where arity is determined by looking up `callee_index` in a table of signatures
 
 ### Strings
 Strings referenced by the module (i.e. function names) are encoded as null-terminated [UTF8](http://unicode.org/faq/utf_bom.html#UTF8).
@@ -188,3 +186,16 @@ stored to from dedicated instructions.
 | id = `0x11` | `uint8` | section identifier for globals |
 | size | `varuint32` | size of this section in bytes | 
 | body | `bytes` | contents of this section |
+
+# AST Encoding
+
+Function bodies consist of a dense pre-order encoding of an [Abstract Syntax Tree](AstSemantics.md).
+Each node in the abstract syntax tree corresponds to an operator, such as `i32.add` or `if` or `block`.
+Most operators encode as a single `uint8`, but some require *immediates* which immediately follow the
+first byte, before the child nodes.
+
+## Control flow operators
+
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
+| `nop` | `0x00` | | no operation |
