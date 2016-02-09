@@ -43,6 +43,14 @@ A four-byte little endian unsigned integer.
 ### varuint32
 A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values.
 
+### value_type
+A single-byte unsigned integer indicating a [value type](AstSemantics.md#types). These types are encoded as:
+* `1` indicating type `i32` 
+* `2` indicating type `i64` 
+* `3` indicating type `f32` 
+* `4` indicating type `f64`
+
+
 # Definitions
 
 ### Pre-order encoding
@@ -95,8 +103,8 @@ A module may contain at most one signatures section.
 | Field | Type | Description |
 | ----- |  ----- | ----- | 
 | param_count | `uint8` | the number of parameters to the function |
-| return_type | `local_type?` | the return type of the function, with `0` indicating no return type |
-| param_types | `local_type*` | the parameter types of the function, with<br>`1` indicating type `i32`<br>`2` indicating type `i64`<br>`3` indicating type `f32`<br>`4` indicating type `f64` |
+| return_type | `value_type?` | the return type of the function, with `0` indicating no return type |
+| param_types | `value_type*` | the parameter types of the function |
 
 ### Functions section
 The Functions section declares the functions in the module and must be preceded by a [Signatures](#signatures-section) section. A module may contain at most one functions section.
