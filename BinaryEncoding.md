@@ -24,8 +24,10 @@ The encoding is split into three layers:
   to deliver dramatically smaller files.
 
 Most importantly, the layering approach allows development and standardization to
-occur incrementally, even though production-quality implementations will need to
-implement all of the layers.
+occur incrementally. For example, Layer 1 and Layer 2 encoding techniques can be
+experimented with by application-level decompressing to the layer below. As 
+compression techniques  stabilize, they can be standardized and moved into native 
+implementations.
 
 # Data types
 
