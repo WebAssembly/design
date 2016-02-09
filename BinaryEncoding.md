@@ -58,13 +58,13 @@ Refers to an approach for encoding syntax trees, where each node begins with an 
 sequence, then followed recursively by any child nodes. 
 
 * Examples
-  * Given a simple AST node: `struct I32Add { AstNode *left, *right; }`
-    * First write the binary sequence for `I32Add` (uint8)
+  * Given a simple AST node: `I32Add(left: AstNode, right: AstNode)`
+    * First write the opcode for `I32Add` (uint8)
     * Then recursively write the left and right nodes.
 
-  * Given a call AST node: `struct Call { uint32_t callee_index; vector<AstNode*> args; }`
-    * First write the binary sequence of `Call` (uint8)
-    * Then write the (variable-length) integer `Call::callee_index` (varuint32)
+  * Given a call AST node: `Call(callee_index: uint32_t, args: AstNode[])`
+    * First write the opcode of `Call` (uint8)
+    * Then write the (variable-length) integer `callee_index` (varuint32)
     * Then recursively write each argument node, where arity is determined by looking up `callee_index` in a table of signatures
 
 ### Strings
