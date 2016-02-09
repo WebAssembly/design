@@ -279,7 +279,7 @@ The `memory_immediate` type is encoded as follows:
 
 | Name | Type | Present? | Description |
 | ---- | ---- | ---- | ---- |
-| flags | `uint8` | always | a bitfield where<br>bit `4` indicates an offset follows<br>bit `7` indicates natural alignment |
+| flags | `uint8` | always | a bitfield where<br>bit `4` indicates an offset follows<br>bit `7` indicates natural alignment<br>other bits are reserved for future use |
 | offset | `varuint32` | `flags[4] == 1` | the value of the offset |
 
 ## Simple operators ([described here](AstSemantics#32-bit-integer-operators))
