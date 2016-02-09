@@ -118,7 +118,7 @@ The Functions section declares the functions in the module and must be preceded 
 #### Function Entry
 
 Each function entry describes a function that can be optionally named, imported and/or exported. Non-imported functions
-must contain a function body.
+must contain a function body. Imported and exported functions must have a name. Imported functions do not contain a body.
 
 | Field | Type |  Present?  | Description |
 | ----- |  ----- |  ----- |  ----- | 
