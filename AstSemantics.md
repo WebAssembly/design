@@ -263,19 +263,22 @@ further see the parallel, note that a `br` to a `block`'s label is functionally
 equivalent to a labeled `break` in high-level languages in that a `br` simply
 breaks out of a `block`.
 
-Branches that exit a `block`, `loop`, or `tableswitch` may take a subexpression
-that yields a value for the exited construct. If present, it is the first operand
+Branches that exit a `block`, `loop`, or `tableswitch` may have a result-value
+operand. When they cause an exit from a block, the value of this operand is the
+result value for the block. If present, it is the first operand
 before any others.
 
 ### Yielding values from control constructs
 
-The `nop`, `if`, `br`, `br_if`, `case`, and `return` constructs do not yield values.
+The `nop`, `if`, `br`, `case`, and `return` constructs do not yield values.
 Other control constructs may yield values if their subexpressions yield values:
 
 * `block`: yields either the value of the last expression in the block or the result of an inner `br` that targeted the label of the block
 * `loop`: yields either the value of the last expression in the loop or the result of an inner `br` that targeted the end label of the loop
 * `if_else`: yields either the value of the true expression or the false expression
 * `tableswitch`: yields either the value of the last case or the result of an inner `br` that targeted the tableswitch
+* `br_if`: yields the value of its result-value operand if it has one;
+   otherwise it does not yield a value.
 
 
 ### Tableswitch
