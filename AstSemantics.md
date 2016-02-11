@@ -83,12 +83,17 @@ operators.
 The main storage of a WebAssembly instance, called the *linear memory*, is a
 contiguous, byte-addressable range of memory spanning from offset `0` and
 extending for `memory_size` bytes which can be dynamically grown by
-[`grow_memory`](AstSemantics.md#resizing). The linear memory can be considered to
-be an untyped array of bytes, and it is unspecified how embedders map this array
-into their process' own [virtual memory][]. The linear memory is sandboxed; it
-does not alias the execution engine's internal data structures, the execution
-stack, local variables, or other process memory. The initial state of linear
-memory is specified by the [module](Modules.md#linear-memory-section).
+[`grow_memory`](AstSemantics.md#resizing). The linear memory can be considered
+to be an untyped array of bytes, and it is unspecified how embedders map this
+array into their process' own [virtual memory][]. The linear memory is
+sandboxed; it does not alias the execution engine's internal data structures,
+the execution stack, local variables, or other process memory.
+
+The initial state of linear memory is specified by the
+[module](Modules.md#linear-memory-section). The initial and maximum memory size
+are required to be a multiple of the WebAssembly page size, which is 64KiB on
+all engines (though large page support may be added in the
+[future](FutureFeatures.md#large-page-support)).
 
   [virtual memory]: https://en.wikipedia.org/wiki/Virtual_memory
 
