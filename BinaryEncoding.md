@@ -16,12 +16,7 @@ The encoding is split into three layers:
   The structural compression introduces more efficient encoding of values, 
   rearranges values within the module, and prunes structurally identical
   tree nodes.
-* **Layer 2** applies generic compression techniques, already available
-  in browsers and other tooling. Algorithms as simple as gzip can deliver
-  good results, but more sophisticated algorithms like 
-  [LZHAM](https://github.com/richgel999/lzham_codec) and
-  [Brotli](https://datatracker.ietf.org/doc/draft-alakuijala-brotli/) are able
-  to deliver dramatically smaller files.
+* **Layer 2** Layer 2 applies generic compression algorithms, like [gzip](http://www.gzip.org/) and [Brotli](https://datatracker.ietf.org/doc/draft-alakuijala-brotli/), that are already available in browsers and other tooling.
 
 Most importantly, the layering approach allows development and standardization to
 occur incrementally. For example, Layer 1 and Layer 2 encoding techniques can be
