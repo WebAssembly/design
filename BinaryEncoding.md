@@ -226,7 +226,7 @@ The `tableswitch` operator has as complex immediate operand which is encoded as 
 | ---- | ---- | ---- |
 | case_count | `uint16` | number of cases in the case_table |
 | target_count | `uint16` | number of targets in the target_table |
-| target_table | `uint16*` | target entries where<br>`>= 0x8000` indicates an outer block to which to break<br>`<= 0x8000` indicates a case to which to jump |
+| target_table | `uint16*` | target entries where<br>`>= 0x8000` indicates an outer block to which to break<br>`< 0x8000` indicates a case to which to jump |
 
 The table switch operator is then immediately followed by `case_count` case expressions which by default fall through to each other.
 
