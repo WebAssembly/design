@@ -236,7 +236,7 @@ The table switch operator is then immediately followed by `case_count` case expr
 ## Basic operators ([described here](AstSemantics.md#constants))
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i8.const` | `0x09` | value = `uint8` | a constant value, signed extended to type `i32`  |
+| `i8.const` | `0x09` | value = `int8` | a constant value, signed extended to type `i32`  |
 | `i32.const` | `0x0a` | value = `uint32` | a constant value interpreted as `i32` |
 | `i64.const` | `0x0b` | value = `uint64` | a constant value interpreted as `i64` |
 | `f64.const` | `0x0c` | value = `uint64` | a constant value interpreted as `f64` |
