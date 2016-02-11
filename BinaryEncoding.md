@@ -31,6 +31,9 @@ implementations.
 
 # Data types
 
+### int8
+A single-byte signed integer.
+
 ### uint8
 A single-byte unsigned integer.
 
@@ -201,8 +204,8 @@ stored to from dedicated instructions.
 
 Function bodies consist of a dense pre-order encoding of an [Abstract Syntax Tree](AstSemantics.md).
 Each node in the abstract syntax tree corresponds to an operator, such as `i32.add` or `if` or `block`.
-Most operators encode as a single `uint8`, but some require *immediates* which immediately follow the
-first byte, before the child nodes.
+Operators are encoding by an opcode byte followed by immediate bytes (if any), followed by children 
+nodes (if any).
 
 ## Control flow operators ([described here](AstSemantics.md#control-flow-structures))
 
