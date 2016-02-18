@@ -138,6 +138,14 @@ Also,
 [more expressive control flow constructs](FutureFeatures.md#more-expressive-control-flow)
 may be added in the future.
 
+The `tableswitch` instruction traps if the index is out of bounds rather than
+having a builtin "default" destination. Applications can perform their own
+range check if they require one. This does oblidge optimizing JITs to do more
+work to optimize away its own range checks, but the upside of making
+`tableswitch` be conceptually just a jump table, and not a jump table with an
+extra branch folded in, and it enables engines that have ways of doing the
+range check without using a branch to emit switches that have no branching at
+all in situations where the application itself doesn't need a default.
 
 ## Locals
 
