@@ -439,7 +439,7 @@ Note that not all operators required by IEEE 754-2008 are provided directly.
 However, WebAssembly includes enough functionality to support reasonable library
 implementations of the remaining required operators.
 
-When the result of any arithemtic operation other than `neg`, `abs`, or
+When the result of any arithmetic operation other than `neg`, `abs`, or
 `copysign` is a NaN, the sign bit and the fraction field (which does not include
 the implicit leading digit of the significand) of the NaN are computed as
 follows:

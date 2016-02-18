@@ -32,7 +32,7 @@ currently admits nondeterminism:
    nondeterministic.
  * Except when otherwise specified, when an arithmetic operator with multiple
    floating point operand types and a floating point result type receives
-   multiple NaN input values with differing bit patterns, it is nondeterminsitic
+   multiple NaN input values with differing bit patterns, it is nondeterministic
    which bit pattern is used as the basis for the result (as it is in
    IEEE 754-2008).
  * Except when otherwise specified, when an arithmetic operator with a floating
