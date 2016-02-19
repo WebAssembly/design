@@ -131,7 +131,7 @@ must contain a function body. Imported and exported functions must have a name. 
 | body | `bytes` | `flags[0] == 0` | function body |
 
 ### Data Segments section
-The data segemnts section declares the initialized data that should be loaded into the linear memory.
+The data segments section declares the initialized data that should be loaded into the linear memory.
 A module may only contain one data segments section.
 
 | Field | Type | Description |
@@ -151,6 +151,7 @@ A module may only contain one data segments section.
 The indirect function table section declares the size and entries of the indirect function table, which consist
 of indexes into the [Functions](#functions-section) section.
 This section must be preceded by a [Functions](#functions-section) section.
+Entries must be non-imported functions.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- | 
