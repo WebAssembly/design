@@ -206,7 +206,7 @@ which is 64KiB on all engines (though large page support may be added in
 the [future](FutureFeatures.md#large-page-support)).
 
  * `grow_memory` : grow linear memory by a given unsigned delta which
-    must be a multiple of the page size.
+    must be a multiple of the page size. Return the previous memory size.
 
 As stated [above](AstSemantics.md#linear-memory), linear memory is contiguous,
 meaning there are no "holes" in the linear address space. After the

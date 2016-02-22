@@ -116,6 +116,14 @@ WebAssembly engines.
 In the future, WebAssembly may offer the ability to use larger page sizes on
 some platforms for increased TLB efficiency.
 
+The `grow_memory` operator returns the old memory size. This is desirable for
+using `grow_memory` independently on multiple threads, so that each thread can
+know where the region it allocated starts. The obvious alternative would be for
+such threads to communicate manually, however wasm implementations will likely
+already be communicating between threads in order to properly allocate the sum
+of the allocation requests, so it's expected that they can provide the needed
+information without significant extra effort.
+
 
 ## Linear memory disabled if no linear memory section
 
