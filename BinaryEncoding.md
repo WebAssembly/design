@@ -83,8 +83,8 @@ A module may contain at most one memory section.
 | Field | Type | Description |
 | ----- |  ----- | ----- | 
 | id = `0x00` | `uint8` | section identifier for memory |
-| min_mem_size | `uint8` | minimize memory size as a power of `2` |
-| max_mem_size | `uint8` | maximum memory size as a power of `2` |
+| min_mem_pages | `varuint32` | minimize memory size in 64KiB pages |
+| max_mem_pages | `varuint32` | maximum memory size in 64KiB pages |
 | exported | `uint8` | `1` if the memory is visible outside the module |
 
 ### Signatures section
