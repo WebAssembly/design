@@ -104,6 +104,24 @@ A module may contain at most one signatures section.
 | return_type | `value_type?` | the return type of the function, with `0` indicating no return type |
 | param_types | `value_type*` | the parameter types of the function |
 
+### Import table section
+The import section declares all imports that will be used in the module.
+A module may contain at most one import table section.
+
+| Field | Type | Description |
+| ----- |  ----- | ----- | 
+| id = `0x08` | `uint8` | section identifier for imports |
+| count | `varuint32` | count of import entries to follow | 
+| entries | `import_entry*` | repeated import entries as described below |
+
+#### Import entry
+| Field | Type | Description |
+| ----- |  ----- | ----- | 
+| sig_index | `uint16` | signature index of the import |
+| module_name | `uint32` | offset of the string representing the module name |
+| func_name | `uint32` | offset of the string representing the function name |
+
+
 ### Functions section
 The Functions section declares the functions in the module and must be preceded by a [Signatures](#signatures-section) section. A module may contain at most one functions section.
 
