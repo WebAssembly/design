@@ -130,11 +130,11 @@ must contain a function body. Imported and exported functions must have a name. 
 
 #### Local Entry
 
-Each local entry declares a number of local variables of one type.
+Each local entry declares a number of local variables of a given type.
 It is legal to have several entries with the same type.
 
 | Field | Type | Description |
-| ----- | ----- | ----- | ----- |
+| ----- | ----- | ----- |
 | count | `varuint32` | number of local variables of the following type |
 | type | `value_type` | type of the variables |
 
