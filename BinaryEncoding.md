@@ -123,12 +123,20 @@ must contain a function body. Imported and exported functions must have a name. 
 | flags | `uint8` | always | flags indicating attributes of a function <br>bit `0` : a name is present<br>bit `1` : the function is an import<br>bit `2` : the function has local variables<br>bit `3` : the function is an export |
 | signature | `uint16` | always | index into the Signature section |
 | name | `uint32` | `flags[0] == 1` | name of the function as an offset within the module |
-| i32 count | `uint16` | `flags[2] == 1` | number of `i32` local variables |
-| i64 count | `uint16` | `flags[2] == 1` | number of `i64` local variables |
-| f32 count | `uint16` | `flags[2] == 1` | number of `f32` local variables |
-| f64 count | `uint16` | `flags[2] == 1` | number of `f64` local variables |
+| local count | `varuint32` | always | number of local entries |
+| locals | `local_entry*` | always | local variables |
 | body size | `uint16` | `flags[0] == 0` | size of function body to follow, in bytes |
 | body | `bytes` | `flags[0] == 0` | function body |
+
+#### Local Entry
+
+Each local entry declares a number of local variables of one type.
+It is legal to have several entries with the same type.
+
+| Field | Type | Description |
+| ----- | ----- | ----- | ----- |
+| count | `varuint32` | number of local variables of the following type |
+| type | `value_type` | type of the variables |
 
 ### Data Segments section
 The data segemnts section declares the initialized data that should be loaded into the linear memory.
