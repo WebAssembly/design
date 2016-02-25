@@ -103,6 +103,13 @@ only communicate through messaging, e.g. in browsers using `postMessage`. It
 will be possible to share linear memory between threads of execution when
 [threads](PostMVP.md#threads) are added.
 
+The low 64KiB page can be optionally declared to be unused in which case the
+runtime may optionally protect the low 64KiB page or place the linear memory at
+absolute zero in it's address space which can help optimize the code. Many
+operating systems already protect the low page and the wasm runtime has no
+choice but to effectively run with the low pages protected when placing the
+linear memory at absoluate zero in its address space.
+
 ### Linear Memory Accesses
 
 Linear memory access is accomplished with explicit `load` and `store` operators.

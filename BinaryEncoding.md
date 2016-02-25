@@ -92,7 +92,7 @@ A module may contain at most one memory section.
 | ----- |  ----- | ----- | 
 | min_mem_pages | `varuint32` | minimize memory size in 64KiB pages |
 | max_mem_pages | `varuint32` | maximum memory size in 64KiB pages |
-| exported | `uint8` | `1` if the memory is visible outside the module |
+| flags | `uint8` | Bit 0 - `1` if the memory is visible outside the module. Bit 1 - `1` if the low page is unused and can be protected by the runtime. |
 
 ### Signatures section
 
