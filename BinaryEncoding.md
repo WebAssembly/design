@@ -187,13 +187,25 @@ stored to from dedicated instructions.
 | type | `uint8` | the type of the global, as a memory type |
 | exported | `uint8` | a boolean indicating whether the global variable is exported |
 
-### WorkInProgress: WLL section
+### All other sections
+
+These sections can occur in any order and multiple times.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| id = `0x11` | `uint8` | section identifier for globals |
-| size | `varuint32` | size of this section in bytes | 
+| id | `uint8` | section identifier |
+| size | `uint32` | size of this section in bytes excluding this size |
 | body | `bytes` | contents of this section |
+
+The section size is a fixed width to support back patching.
+
+#### Known external section IDs.
+
+The IDs are expected to be replaced by strings, and this table may be managed elsewhere in future.
+
+| Id | Description |
+|----|-------------|
+| 0x11 | Web Low-level Language, [WLLang/WebLL](https://wllang.com/) |
 
 # AST Encoding
 
