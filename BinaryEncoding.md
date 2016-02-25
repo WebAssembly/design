@@ -187,13 +187,15 @@ stored to from dedicated instructions.
 | type | `uint8` | the type of the global, as a memory type |
 | exported | `uint8` | a boolean indicating whether the global variable is exported |
 
-### WorkInProgress: WLL section
+### Unknown sections
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| id = `0x11` | `uint8` | section identifier for globals |
-| size | `varuint32` | size of this section in bytes | 
-| body | `bytes` | contents of this section |
+| id    | `uint8`     | section identifier |
+| size  | `varuint32` | size of this section in bytes | 
+| body  | `bytes`     | contents of this section |
+
+Sections whose ID is unknown to the WebAssembly implementation are ignored.
 
 # AST Encoding
 
