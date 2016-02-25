@@ -118,8 +118,8 @@ A module may contain at most one import table section.
 | Field | Type | Description |
 | ----- |  ----- | ----- | 
 | sig_index | `uint16` | signature index of the import |
-| module_name | `uint32` | offset of the string representing the module name |
-| func_name | `uint32` | offset of the string representing the function name |
+| module_name | `uint32` | offset from the start of the module of the string representing the module name |
+| func_name | `uint32` | offset from the start of the module of the string representing the function name |
 
 
 ### Functions section
