@@ -277,11 +277,13 @@ before any others.
 The `nop`, `if`, `br`, `br_if`, `case`, and `return` constructs do not yield values.
 Other control constructs may yield values if their subexpressions yield values:
 
-* `block`: yields either the value of the last expression in the block or the result of an inner `br` that targeted the label of the block
-* `loop`: yields either the value of the last expression in the loop or the result of an inner `br` that targeted the end label of the loop
+* `block`: yields either the value of the last expression in the block or the result of an inner `br` or `br_if` that targets the label of the block
+* `loop`: yields either the value of the last expression in the loop or the result of an inner `br` or `br_if` that targets the end label of the loop
 * `if_else`: yields either the value of the true expression or the false expression
-* `tableswitch`: yields either the value of the last case or the result of an inner `br` that targeted the tableswitch
+* `tableswitch`: yields either the value of the last case or the result of an inner `br` or `br_if` that targets the tableswitch
 
+Every yielding control structure with an expected type has to ensure that all possible yield values match
+its expected type. The expected type of a operand is the type that the parent operator demands from a operand. If a operand is the top-level construct in a function, the expected type is the return type of the function.
 
 ### Tableswitch
 
