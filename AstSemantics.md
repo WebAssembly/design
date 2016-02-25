@@ -563,19 +563,6 @@ outside the range which rounds to an integer in range) traps.
     each other, plus a boolean (i32) condition. `select` returns the first
     operand if the condition operand is non-zero, or the second otherwise.
 
-## Feature test
-
-To support [feature testing](FeatureTest.md), an AST node would be provided:
-
-  * `has_feature`: return whether the given feature is supported, identified by string
-
-In the MVP, `has_feature` would always return false. As features were added post-MVP,
-`has_feature` would start returning true. `has_feature` is a pure function, always
-returning the same value for the same string over the lifetime of a single
-instance and other related (as defined by the host environment) instances.
-See also [feature testing](FeatureTest.md) and
-[better feature testing](FutureFeatures.md#better-feature-testing-support).
-
 ## Unreachable
 
   * `unreachable`: An expression which can take on any type, and which, if
