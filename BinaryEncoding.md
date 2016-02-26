@@ -73,27 +73,36 @@ Strings referenced by the module (i.e. function names) are encoded as null-termi
 The following documents the current prototype format. This format is based on and supersedes the v8-native prototype format, originally in a [public design doc](https://docs.google.com/document/d/1-G11CnMA0My20KI9D7dBR6ZCPOBCRD0oCH6SHCPFGx0/edit?usp=sharing).
 
 ## High-level structure
-A module contains a sequence of sections, each identified by a *section identifier byte* whose encodings
-are listed below.
+A module contains a sequence of sections. Sections can in general be repeated, but some can occur only once or have dependant sections that must preceed them but not immediately as unknown sections can occur in any order. Each section is identified by an immediate string. Sections whose identity is unknown to the WebAssembly implementation are ignored and this is supported by including the size in bytes for all sections. The encoding of all sections begins as follows:
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| size  | `varuint32` | size of this section in bytes, excluding this size |
+| id_len | `varuint32` | section identifier string length |
+| id_str | `bytes` | section identifier string of id_len bytes |
 
 ### Memory section
+
+ID: `memory`
+
 The memory section declares the size and characteristics of the memory associated with the module.
 A module may contain at most one memory section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- | 
-| id = `0x00` | `uint8` | section identifier for memory |
 | min_mem_pages | `varuint32` | minimize memory size in 64KiB pages |
 | max_mem_pages | `varuint32` | maximum memory size in 64KiB pages |
 | exported | `uint8` | `1` if the memory is visible outside the module |
 
 ### Signatures section
+
+ID: `signatures`
+
 The signatures section declares all function signatures that will be used in the module.
 A module may contain at most one signatures section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- | 
-| id = `0x01` | `uint8` | section identifier for signatures |
 | count | `varuint32` | count of signature entries to follow | 
 | entries | `signature_entry*` | repeated signature entries as described below |
 
@@ -105,12 +114,14 @@ A module may contain at most one signatures section.
 | param_types | `value_type*` | the parameter types of the function |
 
 ### Import table section
+
+ID: `import_table`
+
 The import section declares all imports that will be used in the module.
 A module may contain at most one import table section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- | 
-| id = `0x08` | `uint8` | section identifier for imports |
 | count | `varuint32` | count of import entries to follow | 
 | entries | `import_entry*` | repeated import entries as described below |
 
@@ -123,11 +134,13 @@ A module may contain at most one import table section.
 
 
 ### Functions section
+
+ID: `functions`
+
 The Functions section declares the functions in the module and must be preceded by a [Signatures](#signatures-section) section. A module may contain at most one functions section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- | 
-| id = `0x02` | `uint8` | section identifier for functions |
 | count | `varuint32` | count of function entries to follow | 
 | entries | `function_entry*` | repeated function entries as described below |
 
@@ -149,12 +162,14 @@ must contain a function body. Imported and exported functions must have a name. 
 | body | `bytes` | `flags[0] == 0` | function body |
 
 ### Data Segments section
+
+ID: `data_segments`
+
 The data segemnts section declares the initialized data that should be loaded into the linear memory.
 A module may only contain one data segments section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- | 
-| id = `0x04` | `uint8` | section identifier for data segments |
 | count | `varuint32` | count of data segments to follow | 
 | entries | `data_segment*` | repeated data segments as described below |
 
@@ -166,31 +181,37 @@ A module may only contain one data segments section.
   - ```uint8```: ```1``` if the segment's data should be automatically loaded into memory at module load time.
 
 ### Indirect Function Table section
+
+ID: `function_table`
+
 The indirect function table section declares the size and entries of the indirect function table, which consist
 of indexes into the [Functions](#functions-section) section.
 This section must be preceded by a [Functions](#functions-section) section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- | 
-| id = `0x05` | `uint8` | section identifier for indirect function table |
 | count | `varuint32` | count of entries to follow | 
 | entries | `uint16*` | repeated indexes into the function table |
 
 ### End section
+
+ID: `end`
+
 This indicates the end of the sections. Additional data that follows this section marker is not interpreted
 by the decoder. It can used, for example, to store function names or data segment bodies.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- | 
-| id = `0x06` | `uint8` | section identifier for end of sections |
 
 
 ### Nonstandard: Globals section
+
+ID: `globals`
+
 A module may only contain one globals section. This section is currently for V8 internal use.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| id = `0x03` | `uint8` | section identifier for globals |
 | count | `varuint32` | count of global variable entries to follow | 
 | entries | `global_variable*` | repeated global variable entries as described below |
 
@@ -209,8 +230,6 @@ stored to from dedicated instructions.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| id    | `uint8`     | section identifier |
-| size  | `varuint32` | size of this section in bytes | 
 | body  | `bytes`     | contents of this section |
 
 Sections whose ID is unknown to the WebAssembly implementation are ignored.
