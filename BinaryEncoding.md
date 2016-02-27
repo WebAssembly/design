@@ -39,7 +39,7 @@ A two-byte little endian unsigned integer.
 A four-byte little endian unsigned integer.
 
 ### varuint32
-A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values.
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values. `varuint32` values may contain leading zeros.
 
 ### value_type
 A single-byte unsigned integer indicating a [value type](AstSemantics.md#types). These types are encoded as:
