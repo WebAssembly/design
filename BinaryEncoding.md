@@ -89,7 +89,7 @@ The memory section declares the size and characteristics of the memory associate
 A module may contain at most one memory section.
 
 | Field | Type | Description |
-| ----- |  ----- | ----- | 
+| ----- |  ----- | ----- |
 | min_mem_pages | `varuint32` | minimize memory size in 64KiB pages |
 | max_mem_pages | `varuint32` | maximum memory size in 64KiB pages |
 | exported | `uint8` | `1` if the memory is visible outside the module |
@@ -102,13 +102,13 @@ The signatures section declares all function signatures that will be used in the
 A module may contain at most one signatures section.
 
 | Field | Type | Description |
-| ----- |  ----- | ----- | 
-| count | `varuint32` | count of signature entries to follow | 
+| ----- |  ----- | ----- |
+| count | `varuint32` | count of signature entries to follow |
 | entries | `signature_entry*` | repeated signature entries as described below |
 
 #### Signature entry
 | Field | Type | Description |
-| ----- |  ----- | ----- | 
+| ----- |  ----- | ----- |
 | param_count | `uint8` | the number of parameters to the function |
 | return_type | `value_type?` | the return type of the function, with `0` indicating no return type |
 | param_types | `value_type*` | the parameter types of the function |
@@ -121,13 +121,13 @@ The import section declares all imports that will be used in the module.
 A module may contain at most one import table section.
 
 | Field | Type | Description |
-| ----- |  ----- | ----- | 
-| count | `varuint32` | count of import entries to follow | 
+| ----- |  ----- | ----- |
+| count | `varuint32` | count of import entries to follow |
 | entries | `import_entry*` | repeated import entries as described below |
 
 #### Import entry
 | Field | Type | Description |
-| ----- |  ----- | ----- | 
+| ----- |  ----- | ----- |
 | sig_index | `uint16` | signature index of the import |
 | module_name | `uint32` | offset from the start of the module of the string representing the module name |
 | func_name | `uint32` | offset from the start of the module of the string representing the function name |
@@ -140,8 +140,8 @@ ID: `functions`
 The Functions section declares the functions in the module and must be preceded by a [Signatures](#signatures-section) section. A module may contain at most one functions section.
 
 | Field | Type | Description |
-| ----- |  ----- | ----- | 
-| count | `varuint32` | count of function entries to follow | 
+| ----- |  ----- | ----- |
+| count | `varuint32` | count of function entries to follow |
 | entries | `function_entry*` | repeated function entries as described below |
 
 #### Function Entry
@@ -150,7 +150,7 @@ Each function entry describes a function that can be optionally named, imported 
 must contain a function body. Imported and exported functions must have a name. Imported functions do not contain a body.
 
 | Field | Type |  Present?  | Description |
-| ----- |  ----- |  ----- |  ----- | 
+| ----- |  ----- |  ----- |  ----- |
 | flags | `uint8` | always | flags indicating attributes of a function <br>bit `0` : a name is present<br>bit `1` : the function is an import<br>bit `2` : the function has local variables<br>bit `3` : the function is an export |
 | signature | `uint16` | always | index into the Signature section |
 | name | `uint32` | `flags[0] == 1` | name of the function as an offset within the module |
@@ -161,6 +161,17 @@ must contain a function body. Imported and exported functions must have a name. 
 | body size | `uint16` | `flags[0] == 0` | size of function body to follow, in bytes |
 | body | `bytes` | `flags[0] == 0` | function body |
 
+### Start Function section
+
+ID: `start_function`
+
+A module may contain at most one start fuction section.
+This section must be preceded by a [Functions](#functions-section) section.
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| index | `varuint32` | start function index |
+
 ### Data Segments section
 
 ID: `data_segments`
@@ -169,8 +180,8 @@ The data segemnts section declares the initialized data that should be loaded in
 A module may only contain one data segments section.
 
 | Field | Type | Description |
-| ----- |  ----- | ----- | 
-| count | `varuint32` | count of data segments to follow | 
+| ----- |  ----- | ----- |
+| count | `varuint32` | count of data segments to follow |
 | entries | `data_segment*` | repeated data segments as described below |
 
 * ```varuint32```: The number of data segments in the section.
@@ -189,8 +200,8 @@ of indexes into the [Functions](#functions-section) section.
 This section must be preceded by a [Functions](#functions-section) section.
 
 | Field | Type | Description |
-| ----- |  ----- | ----- | 
-| count | `varuint32` | count of entries to follow | 
+| ----- |  ----- | ----- |
+| count | `varuint32` | count of entries to follow |
 | entries | `uint16*` | repeated indexes into the function table |
 
 ### End section
@@ -201,7 +212,7 @@ This indicates the end of the sections. Additional data that follows this sectio
 by the decoder. It can used, for example, to store function names or data segment bodies.
 
 | Field | Type | Description |
-| ----- |  ----- | ----- | 
+| ----- |  ----- | ----- |
 
 
 ### Nonstandard: Globals section
@@ -212,7 +223,7 @@ A module may only contain one globals section. This section is currently for V8 
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| count | `varuint32` | count of global variable entries to follow | 
+| count | `varuint32` | count of global variable entries to follow |
 | entries | `global_variable*` | repeated global variable entries as described below |
 
 #### Global Variable entry
@@ -221,8 +232,8 @@ A global variable entry describes a variable outside the WASM linear memory. A G
 stored to from dedicated instructions.
 
 | Field | Type | Description |
-| ----- |  ----- | ----- | 
-| name | `uint32` | name of the global variable as an offset to a string in the module | 
+| ----- |  ----- | ----- |
+| name | `uint32` | name of the global variable as an offset to a string in the module |
 | type | `uint8` | the type of the global, as a memory type |
 | exported | `uint8` | a boolean indicating whether the global variable is exported |
 
