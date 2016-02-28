@@ -161,6 +161,26 @@ must contain a function body. Imported and exported functions must have a name. 
 | body size | `uint16` | `flags[0] == 0` | size of function body to follow, in bytes |
 | body | `bytes` | `flags[0] == 0` | function body |
 
+### Export Table section
+
+ID: `export_table`
+
+The export table section declares all exports from the module.
+A module may contain at most one export table section.
+This section must be preceded by a [Functions](#functions-section) section.
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| count | `varuint32` | count of export entries to follow |
+| entries | `export_entry*` | repeated export entries as described below |
+
+#### Export entry
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| sig_index | `uint16` | signature index of the export |
+| func_index | `uint16` | index into the function table |
+| func_name | `uint32` | offset from the start of the module of the string representing the export name |
+
 ### Start Function section
 
 ID: `start_function`
