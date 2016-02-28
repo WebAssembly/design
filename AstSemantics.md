@@ -245,6 +245,7 @@ a value and may appear as children of other expressions.
  * `block`: a fixed-length sequence of expressions with a label at the end
  * `loop`: a block with an additional label at the beginning which may be used to form loops
  * `if`: if expression with a *then* expression
+ * `unless`: same as `if` but with an *else* expression
  * `if_else`: if expression with *then* and *else* expressions
  * `br`: branch to a given label in an enclosing construct
  * `br_if`: conditionally branch to a given label in an enclosing construct
@@ -272,7 +273,7 @@ before any others.
 
 ### Yielding values from control constructs
 
-The `nop`, `if`, `br`, `br_if`, and `return` constructs do not yield values.
+The `nop`, `if`, `unless`, `br`, `br_if`, and `return` constructs do not yield values.
 Other control constructs may yield values if their subexpressions yield values:
 
 * `block`: yields either the value of the last expression in the block or the result of an inner `br` that targeted the label of the block
