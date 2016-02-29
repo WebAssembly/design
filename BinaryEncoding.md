@@ -81,7 +81,11 @@ The module starts with a magic number and version as follows.
 | magic number | `uint32 0x6d736100` | Magic number '\0asm' |
 | version | `uint32` | Version number, currently 10. The version for MVP will be reset to 1. |
 
-This is followed by a sequence of sections. Sections can in general be repeated, but some can occur only once or have dependant sections that must preceed them but not immediately as unknown sections can occur in any order. Each section is identified by an immediate string. Sections whose identity is unknown to the WebAssembly implementation are ignored and this is supported by including the size in bytes for all sections. The encoding of all sections begins as follows:
+This is followed by a sequence of sections. Sections can in general be repeated, but some can occur only once or have dependant sections that must preceed them but not immediately as unknown sections can occur in any order.
+
+Each section is identified by an immediate string. The WASM defined sections are all three ASCII characters long to support simple efficient testing and dispatch of both their length and content. All section names of length three characters and less are reserved for use by the WASM specification. Sections whose identity is unknown to the WebAssembly implementation are ignored and this is supported by including the size in bytes for all sections.
+
+The encoding of all sections begins as follows:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -91,7 +95,7 @@ This is followed by a sequence of sections. Sections can in general be repeated,
 
 ### Memory section
 
-ID: `memory`
+ID: `mem`
 
 The memory section declares the size and characteristics of the memory associated with the module.
 A module may contain at most one memory section.
@@ -104,7 +108,7 @@ A module may contain at most one memory section.
 
 ### Signatures section
 
-ID: `signatures`
+ID: `sig`
 
 The signatures section declares all function signatures that will be used in the module.
 A module may contain at most one signatures section.
@@ -123,7 +127,7 @@ A module may contain at most one signatures section.
 
 ### Import table section
 
-ID: `import_table`
+ID: `imp`
 
 The import section declares all imports that will be used in the module.
 A module may contain at most one import table section.
@@ -143,7 +147,7 @@ A module may contain at most one import table section.
 
 ### Functions section
 
-ID: `functions`
+ID: `fun`
 
 The Functions section declares the functions in the module and must be preceded by a [Signatures](#signatures-section) section. A module may contain at most one functions section.
 
@@ -171,7 +175,7 @@ must contain a function body. Imported and exported functions must have a name. 
 
 ### Export Table section
 
-ID: `export_table`
+ID: `exp`
 
 The export table section declares all exports from the module.
 A module may contain at most one export table section.
@@ -191,7 +195,7 @@ This section must be preceded by a [Functions](#functions-section) section.
 
 ### Start Function section
 
-ID: `start_function`
+ID: `sta`
 
 A module may contain at most one start fuction section.
 This section must be preceded by a [Functions](#functions-section) section.
@@ -202,7 +206,7 @@ This section must be preceded by a [Functions](#functions-section) section.
 
 ### Data Segments section
 
-ID: `data_segments`
+ID: `dat`
 
 The data segemnts section declares the initialized data that should be loaded into the linear memory.
 A module may only contain one data segments section.
@@ -221,7 +225,7 @@ A module may only contain one data segments section.
 
 ### Indirect Function Table section
 
-ID: `function_table`
+ID: `ftb`
 
 The indirect function table section declares the size and entries of the indirect function table, which consist
 of indexes into the [Functions](#functions-section) section.
@@ -245,7 +249,7 @@ by the decoder. It can used, for example, to store function names or data segmen
 
 ### Nonstandard: Globals section
 
-ID: `globals`
+ID: `glo`
 
 A module may only contain one globals section. This section is currently for V8 internal use.
 
