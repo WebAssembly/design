@@ -73,7 +73,15 @@ Strings referenced by the module (i.e. function names) are encoded as null-termi
 The following documents the current prototype format. This format is based on and supersedes the v8-native prototype format, originally in a [public design doc](https://docs.google.com/document/d/1-G11CnMA0My20KI9D7dBR6ZCPOBCRD0oCH6SHCPFGx0/edit?usp=sharing).
 
 ## High-level structure
-A module contains a sequence of sections. Sections can in general be repeated, but some can occur only once or have dependant sections that must preceed them but not immediately as unknown sections can occur in any order. Each section is identified by an immediate string. Sections whose identity is unknown to the WebAssembly implementation are ignored and this is supported by including the size in bytes for all sections. The encoding of all sections begins as follows:
+
+The module starts with a magic number and version as follows.
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| magic number | `uint32 0x6d736100` | Magic number '\0asm' |
+| version | `uint32` | Version number, currently 10. The version for MVP will be reset to 1. |
+
+This is followed by a sequence of sections. Sections can in general be repeated, but some can occur only once or have dependant sections that must preceed them but not immediately as unknown sections can occur in any order. Each section is identified by an immediate string. Sections whose identity is unknown to the WebAssembly implementation are ignored and this is supported by including the size in bytes for all sections. The encoding of all sections begins as follows:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
