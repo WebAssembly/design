@@ -151,6 +151,7 @@ The Functions section declares the functions in the module and must be preceded 
 | ----- |  ----- | ----- |
 | count | `varuint32` | count of function entries to follow |
 | entries | `function_entry*` | repeated function entries as described below |
+| bodies_offset | `uint32` | offset in the file of the start of the function bodies |
 
 #### Function Entry
 
@@ -159,13 +160,20 @@ must contain a function body. Imported and exported functions must have a name. 
 
 | Field | Type |  Present?  | Description |
 | ----- |  ----- |  ----- |  ----- |
-| flags | `uint8` | always | flags indicating attributes of a function <br>bit `0` : a name is present<br>bit `1` : the function is an import<br>bit `2` : the function has local variables<br>bit `3` : the function is an export |
+| flags | `uint8` | always | flags indicating attributes of a function <br>bit `0` : a name is present<br>bit `1` : the function is an import<br>bit `3` : the function is an export |
 | signature | `uint16` | always | index into the Signature section |
 | name | `uint32` | `flags[0] == 1` | name of the function as an offset within the module |
-| local count | `varuint32` | always | number of local entries |
-| locals | `local_entry*` | always | local variables |
-| body size | `uint16` | `flags[0] == 0` | size of function body to follow, in bytes |
-| body | `bytes` | `flags[0] == 0` | function body |
+| body size | `uint16` | `flags[0] == 0` | size of the OOL function body, including the local variable definitions |
+
+#### Function Body Entry.
+
+For each function with `flags[0] == 0` and starting at offset `bodies_offset` there is a function body entry as follows. These follow each other in the same order as the functions were defined in this section.
+
+| Field | Type |  Description |
+| ----- |  ----- | ----- |
+| local count | `varuint32` | number of local entries |
+| locals | `local_entry*` | local variables |
+| body | `bytes` | function body |
 
 #### Local Entry
 
