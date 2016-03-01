@@ -20,6 +20,42 @@ WebAssembly's [modules](Modules.md) allow for natural [integration with
 the ES6 module system](Modules.md#integration-with-es6-modules) and allow
 synchronous calling to and from JavaScript.
 
+### Function Names
+
+A WebAssembly module imports and exports functions. WebAssembly names functions
+using arbitrary-length byte sequences. The null character is permitted inside
+WebAssembly function names. The most natural Web representation of a mapping of
+function names to functions is a JS object in which each function is a property.
+Property names in JS are UTF-16 encoded strings. A WebAssembly modulde may fail
+validation on the Web if it imports or exports functions whose names do not
+transcode cleanly to UTF-16 according to the following conversion algorithm,
+assuming that the WebAssembly name is in a `Uint8Array` called `array`:
+
+```
+function convertToJSString(array)
+{
+  // Perform the actual conversion.
+  var string = "";
+  for (var i = 0; i < array.length; ++i)
+    string += String.fromCharCode(array[i]);
+  var result = decodeURIComponent(escape(string));
+  
+  // Check for errors. This will throw if 'result' contains bad characters.
+  encodeURIComponent(result);
+  
+  return result;
+}
+```
+
+This performs the UTF8 decoding (`decodeURIComponent(unescape(string))`) using
+a common JS idiom, and uses the first part of the encoding idiom
+(`escape(encodeURIComponent(string))`) to detect errors. The error check may
+throw URIError. If it does, the WebAssembly module will not validate. This
+validation rule is only mandatory for Web embedding.
+
+Note that round-trip conversion is guaranteed to yield the original byte array
+if `encodeURIComponent` does not throw.
+
 ## Aliasing linear memory from JS
 
 If [allowed by the module](Modules.md#linear-memory-section), JavaScript can
