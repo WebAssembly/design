@@ -363,8 +363,10 @@ The `memory_immediate` type is encoded as follows:
 
 | Name | Type | Present? | Description |
 | ---- | ---- | ---- | ---- |
-| flags | `uint8` | always | a bitfield where<br>bit `4` indicates an offset follows<br>bit `7` indicates natural alignment<br>other bits are reserved for future use |
+| flags | `uint8` | always | a bitfield where<br>bits 0 to 3 encode a non-natural alignment otherwise are zero<br>bit `4` indicates an offset follows<br>bit `7` indicates natural alignment when zero, and when one bits 0 to 3 encode the alignment<br>other bits are reserved for future use |
 | offset | `varuint32` | `flags[4] == 1` | the value of the offset |
+
+The non-natural aligment is a power of two in the range 0 to 15 that encodes the alignment excluding the natural alignment and thus gives a range of 1 to the page size of 65536. For example: if the natural alignment is 4 then an alignment of 1 is encoded in the non-natural alignment bits as 0, an alignment of 2 is encoded as 1, an alignment of 8 is encoded as 3, etc. This is intended to avoid redundant representations by design.
 
 ## Simple operators ([described here](AstSemantics#32-bit-integer-operators))
 
