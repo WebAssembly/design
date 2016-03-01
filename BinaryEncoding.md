@@ -162,20 +162,8 @@ must contain a function body. Imported and exported functions must have a name. 
 | flags | `uint8` | always | flags indicating attributes of a function <br>bit `0` : a name is present<br>bit `1` : the function is an import<br>bit `2` : the function has local variables<br>bit `3` : the function is an export |
 | signature | `uint16` | always | index into the Signature section |
 | name | `uint32` | `flags[0] == 1` | name of the function as an offset within the module |
-| local count | `varuint32` | always | number of local entries |
-| locals | `local_entry*` | always | local variables |
 | body size | `uint16` | `flags[0] == 0` | size of function body to follow, in bytes |
 | body | `bytes` | `flags[0] == 0` | function body |
-
-#### Local Entry
-
-Each local entry declares a number of local variables of a given type.
-It is legal to have several entries with the same type.
-
-| Field | Type | Description |
-| ----- | ----- | ----- |
-| count | `varuint32` | number of local variables of the following type |
-| type | `value_type` | type of the variables |
 
 ### Export Table section
 
@@ -281,12 +269,30 @@ stored to from dedicated instructions.
 
 Sections whose ID is unknown to the WebAssembly implementation are ignored.
 
-# AST Encoding
+# Function Bodies
 
-Function bodies consist of a dense pre-order encoding of an [Abstract Syntax Tree](AstSemantics.md).
+Function bodies consist of a sequence of local variable declarations followed by a 
+dense pre-order encoding of an [Abstract Syntax Tree](AstSemantics.md).
 Each node in the abstract syntax tree corresponds to an operator, such as `i32.add` or `if` or `block`.
 Operators are encoding by an opcode byte followed by immediate bytes (if any), followed by children 
 nodes (if any).
+
+| Name | Opcode |Description |
+| ----- | ----- | ----- |
+| local count | `varuint32` | number of local entries |
+| locals | `local_entry*` | local variables |
+| ast    | `byte*` | pre-order encoded AST |
+
+#### Local Entry
+
+Each local entry declares a number of local variables of a given type.
+It is legal to have several entries with the same type.
+
+| Field | Type | Description |
+| ----- | ----- | ----- |
+| count | `varuint32` | number of local variables of the following type |
+| type | `value_type` | type of the variables |
+
 
 ## Control flow operators ([described here](AstSemantics.md#control-flow-structures))
 
