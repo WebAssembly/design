@@ -165,9 +165,8 @@ must contain a function body. Imported and exported functions must have a name. 
 
 | Field | Type |  Present?  | Description |
 | ----- |  ----- |  ----- |  ----- |
-| flags | `uint8` | always | flags indicating attributes of a function <br>bit `0` : a name is present<br>bit `1` : the function is an import<br>bit `2` : the function has local variables<br>bit `3` : the function is an export |
+| flags | `uint8` | always | flags indicating attributes of a function <br>bit `1` : the function is an import<br>bit `2` : the function has local variables<br>bit `3` : the function is an export |
 | signature | `uint16` | always | index into the Signature section |
-| name | `uint32` | `flags[0] == 1` | name of the function as an offset within the module |
 | body size | `uint16` | `flags[0] == 0` | size of function body to follow, in bytes |
 | body | `bytes` | `flags[0] == 0` | function body |
 
@@ -233,6 +232,42 @@ This section must be preceded by a [Functions](#functions-section) section.
 | ----- |  ----- | ----- |
 | count | `varuint32` | count of entries to follow |
 | entries | `uint16*` | repeated indexes into the function table |
+
+### Function Names section
+
+ID: `function_names`
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| names | `utf8-C-string*` | sequence of null-terminated utf8-encoded strings |
+
+The number of names is determined by the number of declared functions. The
+sequence of names assigns a name to each function index.
+
+This section is optional and does not contribute to the semenatics of execution.
+A validation error in this section is not reported and is treated as the section
+being absent. The expectation is that, when a binary WebAssembly module is
+viewed in a browser or other development environment, the names in this section
+will be used as the names of functions in the [text format](TextFormat.md).
+
+### Local Names section
+
+ID: `local_names`
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| names | `utf8-C-string*` | sequence of null-terminated utf8-encoded strings |
+
+The number of names is determined by the sum of all functions' number of locals.
+The sequence of names is defined to be the concatentation of the sequence of
+local names (ordered by local index) for each function (ordered by function index).
+This sequence assigns a name to every local index in every function.
+
+This section is optional and does not contribute to the semenatics of execution.
+A validation error in this section is not reported and is treated as the section
+being absent. The expectation is that, when a binary WebAssembly module is
+viewed in a browser or other development environment, the names in this section
+will be used as the names of locals in the [text format](TextFormat.md).
 
 ### End section
 
