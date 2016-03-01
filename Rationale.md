@@ -146,6 +146,12 @@ Also,
 [more expressive control flow constructs](FutureFeatures.md#more-expressive-control-flow)
 may be added in the future.
 
+## Nop
+
+The nop operator does not produce a value or cause side effects. 
+It is nevertheless useful for compilers and tools, which sometimes need to replace instructions with a ```nop```. Without a ```nop``` instruction, code generators would use alternative *does-nothing* opcode patterns that consume space in a module and may have a runtime cost. Finding an appropriate opcode that does nothing but has the appropriate type for the node's location is nontrivial. The existence of many different ways to encode ```nop``` - often mixed in the same module - would reduce the efficiency of compression algorithms.
+ 
+The history of ```nop``` instructions is long and there are numerous examples of their use in production software.
 
 ## Locals
 

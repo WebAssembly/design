@@ -248,9 +248,7 @@ a value and may appear as children of other expressions.
  * `if_else`: if expression with *then* and *else* expressions
  * `br`: branch to a given label in an enclosing construct
  * `br_if`: conditionally branch to a given label in an enclosing construct
- * `tableswitch`: a jump table which may jump either to an immediate `case`
-                  child or to a label in an enclosing construct
- * `case`: a case which must be an immediate child of `tableswitch`
+ * `tableswitch`: a jump table which jumps to a label in an enclosing construct
  * `return`: return zero or more values from this function
 
 ### Branches and nesting
@@ -274,24 +272,20 @@ before any others.
 
 ### Yielding values from control constructs
 
-The `nop`, `if`, `br`, `br_if`, `case`, and `return` constructs do not yield values.
+The `nop`, `if`, `br`, `br_if`, and `return` constructs do not yield values.
 Other control constructs may yield values if their subexpressions yield values:
 
 * `block`: yields either the value of the last expression in the block or the result of an inner `br` that targeted the label of the block
 * `loop`: yields either the value of the last expression in the loop or the result of an inner `br` that targeted the end label of the loop
 * `if_else`: yields either the value of the true expression or the false expression
-* `tableswitch`: yields either the value of the last case or the result of an inner `br` that targeted the tableswitch
+* `tableswitch`: yields the result of an inner `br` that targeted the tableswitch
 
 
 ### Tableswitch
 
-A `tableswitch` consists of a zero-based array of targets, a *default* target, an index
-operand, and a list of `case` nodes. Targets may be either labels or `case` nodes.
-A `tableswitch` jumps to the target indexed in the array or the default target if the index is out of bounds. 
-
-A `case` node consists of an expression and may be referenced multiple times
-by the parent `tableswitch`. Unless exited explicitly, control falls through a `case` 
-to the next `case` or the end of the `tableswitch`.
+A `tableswitch` consists of a zero-based array of labels, a *default* label,
+and an index operand. A `tableswitch` jumps to the label indexed in the array
+or the default label if the index is out of bounds.
 
 
 ## Calls
@@ -388,6 +382,8 @@ results into the result type.
   * `i32.shl`: sign-agnostic shift left
   * `i32.shr_u`: zero-replicating (logical) shift right
   * `i32.shr_s`: sign-replicating (arithmetic) shift right
+  * `i32.rotl`: sign-agnostic rotate left
+  * `i32.rotr`: sign-agnostic rotate right
   * `i32.eq`: sign-agnostic compare equal
   * `i32.ne`: sign-agnostic compare unequal
   * `i32.lt_s`: signed less than
@@ -406,6 +402,11 @@ Shifts counts are wrapped to be less than the log-base-2 of the number of bits
 in the value to be shifted, as an unsigned quantity. For example, in a 32-bit
 shift, only the least 5 significant bits of the count affect the result. In a
 64-bit shift, only the least 6 significant bits of the count affect the result.
+
+Rotate counts are treated as unsigned.  A count value greater than or equal
+to the number of bits in the value to be rotated yields the same result as
+if the count was wrapped to its least significant N bits, where N is 5 for
+an i32 value or 6 for an i64 value.
 
 All comparison operators yield 32-bit integer results with `1` representing
 `true` and `0` representing `false`.
@@ -557,24 +558,11 @@ Truncation from floating point to integer where IEEE 754-2008 would specify an
 invalid operator exception (e.g. when the floating point value is NaN or
 outside the range which rounds to an integer in range) traps.
 
-## Type-parameterized operators.
+## Type-parametric operators.
 
   * `select`: a ternary operator with two operands, which have the same type as
     each other, plus a boolean (i32) condition. `select` returns the first
     operand if the condition operand is non-zero, or the second otherwise.
-
-## Feature test
-
-To support [feature testing](FeatureTest.md), an AST node would be provided:
-
-  * `has_feature`: return whether the given feature is supported, identified by string
-
-In the MVP, `has_feature` would always return false. As features were added post-MVP,
-`has_feature` would start returning true. `has_feature` is a pure function, always
-returning the same value for the same string over the lifetime of a single
-instance and other related (as defined by the host environment) instances.
-See also [feature testing](FeatureTest.md) and
-[better feature testing](FutureFeatures.md#better-feature-testing-support).
 
 ## Unreachable
 
