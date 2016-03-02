@@ -244,8 +244,8 @@ ID: `function_names`
 The number of names is determined by the number of declared functions. The
 sequence of names assigns a name to each function index.
 
-This section is optional and does not contribute to the semenatics of execution.
-A validation error in this section is not reported and is treated as the section
+This section may occur 0 or 1 times and does not change observable semantics. A
+validation error in this section is not reported and is treated as the section
 being absent. The expectation is that, when a binary WebAssembly module is
 viewed in a browser or other development environment, the names in this section
 will be used as the names of functions in the [text format](TextFormat.md).
@@ -263,8 +263,8 @@ The sequence of names is defined to be the concatentation of the sequence of
 local names (ordered by local index) for each function (ordered by function index).
 This sequence assigns a name to every local index in every function.
 
-This section is optional and does not contribute to the semenatics of execution.
-A validation error in this section is not reported and is treated as the section
+This section may occur 0 or 1 times and does not change observable semantics. A
+validation error in this section is not reported and is treated as the section
 being absent. The expectation is that, when a binary WebAssembly module is
 viewed in a browser or other development environment, the names in this section
 will be used as the names of locals in the [text format](TextFormat.md).
