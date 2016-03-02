@@ -38,8 +38,14 @@ A two-byte little endian unsigned integer.
 ### uint32
 A four-byte little endian unsigned integer.
 
+### varint32
+A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int32 values.
+
 ### varuint32
 A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values. `varuint32` values may contain leading zeros.
+
+### varint64
+A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int64 values.
 
 ### value_type
 A single-byte unsigned integer indicating a [value type](AstSemantics.md#types). These types are encoded as:
@@ -317,9 +323,8 @@ The table switch operator is then immediately followed by `case_count` case expr
 ## Basic operators ([described here](AstSemantics.md#constants))
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i8.const` | `0x09` | value = `int8` | a constant value, signed extended to type `i32`  |
-| `i32.const` | `0x0a` | value = `uint32` | a constant value interpreted as `i32` |
-| `i64.const` | `0x0b` | value = `uint64` | a constant value interpreted as `i64` |
+| `i32.const` | `0x0a` | value = `varint32` | a constant value interpreted as `i32` |
+| `i64.const` | `0x0b` | value = `varint64` | a constant value interpreted as `i64` |
 | `f64.const` | `0x0c` | value = `uint64` | a constant value interpreted as `f64` |
 | `f32.const` | `0x0d` | value = `uint32` | a constant value interpreted as `f32` |
 | `get_local` | `0x0e` | local_index = `varuint32` | read a local variable or parameter |
