@@ -244,29 +244,6 @@ by the decoder. It can used, for example, to store function names or data segmen
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 
-
-### Nonstandard: Globals section
-
-ID: `globals`
-
-A module may only contain one globals section. This section is currently for V8 internal use.
-
-| Field | Type | Description |
-| ----- |  ----- | ----- |
-| count | `varuint32` | count of global variable entries to follow |
-| entries | `global_variable*` | repeated global variable entries as described below |
-
-#### Global Variable entry
-
-A global variable entry describes a variable outside the WASM linear memory. A Global variable can only be loaded and
-stored to from dedicated instructions.
-
-| Field | Type | Description |
-| ----- |  ----- | ----- |
-| name | `uint32` | name of the global variable as an offset to a string in the module |
-| type | `uint8` | the type of the global, as a memory type |
-| exported | `uint8` | a boolean indicating whether the global variable is exported |
-
 ### Unknown sections
 
 | Field | Type | Description |
