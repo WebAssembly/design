@@ -36,27 +36,18 @@ the following conversion algorithm, assuming that the WebAssembly name is in a
 ```
 function convertToJSString(array)
 {
-  // Perform the actual conversion.
   var string = "";
   for (var i = 0; i < array.length; ++i)
     string += String.fromCharCode(array[i]);
-  var result = decodeURIComponent(escape(string));
-  
-  // Check for errors. This will throw if 'result' contains bad characters.
-  encodeURIComponent(result);
-  
-  return result;
+  return decodeURIComponent(escape(string));
 }
 ```
 
 This performs the UTF8 decoding (`decodeURIComponent(unescape(string))`) using
-a common JS idiom, and uses the first part of the encoding idiom
-(`escape(encodeURIComponent(string))`) to detect errors. The error check may
-throw URIError. If it does, the WebAssembly module will not validate. This
-validation rule is only mandatory for Web embedding.
-
-Note that round-trip conversion is guaranteed to yield the original byte array
-if `encodeURIComponent` does not throw.
+a [common JS idiom](http://monsur.hossa.in/2012/07/20/utf-8-in-javascript.html).
+Transcoding failure is detected by `decodeURIComponent`, which may throw
+`URIError`. If it does, the WebAssembly module will not validate. This validation
+rule is only mandatory for Web embedding.
 
 ## Aliasing linear memory from JS
 
