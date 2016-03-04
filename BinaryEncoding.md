@@ -246,8 +246,8 @@ functions and locals in the [text format](TextFormat.md).
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| count | `varuint32` | count of names to follow |
-| names | `function_names*` | sequence of names |
+| count | `varuint32` | count of entries to follow |
+| entries | `function_names*` | sequence of names |
 
 The sequence of `function_name` assigns names to the corresponding
 function index. The count may be greater or less than the actual number of
