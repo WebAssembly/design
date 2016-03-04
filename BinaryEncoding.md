@@ -314,8 +314,6 @@ out of range, `br_table` branches to the default target.
 | `f32.const` | `0x0d` | value = `uint32` | a constant value interpreted as `f32` |
 | `get_local` | `0x0e` | local_index = `varuint32` | read a local variable or parameter |
 | `set_local` | `0x0f` | local_index = `varuint32` | write a local variable or parameter |
-| `load_global` | `0x10` | index = `varuint32` | * nonstandard internal opcode |
-| `store_global` | `0x11` | index = `varuint32` | * nonstandard internal opcode |
 | `call` | `0x12` | function_index = `varuint32` | call a function by its index |
 | `call_indirect` | `0x13` | signature_index = `varuint32` | call a function indirect with an expected signature |
 | `call_import` | `0x09` | import_index = `varuint32` | call an imported function by its index |
