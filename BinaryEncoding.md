@@ -263,7 +263,7 @@ functions.
 | local_names | `local_name*` | sequence of local names |
 
 The sequence of `local_name` assigns names to the corresponding local index. The
-count may be greater or less than the actual number of functions.
+count may be greater or less than the actual number of locals.
 
 #### Local name
 
