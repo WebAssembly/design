@@ -289,19 +289,21 @@ It is legal to have several entries with the same type.
 | `select` | `0x05` | | select one of two values based on condition |
 | `br` | `0x06` | relative_depth = `uint8` | break that targets a outer nested block |
 | `br_if` | `0x07` | relative_depth = `uint8` | conditional break that targets a outer nested block |
-| `tableswitch` | `0x08` | see below | tableswitch control flow construct |
+| `br_table` | `0x08` | see below | branch table control flow construct |
 | `return` | `0x14` | | return zero or one value from this function |
 | `unreachable` | `0x15` | | trap immediately |
 
-The `tableswitch` operator has as complex immediate operand which is encoded as follows:
+The `br_table` operator has an immediate operand which is encoded as follows:
 
 | Field | Type | Description |
 | ---- | ---- | ---- |
-| case_count | `uint16` | number of cases in the case_table |
 | target_count | `uint16` | number of targets in the target_table |
-| target_table | `uint16*` | target entries where<br>`>= 0x8000` indicates an outer block to which to break<br>`< 0x8000` indicates a case to which to jump |
+| target_table | `uint16*` | target entries that indicate an outer block or loop to which to break |
+| default_target | `uint16` | an outer block or loop to which to break in the default case |
 
-The table switch operator is then immediately followed by `case_count` case expressions which by default fall through to each other.
+The `br_table` operator implements an indirect branch. It accepts one `i32` expression as input and 
+branches to the block or loop at the given offset within the `target_table`. If the input value is 
+out of range, `br_table` branches to the default target.
 
 ## Basic operators ([described here](AstSemantics.md#constants))
 | Name | Opcode | Immediate | Description |
