@@ -248,12 +248,13 @@ a value and may appear as children of other expressions.
  * `if_else`: if expression with *then* and *else* expressions
  * `br`: branch to a given label in an enclosing construct
  * `br_if`: conditionally branch to a given label in an enclosing construct
+ * `br_unless`: same as `br_if` but branches if the condition is false instead
  * `tableswitch`: a jump table which jumps to a label in an enclosing construct
  * `return`: return zero or more values from this function
 
 ### Branches and nesting
 
-The `br` and `br_if` constructs express low-level branching.
+The `br`, `br_if`, and `br_unless` constructs express low-level branching.
 Branches may only reference labels defined by an outer *enclosing construct*.
 This means that, for example, references to a `block`'s label can only occur 
 within the `block`'s body.
@@ -272,7 +273,7 @@ before any others.
 
 ### Yielding values from control constructs
 
-The `nop`, `if`, `br`, `br_if`, and `return` constructs do not yield values.
+The `nop`, `if`, `br`, `br_if`, `br_unless`, and `return` constructs do not yield values.
 Other control constructs may yield values if their subexpressions yield values:
 
 * `block`: yields either the value of the last expression in the block or the result of an inner `br` that targeted the label of the block
