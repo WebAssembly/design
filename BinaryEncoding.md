@@ -253,7 +253,7 @@ sequence of names assigns a name to each function index. A name is:
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | size | varuint32 | string length, in bytes |
-| string | bytes | valid utf8-encoding of non-null code points |
+| string | bytes | valid utf8 encoding |
 
 ### Local Names section
 
@@ -277,7 +277,7 @@ This sequence assigns a name to every local index in every function. A name is:
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | size | varuint32 | string length, in bytes |
-| string | bytes | valid utf8-encoding of non-null code points |
+| string | bytes | valid utf8 encoding |
 
 ### End section
 
