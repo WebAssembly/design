@@ -233,51 +233,44 @@ This section must be preceded by a [Functions](#functions-section) section.
 | count | `varuint32` | count of entries to follow |
 | entries | `uint16*` | repeated indexes into the function table |
 
-### Function Names section
+### Names section
+
+ID: `names`
 
 This section may occur 0 or 1 times and does not change execution semantics. A
-validation error in this section is not reported and is treated as the section
-being absent. The expectation is that, when a binary WebAssembly module is
-viewed in a browser or other development environment, the names in this section
-will be used as the names of functions in the [text format](TextFormat.md).
-
-ID: `function_names`
-
-| Field | Type | Description |
-| ----- |  ----- | ----- |
-| names | `name*` | sequence of names |
-
-The number of names is determined by the number of declared functions. The
-sequence of names assigns a name to each function index. A name is:
+validation error in this section does not cause validation for the whole module
+to fail and is instead treated as if the section was absent. The expectation is
+that, when a binary WebAssembly module is viewed in a browser or other
+development environment, the names in this section will be used as the names of
+functions and locals in the [text format](TextFormat.md).
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| size | varuint32 | string length, in bytes |
-| string | bytes | valid utf8 encoding |
+| count | `varuint32` | count of names to follow |
+| names | `function_names*` | sequence of names |
 
-### Local Names section
+The sequence of `function_name` assigns names to the corresponding
+function index. The count may be greater or less than the actual number of
+functions.
 
-This section may occur 0 or 1 times and does not change execution semantics. A
-validation error in this section is not reported and is treated as the section
-being absent. The expectation is that, when a binary WebAssembly module is
-viewed in a browser or other development environment, the names in this section
-will be used as the names of locals in the [text format](TextFormat.md).
-
-ID: `local_names`
+#### Function names
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| names | `name*` | sequence of names |
+| fun_name_len | `varuint32` | string length, in bytes |
+| fun_name_str | `bytes` | valid utf8 encoding |
+| local_count | `varuint32` | count of local names to follow |
+| local_names | `local_name*` | sequence of local names |
 
-The number of names is determined by the sum of all functions' number of locals.
-The sequence of names is defined to be the concatentation of the sequence of
-local names (ordered by local index) for each function (ordered by function index).
-This sequence assigns a name to every local index in every function. A name is:
+The sequence of `local_name` assigns names to the corresponding local index. The
+count may be greater or less than the actual number of functions.
+
+#### Local name
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| size | varuint32 | string length, in bytes |
-| string | bytes | valid utf8 encoding |
+| local_name_len | `varuint32` | string length, in bytes |
+| local_name_str | `bytes` | valid utf8 encoding |
 
 ### End section
 
