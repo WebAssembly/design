@@ -318,7 +318,7 @@ out of range, `br_table` branches to the default target.
 | `store_global` | `0x11` | index = `varuint32` | * nonstandard internal opcode |
 | `call` | `0x12` | function_index = `varuint32` | call a function by its index |
 | `call_indirect` | `0x13` | signature_index = `varuint32` | call a function indirect with an expected signature |
-| `call_import` | `0x09` | import_index = `varuint32` | call an imported function by its index |
+| `call_import` | `0x1f` | import_index = `varuint32` | call an imported function by its index |
 
 ## Memory-related operators ([described here](AstSemantics.md#linear-memory-accesses))
 
