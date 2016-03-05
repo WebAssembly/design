@@ -87,7 +87,7 @@ The module starts with a magic number and version as follows.
 | magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
 | version | `uint32` | Version number, currently 10. The version for MVP will be reset to 1. |
 
-This is followed by a sequence of sections. Sections can in general be repeated, but some can occur only once or have dependent sections that must preceed them but not immediately as unknown sections can occur in any order. Each section is identified by an immediate string. Sections whose identity is unknown to the WebAssembly implementation are ignored and this is supported by including the size in bytes for all sections. The encoding of all sections begins as follows:
+This is followed by a sequence of sections. Sections can in general be repeated, but some can occur only once or have dependent sections that must precede them but not necessarily immediately as unknown sections can occur in any order. Each section is identified by an immediate string. Sections whose identity is unknown to the WebAssembly implementation are ignored and this is supported by including the size in bytes for all sections. The encoding of all sections begins as follows:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -165,11 +165,12 @@ must contain a function body. Imported and exported functions must have a name. 
 
 | Field | Type |  Present?  | Description |
 | ----- |  ----- |  ----- |  ----- |
-| flags | `uint8` | always | flags indicating attributes of a function <br>bit `0` : a name is present<br>bit `1` : the function is an import<br>bit `2` : the function has local variables<br>bit `3` : the function is an export |
+| flags | `uint8` | always | flags indicating attributes of a function <br>bit `0` : a name is present<br>bit `1` : the function is an import<br>bit `3` : the function is an export
+<br>remaining bits should be set to 0 |
 | signature | `uint16` | always | index into the Signature section |
 | name | `uint32` | `flags[0] == 1` | name of the function as an offset within the module |
-| body size | `uint16` | `flags[0] == 0` | size of function body to follow, in bytes |
-| body | `bytes` | `flags[0] == 0` | function body |
+| body size | `uint16` | `flags[1] == 0` | size of function body to follow, in bytes |
+| body | `bytes` | `flags[1] == 0` | function body |
 
 ### Export Table section
 
@@ -195,7 +196,7 @@ This section must be preceded by a [Functions](#functions-section) section.
 
 ID: `start_function`
 
-A module may contain at most one start fuction section.
+A module may contain at most one start function section.
 This section must be preceded by a [Functions](#functions-section) section.
 
 | Field | Type | Description |
@@ -206,8 +207,8 @@ This section must be preceded by a [Functions](#functions-section) section.
 
 ID: `data_segments`
 
-The data segemnts section declares the initialized data that should be loaded into the linear memory.
-A module may only contain one data segments section.
+The data segments section declares the initialized data that should be loaded into the linear memory.
+A module may contain at most one data segments section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -354,7 +355,7 @@ The `memory_immediate` type is encoded as follows:
 
 | Name | Type | Present? | Description |
 | ---- | ---- | ---- | ---- |
-| flags | `uint8` | always | a bitfield where<br>bit `4` indicates an offset follows<br>bit `7` indicates natural alignment<br>other bits are reserved for future use |
+| flags | `uint8` | always | a bitfield where<br>bit `4` indicates an offset follows<br>bit `7` indicates natural alignment<br>other bits are reserved for future use and should be set to 0 |
 | offset | `varuint32` | `flags[4] == 1` | the value of the offset |
 
 ## Simple operators ([described here](AstSemantics#32-bit-integer-operators))
