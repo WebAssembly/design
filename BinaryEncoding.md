@@ -149,9 +149,9 @@ A module may contain at most one import table section.
 
 ID: `function_signatures`
 
-The Functions Signatures section declares the signatures of all functions in the
+The Function Signatures section declares the signatures of all functions in the
 module and must be preceded by the [Signatures](#signatures-section) section. A
-module may contain at most one functions section.
+module may contain at most one functions signatures section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -164,7 +164,8 @@ ID: `function_bodies`
 
 The Function Bodies section assigns a body to every function in the module and
 must be preceded by the [Function Signatures](#function-signatures-section) section.
-The count of function signatures and function bodies must be the same.
+The count of function signatures and function bodies must be the same and the `i`th
+signature corresponds to the `i`th function body.
 
 | Field | Type |  Description |
 | ----- |  ----- |  ----- |  ----- |
