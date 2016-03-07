@@ -145,28 +145,31 @@ A module may contain at most one import table section.
 | function_len | `varuint32` | function string length |
 | function_str | `bytes` | function string of `function_len` bytes |
 
-### Functions section
+### Function Signatures section
 
-ID: `functions`
+ID: `function_signatures`
 
-The Functions section declares the functions in the module and must be preceded by a [Signatures](#signatures-section) section. A module may contain at most one functions section.
+The Functions Signatures section declares the signatures of all functions in the
+module and must be preceded by the [Signatures](#signatures-section) section. A
+module may contain at most one functions section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| count | `varuint32` | count of function entries to follow |
-| entries | `function_entry*` | repeated function entries as described below |
+| count | `varuint32` | count of signature indices to follow |
+| signatures | `varuint32*` | sequence of indices into the Signature section |
 
-#### Function Entry
+### Function Bodies section
 
-Each function entry describes a function that can be optionally named, imported and/or exported. Non-imported functions
-must contain a function body. Imported and exported functions must have a name. Imported functions do not contain a body.
+ID: `function_bodies`
 
-| Field | Type |  Present?  | Description |
+The Function Bodies section assigns a body to every function in the module and
+must be preceded by the [Function Signatures](#function-signatures-section) section.
+The count of function signatures and function bodies must be the same.
+
+| Field | Type |  Description |
 | ----- |  ----- |  ----- |  ----- |
-| flags | `uint8` | always | flags indicating attributes of a function <br>bit `1` : the function is an import<br>bit `2` : the function has local variables<br>bit `3` : the function is an export |
-| signature | `uint16` | always | index into the Signature section |
-| body size | `uint16` | `flags[0] == 0` | size of function body to follow, in bytes |
-| body | `bytes` | `flags[0] == 0` | function body |
+| count | `varuint32` | count of function bodies to follow |
+| bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
 
 ### Export Table section
 
