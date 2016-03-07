@@ -248,7 +248,7 @@ a value and may appear as children of other expressions.
  * `if_else`: if expression with *then* and *else* expressions
  * `br`: branch to a given label in an enclosing construct
  * `br_if`: conditionally branch to a given label in an enclosing construct
- * `tableswitch`: a jump table which jumps to a label in an enclosing construct
+ * `br_table`: a jump table which jumps to a label in an enclosing construct
  * `return`: return zero or more values from this function
 
 ### Branches and nesting
@@ -266,7 +266,7 @@ further see the parallel, note that a `br` to a `block`'s label is functionally
 equivalent to a labeled `break` in high-level languages in that a `br` simply
 breaks out of a `block`.
 
-Branches that exit a `block`, `loop`, or `tableswitch` may take a subexpression
+Branches that exit a `block`, `loop`, or `br_table` may take a subexpression
 that yields a value for the exited construct. If present, it is the first operand
 before any others.
 
@@ -278,13 +278,12 @@ Other control constructs may yield values if their subexpressions yield values:
 * `block`: yields either the value of the last expression in the block or the result of an inner `br` that targeted the label of the block
 * `loop`: yields either the value of the last expression in the loop or the result of an inner `br` that targeted the end label of the loop
 * `if_else`: yields either the value of the true expression or the false expression
-* `tableswitch`: yields the result of an inner `br` that targeted the tableswitch
 
 
 ### Tableswitch
 
-A `tableswitch` consists of a zero-based array of labels, a *default* label,
-and an index operand. A `tableswitch` jumps to the label indexed in the array
+A `br_table` consists of a zero-based array of labels, a *default* label,
+and an index operand. A `br_table` jumps to the label indexed in the array
 or the default label if the index is out of bounds.
 
 
