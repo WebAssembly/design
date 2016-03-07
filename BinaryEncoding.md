@@ -165,9 +165,8 @@ must contain a function body. Imported and exported functions must have a name. 
 
 | Field | Type |  Present?  | Description |
 | ----- |  ----- |  ----- |  ----- |
-| flags | `uint8` | always | flags indicating attributes of a function <br>bit `0` : a name is present<br>bit `1` : the function is an import<br>bit `2` : the function has local variables<br>bit `3` : the function is an export |
+| flags | `uint8` | always | flags indicating attributes of a function <br>bit `1` : the function is an import<br>bit `2` : the function has local variables<br>bit `3` : the function is an export |
 | signature | `uint16` | always | index into the Signature section |
-| name | `uint32` | `flags[0] == 1` | name of the function as an offset within the module |
 | body size | `uint16` | `flags[0] == 0` | size of function body to follow, in bytes |
 | body | `bytes` | `flags[0] == 0` | function body |
 
@@ -233,6 +232,45 @@ This section must be preceded by a [Functions](#functions-section) section.
 | ----- |  ----- | ----- |
 | count | `varuint32` | count of entries to follow |
 | entries | `uint16*` | repeated indexes into the function table |
+
+### Names section
+
+ID: `names`
+
+This section may occur 0 or 1 times and does not change execution semantics. A
+validation error in this section does not cause validation for the whole module
+to fail and is instead treated as if the section was absent. The expectation is
+that, when a binary WebAssembly module is viewed in a browser or other
+development environment, the names in this section will be used as the names of
+functions and locals in the [text format](TextFormat.md).
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| count | `varuint32` | count of entries to follow |
+| entries | `function_names*` | sequence of names |
+
+The sequence of `function_name` assigns names to the corresponding
+function index. The count may be greater or less than the actual number of
+functions.
+
+#### Function names
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| fun_name_len | `varuint32` | string length, in bytes |
+| fun_name_str | `bytes` | valid utf8 encoding |
+| local_count | `varuint32` | count of local names to follow |
+| local_names | `local_name*` | sequence of local names |
+
+The sequence of `local_name` assigns names to the corresponding local index. The
+count may be greater or less than the actual number of locals.
+
+#### Local name
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| local_name_len | `varuint32` | string length, in bytes |
+| local_name_str | `bytes` | valid utf8 encoding |
 
 ### End section
 
