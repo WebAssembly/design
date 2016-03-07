@@ -187,7 +187,6 @@ This section must be preceded by a [Functions](#functions-section) section.
 #### Export entry
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| sig_index | `uint16` | signature index of the export |
 | func_index | `uint16` | index into the function table |
 | function_len | `varuint32` | function string length |
 | function_str | `bytes` | function string of `function_len` bytes |
