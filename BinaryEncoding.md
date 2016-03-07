@@ -303,6 +303,7 @@ nodes (if any).
 
 | Name | Opcode |Description |
 | ----- | ----- | ----- |
+| body size | `varuint32` | size of function body to follow, in bytes |
 | local count | `varuint32` | number of local entries |
 | locals | `local_entry*` | local variables |
 | ast    | `byte*` | pre-order encoded AST |
