@@ -212,12 +212,12 @@ A module may only contain one data segments section.
 | count | `varuint32` | count of data segments to follow |
 | entries | `data_segment*` | repeated data segments as described below |
 
-* ```varuint32```: The number of data segments in the section.
-* For each data segment:
-  - ```uint32```: The base address of the data segment in memory.
-  - ```uint32```: The offset of the data segment's data in the file.
-  - ```uint32```: The size of the data segment (in bytes)
-  - ```uint8```: ```1``` if the segment's data should be automatically loaded into memory at module load time.
+a `data_segment` is:
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| offset | `uint32` | the offset in linear memory at which to store the data |
+| size | `uint32` | the size of the data segment (in bytes) |
 
 ### Indirect Function Table section
 
