@@ -218,6 +218,7 @@ a `data_segment` is:
 | ----- |  ----- | ----- |
 | offset | `uint32` | the offset in linear memory at which to store the data |
 | size | `uint32` | the size of the data segment (in bytes) |
+| data | `bytes` | a sequence of `size` bytes |
 
 ### Indirect Function Table section
 
