@@ -387,8 +387,8 @@ The `memory_immediate` type is encoded as follows:
 
 | Name | Type | Description |
 | ---- | ---- | ---- |
+| flags | `varuint32` | a bitfield currently only containing the alignment (less-or-equal than natural alignment, specified as a power of 2) for the `log2(access size)` least-significant bits |
 | offset | `varuint32` | the value of the offset |
-| alignment | `varuint32` | the value of the alignment |
 
 ## Simple operators ([described here](AstSemantics#32-bit-integer-operators))
 
