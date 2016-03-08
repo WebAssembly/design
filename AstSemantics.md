@@ -280,7 +280,7 @@ Other control constructs may yield values if their subexpressions yield values:
 * `if_else`: yields either the value of the true expression or the false expression
 
 
-### Tableswitch
+### `br_table`
 
 A `br_table` consists of a zero-based array of labels, a *default* label,
 and an index operand. A `br_table` jumps to the label indexed in the array
