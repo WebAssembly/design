@@ -178,7 +178,7 @@ ID: `export_table`
 
 The export table section declares all exports from the module.
 A module may contain at most one export table section.
-This section must be preceded by a [Functions](#functions-section) section.
+This section must be preceded by the [Function Signatures](#function-signatures-section) section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -197,7 +197,7 @@ This section must be preceded by a [Functions](#functions-section) section.
 ID: `start_function`
 
 A module may contain at most one start fuction section.
-This section must be preceded by a [Functions](#functions-section) section.
+This section must be preceded by a [Function Signatures](#function-signatures-section) section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -228,8 +228,7 @@ a `data_segment` is:
 ID: `function_table`
 
 The indirect function table section declares the size and entries of the indirect function table, which consist
-of indexes into the [Functions](#functions-section) section.
-This section must be preceded by a [Functions](#functions-section) section.
+of indexes into the [Function Signatures](#function-signatures-section) section (which must come before).
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
