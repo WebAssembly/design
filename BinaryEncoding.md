@@ -71,9 +71,6 @@ sequence, then followed recursively by any child nodes.
     * Then write the (variable-length) integer `callee_index` (varuint32)
     * Then recursively write each argument node, where arity is determined by looking up `callee_index` in a table of signatures
 
-### Strings
-Strings referenced by the module (i.e. function names) are encoded as null-terminated [UTF8](http://unicode.org/faq/utf_bom.html#UTF8).
-
 # Module structure
 
 The following documents the current prototype format. This format is based on and supersedes the v8-native prototype format, originally in a [public design doc](https://docs.google.com/document/d/1-G11CnMA0My20KI9D7dBR6ZCPOBCRD0oCH6SHCPFGx0/edit?usp=sharing).
@@ -143,9 +140,10 @@ A module may contain at most one import table section.
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | sig_index | `uint16` | signature index of the import |
-| module_name | `uint32` | offset from the start of the module of the string representing the module name |
-| func_name | `uint32` | offset from the start of the module of the string representing the function name |
-
+| module_len | `varuint32` | module string length |
+| module_str | `bytes` | module string of `module_len` bytes |
+| function_len | `varuint32` | function string length |
+| function_str | `bytes` | function string of `function_len` bytes |
 
 ### Functions section
 
@@ -188,7 +186,8 @@ This section must be preceded by a [Functions](#functions-section) section.
 | ----- |  ----- | ----- |
 | sig_index | `uint16` | signature index of the export |
 | func_index | `uint16` | index into the function table |
-| func_name | `uint32` | offset from the start of the module of the string representing the export name |
+| function_len | `varuint32` | function string length |
+| function_str | `bytes` | function string of `function_len` bytes |
 
 ### Start Function section
 
@@ -213,12 +212,13 @@ A module may only contain one data segments section.
 | count | `varuint32` | count of data segments to follow |
 | entries | `data_segment*` | repeated data segments as described below |
 
-* ```varuint32```: The number of data segments in the section.
-* For each data segment:
-  - ```uint32```: The base address of the data segment in memory.
-  - ```uint32```: The offset of the data segment's data in the file.
-  - ```uint32```: The size of the data segment (in bytes)
-  - ```uint8```: ```1``` if the segment's data should be automatically loaded into memory at module load time.
+a `data_segment` is:
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| offset | `uint32` | the offset in linear memory at which to store the data |
+| size | `uint32` | the size of the data segment (in bytes) |
+| data | `bytes` | a sequence of `size` bytes |
 
 ### Indirect Function Table section
 
