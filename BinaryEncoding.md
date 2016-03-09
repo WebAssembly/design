@@ -71,14 +71,17 @@ The following documents the current prototype format. This format is based on an
 
 ## High-level structure
 
-The module starts with a magic number and version as follows.
+The module starts with a preamble of two fields:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
 | version | `uint32` | Version number, currently 10. The version for MVP will be reset to 1. |
 
-This is followed by a sequence of sections. Sections can in general be repeated, but some can occur only once or have dependent sections that must preceed them but not immediately as unknown sections can occur in any order. Each section is identified by an immediate string. Sections whose identity is unknown to the WebAssembly implementation are ignored and this is supported by including the size in bytes for all sections. The encoding of all sections begins as follows:
+This preamble is followed by a sequence of sections. Each section is identified by an
+immediate string. Sections whose identity is unknown to the WebAssembly
+implementation are ignored and this is supported by including the size in bytes
+for all sections. The encoding of all sections begins as follows:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -86,25 +89,34 @@ This is followed by a sequence of sections. Sections can in general be repeated,
 | id_len | `varuint32` | section identifier string length |
 | id_str | `bytes` | section identifier string of id_len bytes |
 
-### Memory section
+Each section other than the End section is optional and may appear at most once.
+The End section must appear exactly once. If present, sections must occur in
+this precise order (interleaved or followed by unknown sections, as noted
+above):
 
-ID: `memory`
+* [Signatures](#signatures-section) section
+* [Import Table](#import-table-section) section
+* [Function Signatures](#function-signatures-section) section
+* [Indirect Function Table](#indirect-function-table-section) section
+* [Memory](#memory-section) section
+* [Export Table](#export-table-section) section
+* [Start Function](#start-function-section) section
+* [Function Bodies](#function-bodies-section) section
+* [Data Segments](#data-segments-section) section
+* [End](#end-section) section
+* [Names](#names-section) section
 
-The memory section declares the size and characteristics of the memory associated with the module.
-A module may contain at most one memory section.
+Known sections (from this list) may not appear out of order.
 
-| Field | Type | Description |
-| ----- |  ----- | ----- |
-| min_mem_pages | `varuint32` | minimize memory size in 64KiB pages |
-| max_mem_pages | `varuint32` | maximum memory size in 64KiB pages |
-| exported | `uint8` | `1` if the memory is visible outside the module |
+The end of the last present section must coincide with the last byte of the
+module. The shortest valid module is 8 bytes (`magic number`, `version`,
+followed by zero sections).
 
 ### Signatures section
 
 ID: `signatures`
 
 The signatures section declares all function signatures that will be used in the module.
-A module may contain at most one signatures section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -118,12 +130,11 @@ A module may contain at most one signatures section.
 | return_type | `value_type?` | the return type of the function, with `0` indicating no return type |
 | param_types | `value_type*` | the parameter types of the function |
 
-### Import table section
+### Import Table section
 
 ID: `import_table`
 
 The import section declares all imports that will be used in the module.
-A module may contain at most one import table section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -144,35 +155,43 @@ A module may contain at most one import table section.
 ID: `function_signatures`
 
 The Function Signatures section declares the signatures of all functions in the
-module and must be preceded by the [Signatures](#signatures-section) section. A
-module may contain at most one functions signatures section.
+module.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | count | `varuint32` | count of signature indices to follow |
 | signatures | `varuint32*` | sequence of indices into the Signature section |
 
-### Function Bodies section
+### Indirect Function Table section
 
-ID: `function_bodies`
+ID: `function_table`
 
-The Function Bodies section assigns a body to every function in the module and
-must be preceded by the [Function Signatures](#function-signatures-section) section.
-The count of function signatures and function bodies must be the same and the `i`th
-signature corresponds to the `i`th function body.
+The indirect function table section defines the module's 
+[indirect function table](AstSemantics.md#calls).
 
-| Field | Type |  Description |
-| ----- |  ----- |  ----- |  ----- |
-| count | `varuint32` | count of function bodies to follow |
-| bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| count | `varuint32` | count of entries to follow |
+| entries | `varuint32*` | repeated indexes into the function table |
+
+### Memory section
+
+ID: `memory`
+
+The memory section declares the size and characteristics of the memory
+associated with the module.
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| min_mem_pages | `varuint32` | minimize memory size in 64KiB pages |
+| max_mem_pages | `varuint32` | maximum memory size in 64KiB pages |
+| exported | `uint8` | `1` if the memory is visible outside the module |
 
 ### Export Table section
 
 ID: `export_table`
 
 The export table section declares all exports from the module.
-A module may contain at most one export table section.
-This section must be preceded by the [Function Signatures](#function-signatures-section) section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -190,19 +209,31 @@ This section must be preceded by the [Function Signatures](#function-signatures-
 
 ID: `start_function`
 
-A module may contain at most one start function section.
-This section must be preceded by a [Function Signatures](#function-signatures-section) section.
+The start function section declares the [start function](Modules.md#module-start-function).
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | index | `varuint32` | start function index |
 
+### Function Bodies section
+
+ID: `function_bodies`
+
+The Function Bodies section assigns a body to every function in the module.
+The count of function signatures and function bodies must be the same and the `i`th
+signature corresponds to the `i`th function body.
+
+| Field | Type |  Description |
+| ----- |  ----- |  ----- |  ----- |
+| count | `varuint32` | count of function bodies to follow |
+| bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
+
 ### Data Segments section
 
 ID: `data_segments`
 
-The data segments section declares the initialized data that should be loaded into the linear memory.
-A module may only contain one data segments section.
+The data segments section declares the initialized data that should be loaded
+into the linear memory.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -217,28 +248,27 @@ a `data_segment` is:
 | size | `varuint32` | size of `data` (in bytes) |
 | data | `bytes` | sequence of `size` bytes |
 
-### Indirect Function Table section
+### End section
 
-ID: `function_table`
+ID: `end`
 
-The indirect function table section declares the size and entries of the indirect function table, which consist
-of indexes into the [Function Signatures](#function-signatures-section) section (which must come before).
+This section is mandatory and indicates the end of the sections that affect
+semantics. Subsequent sections may be skipped or streamed lazily without
+affecting execution.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| count | `varuint32` | count of entries to follow |
-| entries | `varuint32*` | repeated indexes into the function table |
 
 ### Names section
 
 ID: `names`
 
-This section may occur 0 or 1 times and does not change execution semantics. A
-validation error in this section does not cause validation for the whole module
-to fail and is instead treated as if the section was absent. The expectation is
-that, when a binary WebAssembly module is viewed in a browser or other
-development environment, the names in this section will be used as the names of
-functions and locals in the [text format](TextFormat.md).
+The names section does not change execution semantics and a validation error in
+this section does not cause validation for the whole module to fail and is
+instead treated as if the section was absent. The expectation is that, when a
+binary WebAssembly module is viewed in a browser or other development
+environment, the names in this section will be used as the names of functions
+and locals in the [text format](TextFormat.md).
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -268,23 +298,6 @@ count may be greater or less than the actual number of locals.
 | local_name_len | `varuint32` | string length, in bytes |
 | local_name_str | `bytes` | valid utf8 encoding |
 
-### End section
-
-ID: `end`
-
-This indicates the end of the sections. Additional data that follows this section marker is not interpreted
-by the decoder. It can used, for example, to store function names or data segment bodies.
-
-| Field | Type | Description |
-| ----- |  ----- | ----- |
-
-### Unknown sections
-
-| Field | Type | Description |
-| ----- |  ----- | ----- |
-| body  | `bytes` | contents of this section |
-
-Sections whose ID is unknown to the WebAssembly implementation are ignored.
 
 # Function Bodies
 
