@@ -387,8 +387,14 @@ The `memory_immediate` type is encoded as follows:
 
 | Name | Type | Description |
 | ---- | ---- | ---- |
-| flags | `varuint32` | a bitfield currently only containing the alignment (less-or-equal than natural alignment, specified as a power of 2) for the `log2(access size)` least-significant bits |
+| flags | `varuint32` | a bitfield which currently contains the alignment in the least significant bits, encoded as `log2(alignment)` |
 | offset | `varuint32` | the value of the offset |
+
+As implied by the `log2(alignment)` encoding, the alignment must be a power of 2.
+As an additional validation criteria, the alignment must be less or equal to 
+natural alignment. Thus, for any given memory access op, the bits after the
+`log(memory-access-size)` least-significant bits can be used in the future
+(e.g., for shared memory ordering requirements).
 
 ## Simple operators ([described here](AstSemantics#32-bit-integer-operators))
 
