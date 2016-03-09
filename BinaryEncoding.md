@@ -233,44 +233,63 @@ This section must be preceded by a [Functions](#functions-section) section.
 | count | `varuint32` | count of entries to follow |
 | entries | `uint16*` | repeated indexes into the function table |
 
-### Names section
+### Function Names section
 
-ID: `names`
+ID: `function_names`
 
 This section may occur 0 or 1 times and does not change execution semantics. A
 validation error in this section does not cause validation for the whole module
-to fail and is instead treated as if the section was absent. The expectation is
+to fail and may be treated as if the section was absent. The expectation is
 that, when a binary WebAssembly module is viewed in a browser or other
-development environment, the names in this section will be used as the names of
-functions and locals in the [text format](TextFormat.md).
+development environment, the names in this section will be used as the name
+prefixes of functions in the [text format](TextFormat.md) and that when there
+are duplicates that a unique suffix will be added.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| count | `varuint32` | count of entries to follow |
-| entries | `function_names*` | sequence of names |
+| fun_name_lens | `varuint32*` | sequence of name lengths in bytes |
+| fun_name_strs | `bytes*` | valid utf8 encoding for all the names |
 
-The sequence of `function_name` assigns names to the corresponding
-function index. The count may be greater or less than the actual number of
-functions.
+The sequence of `fun_name_lens` gives the lengths for each function name in the
+same order as in the function signatures section, and then for the import
+functions in the order in the imports section. All names must have a name
+length, however the length may be zero in which case no name is defined for the
+respective function. The `fun_name_strs` are the bytes for all these string in
+the same order.
 
-#### Function names
+The lengths are first in a block to provide a directory to lookup names and to
+help compression. Blocks of unnamed functions are blocks of zeros and are
+expected to compress well so it is not expected to be a burden to have to supply
+a length for all function names.
+
+### Local Names section
+
+ID: `local_names`
+
+This section may occur 0 or 1 times and does not change execution semantics. A
+validation error in this section does not cause validation for the whole module
+to fail and may be treated as if the section was absent. The expectation is
+that, when a binary WebAssembly module is viewed in a browser or other
+development environment, the names in this section will be used as the name
+prefixes of locals in the [text format](TextFormat.md) and that when there are
+duplicates that a unique suffix will be added.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| fun_name_len | `varuint32` | string length, in bytes |
-| fun_name_str | `bytes` | valid utf8 encoding |
-| local_count | `varuint32` | count of local names to follow |
-| local_names | `local_name*` | sequence of local names |
+| local_name_lens | `varuint32*` | sequence of name lengths in bytes |
+| local_name_strs | `bytes*` | valid utf8 encoding for all the names |
 
-The sequence of `local_name` assigns names to the corresponding local index. The
-count may be greater or less than the actual number of locals.
+The sequence of `local_name_lens` gives the lengths for each local name of each
+function in the same order as in the function signatures section and the same
+order as the locals are defined in the function bodies. All names must have a
+name length, however the length may be zero in which case no name is defined for
+the respective local. The `fun_name_strs` are the bytes for all these string in
+the same order.
 
-#### Local name
-
-| Field | Type | Description |
-| ----- |  ----- | ----- |
-| local_name_len | `varuint32` | string length, in bytes |
-| local_name_str | `bytes` | valid utf8 encoding |
+The lengths are first in a block to provide a directory to lookup names and to
+help compression. Blocks of unnamed locals are blocks of zeros and are expected
+to compress well so it is not expected to be a burden to have to supply a length
+for all function names.
 
 ### End section
 
