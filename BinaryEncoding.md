@@ -63,12 +63,12 @@ sequence, then followed recursively by any child nodes.
 
 * Examples
   * Given a simple AST node: `I32Add(left: AstNode, right: AstNode)`
-    * First write the opcode for `I32Add` (`varuint32`).
+    * First write the opcode for `I32Add` (uint8)
     * Then recursively write the left and right nodes.
 
   * Given a call AST node: `Call(callee_index: uint32_t, args: AstNode[])`
-    * First write the opcode of `Call` (`varuint32`).
-    * Then write the (variable-length) integer `callee_index` (`varuint32`)
+    * First write the opcode of `Call` (uint8)
+    * Then write the (variable-length) integer `callee_index` (varuint32)
     * Then recursively write each argument node, where arity is determined by looking up `callee_index` in a table of signatures
 
 ### Strings
