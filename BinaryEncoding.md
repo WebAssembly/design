@@ -214,7 +214,7 @@ a `data_segment` is:
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | offset | `varuint32` | the offset in linear memory at which to store the data |
-| size | `uint32` | size of `data` (in bytes) |
+| size | `varuint32` | size of `data` (in bytes) |
 | data | `bytes` | sequence of `size` bytes |
 
 ### Indirect Function Table section
