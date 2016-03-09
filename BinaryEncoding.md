@@ -26,14 +26,8 @@ implementations.
 
 # Data types
 
-### int8
-A single-byte signed integer.
-
 ### uint8
 A single-byte unsigned integer.
-
-### uint16
-A two-byte little endian unsigned integer.
 
 ### uint32
 A four-byte little endian unsigned integer.
@@ -120,7 +114,7 @@ A module may contain at most one signatures section.
 #### Signature entry
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| param_count | `uint8` | the number of parameters to the function |
+| param_count | `varuint32` | the number of parameters to the function |
 | return_type | `value_type?` | the return type of the function, with `0` indicating no return type |
 | param_types | `value_type*` | the parameter types of the function |
 
@@ -139,7 +133,7 @@ A module may contain at most one import table section.
 #### Import entry
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| sig_index | `uint16` | signature index of the import |
+| sig_index | `varuint32` | signature index of the import |
 | module_len | `varuint32` | module string length |
 | module_str | `bytes` | module string of `module_len` bytes |
 | function_len | `varuint32` | function string length |
@@ -188,7 +182,7 @@ This section must be preceded by the [Function Signatures](#function-signatures-
 #### Export entry
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| func_index | `uint16` | index into the function table |
+| func_index | `varuint32` | index into the function table |
 | function_len | `varuint32` | function string length |
 | function_str | `bytes` | function string of `function_len` bytes |
 
@@ -219,9 +213,9 @@ a `data_segment` is:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| offset | `uint32` | the offset in linear memory at which to store the data |
-| size | `uint32` | the size of the data segment (in bytes) |
-| data | `bytes` | a sequence of `size` bytes |
+| offset | `varuint32` | the offset in linear memory at which to store the data |
+| size | `varuint32` | size of `data` (in bytes) |
+| data | `bytes` | sequence of `size` bytes |
 
 ### Indirect Function Table section
 
@@ -233,7 +227,7 @@ of indexes into the [Function Signatures](#function-signatures-section) section 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | count | `varuint32` | count of entries to follow |
-| entries | `uint16*` | repeated indexes into the function table |
+| entries | `varuint32*` | repeated indexes into the function table |
 
 ### Names section
 
@@ -288,7 +282,7 @@ by the decoder. It can used, for example, to store function names or data segmen
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| body  | `bytes`     | contents of this section |
+| body  | `bytes` | contents of this section |
 
 Sections whose ID is unknown to the WebAssembly implementation are ignored.
 
@@ -323,13 +317,13 @@ It is legal to have several entries with the same type.
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
 | `nop` | `0x00` | | no operation |
-| `block` | `0x01` | count = `uint8` | a sequence of expressions, the last of which yields a value |
-| `loop` | `0x02` | count = `uint8` | a block which can also form control flow loops |
+| `block` | `0x01` | count = `varuint32` | a sequence of expressions, the last of which yields a value |
+| `loop` | `0x02` | count = `varuint32` | a block which can also form control flow loops |
 | `if` | `0x03` | | high-level one-armed if |
 | `if_else` | `0x04` | | high-level two-armed if |
 | `select` | `0x05` | | select one of two values based on condition |
-| `br` | `0x06` | relative_depth = `uint8` | break that targets a outer nested block |
-| `br_if` | `0x07` | relative_depth = `uint8` | conditional break that targets a outer nested block |
+| `br` | `0x06` | relative_depth = `varuint32` | break that targets a outer nested block |
+| `br_if` | `0x07` | relative_depth = `varuint32` | conditional break that targets a outer nested block |
 | `br_table` | `0x08` | see below | branch table control flow construct |
 | `return` | `0x14` | | return zero or one value from this function |
 | `unreachable` | `0x15` | | trap immediately |
@@ -338,9 +332,9 @@ The `br_table` operator has an immediate operand which is encoded as follows:
 
 | Field | Type | Description |
 | ---- | ---- | ---- |
-| target_count | `uint16` | number of targets in the target_table |
-| target_table | `uint16*` | target entries that indicate an outer block or loop to which to break |
-| default_target | `uint16` | an outer block or loop to which to break in the default case |
+| target_count | `varuint32` | number of targets in the target_table |
+| target_table | `uint32*` | target entries that indicate an outer block or loop to which to break |
+| default_target | `uint32` | an outer block or loop to which to break in the default case |
 
 The `br_table` operator implements an indirect branch. It accepts one `i32` expression as input and 
 branches to the block or loop at the given offset within the `target_table`. If the input value is 
@@ -391,10 +385,16 @@ out of range, `br_table` branches to the default target.
 
 The `memory_immediate` type is encoded as follows:
 
-| Name | Type | Present? | Description |
-| ---- | ---- | ---- | ---- |
-| flags | `uint8` | always | a bitfield where<br>bit `4` indicates an offset follows<br>bit `7` indicates natural alignment<br>other bits are reserved for future use |
-| offset | `varuint32` | `flags[4] == 1` | the value of the offset |
+| Name | Type | Description |
+| ---- | ---- | ---- |
+| flags | `varuint32` | a bitfield which currently contains the alignment in the least significant bits, encoded as `log2(alignment)` |
+| offset | `varuint32` | the value of the offset |
+
+As implied by the `log2(alignment)` encoding, the alignment must be a power of 2.
+As an additional validation criteria, the alignment must be less or equal to 
+natural alignment. Thus, for any given memory access op, the bits after the
+`log(memory-access-size)` least-significant bits can be used in the future
+(e.g., for shared memory ordering requirements).
 
 ## Simple operators ([described here](AstSemantics#32-bit-integer-operators))
 
