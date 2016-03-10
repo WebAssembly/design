@@ -413,6 +413,8 @@ natural alignment. Thus, for any given memory access op, the bits after the
 | `i32.shl` | `0x4a` | | |
 | `i32.shr_u` | `0x4b` | | |
 | `i32.shr_s` | `0x4c` | | |
+| `i32.rotr` | `0xb6` | | |
+| `i32.rotl` | `0xb7` | | |
 | `i32.eq` | `0x4d` | | |
 | `i32.ne` | `0x4e` | | |
 | `i32.lt_s` | `0x4f` | | |
@@ -440,6 +442,8 @@ natural alignment. Thus, for any given memory access op, the bits after the
 | `i64.shl` | `0x65` | | |
 | `i64.shr_u` | `0x66` | | |
 | `i64.shr_s` | `0x67` | | |
+| `i64.rotr` | `0xb8` | | |
+| `i64.rotl` | `0xb9` | | |
 | `i64.eq` | `0x68` | | |
 | `i64.ne` | `0x69` | | |
 | `i64.lt_s` | `0x6a` | | |
