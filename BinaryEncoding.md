@@ -71,7 +71,7 @@ The following documents the current prototype format. This format is based on an
 
 ## High-level structure
 
-The module starts with a magic number and version as follows.
+A WASM binary contains a single module, which starts with a magic number and version as follows:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
