@@ -268,16 +268,6 @@ count may be greater or less than the actual number of locals.
 | local_name_len | `varuint32` | string length, in bytes |
 | local_name_str | `bytes` | valid utf8 encoding |
 
-### End section
-
-ID: `end`
-
-This indicates the end of the sections. Additional data that follows this section marker is not interpreted
-by the decoder. It can used, for example, to store function names or data segment bodies.
-
-| Field | Type | Description |
-| ----- |  ----- | ----- |
-
 ### Unknown sections
 
 | Field | Type | Description |
