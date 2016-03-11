@@ -190,7 +190,7 @@ This section must be preceded by the [Function Signatures](#function-signatures-
 
 ID: `start_function`
 
-A module may contain at most one start fuction section.
+A module may contain at most one start function section.
 This section must be preceded by a [Function Signatures](#function-signatures-section) section.
 
 | Field | Type | Description |
@@ -201,7 +201,7 @@ This section must be preceded by a [Function Signatures](#function-signatures-se
 
 ID: `data_segments`
 
-The data segemnts section declares the initialized data that should be loaded into the linear memory.
+The data segments section declares the initialized data that should be loaded into the linear memory.
 A module may only contain one data segments section.
 
 | Field | Type | Description |
