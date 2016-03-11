@@ -428,7 +428,7 @@ natural alignment. Thus, for any given memory access op, the bits after the
 | `i32.clz` | `0x57` | | |
 | `i32.ctz` | `0x58` | | |
 | `i32.popcnt` | `0x59` | | |
-| `i32.eqz  | `0x5a` | | |
+| `i32.eqz`  | `0x5a` | | |
 | `i64.add` | `0x5b` | | |
 | `i64.sub` | `0x5c` | | |
 | `i64.mul` | `0x5d` | | |
@@ -457,7 +457,7 @@ natural alignment. Thus, for any given memory access op, the bits after the
 | `i64.clz` | `0x72` | | |
 | `i64.ctz` | `0x73` | | |
 | `i64.popcnt` | `0x74` | | |
-| `i64.eqz  | `0xba` | | |
+| `i64.eqz`  | `0xba` | | |
 | `f32.add` | `0x75` | | |
 | `f32.sub` | `0x76` | | |
 | `f32.mul` | `0x77` | | |
