@@ -15,13 +15,25 @@ and update the [design](AstSemantics.md) before the MVP is finalized.
 
 ## Why AST?
 
-Why not a stack-, register- or SSA-based bytecode?
+Why not a register- or SSA-based bytecode?
 * Trees allow a smaller binary encoding: [JSZap][], [Slim Binaries][].
 * [Polyfill prototype][] shows simple and efficient translation to asm.js.
 
   [JSZap]: https://research.microsoft.com/en-us/projects/jszap/
   [Slim Binaries]: https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.108.1711
   [Polyfill prototype]: https://github.com/WebAssembly/polyfill-prototype-1
+
+
+## Why not a fully-general stack machine?
+
+Stack machines have all the code size advantages as expression trees represented
+in post-order. However, we wish to avoid requiring an explicit expression stack at
+runtime, because many implementations will want to use registers rather than an
+actual stack for evaluation. Consequently, while it's possible to think about
+wasm expression evaluation in terms of a conceptual stack machine, the stack
+machine would be constrained such that one can always statically know the types,
+definitions, and uses of all operands on the stack, so that an implementation can
+connect definitions with their uses through whatever mechanism they see fit.
 
 
 ## Basic Types Only
@@ -104,7 +116,7 @@ tradeoffs.
   [ArrayBuffer]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer
 
 
-## Resizing
+## Linear Memory Resizing
 
 To allow efficient engines to employ virtual-memory based techniques for bounds
 checking, memory sizes are required to be page-aligned.
@@ -183,7 +195,6 @@ may be added in the future.
 The nop operator does not produce a value or cause side effects. 
 It is nevertheless useful for compilers and tools, which sometimes need to replace instructions with a ```nop```. Without a ```nop``` instruction, code generators would use alternative *does-nothing* opcode patterns that consume space in a module and may have a runtime cost. Finding an appropriate opcode that does nothing but has the appropriate type for the node's location is nontrivial. The existence of many different ways to encode ```nop``` - often mixed in the same module - would reduce the efficiency of compression algorithms.
  
-The history of ```nop``` instructions is long and there are numerous examples of their use in production software.
 
 ## Locals
 
@@ -194,9 +205,9 @@ variables by creating a separate stack data structure within linear memory. This
 stack is sometimes called the "aliased" stack, since it is used for variables
 which may be pointed to by pointers.
 
-This prevents WebAssembly from performing clever optimizations on the stack and
-liveness of such variables, but this loss isn't expected to be
-consequential. Common C compiler optimizations such as LLVM's global value
+This obstructs WebAssembly from performing clever optimizations on the stack and
+computing precise liveness of such variables, but this loss isn't expected to be
+consequential. Common compiler optimizations such as LLVM's global value
 numbering effectively split address-taken variables into parts, shrinking the
 range where they actually need to have their address taken, and creating new
 ranges where they can be allocated as local variables.
@@ -231,7 +242,11 @@ performance, but variable-length calls are already somewhat slow.
 
 ## Multiple Return Values
 
-TODO
+WebAssembly's MVP does not support multiple return values from functions because
+they aren't strictly necessary for the earliest anticipated use cases (and it's
+a *minimum* viable product), and they would introduce some complexity for some
+implementations. However, multiple return values are a very useful feature, and
+are relevant to ABIs, so it's likely to be added soon after the MVP.
 
 
 ## Indirect Calls
@@ -361,6 +376,19 @@ today implement this masking behavior, and those that don't can typically
 emulate it with a single extra mask instruction, and because several popular
 source languages, including JavaScript and C#, have come to specify this
 behavior too, we reluctantly adopt this behavior as well.
+
+WebAssembly has three classes of integer operations: signed, unsigned, and
+sign-agnostic. The signed and unsigned instructions have the property that
+whenever they can't return their mathematically expected value (such as when
+an overflow occurs, or when their operand is outside their domain), they
+trap, in order to avoid silently returning an incorrect value.
+
+Note that the `add`, `sub`, and `mul` operators are categorized as
+sign-agnostic. Because of the magic of two's complement representation, they
+may be used for both signed and unsigned purposes. Note that this (very
+conveniently!) means that engines don't need to add extra overflow-checking
+code for these most common of arithmetic operators on the most popular
+hardware platforms.
 
 
 ## Motivating Scenarios for Feature Testing
