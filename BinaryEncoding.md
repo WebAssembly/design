@@ -89,9 +89,10 @@ for all sections. The encoding of all sections begins as follows:
 | id_len | `varuint32` | section identifier string length |
 | id_str | `bytes` | section identifier string of id_len bytes |
 
-Each section other than the End section is optional and may appear at most once
-and only in the precise order defined below (out-of-order sections are a
-validation error).
+Each section other than the End section is optional and may appear at most once.
+The End section must appear exactly once. If present, sections must occur in
+this precise order (interleaved or followed by unknown sections, as noted
+above):
 
 * [Signatures](#signatures-section) section
 * [Import Table](#import-table-section) section
@@ -105,13 +106,12 @@ validation error).
 * [End](#end-section) section
 * [Names](#names-section) section
 
-The End section must appear exactly once and is the last section that affects
-execution, including whether the module validates. Any validation error after
-the End section causes the containing section and all subsequent bytes to be
-ignored.
+Thus, the shortest valid module is 13 bytes (`magic number`, `version`,
+`size` = 4, `id_len` = 3, `id_str` = "end").
 
-The shortest valid module is thus 13 bytes: `magic number`, `version`,
-`size` = `4`, `id_len` = `3`, `id_str` = `end`.
+Additionally, known sections (from the above list) may not appear out of order
+and the end of the last present section must coincide with the last byte of the
+module. 
 
 ### Signatures section
 
@@ -264,9 +264,12 @@ affecting execution.
 
 ID: `names`
 
-When a binary WebAssembly module is viewed in a browser or other development
-environment, the names in this section, when present, are used as the names of
-functions and locals in the [text format](TextFormat.md).
+The names section does not change execution semantics and a validation error in
+this section does not cause validation for the whole module to fail and is
+instead treated as if the section was absent. The expectation is that, when a
+binary WebAssembly module is viewed in a browser or other development
+environment, the names in this section will be used as the names of functions
+and locals in the [text format](TextFormat.md).
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
