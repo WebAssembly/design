@@ -106,12 +106,11 @@ above):
 * [End](#end-section) section
 * [Names](#names-section) section
 
-Thus, the shortest valid module is 13 bytes (`magic number`, `version`,
-`size` = 4, `id_len` = 3, `id_str` = "end").
+Known sections (from this list) may not appear out of order.
 
-Additionally, known sections (from the above list) may not appear out of order
-and the end of the last present section must coincide with the last byte of the
-module. 
+The end of the last present section must coincide with the last byte of the
+module. The shortest valid module is 8 bytes (`magic number`, `version`,
+followed by zero sections).
 
 ### Signatures section
 
