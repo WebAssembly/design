@@ -89,10 +89,8 @@ for all sections. The encoding of all sections begins as follows:
 | id_len | `varuint32` | section identifier string length |
 | id_str | `bytes` | section identifier string of id_len bytes |
 
-Each section other than the End section is optional and may appear at most once.
-The End section must appear exactly once. If present, sections must occur in
-this precise order (interleaved or followed by unknown sections, as noted
-above):
+Each section is optional and may appear at most once.
+Known sections (from this list) may not appear out of order.
 
 * [Signatures](#signatures-section) section
 * [Import Table](#import-table-section) section
@@ -103,10 +101,7 @@ above):
 * [Start Function](#start-function-section) section
 * [Function Bodies](#function-bodies-section) section
 * [Data Segments](#data-segments-section) section
-* [End](#end-section) section
 * [Names](#names-section) section
-
-Known sections (from this list) may not appear out of order.
 
 The end of the last present section must coincide with the last byte of the
 module. The shortest valid module is 8 bytes (`magic number`, `version`,
@@ -247,17 +242,6 @@ a `data_segment` is:
 | offset | `varuint32` | the offset in linear memory at which to store the data |
 | size | `varuint32` | size of `data` (in bytes) |
 | data | `bytes` | sequence of `size` bytes |
-
-### End section
-
-ID: `end`
-
-This section is mandatory and indicates the end of the sections that affect
-semantics. Subsequent sections may be skipped or streamed lazily without
-affecting execution.
-
-| Field | Type | Description |
-| ----- |  ----- | ----- |
 
 ### Names section
 
