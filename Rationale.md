@@ -205,12 +205,13 @@ variables by creating a separate stack data structure within linear memory. This
 stack is sometimes called the "aliased" stack, since it is used for variables
 which may be pointed to by pointers.
 
-This obstructs WebAssembly from performing clever optimizations on the stack and
-computing precise liveness of such variables, but this loss isn't expected to be
-consequential. Common compiler optimizations such as LLVM's global value
-numbering effectively split address-taken variables into parts, shrinking the
-range where they actually need to have their address taken, and creating new
-ranges where they can be allocated as local variables.
+Since the aliased stack appears to the WebAssembly engine as normal memory,
+WebAssembly optimizations that would target the aliased stack need to be more
+general, and thus more complicated. We observe that common compiler
+optimizations on the producer side, such as LLVM's global value numbering,
+effectively split address-taken variables into many small ranges that can often
+be allocated as local variables. Thus our expectation that any loss of
+optimization potential here is minimal.
 
 Conversely, non-address taken values which are usually on the stack are instead
 represented as locals inside functions. This effectively means that WebAssembly
