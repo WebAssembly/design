@@ -2,10 +2,13 @@
 
 Dynamic loading of code is in [the MVP](MVP.md) in the form of
 [modules](Modules.md), but all loaded modules have their own separate
-[linear memory](AstSemantics.md#linear-memory) and cannot share
-[function pointers](AstSemantics.md#calls). Dynamic linking will allow
-developers to share memory and function pointers between WebAssembly
-dynamic libraries.
+[linear memory](AstSemantics.md#linear-memory) by default and cannot share
+[function pointers](AstSemantics.md#calls). Limited collaboration between
+modules is possible im the MVP by having two modules share the same linear
+memory and invoke each other through the embedder.
+
+True dynamic linking will allow developers to share memory *and* function
+pointers between WebAssembly dynamic libraries.
 
 WebAssembly will support both load-time and run-time (`dlopen`) dynamic linking
 of libraries.
