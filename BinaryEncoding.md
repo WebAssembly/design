@@ -57,19 +57,34 @@ A single-byte unsigned integer indicating a [value type](AstSemantics.md#types).
 
 # Definitions
 
-### Post-order encoding
+### "Post-order" syntax tree encoding
+
 Refers to an approach for encoding syntax trees, where each node begins with an identifying binary
 sequence, then followed recursively by any child nodes. 
 
-* Examples
-  * Given a simple AST node: `i32.add(left: AstNode, right: AstNode)`
-    * First recursively write the left and right child nodes.
-    * Then write the opcode for `i32.add` (uint8)
+WASM syntax trees are encoded in a variation of post-order traversal. Nodes with fixed arity will be encoded in post-order. 
+Nodes with variadic control-flow opcodes such as but not limited to blocks and loops, will be bracketed with opcode-specific start and end marker. Other variadic opcodes such as `call` will be post-order without brackets since the arity immediate is sufficient. Thus, for fixed arity and non-control flow variadic opcodes, the binary sequence begins with child subtrees followed by the opcode.
+For variadic control-flow opcodes, the binary sequence begins with an opcode-specific start marker, followed by the the child subtrees (encoded in this same variant of post-order), then the opcode, which serves as an end marker.
+This encoding is immediately amenable to one-pass decoding with an explicit stack without need for shift-reduce parsing.  
 
-  * Given a call AST node: `call(args: AstNode[], callee_index: varuint32)`
-    * First recursively write each argument node.
-    * Then write the (variable-length) integer `callee_index` (varuint32)
-    * Finally write the opcode of `Call` (uint8)
+####Examples:
+
+* Given a simple AST node: `i32.add(left: AstNode, right: AstNode)`
+  * First recursively write the left and right child nodes.
+  * Then write the opcode for `i32.add` (uint8)
+
+* Given a call AST node: `call(args: AstNode[], callee_index: varuint32)`
+  * First recursively write each argument node.
+  * Then write the (variable-length) integer `callee_index` (varuint32)
+  * Finally write the opcode of `Call` (uint8)
+
+* Given nested block AST nodes: `Block(2, [Block(2, [I32Const 2, I32Const 3]), I32Const 4])`
+  * First, write the opcode marker `BLOCK_START`
+  * Write the the arity immediate of the outer block: `2` 
+  * Recursively write the first subnode: `BLOCK_START 2 I32CONST 3 I32CONST BLOCK_END`
+  * Recursively the write second subnode: `4 I32CONST`
+  * Write the opcode `BLOCK_END` 
+
 
 # Module structure
 
