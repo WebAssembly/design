@@ -396,7 +396,7 @@ natural alignment. Thus, for any given memory access op, the bits after the
 `log(memory-access-size)` least-significant bits can be used in the future
 (e.g., for shared memory ordering requirements).
 
-## Simple operators ([described here](AstSemantics#32-bit-integer-operators))
+## Simple operators ([described here](AstSemantics.md#32-bit-integer-operators))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
