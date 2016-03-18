@@ -16,7 +16,9 @@ and the rest of the Web platform that have been considered:
 
 ## The `Wasm` object
 
-WebAssembly is exposed to the Web through a `Wasm` object, whose API is designed
+In addition to
+[integration with the ES6 Modules system](Modules.md#integration-with-es6-modules),
+WebAssembly is exposed to the Web through a `Wasm` object whose API is designed
 to provide a powerful, idiomatic set of methods and properties to instantiate
 and introspect WebAssembly modules directly from JavaScript.
 
