@@ -14,6 +14,14 @@ than if the module was JavaScript.
 More concretely, the following is a list of points of contact between WebAssembly
 and the rest of the Web platform that have been considered:
 
+## The `Wasm` object
+
+In addition to
+[integration with the ES6 Modules system](Modules.md#integration-with-es6-modules),
+WebAssembly is exposed to the Web through a `Wasm` object whose API is designed
+to provide a powerful, idiomatic set of methods and properties to instantiate
+and introspect WebAssembly modules directly from JavaScript.
+
 ## Modules
 
 WebAssembly's [modules](Modules.md) allow for natural [integration with
