@@ -78,3 +78,14 @@ coroutines. Coroutine support is being
 
   [caveats]: https://blog.mozilla.org/nnethercote/2011/01/18/the-dangers-of-fno-exceptions
   [low-level capabilities]: https://extensiblewebmanifesto.org
+
+## Feature Testing
+
+Post-MVP, some form of feature-testing will be required. We don't yet have the
+experience writing polyfills to know whether `has_feature` is the right
+primitive building block so we're not defining it (or something else) until we
+gain this experience. In the interim, it's possible to do a crude feature test
+(as people do in JavaScript) by just `eval`-ing WebAssembly code and catching
+validation errors.
+
+See [Feature test](FeatureTest.md) for a more detailed sketch.
