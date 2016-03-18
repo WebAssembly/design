@@ -30,7 +30,7 @@ and can thus be represented efficiently by the engine.
   [synchronic]: http://wg21.link/n4195
   [C++11 memory model]: http://www.hboehm.info/c++mm/
   [PNaCl atomic support]: https://developer.chrome.com/native-client/reference/pnacl-c-cpp-language-support#memory-model-and-atomics
-  [SharedArrayBuffer]: https://docs.google.com/document/d/1NDGA_gZJ7M7w1Bh8S0AoDyEqwDdRh4uSoTPSNn77PFk
+  [SharedArrayBuffer]: https://github.com/tc39/ecmascript_sharedmem
 
 ## Dynamic linking
 
