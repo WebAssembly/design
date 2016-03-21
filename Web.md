@@ -57,6 +57,11 @@ would inhibit export. In general, `ArrayBuffer` could be viewed as an
 optimization of copy in/out that was only available when linear memory
 behaved like an `ArrayBuffer` (or `SharedArrayBuffer`).
 
+## 64-bit integers
+Currently Javascript doesn't support 64-bit itergers so they will be disallowed
+as a return value in JS binding. Once JS has [Typed Objects](http://wiki.ecmascript.org/doku.php?id=harmony:typed_objects)
+i64 values can be communicated to browser environment.
+
 ## Security
 
 WebAssembly's security model should depend on [CORS][] and
