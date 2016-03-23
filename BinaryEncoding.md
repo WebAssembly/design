@@ -56,8 +56,8 @@ Refers to an approach for encoding syntax trees, where each node begins with an 
 sequence, then followed recursively by any child nodes. 
 
 * Examples
-  * Given a simple AST node: `I32Add(left: AstNode, right: AstNode)`
-    * First write the opcode for `I32Add` (uint8)
+  * Given a simple AST node: `Add(left: AstNode, right: AstNode)`
+    * First write the opcode for `Add` (uint8)
     * Then recursively write the left and right nodes.
 
   * Given a call AST node: `Call(callee_index: uint32_t, args: AstNode[])`
@@ -357,29 +357,17 @@ out of range, `br_table` branches to the default target.
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.load8_s` | `0x20` | `memory_immediate` | load from memory |
-| `i32.load8_u` | `0x21` | `memory_immediate` | load from memory  |
-| `i32.load16_s` | `0x22` | `memory_immediate` | load from memory |
-| `i32.load16_u` | `0x23` | `memory_immediate` | load from memory |
-| `i64.load8_s` | `0x24` | `memory_immediate` | load from memory |
-| `i64.load8_u` | `0x25` | `memory_immediate` | load from memory |
-| `i64.load16_s` | `0x26` | `memory_immediate` | load from memory |
-| `i64.load16_u` | `0x27` | `memory_immediate` | load from memory |
-| `i64.load32_s` | `0x28` | `memory_immediate` | load from memory |
-| `i64.load32_u` | `0x29` | `memory_immediate` | load from memory |
-| `i32.load` | `0x2a` | `memory_immediate` | load from memory |
-| `i64.load` | `0x2b` | `memory_immediate` | load from memory |
-| `f32.load` | `0x2c` | `memory_immediate` | load from memory |
-| `f64.load` | `0x2d` | `memory_immediate` | load from memory |
-| `i32.store8` | `0x2e` | `memory_immediate` | store to memory |
-| `i32.store16` | `0x2f` | `memory_immediate` | store to memory |
-| `i64.store8` | `0x30` | `memory_immediate` | store to memory |
-| `i64.store16` | `0x31` | `memory_immediate` | store to memory |
-| `i64.store32` | `0x32` | `memory_immediate` | store to memory |
-| `i32.store` | `0x33` | `memory_immediate` | store to memory |
-| `i64.store` | `0x34` | `memory_immediate` | store to memory |
-| `f32.store` | `0x35` | `memory_immediate` | store to memory |
-| `f64.store` | `0x36` | `memory_immediate` | store to memory |
+| `load8_s` | `0x20` | `memory_immediate` | load from memory. i32, i64 |
+| `load8_u` | `0x21` | `memory_immediate` | load from memory. u32, u64  |
+| `load16_s` | `0x22` | `memory_immediate` | load from memory. i32, i64 |
+| `load16_u` | `0x23` | `memory_immediate` | load from memory. u32, u64 |
+| `load32_s` | `0x28` | `memory_immediate` | load from memory. i64 |
+| `load32_u` | `0x29` | `memory_immediate` | load from memory. u64 |
+| `load` | `0x2a` | `memory_immediate` | load from memory. i32, i64, f32, f64 |
+| `store8` | `0x2e` | `memory_immediate` | store to memory. i32, i64 |
+| `store16` | `0x2f` | `memory_immediate` | store to memory. i32, i64 |
+| `store32` | `0x32` | `memory_immediate` | store to memory. i64 |
+| `store` | `0x33` | `memory_immediate` | store to memory. i32, i64, f32, f64 |
 | `memory_size` | `0x3b` |  | query the size of memory |
 | `grow_memory` | `0x39` |  | grow the size of memory |
 
@@ -400,128 +388,58 @@ natural alignment. Thus, for any given memory access op, the bits after the
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.add` | `0x40` | | |
-| `i32.sub` | `0x41` | | |
-| `i32.mul` | `0x42` | | |
-| `i32.div_s` | `0x43` | | |
-| `i32.div_u` | `0x44` | | |
-| `i32.rem_s` | `0x45` | | |
-| `i32.rem_u` | `0x46` | | |
-| `i32.and` | `0x47` | | |
-| `i32.or` | `0x48` | | |
-| `i32.xor` | `0x49` | | |
-| `i32.shl` | `0x4a` | | |
-| `i32.shr_u` | `0x4b` | | |
-| `i32.shr_s` | `0x4c` | | |
-| `i32.rotr` | `0xb6` | | |
-| `i32.rotl` | `0xb7` | | |
-| `i32.eq` | `0x4d` | | |
-| `i32.ne` | `0x4e` | | |
-| `i32.lt_s` | `0x4f` | | |
-| `i32.le_s` | `0x50` | | |
-| `i32.lt_u` | `0x51` | | |
-| `i32.le_u` | `0x52` | | |
-| `i32.gt_s` | `0x53` | | |
-| `i32.ge_s` | `0x54` | | |
-| `i32.gt_u` | `0x55` | | |
-| `i32.ge_u` | `0x56` | | |
-| `i32.clz` | `0x57` | | |
-| `i32.ctz` | `0x58` | | |
-| `i32.popcnt` | `0x59` | | |
-| `i32.eqz`  | `0x5a` | | |
-| `i64.add` | `0x5b` | | |
-| `i64.sub` | `0x5c` | | |
-| `i64.mul` | `0x5d` | | |
-| `i64.div_s` | `0x5e` | | |
-| `i64.div_u` | `0x5f` | | |
-| `i64.rem_s` | `0x60` | | |
-| `i64.rem_u` | `0x61` | | |
-| `i64.and` | `0x62` | | |
-| `i64.or` | `0x63` | | |
-| `i64.xor` | `0x64` | | |
-| `i64.shl` | `0x65` | | |
-| `i64.shr_u` | `0x66` | | |
-| `i64.shr_s` | `0x67` | | |
-| `i64.rotr` | `0xb8` | | |
-| `i64.rotl` | `0xb9` | | |
-| `i64.eq` | `0x68` | | |
-| `i64.ne` | `0x69` | | |
-| `i64.lt_s` | `0x6a` | | |
-| `i64.le_s` | `0x6b` | | |
-| `i64.lt_u` | `0x6c` | | |
-| `i64.le_u` | `0x6d` | | |
-| `i64.gt_s` | `0x6e` | | |
-| `i64.ge_s` | `0x6f` | | |
-| `i64.gt_u` | `0x70` | | |
-| `i64.ge_u` | `0x71` | | |
-| `i64.clz` | `0x72` | | |
-| `i64.ctz` | `0x73` | | |
-| `i64.popcnt` | `0x74` | | |
-| `i64.eqz`  | `0xba` | | |
-| `f32.add` | `0x75` | | |
-| `f32.sub` | `0x76` | | |
-| `f32.mul` | `0x77` | | |
-| `f32.div` | `0x78` | | |
-| `f32.min` | `0x79` | | |
-| `f32.max` | `0x7a` | | |
-| `f32.abs` | `0x7b` | | |
-| `f32.neg` | `0x7c` | | |
-| `f32.copysign` | `0x7d` | | |
-| `f32.ceil` | `0x7e` | | |
-| `f32.floor` | `0x7f` | | |
-| `f32.trunc` | `0x80` | | |
-| `f32.nearest` | `0x81` | | |
-| `f32.sqrt` | `0x82` | | |
-| `f32.eq` | `0x83` | | |
-| `f32.ne` | `0x84` | | |
-| `f32.lt` | `0x85` | | |
-| `f32.le` | `0x86` | | |
-| `f32.gt` | `0x87` | | |
-| `f32.ge` | `0x88` | | |
-| `f64.add` | `0x89` | | |
-| `f64.sub` | `0x8a` | | |
-| `f64.mul` | `0x8b` | | |
-| `f64.div` | `0x8c` | | |
-| `f64.min` | `0x8d` | | |
-| `f64.max` | `0x8e` | | |
-| `f64.abs` | `0x8f` | | |
-| `f64.neg` | `0x90` | | |
-| `f64.copysign` | `0x91` | | |
-| `f64.ceil` | `0x92` | | |
-| `f64.floor` | `0x93` | | |
-| `f64.trunc` | `0x94` | | |
-| `f64.nearest` | `0x95` | | |
-| `f64.sqrt` | `0x96` | | |
-| `f64.eq` | `0x97` | | |
-| `f64.ne` | `0x98` | | |
-| `f64.lt` | `0x99` | | |
-| `f64.le` | `0x9a` | | |
-| `f64.gt` | `0x9b` | | |
-| `f64.ge` | `0x9c` | | |
-| `i32.trunc_s/f32` | `0x9d` | | |
-| `i32.trunc_s/f64` | `0x9e` | | |
-| `i32.trunc_u/f32` | `0x9f` | | |
-| `i32.trunc_u/f64` | `0xa0` | | |
-| `i32.wrap/i64` | `0xa1` | | |
-| `i64.trunc_s/f32` | `0xa2` | | |
-| `i64.trunc_s/f64` | `0xa3` | | |
-| `i64.trunc_u/f32` | `0xa4` | | |
-| `i64.trunc_u/f64` | `0xa5` | | |
-| `i64.extend_s/i32` | `0xa6` | | |
-| `i64.extend_u/i32` | `0xa7` | | |
-| `f32.convert_s/i32` | `0xa8` | | |
-| `f32.convert_u/i32` | `0xa9` | | |
-| `f32.convert_s/i64` | `0xaa` | | |
-| `f32.convert_u/i64` | `0xab` | | |
-| `f32.demote/f64` | `0xac` | | |
-| `f32.reinterpret/i32` | `0xad` | | |
-| `f64.convert_s/i32` | `0xae` | | |
-| `f64.convert_u/i32` | `0xaf` | | |
-| `f64.convert_s/i64` | `0xb0` | | |
-| `f64.convert_u/i64` | `0xb1` | | |
-| `f64.promote/f32` | `0xb2` | | |
-| `f64.reinterpret/i64` | `0xb3` | | |
-| `i32.reinterpret/f32` | `0xb4` | | |
-| `i64.reinterpret/f64` | `0xb5` | | |
+| `add` | `0x40` | | i32, i64, f32, f64 |
+| `sub` | `0x41` | | i32, i64, f32, f64 |
+| `mul` | `0x42` | | i32, i64, f32, f64 |
+| `div_s` | `0x43` | | i32, i64 |
+| `div_u` | `0x44` | | i32, i64 |
+| `rem_s` | `0x45` | | i32, i64 |
+| `rem_u` | `0x46` | | i32, i64 |
+| `and` | `0x47` | | i32, i64 |
+| `or` | `0x48` | | i32, i64 |
+| `xor` | `0x49` | | i32, i64 |
+| `shl` | `0x4a` | | i32, i64 |
+| `shr_u` | `0x4b` | | i32, i64 |
+| `shr_s` | `0x4c` | | i32, i64 |
+| `rotr` | `0xb6` | | i32, i64 |
+| `rotl` | `0xb7` | | i32, i64 |
+| `eq` | `0x4d` | | i32, i64, f32, f64 -> i32 |
+| `ne` | `0x4e` | | i32, i64, f32, f64 -> i32 |
+| `lt_s` | `0x4f` | | i32, i64, f32, f64 -> i32 |
+| `le_s` | `0x50` | | i32, i64, f32, f64 -> i32 |
+| `lt_u` | `0x51` | | i32, i64 -> i32 |
+| `le_u` | `0x52` | | i32, i64 -> i32 |
+| `gt_s` | `0x53` | | i32, i64, f32, f64 -> i32 |
+| `ge_s` | `0x54` | | i32, i64, f32, f64 -> i32 |
+| `gt_u` | `0x55` | | i32, i64 -> i32 |
+| `ge_u` | `0x56` | | i32, i64 -> i32 |
+| `clz` | `0x57` | | i32, i64 |
+| `popcnt` | `0x59` | | i32, i64 |
+| `eqz`  | `0x5a` | | i32, i64 |
+| `min` | `0x79` | | f32, f64 |
+| `max` | `0x7a` | | f32, f64 |
+| `abs` | `0x7b` | | f32, f64 |
+| `neg` | `0x7c` | | f32, f64 |
+| `fcopysign` | `0x7d` | | f32, f64 |
+| `fceil` | `0x7e` | | f32, f64 |
+| `ffloor` | `0x7f` | | f32, f64 |
+| `ftrunc` | `0x80` | | f32, f64 |
+| `fnearest` | `0x81` | | f32, f64 |
+| `fsqrt` | `0x82` | | f32, f64 |
+| `i32.trunc_s` | `0x9d` | | f32, f64 -> i32 |
+| `i32.trunc_u` | `0x9f` | | f32, f64 -> u32 |
+| `i32.wrap/i64` | `0xa1` | | i64 -> i32 |
+| `i64.trunc_s` | `0xa2` | | f32, f64 -> i64 |
+| `i64.trunc_u` | `0xa4` | | f32, f64 -> u64 |
+| `i64.extend_s` | `0xa6` | | i32 -> i64 |
+| `i64.extend_u` | `0xa7` | | u32 -> i64 |
+| `f32.convert_s` | `0xa8` | | i32, i64, f64 -> f32 |
+| `f32.convert_u` | `0xa9` | | u32, u64 -> f32 |
+| `f32.reinterpret/i32` | `0xad` | | i32 -> f32 |
+| `f64.convert_s` | `0xae` | | i32, i64, f32 -> f64 |
+| `f64.convert_u` | `0xaf` | | u32, u64 -> f64 |
+| `f64.reinterpret/i64` | `0xb3` | | i64 -> f64 |
+| `i32.reinterpret/f32` | `0xb4` | | f32 -> i32 |
+| `i64.reinterpret/f64` | `0xb5` | | f64 -> i64 |
 
 
