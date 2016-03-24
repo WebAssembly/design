@@ -392,8 +392,8 @@ The `memory_immediate` type is encoded as follows:
 
 As implied by the `log2(alignment)` encoding, the alignment must be a power of 2.
 As an additional validation criteria, the alignment must be less or equal to 
-natural alignment. Thus, for any given memory access op, the bits after the
-`log(memory-access-size)` least-significant bits can be used in the future
+natural alignment. The bits after the
+`log(memory-access-size)` least-significant bits should be set to 0. These bits are reserved for future use
 (e.g., for shared memory ordering requirements).
 
 ## Simple operators ([described here](AstSemantics.md#32-bit-integer-operators))
