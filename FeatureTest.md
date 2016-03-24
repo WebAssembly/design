@@ -2,10 +2,13 @@ See [rationale](Rationale.md#feature-testing---motivating-scenarios) for motivat
 
 # Feature Test
 
-The [MVP](MVP.md) allows an application to query which post-MVP features are
-supported via [`has_feature`](AstSemantics.md#feature-test). This accounts for
-the pragmatic reality that features are shipped in different orders at different
-times by different engines.
+[PostMVP](PostMVP.md), applications will be able to query which features are
+supported via [`has_feature` or a similar API](PostMVP#Feature-Testing). This
+accounts for the pragmatic reality that features are shipped in different orders
+at different times by different engines.
+
+What follows is a sketch of what such a feature testing capability could look
+like.
 
 Since some WebAssembly features add operators and all WebAssembly code in a
 module is validated ahead-of-time, the usual JavaScript feature detection

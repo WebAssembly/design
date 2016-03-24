@@ -396,6 +396,7 @@ results into the result type.
   * `i32.clz`: sign-agnostic count leading zero bits (All zero bits are considered leading if the value is zero)
   * `i32.ctz`: sign-agnostic count trailing zero bits (All zero bits are considered trailing if the value is zero)
   * `i32.popcnt`: sign-agnostic count number of one bits
+  * `i32.eqz`: compare equal to zero (return 1 if operand is zero, 0 otherwise)
 
 Shifts counts are wrapped to be less than the log-base-2 of the number of bits
 in the value to be shifted, as an unsigned quantity. For example, in a 32-bit
