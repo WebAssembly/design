@@ -58,8 +58,9 @@ optimization of copy in/out that was only available when linear memory
 behaved like an `ArrayBuffer` (or `SharedArrayBuffer`).
 
 ## 64-bit integers
+
 Currently Javascript doesn't support 64-bit integers so they will be disallowed
-as a return value in JS binding. Once JS has [Typed Objects](http://wiki.ecmascript.org/doku.php?id=harmony:typed_objects)
+as parameters in imports and exports and in return values in the JS bindings. Once JS has [Typed Objects](http://wiki.ecmascript.org/doku.php?id=harmony:typed_objects)
 i64 values can be communicated to browser environment.
 
 ## Security
