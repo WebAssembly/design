@@ -63,7 +63,7 @@ Refers to an approach for encoding syntax trees, where each node begins with an 
 sequence, then followed recursively by any child nodes. 
 
 WASM syntax trees are encoded in a variation of post-order traversal. Nodes with fixed arity will be encoded in post-order. 
-Nodes with variadic control-flow opcodes such as but not limited to blocks and loops, will be bracketed with opcode-specific start and end marker. Other variadic opcodes such as `call` will be post-order without brackets since the arity immediate is sufficient. Thus, for fixed arity and non-control flow variadic opcodes, the binary sequence begins with child subtrees followed by the opcode.
+Nodes with variadic control-flow opcodes, such as but not limited to blocks, loops, and if_else, will be bracketed with opcode-specific start and end marker. Other variadic opcodes such as `call` will be post-order without brackets since the arity immediate is sufficient. Thus, for fixed arity and non-control flow variadic opcodes, the binary sequence begins with child subtrees followed by the opcode.
 For variadic control-flow opcodes, the binary sequence begins with an opcode-specific start marker, followed by the the child subtrees (encoded in this same variant of post-order), then the opcode, which serves as an end marker.
 This encoding is immediately amenable to one-pass decoding with an explicit stack without need for shift-reduce parsing.  
 
@@ -78,12 +78,20 @@ This encoding is immediately amenable to one-pass decoding with an explicit stac
   * Then write the (variable-length) integer `callee_index` (varuint32)
   * Finally write the opcode of `Call` (uint8)
 
-* Given nested block AST nodes: `Block(2, [Block(2, [I32Const 2, I32Const 3]), I32Const 4])`
-  * First, write the opcode marker `BLOCK_START`
+* Given an if-expression: `if_else(expr: AstNode, true-exprs: AstNode, false_exprs: AstNode)`
+  * Recursively encode expr
+  * Write the opcode for `if`
+  * Recursively encode true-exprs
+  * Write the opcode for `else`
+  * Recursively encode false-exprs
+  * Write the opcode for `end` 
+
+* Given nested block AST nodes: `block(2, [Block(2, [I32.Const 2, I32.Const 3]), I32.Const 4])`
+  * First, write the opcode marker `block` 
   * Write the the arity immediate of the outer block: `2` 
-  * Recursively write the first subnode: `BLOCK_START 2 I32CONST 3 I32CONST BLOCK_END`
-  * Recursively the write second subnode: `4 I32CONST`
-  * Write the opcode `BLOCK_END` 
+  * Recursively write the first subnode: `block 2 i32const 3 i32const end`
+  * Recursively the write second subnode: `4 i32const`
+  * Write the opcode for `end` 
 
 
 # Module structure
