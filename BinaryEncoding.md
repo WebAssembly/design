@@ -330,6 +330,7 @@ It is legal to have several entries with the same type.
 | `end` | `0x0f` | | end a block, loop, or if |
 
 The `br_table` operator has an immediate operand which is encoded as follows:
+Note that there is no explicit `if_else` opcode, as the else clause is encoded with the `else` bytecode.
 
 | Field | Type | Description |
 | ---- | ---- | ---- |
