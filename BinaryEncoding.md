@@ -319,14 +319,15 @@ It is legal to have several entries with the same type.
 | `nop` | `0x00` | | no operation |
 | `block` | `0x01` | count = `varuint32` | a sequence of expressions, the last of which yields a value |
 | `loop` | `0x02` | count = `varuint32` | a block which can also form control flow loops |
-| `if` | `0x03` | | high-level one-armed if |
-| `if_else` | `0x04` | | high-level two-armed if |
+| `if` | `0x03` | | begin if expression |
+| `else` | `0x04` | | begin else expression of if |
 | `select` | `0x05` | | select one of two values based on condition |
 | `br` | `0x06` | relative_depth = `varuint32` | break that targets a outer nested block |
 | `br_if` | `0x07` | relative_depth = `varuint32` | conditional break that targets a outer nested block |
 | `br_table` | `0x08` | see below | branch table control flow construct |
 | `return` | `0x14` | | return zero or one value from this function |
 | `unreachable` | `0x15` | | trap immediately |
+| `end` | `0x17` | | end a block, loop, or if |
 
 The `br_table` operator has an immediate operand which is encoded as follows:
 
