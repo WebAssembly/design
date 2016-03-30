@@ -202,11 +202,15 @@ Out of bounds accesses trap.
 
 In the MVP, linear memory can be resized by a `grow_memory` operator. The
 operand to this operator is in units of the WebAssembly page size,
-which is 64KiB on all engines (though large page support may be added in 
+which is defined to be 64KiB (though large page support may be added in 
 the [future](FutureFeatures.md#large-page-support)).
 
  * `grow_memory` : grow linear memory by a given unsigned delta of pages.
-    Return the previous memory size in bytes.
+    Return the previous memory size in units of pages or -1 on failure.
+
+`grow_memory` must fail when attempting to grow past the maximum declared
+size, if one is specified in the [memory section](Module.md#linear-memory-section).
+`grow_memory` may also fail if an underlying system allocation fails.
 
 As stated [above](AstSemantics.md#linear-memory), linear memory is contiguous,
 meaning there are no "holes" in the linear address space. After the
