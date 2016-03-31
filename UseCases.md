@@ -42,6 +42,7 @@ design of WebAssembly.
 * Server-side compute of untrusted code.
 * Server-side application.
 * Hybrid native apps on mobile devices.
+* Symmetric computations across multiple nodes
 
 # How WebAssembly can be used
 
