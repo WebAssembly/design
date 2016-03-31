@@ -208,9 +208,12 @@ the [future](FutureFeatures.md#large-page-support)).
  * `grow_memory` : grow linear memory by a given unsigned delta of pages.
     Return the previous memory size in units of pages or -1 on failure.
 
-`grow_memory` must fail when attempting to grow past the maximum declared
-size, if one is specified in the [memory section](Module.md#linear-memory-section).
-`grow_memory` may also fail if an underlying system allocation fails.
+When a maximum memory size is declared in the [memory section](Module.md#linear-memory-section),
+`grow_memory` must fail if it would grow past the maximum. However,
+`grow_memory` may still fail before the maximum if it was not possible to
+reserve the space up front or if enabling the reserved memory fails.
+When there is no maximum memory size declared, `grow_memory` is expected
+to perform a system allocation which may fail.
 
 As stated [above](AstSemantics.md#linear-memory), linear memory is contiguous,
 meaning there are no "holes" in the linear address space. After the
