@@ -52,6 +52,7 @@ currently admits nondeterminism:
      or functions have too many locals, or infinite recursion). Note that this stack
      isn't located in the program-accessible linear memory.
    - Resources such as handles may get exhausted.
+   - Any other resource could get exhausted at any time. Caveat emptor.
 
 Users of C, C++, and similar languages should be aware that operators which
 have defined or constrained behavior in WebAssembly itself may nonetheless still
