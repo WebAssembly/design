@@ -92,42 +92,42 @@ for all sections. The encoding of all sections begins as follows:
 Each section is optional and may appear at most once.
 Known sections (from this list) may not appear out of order.
 
-* [Signatures](#signatures-section) section
-* [Import Table](#import-table-section) section
-* [Function Signatures](#function-signatures-section) section
-* [Indirect Function Table](#indirect-function-table-section) section
+* [Type](#type-section) section
+* [Import](#import-section) section
+* [Function](#function-section) section
+* [Indirection](#indirection-section) section
 * [Memory](#memory-section) section
-* [Export Table](#export-table-section) section
-* [Start Function](#start-function-section) section
-* [Function Bodies](#function-bodies-section) section
-* [Data Segments](#data-segments-section) section
+* [Export](#export-section) section
+* [Start](#start-section) section
+* [Code](#code-section) section
+* [Data](#data-section) section
 * [Names](#names-section) section
 
 The end of the last present section must coincide with the last byte of the
 module. The shortest valid module is 8 bytes (`magic number`, `version`,
 followed by zero sections).
 
-### Signatures section
+### Type section
 
-ID: `signatures`
+ID: `types`
 
-The signatures section declares all function signatures that will be used in the module.
+The type section declares all function signatures that will be used in the module.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | count | `varuint32` | count of signature entries to follow |
-| entries | `signature_entry*` | repeated signature entries as described below |
+| entries | `type_entry*` | repeated type entries as described below |
 
-#### Signature entry
+#### Type entry
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | param_count | `varuint32` | the number of parameters to the function |
 | return_type | `value_type?` | the return type of the function, with `0` indicating no return type |
 | param_types | `value_type*` | the parameter types of the function |
 
-### Import Table section
+### Import section
 
-ID: `import_table`
+ID: `imports`
 
 The import section declares all imports that will be used in the module.
 
@@ -145,29 +145,29 @@ The import section declares all imports that will be used in the module.
 | function_len | `varuint32` | function string length |
 | function_str | `bytes` | function string of `function_len` bytes |
 
-### Function Signatures section
+### Function section
 
-ID: `function_signatures`
+ID: `functions`
 
-The Function Signatures section declares the signatures of all functions in the
-module.
+The function section _declares_ the signatures of all functions in the
+module (their definitions appear in the [code section](#code-section)).
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | count | `varuint32` | count of signature indices to follow |
-| signatures | `varuint32*` | sequence of indices into the Signature section |
+| types | `varuint32*` | sequence of indices into the type section |
 
-### Indirect Function Table section
+### Indirection section
 
-ID: `function_table`
+ID: `indirect`
 
-The indirect function table section defines the module's 
+The indirection section defines the module's 
 [indirect function table](AstSemantics.md#calls).
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | count | `varuint32` | count of entries to follow |
-| entries | `varuint32*` | repeated indexes into the function table |
+| entries | `varuint32*` | repeated indexes into the function section |
 
 ### Memory section
 
@@ -182,11 +182,11 @@ associated with the module.
 | max_mem_pages | `varuint32` | maximum memory size in 64KiB pages |
 | exported | `uint8` | `1` if the memory is visible outside the module |
 
-### Export Table section
+### Export section
 
-ID: `export_table`
+ID: `exports`
 
-The export table section declares all exports from the module.
+The export section declares all exports from the module.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -200,34 +200,35 @@ The export table section declares all exports from the module.
 | function_len | `varuint32` | function string length |
 | function_str | `bytes` | function string of `function_len` bytes |
 
-### Start Function section
+### Start section
 
-ID: `start_function`
+ID: `start`
 
-The start function section declares the [start function](Modules.md#module-start-function).
+The start section declares the [start function](Modules.md#module-start-function).
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | index | `varuint32` | start function index |
 
-### Function Bodies section
+### Code section
 
-ID: `function_bodies`
+ID: `code`
 
-The Function Bodies section assigns a body to every function in the module.
-The count of function signatures and function bodies must be the same and the `i`th
-signature corresponds to the `i`th function body.
+The code section assigns a body to every function in the module.
+The count of function declared in the [function section](#function-section)
+and function bodies defined in this section must be the same and the `i`th
+declaration corresponds to the `i`th function body.
 
 | Field | Type |  Description |
 | ----- |  ----- |  ----- |  ----- |
 | count | `varuint32` | count of function bodies to follow |
 | bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
 
-### Data Segments section
+### Data section
 
-ID: `data_segments`
+ID: `data`
 
-The data segments section declares the initialized data that should be loaded
+The data section declares the initialized data that should be loaded
 into the linear memory.
 
 | Field | Type | Description |
