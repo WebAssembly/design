@@ -121,7 +121,7 @@ The type section declares all function signatures that will be used in the modul
 #### Type entry
 | Field | Type/Value | Description |
 | ----- |  ----- | ----- |
-| constructor | `0x05` | the function type constructor |
+| constructor | `0x40` | the function type constructor |
 | param_count | `varuint32` | the number of parameters to the function |
 | param_types | `value_type*` | the parameter types of the function |
 | return_count | `uint8` | the number of results from the function (0 or 1) |
