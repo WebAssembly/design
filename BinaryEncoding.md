@@ -119,11 +119,15 @@ The type section declares all function signatures that will be used in the modul
 | entries | `type_entry*` | repeated type entries as described below |
 
 #### Type entry
-| Field | Type | Description |
+| Field | Type/Value | Description |
 | ----- |  ----- | ----- |
+| constructor | `0x05` | the function type constructor |
 | param_count | `varuint32` | the number of parameters to the function |
-| return_type | `value_type?` | the return type of the function, with `0` indicating no return type |
 | param_types | `value_type*` | the parameter types of the function |
+| return_count | `uint8` | the number of results from the function (0 or 1) |
+| return_type | `value_type?` | the result type of the function (if return_count is 1) |
+
+(Note: In the future, this section may contain other forms of type entries as well.)
 
 ### Import section
 
