@@ -75,8 +75,8 @@ The module starts with a preamble of two fields:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
-| version | `uint32` | Version number, currently 11. The version for MVP will be reset to 1. |
+| magic number | `uint32` |  Magic number `0x6d736100` ('\0asm') |
+| version | `uint32` | Version number 11 (`0x0b`). The version for MVP will be reset to 1. |
 
 This preamble is followed by a sequence of sections. Each section is identified by an
 immediate string. Sections whose identity is unknown to the WebAssembly
