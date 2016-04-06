@@ -92,7 +92,7 @@ for all sections. The encoding of sections is structured as follows:
 
 Each section is optional and may appear at most once.
 Known sections (from this list) may not appear out of order.
-The actual content of each section is encoded in its `payload_str`.
+The content of each section is encoded in its `payload_str`.
 
 * [Signatures](#signatures-section) section
 * [Import Table](#import-table-section) section
