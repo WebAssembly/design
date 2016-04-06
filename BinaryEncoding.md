@@ -35,6 +35,9 @@ A four-byte little endian unsigned integer.
 ### varint32
 A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int32 values.
 
+### varuint1
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values 0 or 1. `varuint1` values may contain leading zeros. (This type is mainly used for compatibility with potential future extensions.)
+
 ### varuint32
 A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values. `varuint32` values may contain leading zeros.
 
@@ -115,19 +118,19 @@ The type section declares all function signatures that will be used in the modul
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| count | `varuint32` | count of signature entries to follow |
+| count | `varuint32` | count of type entries to follow |
 | entries | `type_entry*` | repeated type entries as described below |
 
 #### Type entry
-| Field | Type/Value | Description |
+| Field | Type | Description |
 | ----- |  ----- | ----- |
-| constructor | `0x40` | the function type constructor |
+| form | `uint8` | `0x40`, indicating a function type |
 | param_count | `varuint32` | the number of parameters to the function |
 | param_types | `value_type*` | the parameter types of the function |
-| return_count | `uint8` | the number of results from the function (0 or 1) |
+| return_count | `varuint1` | the number of results from the function |
 | return_type | `value_type?` | the result type of the function (if return_count is 1) |
 
-(Note: In the future, this section may contain other forms of type entries as well.)
+(Note: In the future, this section may contain other forms of type entries as well, which can be distinguished by the `form` field.)
 
 ### Import section
 
