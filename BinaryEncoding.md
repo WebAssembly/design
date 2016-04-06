@@ -101,7 +101,7 @@ Known sections (from this list) may not appear out of order.
 * [Start](#start-section) section
 * [Code](#code-section) section
 * [Data](#data-section) section
-* [Names](#names-section) section
+* [Name](#name-section) section
 
 The end of the last present section must coincide with the last byte of the
 module. The shortest valid module is 8 bytes (`magic number`, `version`,
@@ -109,7 +109,7 @@ followed by zero sections).
 
 ### Type section
 
-ID: `types`
+ID: `type`
 
 The type section declares all function signatures that will be used in the module.
 
@@ -127,7 +127,7 @@ The type section declares all function signatures that will be used in the modul
 
 ### Import section
 
-ID: `imports`
+ID: `import`
 
 The import section declares all imports that will be used in the module.
 
@@ -147,7 +147,7 @@ The import section declares all imports that will be used in the module.
 
 ### Function section
 
-ID: `functions`
+ID: `function`
 
 The function section _declares_ the signatures of all functions in the
 module (their definitions appear in the [code section](#code-section)).
@@ -184,7 +184,7 @@ associated with the module.
 
 ### Export section
 
-ID: `exports`
+ID: `export`
 
 The export section declares all exports from the module.
 
@@ -244,9 +244,9 @@ a `data_segment` is:
 | size | `varuint32` | size of `data` (in bytes) |
 | data | `bytes` | sequence of `size` bytes |
 
-### Names section
+### Name section
 
-ID: `names`
+ID: `name`
 
 The names section does not change execution semantics and a validation error in
 this section does not cause validation for the whole module to fail and is
@@ -260,7 +260,7 @@ and locals in the [text format](TextFormat.md).
 | count | `varuint32` | count of entries to follow |
 | entries | `function_names*` | sequence of names |
 
-The sequence of `function_name` assigns names to the corresponding
+The sequence of `function_names` assigns names to the corresponding
 function index. The count may be greater or less than the actual number of
 functions.
 
