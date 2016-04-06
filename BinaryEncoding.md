@@ -95,7 +95,7 @@ Known sections (from this list) may not appear out of order.
 * [Type](#type-section) section
 * [Import](#import-section) section
 * [Function](#function-section) section
-* [Indirection](#indirection-section) section
+* [Table](#table-section) section
 * [Memory](#memory-section) section
 * [Export](#export-section) section
 * [Start](#start-section) section
@@ -157,11 +157,11 @@ module (their definitions appear in the [code section](#code-section)).
 | count | `varuint32` | count of signature indices to follow |
 | types | `varuint32*` | sequence of indices into the type section |
 
-### Indirection section
+### Table section
 
-ID: `indirect`
+ID: `table`
 
-The indirection section defines the module's 
+The table section defines the module's
 [indirect function table](AstSemantics.md#calls).
 
 | Field | Type | Description |
