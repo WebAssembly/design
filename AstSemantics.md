@@ -215,6 +215,10 @@ reserve the space up front or if enabling the reserved memory fails.
 When there is no maximum memory size declared, `grow_memory` is expected
 to perform a system allocation which may fail.
 
+The current size of the linear memory can be queried by the following operator:
+
+  * `current_memory` : return the current size of the linear memory in units of pages.
+
 As stated [above](AstSemantics.md#linear-memory), linear memory is contiguous,
 meaning there are no "holes" in the linear address space. After the
 MVP, there are [future features](FutureFeatures.md#finer-grained-control-over-memory)
