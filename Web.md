@@ -14,19 +14,18 @@ than if the module was JavaScript.
 More concretely, the following is a list of points of contact between WebAssembly
 and the rest of the Web platform that have been considered:
 
-## The `Wasm` object
+## JavaScript API
 
-In addition to
-[integration with the ES6 Modules system](Modules.md#integration-with-es6-modules),
-WebAssembly is exposed to the Web through a `Wasm` object whose API is designed
-to provide a powerful, idiomatic set of methods and properties to instantiate
-and introspect WebAssembly modules directly from JavaScript.
+A [JavaScript API](JS.md) is provided which allows JavaScript to compile
+WebAssembly modules, perform limited reflection on compiled modules, store
+and retrieve compiled modules from offline storage, instantiate compiled modules
+with JavaScript imports, call the exported functions of instantiated modules,
+alias the exported memory of instantiated modules, etc.
 
 ## Modules
 
 WebAssembly's [modules](Modules.md) allow for natural [integration with
-the ES6 module system](Modules.md#integration-with-es6-modules) and allow
-synchronous calling to and from JavaScript.
+the ES6 module system](Modules.md#integration-with-es6-modules).
 
 ### Function Names
 
@@ -92,15 +91,6 @@ WebAssembly's security model should depend on [CORS][] and
 [subresource integrity][] to enable distribution, especially through content
 distribution networks and to implement
 [dynamic linking](DynamicLinking.md).
-
-## Threads
-
-Once [threads are supported](PostMVP.md#threads), a WebAssembly module would
-be shared (including its heap) between workers via `postMessage()`.
-* This also has the effect of explicitly sharing code so that engines don't
-perform N fetches and compile N copies.
-* WebAssembly may later standardize a more direct way to create a thread that
-doesn't involve creating a new Worker.
 
 ## SIMD
 
