@@ -81,16 +81,18 @@ The module starts with a preamble of two fields:
 This preamble is followed by a sequence of sections. Each section is identified by an
 immediate string. Sections whose identity is unknown to the WebAssembly
 implementation are ignored and this is supported by including the size in bytes
-for all sections. The encoding of all sections begins as follows:
+for all sections. The encoding of sections is structured as follows:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| size  | `varuint32` | size of this section in bytes, excluding this size |
 | id_len | `varuint32` | section identifier string length |
 | id_str | `bytes` | section identifier string of id_len bytes |
+| payload_len  | `varuint32` | size of this section in bytes |
+| payload_str  | `bytes` | content of this section, of length payload_len |
 
 Each section is optional and may appear at most once.
 Known sections (from this list) may not appear out of order.
+The content of each section is encoded in its `payload_str`.
 
 * [Signatures](#signatures-section) section
 * [Import Table](#import-table-section) section
