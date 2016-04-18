@@ -1,9 +1,9 @@
-# JS API
+# JavaScript API
 
-In the MVP, the only way to access WebAssembly on the Web is through an explicit
-JS API which is defined below. (In the future, WebAssembly may also be
-loaded and run directly from an HTML `<script type='module'>` tag&mdash;and any other
-Web API that loads ES6 modules via URL&mdash;as part of 
+In the [MVP](MVP.md), the only way to access WebAssembly on the Web is through
+an explicit JS API which is defined below. (In the future, WebAssembly may also
+be loaded and run directly from an HTML `<script type='module'>` tag—and
+any other Web API that loads ES6 modules via URL—as part of 
 [ES6 Module integration](Modules.md#integration-with-es6-modules).)
 
 ## The `Wasm` object
@@ -64,7 +64,7 @@ a `TypeError` exception is thrown.
 
 Otherwise, this function performs synchronous compilation of the TypedArray
 object:
-* The range of bytes compiled is the byte range subtended by the typed
+* The range of bytes compiled is the byte range delimited by the typed
   array object (starting at the first element and extending `length * BYTES_PER_ELEMENT`).
 * The compiled bytes are first logically decoded into an AST according to
 [BinaryEncoding.md](BinaryEncoding.md) and then validated according to the rules
