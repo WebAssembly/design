@@ -154,9 +154,7 @@ Exported Functions do not have the normal function internal slots but instead ha
 
 Exported Functions also have the following data properties:
 * the `length` property is set to the exported function's signature's arity 
-* the `name` is set to either:
-  * the generated string `"wasm-function[index]"`
-  * the function's name as defined in the [Names Section](BinaryEncoding.md#names-section)
+* the `name` is set to `index` as a Number value
 
 WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined as:
  * Let `argTypes` be the list of value types defined by the signature of [[WasmFunctionIndex]].
