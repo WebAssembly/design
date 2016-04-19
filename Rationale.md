@@ -323,11 +323,12 @@ architectures there may be a need to revisit some of the decisions:
 
 ## NaN bit pattern propagation
 
-In general, WebAssembly's floating point operations propagate NaN bit patterns.
-When an operation has a NaN operand, it returns a NaN result with the same bit
-pattern. This is done in accordance with IEEE 754-2008, and it also has the
-desirable property of making it easier to port interpreters to WebAssembly that
-use NaN-boxing, because they can rely on the property that if an arithmetic
+In general, WebAssembly's floating point operations provide the guarantee that
+a NaN returned from an operation won't have new bits set in its fractional
+field, except the most significant bit.
+
+This is intended to support interpreters running on WebAssembly that use
+NaN-boxing, because they can rely on the property that if an arithmetic
 operation has no non-canonical NaNs as input, its output is also canonical.
 
 The specific bit-pattern rules are modeled after what numerous popular

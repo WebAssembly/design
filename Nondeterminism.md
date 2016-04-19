@@ -30,11 +30,12 @@ currently admits nondeterminism:
    shared memory, nondeterminism will be visible through the global sequence of
    API calls. With shared memory, the result of load operators is
    nondeterministic.
- * Except when otherwise specified, when an arithmetic operator with multiple
-   floating point operand types and a floating point result type receives
-   multiple NaN input values with differing bit patterns, it is nondeterministic
-   which bit pattern is used as the basis for the result (as it is in
-   IEEE 754-2008).
+ * Except when otherwise specified, when an arithmetic operator returns NaN,
+   there is nondeterminism in determining the specific bits of the NaN. However,
+   wasm does still provide the guarantee that NaN values returned from an operation
+   will not have 1 bits in their fraction field that aren't set in any NaN values
+   in the input operands, except for the most significant bit of the fraction field
+   which is typically set to 1.
  * Except when otherwise specified, when an arithmetic operator with a floating
    point result type receives no NaN input values and produces a NaN result
    value, the sign bit of the NaN result value is nondeterministic.
