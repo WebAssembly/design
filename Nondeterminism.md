@@ -35,7 +35,7 @@ currently admits nondeterminism:
    wasm does still provide the guarantee that NaN values returned from an operation
    will not have 1 bits in their fraction field that aren't set in any NaN values
    in the input operands, except for the most significant bit of the fraction field
-   which is typically set to 1.
+   (which most operators set to 1).
  * Except when otherwise specified, when an arithmetic operator with a floating
    point result type receives no NaN input values and produces a NaN result
    value, the sign bit of the NaN result value is nondeterministic.
