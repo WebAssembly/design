@@ -32,12 +32,12 @@ Promise<Wasm.Module> compile(TypedArray bytes)
 ```
 If the given `bytes` argument is not a
 [TypedArray object](http://tc39.github.io/ecma262/#sec-typedarray-objects),
-a `TypeError` exception is thrown.
+the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
+with a `TypeError`.
 
-Otherwise, this function returns a `Promise` for an asychronous task
-to compile a `Wasm.Module` as described in the 
-[`Wasm.Module` constructor](#wasmmodule-constructor). On success, the
-`Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
+Otherwise, this function starts an asychronous task to compile a `Wasm.Module`
+as described in the [`Wasm.Module` constructor](#wasmmodule-constructor).
+On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `Wasm.Module` instance. On failure, the `Promise` is 
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with the 
 `Wasm.CompileError`.
