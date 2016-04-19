@@ -35,6 +35,9 @@ A four-byte little endian unsigned integer.
 ### varint32
 A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int32 values.
 
+### varuint1
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values 0 or 1. `varuint1` values may contain leading zeros. (This type is mainly used for compatibility with potential future extensions.)
+
 ### varuint32
 A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values. `varuint32` values may contain leading zeros.
 
@@ -117,15 +120,19 @@ The type section declares all function signatures that will be used in the modul
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| count | `varuint32` | count of signature entries to follow |
+| count | `varuint32` | count of type entries to follow |
 | entries | `type_entry*` | repeated type entries as described below |
 
 #### Type entry
 | Field | Type | Description |
 | ----- |  ----- | ----- |
+| form | `uint8` | `0x40`, indicating a function type |
 | param_count | `varuint32` | the number of parameters to the function |
-| return_type | `value_type?` | the return type of the function, with `0` indicating no return type |
 | param_types | `value_type*` | the parameter types of the function |
+| return_count | `varuint1` | the number of results from the function |
+| return_type | `value_type?` | the result type of the function (if return_count is 1) |
+
+(Note: In the future, this section may contain other forms of type entries as well, which can be distinguished by the `form` field.)
 
 ### Import section
 
@@ -216,7 +223,7 @@ The start section declares the [start function](Modules.md#module-start-function
 
 ID: `code`
 
-The code section assigns a body to every function in the module.
+The code section contains a body for every function in the module.
 The count of function declared in the [function section](#function-section)
 and function bodies defined in this section must be the same and the `i`th
 declaration corresponds to the `i`th function body.
@@ -230,7 +237,7 @@ declaration corresponds to the `i`th function body.
 
 ID: `data`
 
-The data section declares the initialized data that should be loaded
+The data section declares the initialized data that is loaded
 into the linear memory.
 
 | Field | Type | Description |
