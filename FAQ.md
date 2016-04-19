@@ -389,3 +389,12 @@ those that motivated the development of the
 
 Even Knuth found it worthwhile to give us his opinion on this issue at point,
 [a flame about 64-bit pointers](http://www-cs-faculty.stanford.edu/~uno/news08.html).
+
+## Will I be able to access proprietary platform APIs (e.g. Android / iOS)?
+
+Yes but it will depend on the _WebAssembly embedder_. Inside a browser you'll 
+get access to the same HTML5 and other browser-specific APIs which are also 
+accessible through regular JavaScript. However, if a wasm VM is provided as an 
+[“app execution platform”](NonWeb.md) by a specific vendor, it might provide 
+access to [proprietary platform-specific APIs](Portability.md#api) of e.g. 
+Android / iOS. 
