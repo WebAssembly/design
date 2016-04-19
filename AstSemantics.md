@@ -426,8 +426,8 @@ The same operators are available on 64-bit integers as the those available for
 ## Floating point operators
 
 Floating point arithmetic follows the IEEE 754-2008 standard, except that:
- - The IEEE 754-2008 recommendation that operations propagate NaN bits from
-   their operands is permitted but not required.
+ - The IEEE 754-2008 section 6.2 recommendation that operations propagate NaN
+   bits from their operands is permitted but not required.
  - WebAssembly uses "non-stop" mode, and floating point exceptions are not
    otherwise observable. In particular, neither alternate floating point
    exception handling attributes nor the non-computational operators on status
