@@ -223,7 +223,7 @@ The start section declares the [start function](Modules.md#module-start-function
 
 ID: `code`
 
-The code section assigns a body to every function in the module.
+The code section contains a body for every function in the module.
 The count of function declared in the [function section](#function-section)
 and function bodies defined in this section must be the same and the `i`th
 declaration corresponds to the `i`th function body.
@@ -237,7 +237,7 @@ declaration corresponds to the `i`th function body.
 
 ID: `data`
 
-The data section declares the initialized data that should be loaded
+The data section declares the initialized data that is loaded
 into the linear memory.
 
 | Field | Type | Description |
