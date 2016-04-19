@@ -42,9 +42,9 @@ with the resulting `Wasm.Module` instance. On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with the 
 `Wasm.CompileError`.
 
-The asynchronous compilation is performed on the state of the given
-TypedArray when `compile` is first called; subsequent mutations of the
-TypedArray does not affect ongoing compilations.
+The asynchronous compilation is logically performed on a copy of the state of
+the given TypedArray captured during the call to `compile`; subsequent mutations
+of the TypedArray after `compile` return do not affect ongoing compilations.
 
 ## `Wasm.Module` Objects
 
