@@ -84,27 +84,29 @@ The module starts with a preamble of two fields:
 This preamble is followed by a sequence of sections. Each section is identified by an
 immediate string. Sections whose identity is unknown to the WebAssembly
 implementation are ignored and this is supported by including the size in bytes
-for all sections. The encoding of all sections begins as follows:
+for all sections. The encoding of sections is structured as follows:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| size  | `varuint32` | size of this section in bytes, excluding this size |
 | id_len | `varuint32` | section identifier string length |
 | id_str | `bytes` | section identifier string of id_len bytes |
+| payload_len  | `varuint32` | size of this section in bytes |
+| payload_str  | `bytes` | content of this section, of length payload_len |
 
 Each section is optional and may appear at most once.
 Known sections (from this list) may not appear out of order.
+The content of each section is encoded in its `payload_str`.
 
 * [Type](#type-section) section
 * [Import](#import-section) section
 * [Function](#function-section) section
-* [Indirection](#indirection-section) section
+* [Table](#table-section) section
 * [Memory](#memory-section) section
 * [Export](#export-section) section
 * [Start](#start-section) section
 * [Code](#code-section) section
 * [Data](#data-section) section
-* [Names](#names-section) section
+* [Name](#name-section) section
 
 The end of the last present section must coincide with the last byte of the
 module. The shortest valid module is 8 bytes (`magic number`, `version`,
@@ -112,7 +114,7 @@ followed by zero sections).
 
 ### Type section
 
-ID: `types`
+ID: `type`
 
 The type section declares all function signatures that will be used in the module.
 
@@ -134,7 +136,7 @@ The type section declares all function signatures that will be used in the modul
 
 ### Import section
 
-ID: `imports`
+ID: `import`
 
 The import section declares all imports that will be used in the module.
 
@@ -154,7 +156,7 @@ The import section declares all imports that will be used in the module.
 
 ### Function section
 
-ID: `functions`
+ID: `function`
 
 The function section _declares_ the signatures of all functions in the
 module (their definitions appear in the [code section](#code-section)).
@@ -164,11 +166,11 @@ module (their definitions appear in the [code section](#code-section)).
 | count | `varuint32` | count of signature indices to follow |
 | types | `varuint32*` | sequence of indices into the type section |
 
-### Indirection section
+### Table section
 
-ID: `indirect`
+ID: `table`
 
-The indirection section defines the module's 
+The table section defines the module's
 [indirect function table](AstSemantics.md#calls).
 
 | Field | Type | Description |
@@ -191,7 +193,7 @@ associated with the module.
 
 ### Export section
 
-ID: `exports`
+ID: `export`
 
 The export section declares all exports from the module.
 
@@ -251,9 +253,9 @@ a `data_segment` is:
 | size | `varuint32` | size of `data` (in bytes) |
 | data | `bytes` | sequence of `size` bytes |
 
-### Names section
+### Name section
 
-ID: `names`
+ID: `name`
 
 The names section does not change execution semantics and a validation error in
 this section does not cause validation for the whole module to fail and is
@@ -267,7 +269,7 @@ and locals in the [text format](TextFormat.md).
 | count | `varuint32` | count of entries to follow |
 | entries | `function_names*` | sequence of names |
 
-The sequence of `function_name` assigns names to the corresponding
+The sequence of `function_names` assigns names to the corresponding
 function index. The count may be greater or less than the actual number of
 functions.
 
