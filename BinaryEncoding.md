@@ -38,6 +38,9 @@ A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-l
 ### varuint1
 A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values 0 or 1. `varuint1` values may contain leading zeros. (This type is mainly used for compatibility with potential future extensions.)
 
+### varuint7
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values [0, 127]. `varuint7` values may contain leading zeros. (This type is mainly used for compatibility with potential future extensions.)
+
 ### varuint32
 A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values. `varuint32` values may contain leading zeros.
 
@@ -126,7 +129,7 @@ The type section declares all function signatures that will be used in the modul
 #### Type entry
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| form | `uint8` | `0x40`, indicating a function type |
+| form | `varuint7` | `0x40`, indicating a function type |
 | param_count | `varuint32` | the number of parameters to the function |
 | param_types | `value_type*` | the parameter types of the function |
 | return_count | `varuint1` | the number of results from the function |
