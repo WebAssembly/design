@@ -179,7 +179,7 @@ associated with the module.
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | initial | `varuint32` | initial memory size in 64KiB pages |
-| max | `varuint32` | maximum memory size in 64KiB pages |
+| maximum | `varuint32` | maximum memory size in 64KiB pages |
 | exported | `uint8` | `1` if the memory is visible outside the module |
 
 ### Export Table section
