@@ -98,11 +98,11 @@ The `instantiate` method has the signature:
 ```
 Wasm.Instance instantiate([importObject])
 ```
-If the receiver of `instantiate` is not a `Wasm.Module` instance, a `TypeError`
-is thrown.
+If the `this` value of `instantiate` is not a `Wasm.Module` instance, a
+`TypeError` is thrown.
 
 Let `m` be the [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L211)
-associated with the `Wasm.Module` receiver.
+associated with the `Wasm.Module`.
 
 If the `importObject` parameter is not `undefined` and `Type(importObject)` is
 not Object, a `TypeError` is thrown. If the list of 
