@@ -46,6 +46,10 @@ The asynchronous compilation is logically performed on a copy of the state of
 the given TypedArray captured during the call to `compile`; subsequent mutations
 of the TypedArray after `compile` return do not affect ongoing compilations.
 
+In the [future](FutureFeatures.md#streaming-compilation), this function can be
+extended to accept a [stream](https://streams.spec.whatwg.org), thereby enabling
+asynchronous, background, streaming compilation.
+
 ## `Wasm.Module` Objects
 
 A `Wasm.Module` object represents the stateless result of compiling a
