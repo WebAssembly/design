@@ -154,6 +154,12 @@ Exported Functions do not have the normal function internal slots but instead ha
    containing the exported function
  * [[WasmFunctionIndex]] : the index of the function inside the module
 
+as well as the internal slots required of all builtin functions:
+ * [[Prototype]] : [%FunctionPrototype%](http://tc39.github.io/ecma262/#sec-well-known-intrinsic-objects)
+ * [[Extensible]] : `true`
+ * [[Realm]] : the [current Realm Record](http://tc39.github.io/ecma262/#current-realm)
+ * [[ScriptOrModule]] : [`GetActiveScriptOrModule`](http://tc39.github.io/ecma262/#sec-getactivescriptormodule)
+
 Exported Functions also have the following data properties:
 * the `length` property is set to the exported function's signature's arity 
 * the `name` is set to `index` as a Number value
