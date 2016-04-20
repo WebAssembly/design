@@ -28,10 +28,10 @@ following properties:
 
 The `compile` function has the signature:
 ```
-Promise<Wasm.Module> compile(TypedArray bytes)
+Promise<Wasm.Module> compile(BufferSource bytes)
 ```
 If the given `bytes` argument is not a
-[TypedArray object](http://tc39.github.io/ecma262/#sec-typedarray-objects),
+[`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
 the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
 with a `TypeError`.
 
@@ -43,8 +43,8 @@ with the resulting `Wasm.Module` instance. On failure, the `Promise` is
 `Wasm.CompileError`.
 
 The asynchronous compilation is logically performed on a copy of the state of
-the given TypedArray captured during the call to `compile`; subsequent mutations
-of the TypedArray after `compile` return do not affect ongoing compilations.
+the given `BufferSource` captured during the call to `compile`; subsequent mutations
+of the `BufferSource` after `compile` return do not affect ongoing compilations.
 
 In the [future](FutureFeatures.md#streaming-compilation), this function can be
 extended to accept a [stream](https://streams.spec.whatwg.org), thereby enabling
@@ -60,22 +60,20 @@ contains a single [`Ast.module`](https://github.com/WebAssembly/spec/blob/master
 
 The `Wasm.Module` constructor has the signature:
 ```
-new Module(TypedArray bytes)
+new Module(`BufferSource` bytes)
 ```
 If the given `bytes` argument is not a
-[TypedArray object](http://tc39.github.io/ecma262/#sec-typedarray-objects),
+[`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
 a `TypeError` exception is thrown.
 
-Otherwise, this function performs synchronous compilation of the TypedArray
-object:
-* The range of bytes compiled is the byte range delimited by the typed
-  array object (starting at the first element and extending `length * BYTES_PER_ELEMENT`).
-* The compiled bytes are first logically decoded into an AST according to
-[BinaryEncoding.md](BinaryEncoding.md) and then validated according to the rules
-in [spec/check.ml](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/check.ml).
-* The spec `string` values inside `Ast.module` are decoded as UTF8 as described in [Web.md](Web.md#function-names).
+Otherwise, this function performs synchronous compilation of the `BufferSource`:
+* The byte range delimited by the `BufferSource` is first logically decoded into
+  an AST according to [BinaryEncoding.md](BinaryEncoding.md) and then validated
+  according to the rules in [spec/check.ml](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/check.ml).
+* The spec `string` values inside `Ast.module` are decoded as UTF8 as described in 
+  [Web.md](Web.md#function-names).
 * On success, a new `Wasm.Module` instance is returned that contains the
-validated [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L211).
+  validated [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L211).
 * On failure, a new `Wasm.CompileError` is thrown.
 
 ### Structured Clone of a `Wasm.Module`
