@@ -329,8 +329,8 @@ It is legal to have several entries with the same type.
 | `if` | `0x03` | | high-level one-armed if |
 | `if_else` | `0x04` | | high-level two-armed if |
 | `select` | `0x05` | | select one of two values based on condition |
-| `br` | `0x06` | relative_depth = `varuint32` | break that targets a outer nested block |
-| `br_if` | `0x07` | relative_depth = `varuint32` | conditional break that targets a outer nested block |
+| `br` | `0x06` | relative_depth = `varuint32` | break that targets an outer nested block |
+| `br_if` | `0x07` | relative_depth = `varuint32` | conditional break that targets an outer nested block |
 | `br_table` | `0x08` | see below | branch table control flow construct |
 | `return` | `0x14` | | return zero or one value from this function |
 | `unreachable` | `0x15` | | trap immediately |
@@ -343,7 +343,8 @@ The `br_table` operator has an immediate operand which is encoded as follows:
 | target_table | `uint32*` | target entries that indicate an outer block or loop to which to break |
 | default_target | `uint32` | an outer block or loop to which to break in the default case |
 
-The `br_table` operator implements an indirect branch. It accepts one `i32` expression as input and 
+The `br_table` operator implements an indirect branch. It accepts an optional value argument
+(like other branches) and an additional `i32` expression as input, and 
 branches to the block or loop at the given offset within the `target_table`. If the input value is 
 out of range, `br_table` branches to the default target.
 
