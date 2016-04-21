@@ -324,18 +324,20 @@ It is legal to have several entries with the same type.
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
 | `nop` | `0x00` | | no operation |
-| `block` | `0x01` | count = `varuint32` | a sequence of expressions, the last of which yields a value |
-| `loop` | `0x02` | count = `varuint32` | a block which can also form control flow loops |
-| `if` | `0x03` | | high-level one-armed if |
-| `if_else` | `0x04` | | high-level two-armed if |
+| `block` | `0x01` |  | begin a sequence of expressions, the last of which yields a value |
+| `loop` | `0x02` |  | begin a block which can also form control flow loops |
+| `if` | `0x03` | | begin if expression |
+| `else` | `0x04` | | begin else expression of if |
 | `select` | `0x05` | | select one of two values based on condition |
 | `br` | `0x06` | relative_depth = `varuint32` | break that targets a outer nested block |
 | `br_if` | `0x07` | relative_depth = `varuint32` | conditional break that targets a outer nested block |
 | `br_table` | `0x08` | see below | branch table control flow construct |
-| `return` | `0x14` | | return zero or one value from this function |
-| `unreachable` | `0x15` | | trap immediately |
+| `return` | `0x09` | | return zero or one value from this function |
+| `unreachable` | `0x0a` | | trap immediately |
+| `end` | `0x0f` | | end a block, loop, or if |
 
 The `br_table` operator has an immediate operand which is encoded as follows:
+Note that there is no explicit `if_else` opcode, as the else clause is encoded with the `else` bytecode.
 
 | Field | Type | Description |
 | ---- | ---- | ---- |
@@ -350,15 +352,15 @@ out of range, `br_table` branches to the default target.
 ## Basic operators ([described here](AstSemantics.md#constants))
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.const` | `0x0a` | value = `varint32` | a constant value interpreted as `i32` |
-| `i64.const` | `0x0b` | value = `varint64` | a constant value interpreted as `i64` |
-| `f64.const` | `0x0c` | value = `uint64` | a constant value interpreted as `f64` |
-| `f32.const` | `0x0d` | value = `uint32` | a constant value interpreted as `f32` |
-| `get_local` | `0x0e` | local_index = `varuint32` | read a local variable or parameter |
-| `set_local` | `0x0f` | local_index = `varuint32` | write a local variable or parameter |
-| `call` | `0x12` | function_index = `varuint32` | call a function by its index |
-| `call_indirect` | `0x13` | signature_index = `varuint32` | call a function indirect with an expected signature |
-| `call_import` | `0x1f` | import_index = `varuint32` | call an imported function by its index |
+| `i32.const` | `0x10` | value = `varint32` | a constant value interpreted as `i32` |
+| `i64.const` | `0x11` | value = `varint64` | a constant value interpreted as `i64` |
+| `f64.const` | `0x12` | value = `uint64` | a constant value interpreted as `f64` |
+| `f32.const` | `0x13` | value = `uint32` | a constant value interpreted as `f32` |
+| `get_local` | `0x14` | local_index = `varuint32` | read a local variable or parameter |
+| `set_local` | `0x15` | local_index = `varuint32` | write a local variable or parameter |
+| `call` | `0x16` | function_index = `varuint32` | call a function by its index |
+| `call_indirect` | `0x17` | signature_index = `varuint32` | call a function indirect with an expected signature |
+| `call_import` | `0x18` | import_index = `varuint32` | call an imported function by its index |
 
 ## Memory-related operators ([described here](AstSemantics.md#linear-memory-accesses))
 
