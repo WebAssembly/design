@@ -406,8 +406,7 @@ allow highly efficient, specialized code to be generated for accessing the
 ## Streaming Compilation
 
 The WebAssembly binary format is designed to allow streaming decoding,
-validation and compilation so that these tasks to happen, e.g., while the binary
-is being streamed over a network. In the MVP, however, the only way to compile
+validation and compilation. In the MVP, however, the only way to compile
 WebAssembly in a browser is through [JS API](JS.md) functions which
 require all code to be available in an `ArrayBuffer` before compilation
 can begin.
