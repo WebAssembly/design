@@ -415,7 +415,7 @@ There are two future features that would allow streaming compilation
 of WebAssembly in browsers:
 * [ES6 Module integration](Modules.md#integration-with-es6-modules) would allow
   the browser's network layer to feed a stream directly into the engine.
-* The asynchronous [`Wasm.compile`](JS.md#wasmcompile) function could be 
+* The asynchronous [`WASM.compile`](JS.md#wasmcompile) function could be 
   extended to accept a readable stream (as defined by the 
   [Streams API](https://streams.spec.whatwg.org))
   which would allow the engine to compile the stream as chunks became available,
