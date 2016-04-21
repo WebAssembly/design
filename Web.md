@@ -51,7 +51,7 @@ function convertToJSString(array)
 }
 ```
 
-This performs the UTF8 decoding (`decodeURIComponent(unescape(string))`) using
+This performs the UTF8 decoding (`decodeURIComponent(escape(string))`) using
 a [common JS idiom](http://monsur.hossa.in/2012/07/20/utf-8-in-javascript.html).
 Transcoding failure is detected by `decodeURIComponent`, which may throw
 `URIError`. If it does, the WebAssembly module will not validate. This validation
