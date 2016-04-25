@@ -1,7 +1,7 @@
 # Abstract Syntax Tree Semantics
 
 WebAssembly code is represented as an Abstract Syntax Tree (AST) where each node
-represents an expression. Each function body consists of exactly one expression. 
+represents an expression. Each function body consists of a list of expressions.
 All expressions and operators are typed, with no implicit conversions or overloading rules.
 
 This document explains the high-level design of the AST: its types, constructs, and
