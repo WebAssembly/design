@@ -44,7 +44,7 @@ WebAssembly only represents [a few types](AstSemantics.md#Types).
   language compiler to express its own types in terms of the basic machine
   types. This allows WebAssembly to present itself as a virtual ISA, and lets
   compilers target it as they would any other ISA.
-* These types are efficiently executed by all modern architectures.
+* These types are efficiently executed by all modern CPU architectures.
 * Smaller types (such as `i8` and `i16`) are usually no more efficient and in
   languages like C/C++ are only semantically meaningful for memory accesses
   since arithmetic get widened to `i32` or `i64`. Avoiding them at least for MVP
