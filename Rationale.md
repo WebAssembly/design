@@ -208,10 +208,10 @@ which may be pointed to by pointers.
 Since the aliased stack appears to the WebAssembly engine as normal memory,
 WebAssembly optimizations that would target the aliased stack need to be more
 general, and thus more complicated. We observe that common compiler
-optimizations on the producer side, such as LLVM's global value numbering,
-effectively split address-taken variables into many small ranges that can often
-be allocated as local variables. Thus our expectation that any loss of
-optimization potential here is minimal.
+optimizations done before the WebAssembly code is produced, such as LLVM's
+global value numbering, effectively split address-taken variables into many
+small ranges that can often be allocated as local variables. Thus our
+expectation that any loss of optimization potential here is minimal.
 
 Conversely, non-address taken values which are usually on the stack are instead
 represented as locals inside functions. This effectively means that WebAssembly
