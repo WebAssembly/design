@@ -232,7 +232,7 @@ register allocation algorithms, offloading some of the optimization work from
 the WebAssembly VM.
 
 
-## Variable-Length Argument Lists
+## Variable-Length Argument Lists ("varargs")
 
 C and C++ compilers are expected to implement variable-length argument lists by
 storing arguments in a buffer in linear memory and passing a pointer to the
