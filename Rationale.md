@@ -124,6 +124,38 @@ already be communicating between threads in order to properly allocate the sum
 of the allocation requests, so it's expected that they can provide the needed
 information without significant extra effort.
 
+The [optional maximum size](Modules.md#linear-memory-section) is designed to
+address a number of competing constraints:
+1. Allow WebAssembly modules to grab large regions of contiguous memory in a
+   32-bit address space early in an application's startup before the virtual
+   address space becomes fragmented by execution of the application.
+2. Allow many small WebAssembly instances to execute in a single 32-bit process.
+   (For example, it is common for a single web application to use dozens of
+   libraries, each of which may, over time, include WebAssembly modules as
+   implementation details.)
+3. Avoid *forcing* every developer using WebAssembly to understand their precise
+   maximum heap usage.
+4. When threading and shared memory are added to WebAssembly
+   [post-MVP](PostMVP.md#threads), the design should not require memory growth
+   to `realloc` since this implies significant implementation complexity,
+   security hazards, and optimization challenges.
+
+The optional maximum addresses these constraints:
+* (1) is addressed by specifying a large maximum memory size. Simply setting a
+  large *initial* memory size has problems due to (3) and the fact that a
+  failure to allocate initial is a fatal error which makes the choice of "how
+  big?" difficult.
+* (2) and (3) are addressed by making the maximum optional combined with the
+  implied implementation that, on 32-bit, engines will not allocate
+  significantly more than the current memory size, *and* the compiler sets the
+  initial size to just enough to hold static data.
+* (4) is addressed assuming that, when threading is added, a new, optional
+  "shared" flag is added to the memory section that must be set to enable shared
+  memory and the shared flag forces the maximum to be specified. In this case,
+  shared memory never moves; the only thing that changes is that the bounds
+  grows which does not have all the abovementioned hazards. In particular, any
+  extant `SharedArrayBuffer`s that alias linear memory stay valid without
+  any updates.
 
 ## Linear memory disabled if no linear memory section
 

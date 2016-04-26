@@ -161,14 +161,19 @@ by the module. If the section is absent, the linear memory operators
 The linear memory section declares the initial [memory size](AstSemantics.md#linear-memory)
 (which may be subsequently increased by [`grow_memory`](AstSemantics.md#resizing)).
 
+The linear memory section may optionally declare a maximum memory size.
+[`grow_memory`](AstSemantics.md#resizing) is guaranteed to fail if attempting to
+grow past the declared maximum. When declared, implementations *should*
+(non-normative) attempt to reserve virtual memory up to the maximum size. While
+failure to allocate the *initial* memory size is a runtime error, failure to
+reserve up to the *maximum* is not. When a maximum memory size is *not* declared,
+on architectures with limited virtual address space, engines should allocate
+only the initial size and reallocate on demand.
+
 The initial contents of linear memory are zero by default. However, the memory
 section contains a possibly-empty array of *segments* (analogous to `.data`)
 which can specify the initial contents of fixed `(offset, length)` ranges of
 memory.
-
-The linear memory section may also contain an optional hint declaring the expected
-maximum heap usage. This hint is not semantically visible but can help a
-WebAssembly engine to optimize `grow_memory`.
 
 The linear memory section may optionally declare that the instance's
 linear memory is *externally aliasable*. How linear memory is aliased is up

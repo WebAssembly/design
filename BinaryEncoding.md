@@ -35,6 +35,9 @@ A four-byte little endian unsigned integer.
 ### varint32
 A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int32 values.
 
+### varuint1
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values 0 or 1. `varuint1` values may contain leading zeros. (This type is mainly used for compatibility with potential future extensions.)
+
 ### varuint32
 A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values. `varuint32` values may contain leading zeros.
 
@@ -71,59 +74,71 @@ The following documents the current prototype format. This format is based on an
 
 ## High-level structure
 
-The module starts with a magic number and version as follows.
+The module starts with a preamble of two fields:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
 | version | `uint32` | Version number, currently 10. The version for MVP will be reset to 1. |
 
-This is followed by a sequence of sections. Sections can in general be repeated, but some can occur only once or have dependent sections that must preceed them but not immediately as unknown sections can occur in any order. Each section is identified by an immediate string. Sections whose identity is unknown to the WebAssembly implementation are ignored and this is supported by including the size in bytes for all sections. The encoding of all sections begins as follows:
+This preamble is followed by a sequence of sections. Each section is identified by an
+immediate string. Sections whose identity is unknown to the WebAssembly
+implementation are ignored and this is supported by including the size in bytes
+for all sections. The encoding of sections is structured as follows:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| size  | `varuint32` | size of this section in bytes, excluding this size |
 | id_len | `varuint32` | section identifier string length |
 | id_str | `bytes` | section identifier string of id_len bytes |
+| payload_len  | `varuint32` | size of this section in bytes |
+| payload_str  | `bytes` | content of this section, of length payload_len |
 
-### Memory section
+Each section is optional and may appear at most once.
+Known sections (from this list) may not appear out of order.
+The content of each section is encoded in its `payload_str`.
 
-ID: `memory`
+* [Type](#type-section) section
+* [Import](#import-section) section
+* [Function](#function-section) section
+* [Table](#table-section) section
+* [Memory](#memory-section) section
+* [Export](#export-section) section
+* [Start](#start-section) section
+* [Code](#code-section) section
+* [Data](#data-section) section
+* [Name](#name-section) section
 
-The memory section declares the size and characteristics of the memory associated with the module.
-A module may contain at most one memory section.
+The end of the last present section must coincide with the last byte of the
+module. The shortest valid module is 8 bytes (`magic number`, `version`,
+followed by zero sections).
+
+### Type section
+
+ID: `type`
+
+The type section declares all function signatures that will be used in the module.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| min_mem_pages | `varuint32` | minimize memory size in 64KiB pages |
-| max_mem_pages | `varuint32` | maximum memory size in 64KiB pages |
-| exported | `uint8` | `1` if the memory is visible outside the module |
+| count | `varuint32` | count of type entries to follow |
+| entries | `type_entry*` | repeated type entries as described below |
 
-### Signatures section
-
-ID: `signatures`
-
-The signatures section declares all function signatures that will be used in the module.
-A module may contain at most one signatures section.
-
+#### Type entry
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| count | `varuint32` | count of signature entries to follow |
-| entries | `signature_entry*` | repeated signature entries as described below |
-
-#### Signature entry
-| Field | Type | Description |
-| ----- |  ----- | ----- |
+| form | `uint8` | `0x40`, indicating a function type |
 | param_count | `varuint32` | the number of parameters to the function |
-| return_type | `value_type?` | the return type of the function, with `0` indicating no return type |
 | param_types | `value_type*` | the parameter types of the function |
+| return_count | `varuint1` | the number of results from the function |
+| return_type | `value_type?` | the result type of the function (if return_count is 1) |
 
-### Import table section
+(Note: In the future, this section may contain other forms of type entries as well, which can be distinguished by the `form` field.)
 
-ID: `import_table`
+### Import section
+
+ID: `import`
 
 The import section declares all imports that will be used in the module.
-A module may contain at most one import table section.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -139,40 +154,48 @@ A module may contain at most one import table section.
 | function_len | `varuint32` | function string length |
 | function_str | `bytes` | function string of `function_len` bytes |
 
-### Function Signatures section
+### Function section
 
-ID: `function_signatures`
+ID: `function`
 
-The Function Signatures section declares the signatures of all functions in the
-module and must be preceded by the [Signatures](#signatures-section) section. A
-module may contain at most one functions signatures section.
+The function section _declares_ the signatures of all functions in the
+module (their definitions appear in the [code section](#code-section)).
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | count | `varuint32` | count of signature indices to follow |
-| signatures | `varuint32*` | sequence of indices into the Signature section |
+| types | `varuint32*` | sequence of indices into the type section |
 
-### Function Bodies section
+### Table section
 
-ID: `function_bodies`
+ID: `table`
 
-The Function Bodies section assigns a body to every function in the module and
-must be preceded by the [Function Signatures](#function-signatures-section) section.
-The count of function signatures and function bodies must be the same and the `i`th
-signature corresponds to the `i`th function body.
+The table section defines the module's
+[indirect function table](AstSemantics.md#calls).
 
-| Field | Type |  Description |
-| ----- |  ----- |  ----- |  ----- |
-| count | `varuint32` | count of function bodies to follow |
-| bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| count | `varuint32` | count of entries to follow |
+| entries | `varuint32*` | repeated indexes into the function section |
 
-### Export Table section
+### Memory section
 
-ID: `export_table`
+ID: `memory`
 
-The export table section declares all exports from the module.
-A module may contain at most one export table section.
-This section must be preceded by the [Function Signatures](#function-signatures-section) section.
+The memory section declares the size and characteristics of the memory
+associated with the module.
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| min_mem_pages | `varuint32` | minimize memory size in 64KiB pages |
+| max_mem_pages | `varuint32` | maximum memory size in 64KiB pages |
+| exported | `uint8` | `1` if the memory is visible outside the module |
+
+### Export section
+
+ID: `export`
+
+The export section declares all exports from the module.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -186,23 +209,36 @@ This section must be preceded by the [Function Signatures](#function-signatures-
 | function_len | `varuint32` | function string length |
 | function_str | `bytes` | function string of `function_len` bytes |
 
-### Start Function section
+### Start section
 
-ID: `start_function`
+ID: `start`
 
-A module may contain at most one start function section.
-This section must be preceded by a [Function Signatures](#function-signatures-section) section.
+The start section declares the [start function](Modules.md#module-start-function).
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | index | `varuint32` | start function index |
 
-### Data Segments section
+### Code section
 
-ID: `data_segments`
+ID: `code`
 
-The data segments section declares the initialized data that should be loaded into the linear memory.
-A module may only contain one data segments section.
+The code section contains a body for every function in the module.
+The count of function declared in the [function section](#function-section)
+and function bodies defined in this section must be the same and the `i`th
+declaration corresponds to the `i`th function body.
+
+| Field | Type |  Description |
+| ----- |  ----- |  ----- |  ----- |
+| count | `varuint32` | count of function bodies to follow |
+| bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
+
+### Data section
+
+ID: `data`
+
+The data section declares the initialized data that is loaded
+into the linear memory.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -217,35 +253,23 @@ a `data_segment` is:
 | size | `varuint32` | size of `data` (in bytes) |
 | data | `bytes` | sequence of `size` bytes |
 
-### Indirect Function Table section
+### Name section
 
-ID: `function_table`
+ID: `name`
 
-The indirect function table section declares the size and entries of the indirect function table, which consist
-of indexes into the [Function Signatures](#function-signatures-section) section (which must come before).
-
-| Field | Type | Description |
-| ----- |  ----- | ----- |
-| count | `varuint32` | count of entries to follow |
-| entries | `varuint32*` | repeated indexes into the function table |
-
-### Names section
-
-ID: `names`
-
-This section may occur 0 or 1 times and does not change execution semantics. A
-validation error in this section does not cause validation for the whole module
-to fail and is instead treated as if the section was absent. The expectation is
-that, when a binary WebAssembly module is viewed in a browser or other
-development environment, the names in this section will be used as the names of
-functions and locals in the [text format](TextFormat.md).
+The names section does not change execution semantics and a validation error in
+this section does not cause validation for the whole module to fail and is
+instead treated as if the section was absent. The expectation is that, when a
+binary WebAssembly module is viewed in a browser or other development
+environment, the names in this section will be used as the names of functions
+and locals in the [text format](TextFormat.md).
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | count | `varuint32` | count of entries to follow |
 | entries | `function_names*` | sequence of names |
 
-The sequence of `function_name` assigns names to the corresponding
+The sequence of `function_names` assigns names to the corresponding
 function index. The count may be greater or less than the actual number of
 functions.
 
@@ -268,23 +292,6 @@ count may be greater or less than the actual number of locals.
 | local_name_len | `varuint32` | string length, in bytes |
 | local_name_str | `bytes` | valid utf8 encoding |
 
-### End section
-
-ID: `end`
-
-This indicates the end of the sections. Additional data that follows this section marker is not interpreted
-by the decoder. It can used, for example, to store function names or data segment bodies.
-
-| Field | Type | Description |
-| ----- |  ----- | ----- |
-
-### Unknown sections
-
-| Field | Type | Description |
-| ----- |  ----- | ----- |
-| body  | `bytes` | contents of this section |
-
-Sections whose ID is unknown to the WebAssembly implementation are ignored.
 
 # Function Bodies
 
@@ -317,28 +324,33 @@ It is legal to have several entries with the same type.
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
 | `nop` | `0x00` | | no operation |
-| `block` | `0x01` | count : `varuint32` | a sequence of expressions, the last of which yields a value |
-| `loop` | `0x02` | count : `varuint32` | a block which can also form control flow loops |
-| `if` | `0x03` | | high-level one-armed if |
-| `if_else` | `0x04` | | high-level two-armed if |
+| `block` | `0x01` |  | begin a sequence of expressions, the last of which yields a value |
+| `loop` | `0x02` |  | begin a block which can also form control flow loops |
+| `if` | `0x03` | | begin if expression |
+| `else` | `0x04` | | begin else expression of if |
 | `select` | `0x05` | | select one of two values based on condition |
-| `br` | `0x06` | arity : `varuint32`, relative_depth : `varuint32` | break that targets a outer nested block |
-| `br_if` | `0x07` | arity : `varuint32`, relative_depth : `varuint32` | conditional break that targets a outer nested block |
+| `br` | `0x06` | arity : `varuint1`, relative_depth : `varuint32` | break that targets an outer nested block |
+| `br_if` | `0x07` | arity : `varuint1`, relative_depth : `varuint32` | conditional break that targets an outer nested block |
 | `br_table` | `0x08` | see below | branch table control flow construct |
-| `return` | `0x14` | arity : `varuint32` | return zero or one value from this function |
-| `unreachable` | `0x15` | | trap immediately |
+| `return` | `0x09` | arity : `varuint1` | return zero or one value from this function |
+| `unreachable` | `0x0a` | | trap immediately |
+| `end` | `0x0f` | | end a block, loop, or if |
 
-All arities must be either 0 or 1 in the MVP.
+Note that there is no explicit `if_else` opcode, as the else clause is encoded with the `else` bytecode.
+
+The arities following the break and return operators specify how many preceding expressions are taken as arguments; in the MVP, all these arities must be either 0 or 1.
+
 The `br_table` operator has an immediate operand which is encoded as follows:
 
 | Field | Type | Description |
 | ---- | ---- | ---- |
-| arity | `varuint32` | number of transfer arguments (0 or 1) |
+| arity | `varuint1` | number of arguments |
 | target_count | `varuint32` | number of targets in the target_table |
 | target_table | `uint32*` | target entries that indicate an outer block or loop to which to break |
 | default_target | `uint32` | an outer block or loop to which to break in the default case |
 
-The `br_table` operator implements an indirect branch. It accepts one `i32` expression as input and 
+The `br_table` operator implements an indirect branch. It accepts an optional value argument
+(like other branches) and an additional `i32` expression as input, and 
 branches to the block or loop at the given offset within the `target_table`. If the input value is 
 out of range, `br_table` branches to the default target.
 
@@ -346,18 +358,17 @@ out of range, `br_table` branches to the default target.
 
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.const` | `0x0a` | value : `varint32` | a constant value interpreted as `i32` |
-| `i64.const` | `0x0b` | value : `varint64` | a constant value interpreted as `i64` |
-| `f64.const` | `0x0c` | value : `uint64` | a constant value interpreted as `f64` |
-| `f32.const` | `0x0d` | value : `uint32` | a constant value interpreted as `f32` |
-| `get_local` | `0x0e` | local_index : `varuint32` | read a local variable or parameter |
-| `set_local` | `0x0f` | local_index : `varuint32` | write a local variable or parameter |
-|
-| `call` | `0x12` | arity : `varuint32`, function_index : `varuint32` | call a function by its index |
-| `call_indirect` | `0x13` | arity : `varuint32`, signature_index : `varuint32` | call a function indirect with an expected signature |
-| `call_import` | `0x1f` | arity : `varuint32`, import_index : `varuint32` | call an imported function by its index |
+| `i32.const` | `0x10` | value : `varint32` | a constant value interpreted as `i32` |
+| `i64.const` | `0x11` | value : `varint64` | a constant value interpreted as `i64` |
+| `f64.const` | `0x12` | value : `uint64` | a constant value interpreted as `f64` |
+| `f32.const` | `0x13` | value : `uint32` | a constant value interpreted as `f32` |
+| `get_local` | `0x14` | local_index : `varuint32` | read a local variable or parameter |
+| `set_local` | `0x15` | local_index : `varuint32` | write a local variable or parameter |
+| `call` | `0x16` | arity : `varuint1`, function_index : `varuint32` | call a function by its index |
+| `call_indirect` | `0x17` | arity : `varuint1`, type_index : `varuint32` | call a function indirect with an expected signature |
+| `call_import` | `0x18` | arity : `varuint1`, import_index : `varuint32` | call an imported function by its index |
 
-The arity immediates for the different call opcodes give the number of arguments.
+The arity immediates for the different call opcodes specify the number of preceding expressions taken as arguments.
 
 ## Memory-related operators ([described here](AstSemantics.md#linear-memory-accesses))
 
@@ -399,7 +410,7 @@ The `memory_immediate` type is encoded as follows:
 As implied by the `log2(alignment)` encoding, the alignment must be a power of 2.
 As an additional validation criteria, the alignment must be less or equal to 
 natural alignment. The bits after the
-`log(memory-access-size)` least-significant bits should be set to 0. These bits are reserved for future use
+`log(memory-access-size)` least-significant bits must be set to 0. These bits are reserved for future use
 (e.g., for shared memory ordering requirements).
 
 ## Simple operators ([described here](AstSemantics.md#32-bit-integer-operators))

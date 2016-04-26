@@ -82,18 +82,19 @@ operators.
 
 The main storage of a WebAssembly instance, called the *linear memory*, is a
 contiguous, byte-addressable range of memory spanning from offset `0` and
-extending for `memory_size` bytes which can be dynamically grown by
-[`grow_memory`](AstSemantics.md#resizing). The linear memory can be considered
+extending up to a varying *memory size*.
+This size always is a multiple of the WebAssembly page size,
+which is 64KiB on all engines (though large page support may be added in the
+[future](FutureFeatures.md#large-page-support)).
+The initial state of linear memory is specified by the
+[module](Modules.md#linear-memory-section), and it can be dynamically grown by
+the [`grow_memory`](AstSemantics.md#resizing) operator.
+
+The linear memory can be considered
 to be an untyped array of bytes, and it is unspecified how embedders map this
 array into their process' own [virtual memory][]. The linear memory is
 sandboxed; it does not alias the execution engine's internal data structures,
 the execution stack, local variables, or other process memory.
-
-The initial state of linear memory is specified by the
-[module](Modules.md#linear-memory-section). The initial and maximum memory size
-are required to be a multiple of the WebAssembly page size, which is 64KiB on
-all engines (though large page support may be added in the
-[future](FutureFeatures.md#large-page-support)).
 
   [virtual memory]: https://en.wikipedia.org/wiki/Virtual_memory
 
@@ -152,7 +153,7 @@ interpreted as an unsigned byte index.
 
 Linear memory operators access the bytes starting at the effective address and
 extend for the number of bytes implied by the storage size. If any of the
-accessed bytes are beyond `memory_size`, the access is considered
+accessed bytes are beyond the current memory size, the access is considered
 *out-of-bounds*.
 
 The use of infinite-precision in the effective address computation means that
@@ -200,13 +201,24 @@ Out of bounds accesses trap.
 
 ### Resizing
 
-In the MVP, linear memory can be resized by a `grow_memory` operator. This
-operator requires its operand to be a multiple of the WebAssembly page size,
-which is 64KiB on all engines (though large page support may be added in 
+In the MVP, linear memory can be resized by a `grow_memory` operator. The
+operand to this operator is in units of the WebAssembly page size,
+which is defined to be 64KiB (though large page support may be added in 
 the [future](FutureFeatures.md#large-page-support)).
 
- * `grow_memory` : grow linear memory by a given unsigned delta which
-    must be a multiple of the page size. Return the previous memory size.
+ * `grow_memory` : grow linear memory by a given unsigned delta of pages.
+    Return the previous memory size in units of pages or -1 on failure.
+
+When a maximum memory size is declared in the [memory section](Module.md#linear-memory-section),
+`grow_memory` must fail if it would grow past the maximum. However,
+`grow_memory` may still fail before the maximum if it was not possible to
+reserve the space up front or if enabling the reserved memory fails.
+When there is no maximum memory size declared, `grow_memory` is expected
+to perform a system allocation which may fail.
+
+The current size of the linear memory can be queried by the following operator:
+
+  * `current_memory` : return the current memory size in units of pages.
 
 As stated [above](AstSemantics.md#linear-memory), linear memory is contiguous,
 meaning there are no "holes" in the linear address space. After the
