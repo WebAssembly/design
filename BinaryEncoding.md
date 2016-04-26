@@ -85,7 +85,7 @@ for all sections. The encoding of all sections begins as follows:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| size  | `varuint32` | size of this section in bytes, excluding this size |
+| size  | `uint32` | size of this section in bytes, excluding this size |
 | id_len | `varuint32` | section identifier string length |
 | id_str | `bytes` | section identifier string of id_len bytes |
 
