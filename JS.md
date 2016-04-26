@@ -15,8 +15,10 @@ following properties:
 
 ### Constructor Properties of the `WASM` object
 
-* `WASM.Module` : see [`WASM.Module` objects](#wasmmodule-objects)
-* `WASM.Instance` : see [`WASM.Instance` objects](#wasminstance-objects)
+The following intrinsic objects are added:
+
+* `WASM.Module` : the [`WASM.Module` constructor](#wasmmodule-constructor)
+* `WASM.Instance` : the [`WASM.Instance` constructor](#wasminstance-constructor)
 * `WASM.CompileError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
    which indicates an error during WebAssembly decoding or validation
 * `WASM.RuntimeError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
@@ -39,7 +41,7 @@ Otherwise, this function starts an asychronous task to compile a `WASM.Module`
 as described in the [`WASM.Module` constructor](#wasmmodule-constructor).
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `WASM.Module` instance. On failure, the `Promise` is 
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with the 
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
 `WASM.CompileError`.
 
 The asynchronous compilation is logically performed on a copy of the state of
@@ -53,15 +55,19 @@ asynchronous, background, streaming compilation.
 ## `WASM.Module` Objects
 
 A `WASM.Module` object represents the stateless result of compiling a
-WebAssembly binary-format module. A `WASM.Module` logically
-contains a single [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L211).
+WebAssembly binary-format module and contains one internal slot:
+ * [[Module]] : an [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L208)
+   which is the spec definition of a validated module AST
 
 ### `WASM.Module` Constructor
 
 The `WASM.Module` constructor has the signature:
 ```
-new Module(`BufferSource` bytes)
+new Module(BufferSource bytes)
 ```
+If the NewTarget is `undefined`, a `TypeError` exception is thrown (i.e., this
+constructor cannot be called as a function without `new`).
+
 If the given `bytes` argument is not a
 [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
 a `TypeError` exception is thrown.
@@ -69,11 +75,11 @@ a `TypeError` exception is thrown.
 Otherwise, this function performs synchronous compilation of the `BufferSource`:
 * The byte range delimited by the `BufferSource` is first logically decoded into
   an AST according to [BinaryEncoding.md](BinaryEncoding.md) and then validated
-  according to the rules in [spec/check.ml](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/check.ml).
+  according to the rules in [spec/check.ml](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/check.ml#L325).
 * The spec `string` values inside `Ast.module` are decoded as UTF8 as described in 
   [Web.md](Web.md#function-names).
-* On success, a new `WASM.Module` instance is returned that contains the
-  validated [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L211).
+* On success, a new `WASM.Module` instance is returned with [[Module]] set to
+  the validated `Ast.module`.
 * On failure, a new `WASM.CompileError` is thrown.
 
 ### Structured Clone of a `WASM.Module`
@@ -92,30 +98,44 @@ Given the above engine optimizations, structured cloning provides developers
 explicit control over both compiled-code caching and cross-window/worker code
 sharing.
 
-### `WASM.Module.prototype.instantiate`
+## `WASM.Instance` Objects
 
-The `instantiate` method has the signature:
-```
-WASM.Instance instantiate([importObject])
-```
-If the `this` value of `instantiate` is not a `WASM.Module` instance, a
-`TypeError` is thrown.
+A `WASM.Instance` object represents the instantiation of a `WASM.Module`
+into a [realm](http://tc39.github.io/ecma262/#sec-code-realms) and has one
+internal slot:
+* [[Instance]] : an [`Eval.instance`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L15)
+  which is the WebAssembly spec definition of an instance
 
-Let `m` be the [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L211)
-associated with the `WASM.Module`.
+as well as one plain data property (configurable, writable, enumerable)
+added by the constructor:
+* exports : a [Module Namespace Object](http://tc39.github.io/ecma262/#sec-module-namespace-objects)
+
+### `WASM.Instance` Constructor
+
+The `WASM.Instance` constructor has the signature:
+```
+new Instance(moduleObject [, importObject])
+```
+If the NewTarget is `undefined`, a `TypeError` exception is thrown (i.e., this
+constructor cannot be called as a function without `new`).
+
+If `moduleObject` is not a `WASM.Module` instance, a `TypeError` is thrown.
+
+Let `module` be the [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L211)
+`moduleObject.[[Module]]`.
 
 If the `importObject` parameter is not `undefined` and `Type(importObject)` is
 not Object, a `TypeError` is thrown. If the list of 
-[`m.imports`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L218)
+[`module.imports`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L215)
 is not empty and `Type(importObject)` is not Object, a `TypeError` is thrown.
 
 Let `imports` by an initially-empty list of JS functions.
 
-For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L133)
-`i` in `m.imports`:
+For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L135)
+`i` in `module.imports`:
 * Let `v` be the resultant value of performing
-  [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L137)).
-* If [`i.func_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L138)
+  [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L139)).
+* If [`i.func_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L140)
   is not the empty string:
   * If `Type(v)` is not Object, throw a `TypeError`.
   * Let `v` instead be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`v`, `i.func_name`)
@@ -124,24 +144,52 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spe
 
 Let `instance` be the result of evaluating 
 [`Eval.init`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L314)
-with arguments `m` and `imports`.
+with arguments `module` and `imports`.
 Note: this synchronously executes the [`start`](Modules.md#module-start-function)
 function, if present.
 
-Let `exportObject` be a new, plain empty JS object.
+Let `exports` be an initially-empty list of (string, JS function) pairs.
+Let `exportedFunctions` be an initially-empty map from function indices (integers) to
+JS functions.
 
-For each [exported function](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L130)
-`f` in `m.exports`:
-* Let `index` be the function index of `f`.
-* If `f` is the first export of `index`, let `v` be a new 
-  [Exported Function](#exported-function-exotic-objects) Exotic Object given `instance` and `index`.
-* Otherwise, let `v` be the previously-created Exported Function Exotic Object.
-* Add a plain data property to `exportObject` whose property name is given by `f` and
-  whose value is `v`.
+For each [exported function](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L128)
+`f` in `module.exports`:
+* Let `index` be the exported function index of `f`.
+* If `index` is not already present in `exportedFunctions`, add a mapping
+  from `index` to the result of creating a new 
+  [Exported Function](#exported-function-exotic-objects) Exotic Object (given `instance` and `index`).
+* Append the pair (`f.name`, `exportedFunctions[index]`) to `exports`
 
-Return a new `WASM.Instance` instance containing `instance` where the initial value of
-the [`exports`](#wasminstance-exports-property) data property is
-`exportObject`.
+Let `moduleRecord` be a new [WebAssembly Module Record](#webassembly-module-record) (given `exports`).
+
+Let `exportStrings` be the projected list of only the first (string) components of `exports`.
+Let `moduleNamespace` be the result of calling 
+[`ModuleNamespaceCreate(moduleRecord, exportStrings)`](http://tc39.github.io/ecma262/#sec-modulenamespacecreate).
+Set `moduleRecord.[[Namespace]]` to `moduleNamespace`.
+
+Return a new `WASM.Instance` object initializing `[[Instance]]` = `instance` and `exports` = `moduleNamespace`.
+
+### WebAssembly Module Record
+
+[Abstract Module Record](http://tc39.github.io/ecma262/#sec-abstract-module-records)
+is a spec-internal concept used to define ES6 modules. This abstract class currently
+has one concrete subclass, [Source Text Module Record](http://tc39.github.io/ecma262/#sec-source-text-module-records)
+which corresponds to a normal ES6 module. These interfaces are used to define the
+[process of loading a module on the Web](https://html.spec.whatwg.org/multipage/webappapis.html#integration-with-the-javascript-module-system).
+
+When WebAssembly gets [ES6 Module integration](Modules.md#integration-with-es6-modules), 
+a new *WebAssembly Module Record* subclass would be added which would specify
+the right thing to do for WebAssembly modules as part of the overall loading process.
+
+Until then, the specification of [Module Namespace Exotic Objects](http://tc39.github.io/ecma262/#sec-module-namespace-exotic-objects),
+(used for the `WASM.Instance` `exports` property) still needs to refer to *some*
+vestigial Module Record as part of the specification of the
+[\[\[Get\]\]](http://tc39.github.io/ecma262/#sec-module-namespace-exotic-objects-get-p-receiver)
+method.
+
+More work is needed to flesh out the precise spec interaction here, but the basic
+idea is to create a [Module Environment Record](http://tc39.github.io/ecma262/#sec-module-environment-records)
+from `exports` as the [[Environment]] of a new WebAssembly Module Record.
 
 ## Exported Function Exotic Objects
 
@@ -186,25 +234,6 @@ WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined
 Exported Functions do not have a [[Construct]] method and thus it is not possible to 
 call one with the `new` operator.
 
-## `WASM.Instance` Objects
-
-A `WASM.Instance` object represents the activation/instantiation of a single
-`WASM.Module` into a single [realm](http://tc39.github.io/ecma262/#sec-code-realms)
-with a tuple of realm-specific JS import values. A `WASM.Instance` logically
-contains a single [`Eval.instance`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L15).
-
-### `WASM.Instance` Constructor
-
-Attempting to call `WASM.Instance` as a function or constructor directly from JS
-throws a `TypeError`. `WASM.Instance` instances can only be created indirectly from
-JS by calling [`instantiate`](JS.md#wasmmoduleprototypeinstantiate).
-
-### `WASM.Instance` `exports` property
-
-`WASM.Instance` objects are created with an initial (writable, configurable,
-non-enumerable) `exports` data property whose value is the JS Array of exported
-JS Functions created by [`instantiate`](JS.md#wasmmoduleprototypeinstantiate).
-
 ## Sample API Usage
 
 Given `demo.was` (encoded to `demo.wasm`):
@@ -223,13 +252,13 @@ and the following JavaScript, run in a browser:
 fetch('demo.wasm').then(response =>
     response.arrayBuffer()
 ).then(buffer =>
-    WASM.compile(new Uint8Array(buffer))
+    WASM.compile(buffer)
 ).then(module => {
     var importObj = {
         m: {import1: () => console.log("hello, ")},
         import2: () => console.log("world!\n")
     };
-    var instance = module.instantiate(importObj); // "hello, "
+    var instance = new WASM.Instance(module, importObj); // "hello, "
     instance.exports.f(); // "world!"
 });
 ```
