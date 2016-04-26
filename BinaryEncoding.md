@@ -329,16 +329,16 @@ It is legal to have several entries with the same type.
 | `if` | `0x03` | | begin if expression |
 | `else` | `0x04` | | begin else expression of if |
 | `select` | `0x05` | | select one of two values based on condition |
-| `br` | `0x06` | arity : `varuint1`, relative_depth : `varuint32` | break that targets an outer nested block |
-| `br_if` | `0x07` | arity : `varuint1`, relative_depth : `varuint32` | conditional break that targets an outer nested block |
+| `br` | `0x06` | argument_count : `varuint1`, relative_depth : `varuint32` | break that targets an outer nested block |
+| `br_if` | `0x07` | argument_count : `varuint1`, relative_depth : `varuint32` | conditional break that targets an outer nested block |
 | `br_table` | `0x08` | see below | branch table control flow construct |
-| `return` | `0x09` | arity : `varuint1` | return zero or one value from this function |
+| `return` | `0x09` | argument_count : `varuint1` | return zero or one value from this function |
 | `unreachable` | `0x0a` | | trap immediately |
 | `end` | `0x0f` | | end a block, loop, or if |
 
 Note that there is no explicit `if_else` opcode, as the else clause is encoded with the `else` bytecode.
 
-The arities following the break and return operators specify how many preceding expressions are taken as arguments; in the MVP, all these arities must be either 0 or 1.
+The counts following the break and return operators specify how many preceding operands are taken as transfer arguments; in the MVP, all these values must be either 0 or 1.
 
 The `br_table` operator has an immediate operand which is encoded as follows:
 
@@ -364,11 +364,11 @@ out of range, `br_table` branches to the default target.
 | `f32.const` | `0x13` | value : `uint32` | a constant value interpreted as `f32` |
 | `get_local` | `0x14` | local_index : `varuint32` | read a local variable or parameter |
 | `set_local` | `0x15` | local_index : `varuint32` | write a local variable or parameter |
-| `call` | `0x16` | arity : `varuint1`, function_index : `varuint32` | call a function by its index |
-| `call_indirect` | `0x17` | arity : `varuint1`, type_index : `varuint32` | call a function indirect with an expected signature |
-| `call_import` | `0x18` | arity : `varuint1`, import_index : `varuint32` | call an imported function by its index |
+| `call` | `0x16` | argument_count : `varuint1`, function_index : `varuint32` | call a function by its index |
+| `call_indirect` | `0x17` | argument_count : `varuint1`, type_index : `varuint32` | call a function indirect with an expected signature |
+| `call_import` | `0x18` | argument_count : `varuint1`, import_index : `varuint32` | call an imported function by its index |
 
-The arity immediates for the different call opcodes specify the number of preceding expressions taken as arguments.
+The counts following the different call opcodes specify the number of preceding operands taken as arguments.
 
 ## Memory-related operators ([described here](AstSemantics.md#linear-memory-accesses))
 
