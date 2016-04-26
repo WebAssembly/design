@@ -306,7 +306,8 @@ nodes (if any).
 | body size | `varuint32` | size of function body to follow, in bytes |
 | local count | `varuint32` | number of local entries |
 | locals | `local_entry*` | local variables |
-| ast    | `byte*` | pre-order encoded AST |
+| ast | `byte*` | pre-order encoded AST |
+| end | `byte` | `0x0f`, indicating the end of the body |
 
 #### Local Entry
 
