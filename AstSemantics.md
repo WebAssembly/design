@@ -426,9 +426,8 @@ The same operators are available on 64-bit integers as the those available for
 ## Floating point operators
 
 Floating point arithmetic follows the IEEE 754-2008 standard, except that:
- - The sign bit and fraction field of any NaN value returned from a floating
-   point arithmetic operator are deterministic under more circumstances than
-   required by IEEE 754-2008.
+ - The IEEE 754-2008 section 6.2 recommendation that operations propagate NaN
+   bits from their operands is permitted but not required.
  - WebAssembly uses "non-stop" mode, and floating point exceptions are not
    otherwise observable. In particular, neither alternate floating point
    exception handling attributes nor the non-computational operators on status
@@ -452,15 +451,14 @@ When the result of any arithmetic operation other than `neg`, `abs`, or
 the implicit leading digit of the significand) of the NaN are computed as
 follows:
 
- - If the operation has exactly one NaN operand, the result NaN has the same
-   bits as that operand, except that the most significant bit of the
-   fraction field is 1.
- - If the operation has multiple NaN input values, the result value is computed
-   as if one of the operands, selected nondeterministically, is the only NaN
-   operand (as described in the previous rule).
- - If the operation has no NaN input values, the result value has a
-   nondeterministic sign bit, a fraction field with 1 in the most significant
-   bit and 0 in the remaining bits.
+ - If the operation has any NaN input values, implementations may select any of
+   them to be the result value, but with the most significant bit of the
+   fraction field overwritten to be 1.
+
+ - If the implementation does not choose to use an input NaN as a result value,
+   or if there are no input NaNs, the result value has a nondeterministic sign
+   bit, a fraction field with 1 in the most significant bit and 0 in the
+   remaining bits.
 
 32-bit floating point operations are as follows:
 
@@ -546,15 +544,22 @@ Promotion and demotion of floating point values always succeed.
 Demotion of floating point values uses round-to-nearest ties-to-even rounding,
 and may overflow to infinity or negative infinity as specified by IEEE 754-2008.
 
-If the operand of promotion is a NaN, the result is a NaN with the sign bit
-of the operand and a fraction field consisting of 1 in the most significant bit,
-followed by all but the most significant bits of the fraction field of the
-operand, followed by all 0s.
+If the operand of promotion is a NaN, the result is nondeterministically chosen
+between the following:
+ - a NaN with a nondeterministic sign bit and a fraction field with 1 in the
+   most significant bit and 0 in the remaining bits.
+ - a NaN with the sign bit of the operand and a fraction field consisting of
+   1 in the most significant bit, followed by all but the most significant
+   bit of the fraction field of the operand, followed by all 0s.
 
-If the operand of demotion is a NaN, the result is a NaN with the sign bit
-of the operand and a fraction field consisting of 1 in the most significant bit,
-followed by as many of all but the most significant bit of the fraction field of
-the operand as fit.
+If the operand of demotion is a NaN, the result is nondeterministically chosen
+between the following:
+ - a NaN with a nondeterministic sign bit and a fraction field with 1 in the
+   most significant bit and 0 in the remaining bits.
+ - a NaN with the sign bit of the operand and a fraction field consisting of
+   1 in the most significant bit, followed by all but the most significant bit
+   of the fraction field of the operand, discarding the least significant bits
+   that don't fit.
 
 Reinterpretations always succeed.
 
