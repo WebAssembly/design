@@ -6,6 +6,12 @@ be loaded and run directly from an HTML `<script type='module'>` tag—and
 any other Web API that loads ES6 modules via URL—as part of 
 [ES6 Module integration](Modules.md#integration-with-es6-modules).)
 
+*Note: current experimental WebAssembly implementations expose a single
+all-in-one function `Wasm.instantiateModule(bytes, imports)` which is used
+by the current [demo](http://webassembly.github.io/demo). This function is
+basically equivalent to `new WASM.Instance(new WASM.Module(bytes), imports)`
+as defined below and will be removed at some point in the future.*
+
 ## The `WASM` object
 
 The `WASM` object is the initial value of the `WASM` property of the global
