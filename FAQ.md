@@ -131,7 +131,7 @@ LLVM support because they had more experience with that toolchain from their
   [GCC]: https://gcc.gnu.org
 
 We hope that proprietary compilers also gain WebAssembly support, but we'll let
-vendors speak about their own platform.
+vendors speak about their own platforms.
 
 The [WebAssembly Community Group][] would be delighted to collaborate with more
 compiler vendors, take their input into consideration in WebAssembly itself, and
