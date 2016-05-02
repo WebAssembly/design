@@ -145,11 +145,11 @@ In addition to storing to memory, store instructions produce a value which is th
 
 ### Addressing
 
-Each linear memory access operator has an address operand and an unsigned 
-integer byte offset immediate. The immediate is the same type as the address'
-index. The infinite-precision unsigned sum of the address operand's value with 
-the immediate offset's value is called the *effective address*, which is 
-interpreted as an unsigned byte index.
+Each linear memory access operator has an address operand and an
+unsigned integer byte offset immediate. The infinite-precision
+unsigned sum of the address operand's value with the immediate
+offset's value is called the *effective address*, which is interpreted
+as an unsigned byte index into the linear memory.
 
 Linear memory operators access the bytes starting at the effective address and
 extend for the number of bytes implied by the storage size. If any of the
@@ -168,14 +168,16 @@ offsets have type `i64`. The MVP only includes wasm32; subsequent versions
 will add support for wasm64 and thus
 [>4 GiB linear memory](FutureFeatures.md#linear-memory-bigger-than-4-gib).
 
+The byte offset immediate is the same type as the address operand.
+
 ### Alignment
 
-Each linear memory access operator also has an immediate positive integer power
-of 2 alignment attribute, which is the same type as the address' index. An
-alignment value which is the same as the memory attribute size is considered
-to be a *natural* alignment. The alignment applies to the effective address and
-not merely the address operand, i.e. the immediate offset is taken into account
-when considering alignment.
+Each linear memory access operator also has an immediate positive
+integer power of 2 alignment attribute. An alignment value which is
+the same as the memory attribute size is considered to be a *natural*
+alignment. The alignment applies to the effective address and not
+merely the address operand, i.e. the immediate offset is taken into
+account when considering alignment.
 
 If the effective address of a memory access is a multiple of the alignment
 attribute value of the memory access, the memory access is considered *aligned*,
