@@ -9,46 +9,47 @@ any other Web API that loads ES6 modules via URL—as part of
 *Note: current experimental WebAssembly implementations expose a single
 all-in-one function `Wasm.instantiateModule(bytes, imports)` which is used
 by the current [demo](http://webassembly.github.io/demo). This function is
-basically equivalent to `new WASM.Instance(new WASM.Module(bytes), imports)`
+basically equivalent to 
+`new WebAssembly.Instance(new WebAssembly.Module(bytes), imports)`
 as defined below and will be removed at some point in the future.*
 
-## The `WASM` object
+## The `WebAssembly` object
 
-The `WASM` object is the initial value of the `WASM` property of the global
-object. Like the `Math` and `JSON` objects, the `WASM` object is a plain
-JS object (not a constructor or function) that acts like a namespace and has the
-following properties:
+The `WebAssembly` object is the initial value of the `WebAssembly` property of
+the global object. Like the `Math` and `JSON` objects, the `WebAssembly` object
+is a plain JS object (not a constructor or function) that acts like a namespace
+and has the following properties:
 
-### Constructor Properties of the `WASM` object
+### Constructor Properties of the `WebAssembly` object
 
 The following intrinsic objects are added:
 
-* `WASM.Module` : the [`WASM.Module` constructor](#wasmmodule-constructor)
-* `WASM.Instance` : the [`WASM.Instance` constructor](#wasminstance-constructor)
-* `WASM.CompileError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
+* `WebAssembly.Module` : the [`WebAssembly.Module` constructor](#wasmmodule-constructor)
+* `WebAssembly.Instance` : the [`WebAssembly.Instance` constructor](#wasminstance-constructor)
+* `WebAssembly.CompileError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
    which indicates an error during WebAssembly decoding or validation
-* `WASM.RuntimeError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
+* `WebAssembly.RuntimeError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
    which indicates an error while running WebAssembly code
 
-### Function Properties of the `WASM` object
+### Function Properties of the `WebAssembly` object
 
-#### `WASM.compile`
+#### `WebAssembly.compile`
 
 The `compile` function has the signature:
 ```
-Promise<WASM.Module> compile(BufferSource bytes)
+Promise<WebAssembly.Module> compile(BufferSource bytes)
 ```
 If the given `bytes` argument is not a
 [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
 the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
 with a `TypeError`.
 
-Otherwise, this function starts an asychronous task to compile a `WASM.Module`
-as described in the [`WASM.Module` constructor](#wasmmodule-constructor).
+Otherwise, this function starts an asychronous task to compile a `WebAssembly.Module`
+as described in the [`WebAssembly.Module` constructor](#wasmmodule-constructor).
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
-with the resulting `WASM.Module` instance. On failure, the `Promise` is 
+with the resulting `WebAssembly.Module` instance. On failure, the `Promise` is 
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
-`WASM.CompileError`.
+`WebAssembly.CompileError`.
 
 The asynchronous compilation is logically performed on a copy of the state of
 the given `BufferSource` captured during the call to `compile`; subsequent mutations
@@ -58,16 +59,16 @@ In the [future](FutureFeatures.md#streaming-compilation), this function can be
 extended to accept a [stream](https://streams.spec.whatwg.org), thereby enabling
 asynchronous, background, streaming compilation.
 
-## `WASM.Module` Objects
+## `WebAssembly.Module` Objects
 
-A `WASM.Module` object represents the stateless result of compiling a
+A `WebAssembly.Module` object represents the stateless result of compiling a
 WebAssembly binary-format module and contains one internal slot:
  * [[Module]] : an [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L208)
    which is the spec definition of a validated module AST
 
-### `WASM.Module` Constructor
+### `WebAssembly.Module` Constructor
 
-The `WASM.Module` constructor has the signature:
+The `WebAssembly.Module` constructor has the signature:
 ```
 new Module(BufferSource bytes)
 ```
@@ -84,18 +85,18 @@ Otherwise, this function performs synchronous compilation of the `BufferSource`:
   according to the rules in [spec/check.ml](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/check.ml#L325).
 * The spec `string` values inside `Ast.module` are decoded as UTF8 as described in 
   [Web.md](Web.md#function-names).
-* On success, a new `WASM.Module` instance is returned with [[Module]] set to
+* On success, a new `WebAssembly.Module` instance is returned with [[Module]] set to
   the validated `Ast.module`.
-* On failure, a new `WASM.CompileError` is thrown.
+* On failure, a new `WebAssembly.CompileError` is thrown.
 
-### Structured Clone of a `WASM.Module`
+### Structured Clone of a `WebAssembly.Module`
 
-A `WASM.Module` is a
+A `WebAssembly.Module` is a
 [cloneable object](https://html.spec.whatwg.org/multipage/infrastructure.html#cloneable-objects)
 which means it can be cloned between windows/workers and also
 stored/retrieved into/from an [IDBObjectStore](https://w3c.github.io/IndexedDB/#object-store).
 The semantics of a structured clone is as-if the binary source, from which the
-`WASM.Module` was compiled, were cloned and recompiled into the target realm.
+`WebAssembly.Module` was compiled, were cloned and recompiled into the target realm.
 Engines should attempt to share/reuse internal compiled code when performing
 a structured clone although, in corner cases like CPU upgrade or browser
 update, this may not be possible and full recompilation may be necessary.
@@ -104,10 +105,11 @@ Given the above engine optimizations, structured cloning provides developers
 explicit control over both compiled-code caching and cross-window/worker code
 sharing.
 
-## `WASM.Instance` Objects
+## `WebAssembly.Instance` Objects
 
-A `WASM.Instance` object represents the instantiation of a `WASM.Module`
-into a [realm](http://tc39.github.io/ecma262/#sec-code-realms) and has one
+A `WebAssembly.Instance` object represents the instantiation of a 
+`WebAssembly.Module` into a
+[realm](http://tc39.github.io/ecma262/#sec-code-realms) and has one
 internal slot:
 * [[Instance]] : an [`Eval.instance`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L15)
   which is the WebAssembly spec definition of an instance
@@ -116,16 +118,16 @@ as well as one plain data property (configurable, writable, enumerable)
 added by the constructor:
 * exports : a [Module Namespace Object](http://tc39.github.io/ecma262/#sec-module-namespace-objects)
 
-### `WASM.Instance` Constructor
+### `WebAssembly.Instance` Constructor
 
-The `WASM.Instance` constructor has the signature:
+The `WebAssembly.Instance` constructor has the signature:
 ```
 new Instance(moduleObject [, importObject])
 ```
 If the NewTarget is `undefined`, a `TypeError` exception is thrown (i.e., this
 constructor cannot be called as a function without `new`).
 
-If `moduleObject` is not a `WASM.Module` instance, a `TypeError` is thrown.
+If `moduleObject` is not a `WebAssembly.Module` instance, a `TypeError` is thrown.
 
 Let `module` be the [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L211)
 `moduleObject.[[Module]]`.
@@ -173,7 +175,7 @@ Let `moduleNamespace` be the result of calling
 [`ModuleNamespaceCreate(moduleRecord, exportStrings)`](http://tc39.github.io/ecma262/#sec-modulenamespacecreate).
 Set `moduleRecord.[[Namespace]]` to `moduleNamespace`.
 
-Return a new `WASM.Instance` object initializing `[[Instance]]` = `instance` and `exports` = `moduleNamespace`.
+Return a new `WebAssembly.Instance` object initializing `[[Instance]]` = `instance` and `exports` = `moduleNamespace`.
 
 ### WebAssembly Module Record
 
@@ -188,7 +190,7 @@ a new *WebAssembly Module Record* subclass would be added which would specify
 the right thing to do for WebAssembly modules as part of the overall loading process.
 
 Until then, the specification of [Module Namespace Exotic Objects](http://tc39.github.io/ecma262/#sec-module-namespace-exotic-objects),
-(used for the `WASM.Instance` `exports` property) still needs to refer to *some*
+(used for the `WebAssembly.Instance` `exports` property) still needs to refer to *some*
 vestigial Module Record as part of the specification of the
 [\[\[Get\]\]](http://tc39.github.io/ecma262/#sec-module-namespace-exotic-objects-get-p-receiver)
 method.
@@ -258,19 +260,19 @@ and the following JavaScript, run in a browser:
 fetch('demo.wasm').then(response =>
     response.arrayBuffer()
 ).then(buffer =>
-    WASM.compile(buffer)
+    WebAssembly.compile(buffer)
 ).then(module => {
     var importObj = {
         m: {import1: () => console.log("hello, ")},
         import2: () => console.log("world!\n")
     };
-    var instance = new WASM.Instance(module, importObj); // "hello, "
+    var instance = new WebAssembly.Instance(module, importObj); // "hello, "
     instance.exports.f(); // "world!"
 });
 ```
 
 ## TODO
 
-* `WASM.Memory`: imports, exports
-* `WASM.Table`: imports, exports
-* `WASM.Module` `exports`/`imports` properties (reflection)
+* `WebAssembly.Memory`: imports, exports
+* `WebAssembly.Table`: imports, exports
+* `WebAssembly.Module` `exports`/`imports` properties (reflection)
