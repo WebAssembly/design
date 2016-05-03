@@ -24,10 +24,10 @@ alias the exported memory of instantiated modules, etc.
 
 ## Modules
 
-WebAssembly's [modules](Modules.md) allow for natural [integration with
+WebAssembly's [modules](Modules.md) allow for natural [integration with 
 the ES6 module system](Modules.md#integration-with-es6-modules).
 
-### Function Names
+### Names
 
 A WebAssembly module imports and exports functions. WebAssembly names functions
 using arbitrary-length byte sequences. Any 8-bit values are permitted in a
@@ -55,35 +55,6 @@ a [common JS idiom](http://monsur.hossa.in/2012/07/20/utf-8-in-javascript.html).
 Transcoding failure is detected by `decodeURIComponent`, which may throw
 `URIError`. If it does, the WebAssembly module will not validate. This validation
 rule is only mandatory for Web embedding.
-
-## Aliasing linear memory from JS
-
-If [allowed by the module](Modules.md#linear-memory-section), JavaScript can
-alias a loaded module's linear memory through an exported `ArrayBuffer`.
-Module instances would additionally expose methods to JS to copy ranges of
-bytes into and out of linear memory as separate (unaliased) `ArrayBuffer`s.
-
-Since JS semantics and implementations require the `byteLength` of an
-`ArrayBuffer` to be constant, [resizing](AstSemantics.md#resizing) the
-linear memory cannot simply resize the exported `ArrayBuffer`. Instead,
-the `ArrayBuffer` would be [detached](http://people.mozilla.org/~jorendorff/es6-draft.html#sec-detacharraybuffer)
-and a new `ArrayBuffer` (with a new `byteLength`) would be exported in
-its place.
-
-When [threads](PostMVP.md#threads) are added, a
-[`SharedArrayBuffer`](https://github.com/lars-t-hansen/ecmascript_sharedmem)
-would need to be exported instead of an `ArrayBuffer`. However, the
-detach-on-resize strategy would pose significant usability and implementation 
-hazards, since resizing can happen concurrently. One solution would be
-to simply not export a `SharedArrayBuffer` when a module declared use of
-threads and resizable memory (the copy in/out methods would need to be used
-instead).
-
-Similarly, various [linear memory operations](FutureFeatures.md#finer-grained-control-over-memory)
-like `mprotect` conflict with the JS semantics of `ArrayBuffer` and
-would inhibit export. In general, `ArrayBuffer` could be viewed as an
-optimization of copy in/out that was only available when linear memory
-behaved like an `ArrayBuffer` (or `SharedArrayBuffer`).
 
 ## Security
 

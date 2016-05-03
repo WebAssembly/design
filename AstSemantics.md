@@ -80,29 +80,30 @@ operators.
 
 ## Linear Memory
 
-The main storage of a WebAssembly instance, called the *linear memory*, is a
-contiguous, byte-addressable range of memory spanning from offset `0` and
-extending up to a varying *memory size*.
+A WebAssembly [instance](Modules.md) contains zero or more *linear memories*.
+A linear memory is is a contiguous, byte-addressable range of memory spanning
+from offset `0` and extending up to a varying *memory size*.
 This size always is a multiple of the WebAssembly page size,
-which is 64KiB on all engines (though large page support may be added in the
-[future](FutureFeatures.md#large-page-support)).
-The initial state of linear memory is specified by the
-[module](Modules.md#linear-memory-section), and it can be dynamically grown by
+which is fixed to 64KiB (though large page support may be added in an opt-in
+manner in the [future](FutureFeatures.md#large-page-support)).
+The initial state of a linear memory is specified by the
+[module](Modules.md#linear-memory-section), and can be dynamically grown by
 the [`grow_memory`](AstSemantics.md#resizing) operator.
 
-The linear memory can be considered
-to be an untyped array of bytes, and it is unspecified how embedders map this
-array into their process' own [virtual memory][]. The linear memory is
-sandboxed; it does not alias the execution engine's internal data structures,
-the execution stack, local variables, or other process memory.
+A module can define or import multiple linear memories and each memory access
+operator statically specifies which linear memory to operate on with a 
+[linear memory index](Modules.md#index-spaces) immediate.
+
+A linear memory can be considered to be an untyped array of bytes, and it is
+unspecified how embedders map this array into their process' own [virtual
+memory][]. Linear memory is sandboxed; it does not alias other linear memories,
+the execution engine's internal data structures, the execution stack, local
+variables, or other process memory.
 
   [virtual memory]: https://en.wikipedia.org/wiki/Virtual_memory
 
-In the MVP, linear memory is not shared between threads of execution. Separate
-instances can execute in separate threads but have their own linear memory and can
-only communicate through messaging, e.g. in browsers using `postMessage`. It
-will be possible to share linear memory between threads of execution when
-[threads](PostMVP.md#threads) are added.
+In the MVP, linear memory cannot be shared between threads of execution.
+The addition of [threads](PostMVP.md#threads) will allow this.
 
 ### Linear Memory Accesses
 
@@ -110,6 +111,9 @@ Linear memory access is accomplished with explicit `load` and `store` operators.
 Integer loads can specify a *storage size* which is smaller than the result type as
 well as a signedness which determines whether the bytes are sign- or zero-
 extended into the result type.
+
+Each `load` and `store` specifies the [linear memory index](Modules.md#index-spaces)
+to operate on with an unsigned integer immediate.
 
   * `i32.load8_s`: load 1 byte and sign-extend i8 to i32
   * `i32.load8_u`: load 1 byte and zero-extend i8 to i32
@@ -203,21 +207,25 @@ Out of bounds accesses trap.
 ### Resizing
 
 In the MVP, linear memory can be resized by a `grow_memory` operator. The
-operand to this operator is in units of the WebAssembly page size,
+`grow_memory` operator specifies which memory to resize with a
+[linear memory index](Modules.md#index-spaces) immediate. The dynamic
+operand to `grow_memory` is in units of the WebAssembly page size,
 which is defined to be 64KiB (though large page support may be added in 
 the [future](FutureFeatures.md#large-page-support)).
 
  * `grow_memory` : grow linear memory by a given unsigned delta of pages.
     Return the previous memory size in units of pages or -1 on failure.
 
-When a maximum memory size is declared in the [memory section](Module.md#linear-memory-section),
+When a maximum memory size is declared in the [memory section](Modules.md#linear-memory-sections),
 `grow_memory` must fail if it would grow past the maximum. However,
 `grow_memory` may still fail before the maximum if it was not possible to
 reserve the space up front or if enabling the reserved memory fails.
 When there is no maximum memory size declared, `grow_memory` is expected
 to perform a system allocation which may fail.
 
-The current size of the linear memory can be queried by the following operator:
+The current size of a given linear memory (specified by a
+[linear memory index](Modules.md#index-spaces)) can be queried by the following
+operator:
 
   * `current_memory` : return the current memory size in units of pages.
 
@@ -231,6 +239,40 @@ In the MVP, memory can only be grown. After the MVP, a memory shrinking
 operator may be added. However, due to normal fragmentation, applications are
 instead expected release unused physical pages from the working set using the
 [`discard`](FutureFeatures.md#finer-grained-control-over-memory) future feature.
+
+## Tables
+
+A *table* is similar to a linear memory whose elements, instead of being bytes,
+are opaque values of a particular *table element type*. This allows the table to
+contain values like GC references, raw OS handles, or native pointers that are
+accessed by WebAssembly code indirectly through an integer index. This feature
+bridges the gap between low-level, untrusted linear memory and high-level
+opaque handles/references at the cost of a bounds-checked table indirection.
+
+The table's element type dynamically constrains the type of elements stored 
+in the table and allows engines to avoid some type checks on table use. When
+tables are mutated, any stored value is necessarily coerced (possibly trapping)
+to the element type.
+
+In the MVP, the set of operations and types for tables is limited:
+* tables may only be accessed via [`call_table`](#calls);
+* the only allowed table element types are "function" and
+  "function with signature `X`";
+* tables may not be directly mutated or resized from WebAssembly code;
+  initially this must be done through the host environment (e.g., the
+  the `WebAssembly` [JavaScript API](JS.md#webassemblytable-objects).
+
+These restrictions should be relaxed in the 
+[future](FutureFeatures.md#more-table-operators-and-types). In the MVP,
+the primary purpose of tables is to implement indirect function calls
+in C/C++, using an integer index as the pointer-to-function and the table
+to hold the array of indirectly-callable functions. The compiler may either
+choose to group functions by signature (into N tables-with-signatures)
+or to put all functions into the same table (with no signature). The former
+strategy allows the engine to eliminate dynamic signature-mismatch checks while
+the latter strategy gives each function a unique index (which may be necessary
+for C/C++ compatibility) and admits simpler and potentially more space-efficient
+[dynamic linking](DynamicLinking.md).
 
 ## Local variables
 
@@ -314,43 +356,27 @@ explicit accesses to linear memory.
 In the MVP, the length of the return types sequence may only be 0 or 1. This
 restriction may be lifted in the future.
 
-Direct calls to a function specify the callee by index into a *main function table*.
+Direct calls to a function specify the callee by index into the 
+[function index space](Modules.md#index-spaces).
 
   * `call`: call function directly
 
 A direct call to a function with a mismatched signature is a module verification error.
 
-Like direct calls, calls to [imports](Modules.md#imports-and-exports) specify
-the callee by index into an *imported function table* defined by the sequence of import
-declarations in the module import section. A direct call to an imported function with a
-mismatched signature is a module verification error.
+Indirect calls to a function indicate the callee with an `i32` index into
+the [table](#tables) specified by a [table index](BinaryEncoding.md#index-spaces)
+immediate. The *expected* signature of the target function (specified by its
+index in the [types section](BinaryEncoding.md#type-section)) is given as a
+second immediate. 
 
-  * `call_import` : call imported function directly
+  * `call_table`: call function element in a table
 
-Indirect calls allow calling target functions that are unknown at compile time.
-The target function is an expression of value type `i32` and is always the first
-input into the indirect call.
-
-A `call_indirect` specifies the *expected* signature of the target function with
-an index into a *signature table* defined by the module. An indirect call to a
-function with a mismatched signature causes a trap.
-
-  * `call_indirect`: call function indirectly
-
-Functions from the main function table are made addressable by defining an
-*indirect function table* that consists of a sequence of indices into the
-module's main function table. A function from the main table may appear more
-than once in the indirect function table. Functions not appearing in the
-indirect function table cannot be called indirectly.
-
-In the MVP, indices into the indirect function table are local to a single
-module, so wasm modules may use `i32` constants to refer to entries in their own
-indirect function table. The [dynamic linking](DynamicLinking.md) feature is
-necessary for two modules to pass function pointers back and forth. This will
-mean concatenating indirect function tables and adding an operator `address_of`
-that computes the absolute index into the concatenated table from an index in a
-module's local indirect table. JITing may also mean appending more functions to
-the end of the indirect function table.
+The specified [table](#tables) must have either a "function" or "function with
+signature `X`" element type (in the MVP, these are the only two
+possibilities, but in the future, there may be other kinds of tables).
+If the table element type has a signature, it must match the signature of the
+call. Otherwise, the signature is checked at runtime and a signature mismatch
+causes a trap.
 
 Multiple return value calls will be possible, though possibly not in the
 MVP. The details of multiple-return-value calls needs clarification. Calling a

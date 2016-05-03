@@ -48,7 +48,7 @@ currently admits nondeterminism:
    - Memory allocation may fail.
    - The runtime can fail to allocate a physical page when a memory location is first
      accessed (e.g. through a load or store), even if that memory was virtually reserved
-     by the maximum size property of the [memory section](Module.md#linear-memory-section).
+     by the maximum size property of the [memory section](Modules.md#linear-memory-section).
    - Program stack may get exhausted (e.g., because function call depth is too big,
      or functions have too many locals, or infinite recursion). Note that this stack
      isn't located in the program-accessible linear memory.

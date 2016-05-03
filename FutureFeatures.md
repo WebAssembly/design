@@ -393,16 +393,6 @@ reduce fragmentation issues. Languages like Fortran which limit aliasing would b
 one use case. C/C++ compilers could also determine that some global variables never
 have their address taken.
 
-## Importing linear memory
-
-In the MVP, functions and [linear memory](Modules.md#linear-memory-section) can
-be exported, but only functions can be imported. This feature would additionally
-allow importing linear memory. One use case is sharing linear memories between
-separate WebAssembly [instances](Modules.md). Another use case is allowing, on
-the Web platform, importing a JS `ArrayBuffer` as a linear memory. This would
-allow highly efficient, specialized code to be generated for accessing the
-`ArrayBuffer`.
-
 ## Streaming Compilation
 
 The WebAssembly binary format is designed to allow streaming decoding,
@@ -425,3 +415,19 @@ of WebAssembly in browsers:
   would enable Web apps to perform their own (["layer 1"](BinaryEncoding.md))
   custom compression (on top of the spec-defined binary format, under generic
   HTTP `Content-Encoding` compression).
+
+## More Table Operators and Types
+
+In the MVP, [tables](AstSemantics.md#tables) can only store functions
+and can only be called. The host-environment can do much more (see, e.g.,
+the [JavaScript `WebAssembly.Table` API](JS.md#webassemblytable-objects)),
+but it would be useful to be able to do everything from within WebAssembly 
+(so, e.g., it was possible to have a dynamic loader written in WebAssembly). As
+a prerequisite, WebAssembly would need first-class support for 
+[GC references](GC.md) in expressions and locals. Given that, the following could be
+added:
+* `get_table`/`set_table`: get or set the table element at a given dynamic
+  index; the got/set value would have a GC reference type
+* `grow_table`: grow the current table (up to the optional maximum), similar to
+  `grow_memory`
+* `current_table_length`: like `current_memory`.
