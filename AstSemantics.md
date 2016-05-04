@@ -175,7 +175,8 @@ attribute size is considered to be a *natural* alignment. The alignment applies
 to the effective address and not merely the address operand, i.e. the immediate
 offset is taken into account when considering alignment.
 
-The alignment has same type as the address and offset operands.
+The alignment has same type (determined by wasm32/wasm64, as described above) as
+the address and offset operands.
 
 If the effective address of a memory access is a multiple of the alignment
 attribute value of the memory access, the memory access is considered *aligned*,
