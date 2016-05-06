@@ -273,7 +273,10 @@ or to put all functions into the same table (with no signature). The former
 strategy allows the engine to eliminate dynamic signature-mismatch checks while
 the latter strategy gives each function a unique index (which may be necessary
 for C/C++ compatibility) and admits simpler and potentially more space-efficient
-[dynamic linking](DynamicLinking.md).
+[dynamic linking](DynamicLinking.md). Toolchains can also create many
+minimally-sized tables to implement a variety of [CFI schemes](http://clang.llvm.org/docs/ControlFlowIntegrity.html#forward-edge-cfi-for-virtual-calls)
+that constrain the set of valid call targets for a given `call_table`.
+
 
 ## Local variables
 
