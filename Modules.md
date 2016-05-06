@@ -246,12 +246,18 @@ space, engines should allocate only the initial size and reallocate on demand.
 ## Elements section
 
 For function tables, the intial contents of the tables' elements are sentinel
-values that throw if called. The *elements section* contains a possibly-empty
-array of *element segments* which define the initial contents of fixed
-`(offset, length)` ranges of a given table, specified by its 
-[table index](#index-spaces). The elements are specified by their 
-[function index](#index-spaces). This section is the table analogue of the
-linear memory [data section](#data-section).
+values that throw if called. The *elements section* allows a module to
+initialize (at instantiation time) the elements of any imported or defined
+table with any function in the module. This is symmetric to how the 
+[Data section](#data-section) allows a module to initialize the bytes
+of any imported or defined memory.
+
+Specifically, the elements section contains a possibly-empty array of
+*element segments*. Each element segment contains a 
+[table index](#index-spaces), indicating which table to initialize,
+an *offset* (where in the table to start initializing) and then
+an array of [function indices](#index-spaces) whose corresponding 
+functions will be stored into the table starting at the offset.
 
 ## Code section
 
