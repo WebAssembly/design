@@ -379,8 +379,12 @@ The specified [table](#tables) must have either a "function" or "function with
 signature `X`" element type (in the MVP, these are the only two
 possibilities, but in the future, there may be other kinds of tables).
 If the table element type has a signature, it must match the signature of the
-call. Otherwise, the signature is checked at runtime and a signature mismatch
-causes a trap.
+call. Otherwise, the signature is checked each time the `call_table` is executed,
+comparing the fixed caller signature and the dynamic callee signature and trapping
+if there is a mismatch. Since the callee may be in a different module which
+necessarily has a separate [types section](BinaryEncoding.md#type-section), and
+thus index space of types, the signature match must compare the underlying 
+[`func_type`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/types.ml#L5).
 
 Multiple return value calls will be possible, though possibly not in the
 MVP. The details of multiple-return-value calls needs clarification. Calling a
