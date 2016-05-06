@@ -251,8 +251,9 @@ opaque handles/references at the cost of a bounds-checked table indirection.
 
 The table's element type dynamically constrains the type of elements stored 
 in the table and allows engines to avoid some type checks on table use. When
-tables are mutated, any stored value is necessarily coerced (possibly trapping)
-to the element type.
+tables are mutated, any stored value must match the element type (by one of
+static validation constraint, trapping dynamic type validation check, or dynamic
+coercion).
 
 In the MVP, the set of operations and types for tables is limited:
 * tables may only be accessed via [`call_table`](#calls);
