@@ -25,7 +25,6 @@ WebAssembly is currently being designed as an open standard by a [W3C Community 
 | High Level Goals                           | [design/HighLevelGoals.md](HighLevelGoals.md) |
 | Frequently Asked Questions                 | [design/FAQ.md](FAQ.md)            |
 | Language Spec (in progress)                | [spec/README.md](https://github.com/WebAssembly/spec)           |
-| End-to-end prototypes (C++ to browser VMs) | [wasm-e2e/README.md](https://github.com/WebAssembly/wasm-e2e)       |
 
 ## Design Process & Contributing
 
