@@ -2,9 +2,9 @@
 
 This document describes WebAssembly semantics. The description here is written
 in terms of an Abstract Syntax Tree (AST), however it is also possible to
-understand WebAssembly semantics in terms of a typed stack machine. In practice,
+understand WebAssembly semantics in terms of a stack machine. (In practice,
 implementations need not build an actual AST or maintain an actual stack; they
-need only behave [as if](https://en.wikipedia.org/wiki/As-if_rule) they did so.
+need only behave [as if](https://en.wikipedia.org/wiki/As-if_rule) they did so.)
 
 This document explains the high-level design of the AST: its types, constructs, and
 semantics. For full details consult [the formal Specification](https://github.com/WebAssembly/spec),
