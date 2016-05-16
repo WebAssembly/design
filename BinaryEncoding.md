@@ -304,10 +304,10 @@ Each node in the abstract syntax tree corresponds to an operator, such as `i32.a
 Operators are encoding by an opcode byte followed by immediate bytes (if any), followed by children 
 nodes (if any).
 
-| Name | Opcode |Description |
+| Field | Type |Description |
 | ----- | ----- | ----- |
-| body size | `varuint32` | size of function body to follow, in bytes |
-| local count | `varuint32` | number of local entries |
+| body_size | `varuint32` | size of function body to follow, in bytes |
+| local_count | `varuint32` | number of local entries |
 | locals | `local_entry*` | local variables |
 | ast    | `byte*` | pre-order encoded AST |
 
