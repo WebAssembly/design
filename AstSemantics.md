@@ -1,13 +1,18 @@
 # Abstract Syntax Tree Semantics
 
-WebAssembly code is represented as an Abstract Syntax Tree (AST) where each node
-represents an expression. Each function body consists of a list of expressions.
-All expressions and operators are typed, with no implicit conversions, subtyping, or overloading rules.
+This document describes WebAssembly semantics. The description here is written
+in terms of an Abstract Syntax Tree (AST), however it is also possible to
+understand WebAssembly semantics in terms of a stack machine. (In practice,
+implementations need not build an actual AST or maintain an actual stack; they
+need only behave [as if](https://en.wikipedia.org/wiki/As-if_rule) they did so.)
 
 This document explains the high-level design of the AST: its types, constructs, and
 semantics. For full details consult [the formal Specification](https://github.com/WebAssembly/spec),
 for file-level encoding details consult [Binary Encoding](BinaryEncoding.md),
 and for the human-readable text representation consult [Text Format](TextFormat.md).
+
+Each function body consists of a list of expressions. All expressions and
+operators are typed, with no implicit conversions or overloading rules.
 
 Verification of WebAssembly code requires only a single pass with constant-time
 type checking and well-formedness checking.
