@@ -64,7 +64,7 @@ sequence, then followed recursively by any child nodes.
 * Examples
   * Given a simple AST node: `i32.add(left: AstNode, right: AstNode)`
     * First recursively write the left and right child nodes.
-    * Then write the opcode for `i32.add` (varuint32)
+    * Then write the opcode for `i32.add` (uint8)
 
   * Given a call AST node: `call(args: AstNode[], callee_index: varuint32)`
     * First recursively write each argument node.
