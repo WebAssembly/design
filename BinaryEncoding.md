@@ -331,7 +331,7 @@ It is legal to have several entries with the same type.
 
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
-| `nop` | `0x00` | | no operation |
+| `unreachable` | `0x00` | | trap immediately |
 | `block` | `0x01` |  | begin a sequence of expressions, the last of which yields a value |
 | `loop` | `0x02` |  | begin a block which can also form control flow loops |
 | `if` | `0x03` | | begin if expression |
@@ -341,8 +341,8 @@ It is legal to have several entries with the same type.
 | `br_if` | `0x07` | argument_count : `varuint1`, relative_depth : `varuint32` | conditional break that targets an outer nested block |
 | `br_table` | `0x08` | see below | branch table control flow construct |
 | `return` | `0x09` | argument_count : `varuint1` | return zero or one value from this function |
-| `unreachable` | `0x0a` | | trap immediately |
 | `drop` | `0x0b` | | ignore value |
+| `nop` | `0x0a` | | no operation |
 | `end` | `0x0f` | | end a block, loop, or if |
 
 Note that there is no explicit `if_else` opcode, as the else clause is encoded with the `else` bytecode.
