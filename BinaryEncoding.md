@@ -363,8 +363,8 @@ out of range, `br_table` branches to the default target.
 | ---- | ---- | ---- | ---- |
 | `i32.const` | `0x10` | value : `varint32` | a constant value interpreted as `i32` |
 | `i64.const` | `0x11` | value : `varint64` | a constant value interpreted as `i64` |
-| `f64.const` | `0x12` | value : `uint64` | a constant value interpreted as `f64` |
-| `f32.const` | `0x13` | value : `uint32` | a constant value interpreted as `f32` |
+| `f32.const` | `0x12` | value : `uint32` | a constant value interpreted as `f32` |
+| `f64.const` | `0x13` | value : `uint64` | a constant value interpreted as `f64` |
 | `get_local` | `0x14` | local_index : `varuint32` | read a local variable or parameter |
 | `set_local` | `0x15` | local_index : `varuint32` | write a local variable or parameter |
 | `call` | `0x16` | argument_count : `varuint1`, function_index : `varuint32` | call a function by its index |
