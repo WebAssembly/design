@@ -2,7 +2,7 @@
 
 WebAssembly code is represented as an Abstract Syntax Tree (AST) where each node
 represents an expression. Each function body consists of a list of expressions.
-All expressions and operators are typed, with no implicit conversions or overloading rules.
+All expressions and operators are typed, with no implicit conversions, subtyping, or overloading rules.
 
 This document explains the high-level design of the AST: its types, constructs, and
 semantics. For full details consult [the formal Specification](https://github.com/WebAssembly/spec),
@@ -43,9 +43,9 @@ environment such as a browser, a trap results in throwing a JavaScript exception
 If developer tools are active, attaching a debugger before the
 termination would be sensible.
 
-Callstack space is limited by unspecified and dynamically varying constraints
-and is a source of [nondeterminism](Nondeterminism.md). If program callstack usage
-exceeds the available callstack space at any time, a trap occurs.
+Call stack space is limited by unspecified and dynamically varying constraints
+and is a source of [nondeterminism](Nondeterminism.md). If program call stack usage
+exceeds the available call stack space at any time, a trap occurs.
 
 Implementations must have an internal maximum call stack size, and every call
 must take up some resources toward exhausting that size (of course, dynamic
@@ -140,8 +140,7 @@ size in which case integer wrapping is implied.
   * `f32.store`: (no conversion) store 4 bytes
   * `f64.store`: (no conversion) store 8 bytes
 
-In addition to storing to memory, store instructions produce a value which is their 
-`value` input operand before wrapping.
+Store operators do not produce a value.
 
 ### Addressing
 
@@ -257,8 +256,7 @@ a value and may appear as children of other expressions.
  * `nop`: an empty operator that does not yield a value 
  * `block`: a fixed-length sequence of expressions with a label at the end
  * `loop`: a block with an additional label at the beginning which may be used to form loops
- * `if`: if expression with a *then* expression
- * `if_else`: if expression with *then* and *else* expressions
+ * `if`: if expression with a list of *then* expressions and a list of *else* expressions
  * `br`: branch to a given label in an enclosing construct
  * `br_if`: conditionally branch to a given label in an enclosing construct
  * `br_table`: a jump table which jumps to a label in an enclosing construct
@@ -285,13 +283,15 @@ before any others.
 
 ### Yielding values from control constructs
 
-The `nop`, `if`, `br`, `br_if`, and `return` constructs do not yield values.
+The `nop`, `br`, `br_if`, `br_table`, and `return` constructs do not yield values.
 Other control constructs may yield values if their subexpressions yield values:
 
-* `block`: yields either the value of the last expression in the block or the result of an inner `br` that targeted the label of the block
-* `loop`: yields either the value of the last expression in the loop or the result of an inner `br` that targeted the end label of the loop
-* `if_else`: yields either the value of the true expression or the false expression
+* `block`: yields either the value of the last expression in the block or the result of an inner branch that targeted the label of the block
+* `loop`: yields either the value of the last expression in the loop or the result of an inner branch that targeted the end label of the loop
+* `if`: yields either the value of the last *then* expression or the last *else* expression or the result of an inner branch that targeted the label of one of these.
 
+In all constructs containing block-like sequences of expressions, all expressions but the last must not yield a value.
+The `drop` operator can be used to explicitly discard unwanted expression results.
 
 ### `br_table`
 
@@ -578,6 +578,7 @@ outside the range which rounds to an integer in range) traps.
 
 ## Type-parametric operators.
 
+  * `drop`: a unary operator that discards the value of its operand.
   * `select`: a ternary operator with two operands, which have the same type as
     each other, plus a boolean (i32) condition. `select` returns the first
     operand if the condition operand is non-zero, or the second otherwise.
