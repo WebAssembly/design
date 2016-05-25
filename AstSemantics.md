@@ -257,8 +257,8 @@ a value and may appear as children of other expressions.
  * `nop`: an empty operator that does not yield a value 
  * `block`: a fixed-length sequence of expressions with a label at the end
  * `loop`: a block with an additional label at the beginning which may be used to form loops
- * `if`: if expression with a *then* expression
- * `if_else`: if expression with *then* and *else* expressions
+ * `if`: if expression with a *then* block
+ * `if_else`: if expression with *then* and *else* blocks
  * `br`: branch to a given label in an enclosing construct
  * `br_if`: conditionally branch to a given label in an enclosing construct
  * `br_table`: a jump table which jumps to a label in an enclosing construct
