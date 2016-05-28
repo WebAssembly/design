@@ -80,19 +80,14 @@ operators.
 
 ## Linear Memory
 
-A WebAssembly [instance](Modules.md) contains zero or more *linear memories*.
-A linear memory is is a contiguous, byte-addressable range of memory spanning
-from offset `0` and extending up to a varying *memory size*.
-This size always is a multiple of the WebAssembly page size,
-which is fixed to 64KiB (though large page support may be added in an opt-in
-manner in the [future](FutureFeatures.md#large-page-support)).
-The initial state of a linear memory is specified by the
-[module](Modules.md#linear-memory-section), and can be dynamically grown by
-the [`grow_memory`](AstSemantics.md#resizing) operator.
-
-A module can define or import multiple linear memories and each memory access
-operator statically specifies which linear memory to operate on with a 
-[linear memory index](Modules.md#index-spaces) immediate.
+A *linear memory* is a contiguous, byte-addressable range of memory spanning
+from offset `0` and extending up to a varying *memory size*. This size is always 
+a multiple of the WebAssembly page size, which is fixed to 64KiB (though large
+page support may be added in an opt-in manner in the 
+[future](FutureFeatures.md#large-page-support)). The initial state of a linear
+memory is defined by the module's [linear memory](Modules.md#linear-memory-section) and
+[data](Modules.md#data-section) sections. The memory size can be dynamically
+increased by the [`grow_memory`](AstSemantics.md#resizing) operator.
 
 A linear memory can be considered to be an untyped array of bytes, and it is
 unspecified how embedders map this array into their process' own [virtual
@@ -101,6 +96,18 @@ the execution engine's internal data structures, the execution stack, local
 variables, or other process memory.
 
   [virtual memory]: https://en.wikipedia.org/wiki/Virtual_memory
+
+Every WebAssembly [instance](Modules.md) has one specially-designated *default* 
+linear memory which is the linear memory accessed by all the 
+[memory operators below](#linear-memory-access). In the MVP, there are *only*
+default linear memories but [new memory operators](FutureFeatures.md#multiple-tables-and-memories)
+will be added after the MVP which can also access non-default memories.
+
+Linear memories (default or otherwise) can either be [imported](Modules.md#imports)
+or [defined inside the module](Modules.md#linear-memory-section), with defaultness
+indicated by a flag on the import or definition. After import or definition,
+there is no difference when accessing a linear memory whether it was imported or
+defined internally.
 
 In the MVP, linear memory cannot be shared between threads of execution.
 The addition of [threads](PostMVP.md#threads) will allow this.
@@ -111,9 +118,6 @@ Linear memory access is accomplished with explicit `load` and `store` operators.
 Integer loads can specify a *storage size* which is smaller than the result type as
 well as a signedness which determines whether the bytes are sign- or zero-
 extended into the result type.
-
-Each `load` and `store` specifies the [linear memory index](Modules.md#index-spaces)
-to operate on with an unsigned integer immediate.
 
   * `i32.load8_s`: load 1 byte and sign-extend i8 to i32
   * `i32.load8_u`: load 1 byte and zero-extend i8 to i32
@@ -146,6 +150,8 @@ size in which case integer wrapping is implied.
 
 In addition to storing to memory, store instructions produce a value which is their 
 `value` input operand before wrapping.
+
+The above operators operate on the [default linear memory](#linear-memory).
 
 ### Addressing
 
@@ -207,25 +213,21 @@ Out of bounds accesses trap.
 ### Resizing
 
 In the MVP, linear memory can be resized by a `grow_memory` operator. The
-`grow_memory` operator specifies which memory to resize with a
-[linear memory index](Modules.md#index-spaces) immediate. The dynamic
-operand to `grow_memory` is in units of the WebAssembly page size,
+operand to this operator is in units of the WebAssembly page size,
 which is defined to be 64KiB (though large page support may be added in 
 the [future](FutureFeatures.md#large-page-support)).
 
  * `grow_memory` : grow linear memory by a given unsigned delta of pages.
     Return the previous memory size in units of pages or -1 on failure.
 
-When a maximum memory size is declared in the [memory section](Modules.md#linear-memory-sections),
+When a linear memory has a declared [maximum memory size](Modules.md#linear-memory-section),
 `grow_memory` must fail if it would grow past the maximum. However,
 `grow_memory` may still fail before the maximum if it was not possible to
 reserve the space up front or if enabling the reserved memory fails.
 When there is no maximum memory size declared, `grow_memory` is expected
 to perform a system allocation which may fail.
 
-The current size of a given linear memory (specified by a
-[linear memory index](Modules.md#index-spaces)) can be queried by the following
-operator:
+The current size of the linear memory can be queried by the following operator:
 
   * `current_memory` : return the current memory size in units of pages.
 
@@ -240,50 +242,49 @@ operator may be added. However, due to normal fragmentation, applications are
 instead expected release unused physical pages from the working set using the
 [`discard`](FutureFeatures.md#finer-grained-control-over-memory) future feature.
 
-## Tables
+The above operators operate on the [default linear memory](#linear-memory).
+
+## Table
 
 A *table* is similar to a linear memory whose elements, instead of being bytes,
 are opaque values of a particular *table element type*. This allows the table to
-contain values like GC references, raw OS handles, or native pointers that are
+contain values—like GC references, raw OS handles, or native pointers—that are
 accessed by WebAssembly code indirectly through an integer index. This feature
 bridges the gap between low-level, untrusted linear memory and high-level
 opaque handles/references at the cost of a bounds-checked table indirection.
 
 The table's element type dynamically constrains the type of elements stored 
 in the table and allows engines to avoid some type checks on table use. When
-tables are mutated, any stored value must match the element type (by one of
+tables are mutated, any stored value must match the element type by either a
 static validation constraint, trapping dynamic type validation check, or dynamic
-coercion).
+coercion (depending on where the mutation occurs).
 
-In the MVP, the set of operations and types for tables is limited:
-* tables may only be accessed via [`call_table`](#calls);
-* the only allowed table element types are "function" and
-  "function with signature `X`";
+Every WebAssembly [instance](Modules.md) has one specially-designated *default*
+table which is indexed by [`call_indirect`](#calls) and other future
+table operators. Tables can either be [imported](Modules.md#imports) or 
+[defined inside the module](Modules.md#table-section), with defaultness
+indicated by a flag on the import or definition. After import or definition,
+there is no difference when calling into a table whether it was imported or
+defined internally.
+
+In the MVP, the primary purpose of tables is to implement indirect function
+calls in C/C++ using an integer index as the pointer-to-function and the table
+to hold the array of indirectly-callable functions. Thus, in the MVP:
+* tables may only be accessed from WebAssembly code via [`call_indirect`](#calls);
+* the only allowed table element type is "function" (no signature);
 * tables may not be directly mutated or resized from WebAssembly code;
-  initially this must be done through the host environment (e.g., the
-  the `WebAssembly` [JavaScript API](JS.md#webassemblytable-objects).
+  this can only be done through the host environment (e.g., the
+  the `WebAssembly` [JavaScript API](JS.md#webassemblytable-objects)).
 
-These restrictions should be relaxed in the 
-[future](FutureFeatures.md#more-table-operators-and-types). In the MVP,
-the primary purpose of tables is to implement indirect function calls
-in C/C++, using an integer index as the pointer-to-function and the table
-to hold the array of indirectly-callable functions. The compiler may either
-choose to group functions by signature (into N tables-with-signatures)
-or to put all functions into the same table (with no signature). The former
-strategy allows the engine to eliminate dynamic signature-mismatch checks while
-the latter strategy gives each function a unique index (which may be necessary
-for C/C++ compatibility) and admits simpler and potentially more space-efficient
-[dynamic linking](DynamicLinking.md). Toolchains can also create many
-minimally-sized tables to implement a variety of [CFI schemes](http://clang.llvm.org/docs/ControlFlowIntegrity.html#forward-edge-cfi-for-virtual-calls)
-that constrain the set of valid call targets for a given `call_table`.
-
+These restrictions will be relaxed in the 
+[future](FutureFeatures.md#more-table-operators-and-types). 
 
 ## Local variables
 
-Each function has a fixed, pre-declared number of local variables which occupy a single
+Each function has a fixed, pre-declared number of *local variables* which occupy a single
 index space local to the function. Parameters are addressed as local variables. Local
 variables do not have addresses and are not aliased by linear memory. Local
-variables have value types and are initialized to the appropriate zero value for their
+variables have [value types](#types) and are initialized to the appropriate zero value for their
 type at the beginning of the function, except parameters which are initialized to the values
 of the arguments passed to the function.
 
@@ -293,6 +294,32 @@ of the arguments passed to the function.
 The details of index space for local variables and their types will be further clarified,
 e.g. whether locals with type `i32` and `i64` must be contiguous and separate from
 others, etc.
+
+## Global variables
+
+A *global variable* stores a single value of a fixed [value type](#types) and may be
+declared either *mutable* or *immutable*. This provides WebAssembly with memory
+locations that are disjoint from any [linear memory](#linear-memory) and thus
+cannot be arbitrarily aliased as bits.
+
+Global variables are accessed via an integer index into the module-defined 
+[global index space](Modules.md#global-index-space). Global variables can 
+either be [imported](Modules.md#imports) or [defined inside the module](Modules.md#global-section).
+After import or definition, there is no difference when calling into a table.
+
+  * `get_global`: get the current value of a global variable
+  * `set_global`: set the current value of a global variable
+
+It is a validation error for a `set_global` to index an immutable global variable.
+
+In the MVP, the primary use case of global variables is to represent
+instantiation-time immutable values as a necessary building block of
+[dynamic linking](DynamicLinking.md).
+
+After the MVP, when [reference types](GC.md) are added to the set of [value types](#types),
+global variables will be necessary to allow sharing reference types between
+[threads](PostMVP.md#threads) since shared linear memory cannot load or store
+references.
 
 ## Control flow structures
 
@@ -360,31 +387,29 @@ explicit accesses to linear memory.
 In the MVP, the length of the return types sequence may only be 0 or 1. This
 restriction may be lifted in the future.
 
-Direct calls to a function specify the callee by index into the 
-[function index space](Modules.md#index-spaces).
+Direct calls to a function specify the callee by an index into the 
+[function index space](Modules.md#function-index-space).
 
   * `call`: call function directly
 
 A direct call to a function with a mismatched signature is a module verification error.
 
 Indirect calls to a function indicate the callee with an `i32` index into
-the [table](#tables) specified by a [table index](BinaryEncoding.md#index-spaces)
-immediate. The *expected* signature of the target function (specified by its
-index in the [types section](BinaryEncoding.md#type-section)) is given as a
-second immediate. 
+a [table](#table). The *expected* signature of the target function (specified
+by its index in the [types section](BinaryEncoding.md#type-section)) is given as
+a second immediate.
 
-  * `call_table`: call function element in a table
+  * `call_indirect`: call function indirectly
 
-The specified [table](#tables) must have either a "function" or "function with
-signature `X`" element type (in the MVP, these are the only two
-possibilities, but in the future, there may be other kinds of tables).
-If the table element type has a signature, it must match the signature of the
-call. Otherwise, the signature is checked each time the `call_table` is executed,
-comparing the fixed caller signature and the dynamic callee signature and trapping
-if there is a mismatch. Since the callee may be in a different module which
-necessarily has a separate [types section](BinaryEncoding.md#type-section), and
-thus index space of types, the signature match must compare the underlying 
+Unlike `call`, which checks that the caller and callee signatures match
+statically as part of validation, `call_indirect` checks for signature match
+*dynamically*, comparing the caller's expected signature with the callee function's
+signature and and trapping if there is a mismatch. Since the callee may be in a
+different module which necessarily has a separate [types section](BinaryEncoding.md#type-section),
+and thus index space of types, the signature match must compare the underlying 
 [`func_type`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/types.ml#L5).
+
+In the MVP, the single `call_indirect` operator accesses the [default table](#table).
 
 Multiple return value calls will be possible, though possibly not in the
 MVP. The details of multiple-return-value calls needs clarification. Calling a

@@ -416,18 +416,45 @@ of WebAssembly in browsers:
   custom compression (on top of the spec-defined binary format, under generic
   HTTP `Content-Encoding` compression).
 
+## Multiple Tables and Memories
+
+In the MVP, there can only be (at most one) default table/memory and there are
+only operators for accessing the default table/memory.
+
+After the MVP and after [GC reference types](GC.md) have been added, the default
+limitation can be relaxed so that any number of tables and memories could be
+imported or internally defined and memories/tables could be passed around as
+parameters, return values and locals. New variants of `load`, `store`
+and `call_indirect` would then be added which took an additional memory/table
+reference operand.
+
+To access an imported or internally-defined non-default table or memory, a
+new `address_of` operator could be added which, given an immediate index into
+the module's [definition index space](Modules.md#definition-index-space), would
+return a first-class reference to that definition. Beyond tables and memories,
+this could also be used for function definitions to get a reference to a function
+(which, since opaque, could be implemented as a raw function pointer).
+
 ## More Table Operators and Types
 
-In the MVP, [tables](AstSemantics.md#tables) can only store functions
-and can only be called. The host-environment can do much more (see, e.g.,
-the [JavaScript `WebAssembly.Table` API](JS.md#webassemblytable-objects)),
-but it would be useful to be able to do everything from within WebAssembly 
-(so, e.g., it was possible to have a dynamic loader written in WebAssembly). As
-a prerequisite, WebAssembly would need first-class support for 
-[GC references](GC.md) in expressions and locals. Given that, the following could be
-added:
+In the MVP, WebAssembly has limited functionality for operating on 
+[tables](AstSemantics.md#table) and the host-environment can do much more (e.g.,
+see [JavaScript's `WebAssembly.Table` API](JS.md#webassemblytable-objects)).
+It would be useful to be able to do everything from within WebAssembly so, e.g.,
+it was possible to write a WebAssembly dynamic loader in WebAssembly. As a
+prerequisite, WebAssembly would need first-class support for 
+[GC references](GC.md) in expressions and locals. Given that, the following
+could be added:
 * `get_table`/`set_table`: get or set the table element at a given dynamic
   index; the got/set value would have a GC reference type
 * `grow_table`: grow the current table (up to the optional maximum), similar to
   `grow_memory`
 * `current_table_length`: like `current_memory`.
+
+Additionally, in the MVP, tables' an only store untyped functions. This could be
+relaxed to:
+* functions with a particular signature, allowing code generators to use
+  multiple homogeneously-typed function tables to replace the implied dynamic
+  signature check of a heterogeneous table with a static validation check
+* any other specific GC reference type, effectively allowing WebAssembly code
+  to implement a variety of rooting API schemes

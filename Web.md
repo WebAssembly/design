@@ -24,7 +24,7 @@ alias the exported memory of instantiated modules, etc.
 
 ## Modules
 
-WebAssembly's [modules](Modules.md) allow for natural [integration with 
+WebAssembly's [modules](Modules.md) allow for natural [integration with
 the ES6 module system](Modules.md#integration-with-es6-modules).
 
 ### Names

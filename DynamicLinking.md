@@ -2,12 +2,12 @@
 
 WebAssembly allows load-time and run-time (`dlopen`) dynamic linking in the
 MVP. This is enabled by having multiple [instantiated modules](Modules.md)
-share functions, [linear memory](AstSemantics.md#linear-memory) and
-[tables](AstSemantics.md#tables) using module [imports](Modules.md#imports)
-and [exports](Modules.md#exports). In particular, since all (non-local) state
-that a module can access can be imported and exported and thus shared between
-separate modules' instances, toolchains have the building blocks to implement
-dynamic loaders.
+share functions, [linear memories](AstSemantics.md#linear-memory),
+[tables](AstSemantics.md#table) and [constants](AstSemantics.md#constants)
+using module [imports](Modules.md#imports) and [exports](Modules.md#exports). In
+particular, since all (non-local) state that a module can access can be imported
+and exported and thus shared between separate modules' instances, toolchains
+have the building blocks to implement dynamic loaders.
 
 Since the manner in which modules are loaded and instantiated is defined by the
 host environment (e.g., the [JavaScript API](JS.md)), dynamic linking requires
@@ -29,30 +29,32 @@ native DSOs/DLLs:
 #  define IMPORT __attribute__ ((visibility ("default")))
 #endif
 
-typedef void (*PF)();
+typedef void (**PF)();
 
 IMPORT PF imp();
-EXPORT void exp() { imp()(); }
+EXPORT void exp() { (*imp())(); }
 ```
-This code would generate a WebAssembly module with imports for:
+This code would, at a minimum, generate a WebAssembly module with imports for:
 * the function `imp`
-* the table(s) used for indirectly-callable functions
-* the linear memory used to implement the heap
+* the heap used to perfom the load, when dereferencing the return value of `imp`
+* the table used to perform the pointer-to-function call
 
 and exports for:
 * the function `exp`
-* the imported table(s) and linear memory (so that other modules may
-  import this one)
 
-The host-specific loader can then simply connect the imports
-and exports at instantantiation-time.
+A more realistic module using libc would have more imports including:
+* an immutable `i32` global import for the offset in linear memory to place
+  global [data segments](Modules.md#data-section) and later use as a constant
+  base address when loading and storing from globals
+* an immutable `i32` global import for the offset into the indirect function
+  table at which to place the modules' indirectly called functions and later
+  compute their indices for address-of
 
-One extra detail is what
-to use as the [module name](Modules.md#imports) for imports (since
-WebAssembly has a two-level namespace). One option is to have a single default
-module name for all C/C++ imports/exports (which then allows the toolchain to
-put implementation-internal names in a separate module, avoiding the need for
-`__`-prefix conventions).
+One extra detail is what to use as the [module name](Modules.md#imports) for
+imports (since WebAssembly has a two-level namespace). One option is to have a
+single default module name for all C/C++ imports/exports (which then allows the
+toolchain to put implementation-internal names in a separate namespace, avoiding
+the need for `__`-prefix conventions).
 
 To implement run-time dynamic linking (e.g., `dlopen` and `dlsym`):
 * `dlopen` would compile and instantiate a new module, storing the compiled
@@ -70,7 +72,7 @@ function-pointer return value of `dlsym`.
 
 More complicated dynamic linking functionality (e.g., interposition, weak
 symbols, etc) can be simulated efficiently by assigning a function table
-index to each weak/mutable symbol, calling the symbol via `call_table` on that
+index to each weak/mutable symbol, calling the symbol via `call_indirect` on that
 index, and mutating the underlying element as needed.
 
 After the MVP, we would like to standardize a single [ABI][] per source
@@ -83,20 +85,3 @@ runtimes will be ABI agnostic, so it will be possible to use a non-standard ABI
 for specialized purposes.
 
   [ABI]: https://en.wikipedia.org/wiki/Application_binary_interface
-
-TODO:
-
-The [data](Modules.md#data-section) and [elements](Modules.md#elements-section)
-segments currently have fixed integer offsets which is fundamentally
-incompatible with general dynamic loading. Without extension, dynamic linking
-implementations would either need to statically allocate global data and
-elements (which isn't possible in the general case) or use an entirely different
-(and less efficient) scheme that doesn't use these sections.
-
-A better fix (before or after the MVP) is to allow importing/exporting constant
-primitive values that can be used as the offsets of data/element segments
-and generally read in WebAssembly code through some new `get_const` operator.
-This would essentially be equivalent to the 
-[Global Offset Table](https://en.wikipedia.org/wiki/Position-independent_code)
-used in native implementations of position-independent code although an
-engine could use direct code patching of the values as well.

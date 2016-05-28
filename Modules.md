@@ -2,43 +2,30 @@
 
 The distributable, loadable, and executable unit of code in WebAssembly
 is called a **module**. At runtime, a module can be **instantiated** 
-to produce an **instance**, which is an immutable tuple referencing all
-the state accessible to the running module. Multiple module instances can
-access the same shared state which is the basis for 
+with a set of import values to produce an **instance**, which is an immutable
+tuple referencing all the state accessible to the running module. Multiple
+module instances can access the same shared state which is the basis for 
 [dynamic linking](DynamicLinking.md) in WebAssembly. WebAssembly modules
 are also designed to [integrate with ES6 modules](#integration-with-es6-modules).
 
-A module may contain the following sections:
-* [imports](#imports)
-* [exports](#exports)
+A module contains the following sections:
+* [import](#imports)
+* [export](#exports)
 * [start](#module-start-function)
-* [linear memory](#linear-memory-section)
+* [global](#global-section)
+* [memory](#linear-memory-section)
 * [data](#data-section)
 * [table](#table-section)
 * [elements](#elements-section)
-* [code](#code-section)
+* [function and code](#function-and-code-sections)
 
-An instance contains:
-* the code of the instantiated module; and
-* a set of [index spaces](#index-spaces) of linear memories, tables and
-  functions that were imported or defined by the module.
-
-## Index Spaces
-
-Any number of functions, memories and tables can be both imported and
-defined in a given module. Imports and definitions are merged into index
-spaces (one for each of memories, tables and functions) which allows uniform
-treatment of imports and definitions thereafter (via index).
-
-Specifically, the index space of functions is defined by first giving each of
-the M function imports an index \[0, M\) (ordered by their sequence in the
-imports section) and then giving each of the N function definitions an index 
-\[M, M+N\) (ordered by their sequence in the module). The memory and table
-index spaces are defined in the same way.
-
-Thus, any use of a *function index* (e.g., a [`call`](AstSemantics.md#calls))
-can refer to either a function import or definition and similarly for
-and *table index* or *memory index*.
+A module also defines several *index spaces* which are statically indexed by
+various operators and section fields in the module:
+* the [definition index space](#definition-index-space)
+* the [function index space](#function-index-space)
+* the [global index space](#global-index-space)
+* the [linear memory index space](#linear-memory-index-space)
+* the [table index space](#table-index-space)
 
 ## Imports
 
@@ -46,14 +33,16 @@ A module can declare a sequence of **imports** which are provided, at
 instantiation time, by the host environment. There are several kinds of imports:
 * **function imports**, which can be called inside the module by the
   [`call`](AstSemantics.md#calls) operator;
+* **global imports**, which can be accessed inside the module by the
+  [global operators](AstSemantics.md#global-variables);
 * **linear memory imports**, which can be accessed inside the module by the
   [memory operators](AstSemantics.md#linear-memory); and
 * **table imports**, which can be accessed inside the module by 
-  [call_table](AstSemantics.md#calls) and other
+  [call_indirect](AstSemantics.md#calls) and other
   table operators in the 
   [future](FutureFeatures.md#more-table-operators-and-types).
 
-In the future, other kinds of imports may be added. Imports are designed to
+In the future, other kinds of imports will be added. Imports are designed to
 allow modules to share code and data while still allowing separate compilation
 and caching.
 
@@ -71,22 +60,33 @@ However, if the imported function is a WebAssembly function, the host
 environment must raise an instantiation-time error if there is a signature
 mismatch.
 
+A *global variable import* includes the *value type* and *mutability*
+of the global variable. These fields have the same meaning as in the
+[Global section](#global-section).
+
 A *linear memory import* includes the same set of fields defined in the
-[Linear Memory section](#linear-memory-section): *initial length* and
-optional *maximum length*. The host environment must only allow imports
-of WebAssembly linear memories that have initial length *greater-or-equal* than
-the initial length declared in the import and that have maximum length
-*less-or-equal* than the maximum length declared in the import. This ensures
-that separate compilation can assume: memory accesses below the declared initial
-length are always in-bounds, accesses above the declared maximum length are
-always out-of-bounds and if initial equals maximum, the length is fixed.
+[Linear Memory section](#linear-memory-section): *default flag*, *initial
+length* and optional *maximum length*. The host environment must only allow
+imports of WebAssembly linear memories that have initial length
+*greater-or-equal* than the initial length declared in the import and that have
+maximum length *less-or-equal* than the maximum length declared in the import.
+This ensures that separate compilation can assume: memory accesses below the
+declared initial length are always in-bounds, accesses above the declared
+maximum length are always out-of-bounds and if initial equals maximum, the
+length is fixed. If the default flag is set, the imported memory is used as
+the [default memory](AstSemantics.md#linear-memory) and at most one linear
+memory definition (import or internal) may have the default flag set. In the
+MVP, it is a validation error not to set the default flag.
 
 A *table import* includes the same set of fields defined in the 
-[Table section](#table-section): *element type*, *initial length*
-and optional *maximum length*. As with the linear memory section,
-the host environment must ensure only WebAssembly tables are imported
-with exactly-matching element type, greater-or-equal initial length,
-and less-or-equal maximum length.
+[Table section](#table-section): *default flag*, *element type*, *initial
+length* and optional *maximum length*. As with the linear memory section, the
+host environment must ensure only WebAssembly tables are imported with
+exactly-matching element type, greater-or-equal initial length, and
+less-or-equal maximum length. If the default flag is set, the imported table
+is used as the [default table](AstSemantics.md#table) and at most one table
+definition (import or internal) may have the default flag set. In the MVP, it is
+a validation error not to set the default flag.
 
 Since the WebAssembly spec does not define how import names are interpreted:
 * the [Web environment](Web.md#names) defines names to be UTF8-encoded strings;
@@ -105,20 +105,17 @@ native `syscall`. For example, a shell environment could define a builtin
 
 ## Exports
 
-A module can declare a sequence of **exports** which are provided, at
-instantiation time, to the host environment. There are several kinds of exports:
-* **function exports**, which allow the exported function to be called by the
-  host environment (or other code running in the host environment);
-* **linear memory exports**, which allow the exported linear memory to be
-  aliased by the host environment (or other code running int he host
-  environment); and
-* **table exports**, which allow the elements of the table to be read, written
-  or called by the host environment (or other code running in the host
-  environment).
+A module can declare a sequence of **exports** which are returned at
+instantiation time to the host environment. Each export has two fields:
+a *name*, whose meaning is defined by the host environment, and an
+*index* into the modules [definition index space](definition-index-space),
+which indicates which definition to export.
 
-Exports additionally contain a name and an index into the associated
-export's type's [index space](#index-spaces). As with imports, the meaning
-of an export name is defined by the host.
+All definitions are exportable: functions, globals, linear memories and tables.
+The meaning an exported definition is defined by the host environment. However,
+if another WebAssembly instance imports the definition, then both instances
+will share the same definition and the associated state (global variable value,
+linear memory bytes, table elements) is shared.
 
 ## Integration with ES6 modules
 
@@ -169,7 +166,7 @@ independent libraries would have to hope that all the WebAssembly modules
 transitively used by those libraries "played well" together (e.g., explicitly
 shared `malloc` and coordinated global address ranges). Instead, the
 [dynamic linking future feature](DynamicLinking.md) is intended
-to allow *explicitly* injecting multiple modules into the same instance.
+to allow *explicitly* sharing state between module instances.
 
 ## Module start function
 
@@ -178,7 +175,7 @@ by the loader after the instance is initialized and before the exported function
 are called.
 
 * The start function must not take any arguments or return anything
-* The function is identified by [function index](#index-spaces) and can also be
+* The function is identified by [function index](#function-index-space) and can also be
   exported
 * There can only be at most one start node per module
 
@@ -200,14 +197,31 @@ A module can:
 * The start function will be called after module loading and before any call to the module
     function is done
 
+## Global section
+
+The *global section* provides an internal definition of zero or more
+[global variables](AstSemantics.md#global-variables).
+
+Each global variable internal definition declares its *type*
+(a [value type](AstSemantics.md#types)), *mutability* (boolean flag) and
+*initializer* (an [initializer expression](#initializer-expression)).
+
 ## Linear memory section
 
-The *linear memory section* may contain zero or more definitions of distinct
-[linear memories](AstSemantics.md#linear-memory) which are added to the 
-[linear memory index space](#index-spaces). Each linear memory section declares
-an initial [memory size](AstSemantics.md#linear-memory) (which may be
-subsequently increased by [`grow_memory`](AstSemantics.md#resizing)) and an
-optional maximum memory size.
+The *linear memory section* provides an internal definition of zero or more
+[linear memories](AstSemantics.md#linear-memory). In the MVP, the total number
+of linear memory definitions is limited to 1, but this may be relaxed in the
+[future](FutureFeatures.md#multiple-tables-and-memories).
+
+A linear memory definition may declare itself to be the 
+[default](AstSemantics.md#linear-memory) linear memory of the module. At most
+one linear memory definition may declare itself to be the default. In the MVP,
+if there is a linear memory definition, it *must* declare itself the default
+(there is no way to access non-default linear memories anyhow).
+
+Each linear memory section declares an *initial* [memory size](AstSemantics.md#linear-memory)
+(which may be subsequently increased by [`grow_memory`](AstSemantics.md#resizing)) and an
+optional *maximum memory size*.
 
 [`grow_memory`](AstSemantics.md#resizing) is guaranteed to fail if attempting to
 grow past the declared maximum. When declared, implementations *should*
@@ -221,16 +235,31 @@ only the initial size and reallocate on demand.
 
 The initial contents of linear memory are zero. The *data section* contains a
 possibly-empty array of *data segments* which specify the initial contents
-of fixed `(offset, length)` ranges of a given memory, specified by its [linear
-memory index](#index-space). This section is analogous to the `.data` section
-of native executables.
+of fixed `(offset, length)` ranges of a given memory, specified by its 
+[linear memory index](#linear-memory-index-space). This section is analogous to
+the `.data` section of native executables. The `length` is an integer constant
+value (defining the length of the given segment). The `offset` is an
+[initializer expression](#initializer-expression).
 
 ## Table section
 
-A *table section* may contain zero or more definitions of distinct 
-[tables](AstSemantics.md#tables) which are added to the 
-[table index space](#index-spaces). Each table section declares an *element
-type*, *initial length*, and optional *maximum length*.
+The *table section* contains zero or more definitions of distinct 
+[tables](AstSemantics.md#table). In the MVP, the total number
+of table definitions is limited to 1, but this may be relaxed in the
+[future](FutureFeatures.md#multiple-tables-and-memories).
+
+A table definition may declare itself to be the
+[default](AstSemantics.md#table) table of the module. At most
+one table definition may declare itself to be the default. In the MVP,
+if there is a table definition, it *must* declare itself the default
+(there is no way to access non-default tables anyhow).
+
+Each table definition also includes an *element type*, *initial length*, and
+optional *maximum length*.
+
+In the MVP, the only valid element type is `"function"`, but in the 
+[future](FutureFeatures.md#more-table-operators-and-types), more element
+types will be added.
 
 In the MVP, tables can only be resized via host-defined APIs (such as
 the JavaScript [`WebAssembly.Table.prototype.grow`](JS.md#webassemblytableprototypegrow)).
@@ -245,23 +274,111 @@ space, engines should allocate only the initial size and reallocate on demand.
 
 ## Elements section
 
-For function tables, the intial contents of the tables' elements are sentinel
-values that throw if called. The *elements section* allows a module to
-initialize (at instantiation time) the elements of any imported or defined
-table with any function in the module. This is symmetric to how the 
+The intial contents of a tables' elements are sentinel values (that would throw
+if called). The *elements section* allows a module to initialize (at
+instantiation time) the elements of any imported or internally-defined table
+with any other definition in the module. This is symmetric to how the 
 [Data section](#data-section) allows a module to initialize the bytes
 of any imported or defined memory.
 
 Specifically, the elements section contains a possibly-empty array of
-*element segments*. Each element segment contains a 
-[table index](#index-spaces), indicating which table to initialize,
-an *offset* (where in the table to start initializing) and then
-an array of [function indices](#index-spaces) whose corresponding 
-functions will be stored into the table starting at the offset.
+*element segments* which specify the initial contents of fixed
+`(offset, length)` ranges of a given table, specified by its
+[table index](#table-index-space). The `length` is an integer constant value
+(defining the length of the given segment). The `offset` is an
+[initializer expression](#initializer-expression).
 
-## Code section
+## Function and Code sections
 
-The code section contains a sequence of functions definitions which are added to
-the [function index space](#index-spaces). Functions are split into
-a sequence of [signature declarations](BinaryEncoding.md#function-section)
-and [bodies](BinaryEncoding.md#code-section) as defined in the binary encoding.
+A single logical function definition is defined in two sections: 
+ * the *function* section declares the signatures of each internal function
+   definition in the module;
+ * the *code* section contains the [function body](BinaryEncoding.md#function-bodies)
+   of each function declared by the function section.
+
+This split aids in streaming compilation by putting the function bodies,
+which constitute most of the byte size of the module, near the end so that all
+metadata necessary for recursive module loading and parallel compilation is
+available before compilation begins.
+
+## Definition Index Space
+
+The *definition index space* represents the union of all definitions introduced
+by the [import](#imports), [global](#global-section), [memory](#linear-memory-section),
+[table](#table-section), and [code](#code-section) sections. Each of these
+sections can introduce zero or more definitions and the definition index space
+simply assigns monotonically increasing indices to these definitions according
+to their absolute order as defined in [BinaryEncoding.md](BinaryEncoding.md).
+
+The definition index space is used by:
+* [exports](#exports), to indicate which definition to export
+* [elements sections](#elements-section), to place definitions into tables
+
+In the future, an `address_of` operator could be added which, given a definition
+index immediate, returns a first-class [reference](GC.md) to the definition.
+
+Note: the definition index spaces is a validation/compile-time concept, not
+runtime state of an instance.
+
+## Function Index Space
+
+The *function index space* represents the subsequence of the 
+[definition index space](#definition-index-space) obtained by discarding
+non-function definitions.
+
+The function index space is used by:
+* [calls](AstSemantics.md#calls), to identify the callee of a direct call
+
+## Global Index Space
+
+The *global index space* represents the subsequence of the
+[definition index space](#definition-index-space) obtained by discarding
+non-global definitions.
+
+The global index space is used by:
+* [global variable access operators](AstSemantics.md#global-variables), to
+  identify the global variable to read/write
+* [data segments](#data-section), to define the offset of a data segment
+  (in linear memory) as the value of a global variable
+
+## Linear Memory Index Space
+
+The *linear memory index space* represents the subsequence of the
+[definition index space](#definition-index-space) obtained by discarding
+non-linear-memory definitions.
+
+The linear memory index space is only used by the 
+[data section](#data-section). In the MVP, there is at most one linear memory so
+this index space is just a placeholder for when there can be 
+[multiple memories](FutureFeatures.md#multiple-tables-and-memories).
+
+## Table Index Space
+
+The *table index space* represents the subsequence of the
+[definition index space](#definition-index-space) obtained by discarding
+non-table definitions.
+
+The table index space is only used by the [elements section](#elements-section).
+In the MVP, there is at most one table so this index space is just
+a placeholder for when there can be 
+[multiple tables](FutureFeatures.md#multiple-tables-and-memories).
+
+## Initializer Expression
+
+Initializer expressions are evaluated at instantiation time and are currently
+used to:
+ * define the initial value of [global variables](#global-section)
+ * define the offset of a [data segment](#data-section) or 
+   [elements segment](#elements-section)
+
+An initializer expression is simply the binary encoding of a single
+WebAssembly expression, as defined in [BinaryEncoding.md](BinaryEncoding.md).
+Clearly, not all WebAssembly operators can be supported in initializer
+expressions. In the MVP, to keep things simple while still supporting the needs
+of [dynamic linking](DynamicLinking.md), initializer expressions are restricted
+to the following nullary operators:
+ * the four [constant operators](AstSemantics.md#constants); and
+ * `get_global`, where the global index must refer to an immutable import.
+
+In the future, operators like `i32.add` could be added to allow more expressive
+load-time calculations.
