@@ -437,6 +437,16 @@ false and `Type(value)` is not Null, throw a type error.
 
 Let `i` be the result of [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)(`index`).
 
+If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
+* Set the `i`th element of `T.[[Table]]` to the `v.[[FunctionIndex]]`th function
+  in the module's [function index space](Modules.md#function-index-space).
+
+Otherwise:
+* Set the `i`th element of `T.[[Table]]` to a host-defined value that can be
+  called with *any* signature by coercing its WebAssembly arguments to JavaScript
+  arguments via [ToJSValue](#tojsvalue) and coercing its JavaScript return value
+  to a WebAssembly return value via [ToWebAssemblyValue](#towebassemblyvalue).
+
 Set `T.[[Values]][i]` to `value`.
 
 Return Undefined.
@@ -467,6 +477,9 @@ To coerce a JavaScript value to a given [WebAssembly value type](https://github.
 * coerce to `f32` by first applying [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
   and then converting the resulting IEEE754 64-bit double to a 32-bit float using `roundTiesToEven`
 * coerce to `f64` via [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
+
+If the value type is optional, then given `None`, the JavaScript value is
+ignored.
 
 ## Sample API Usage
 

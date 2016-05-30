@@ -254,10 +254,12 @@ bridges the gap between low-level, untrusted linear memory and high-level
 opaque handles/references at the cost of a bounds-checked table indirection.
 
 The table's element type dynamically constrains the type of elements stored 
-in the table and allows engines to avoid some type checks on table use. When
-tables are mutated, any stored value must match the element type by either a
-static validation constraint, trapping dynamic type validation check, or dynamic
-coercion (depending on where the mutation occurs).
+in the table and allows engines to avoid some type checks on table use. 
+When a WebAssembly value is stored in a table, the value's type must precisely
+match the element type. Depending on the operator/API used to store the value,
+this check may be static or dynamic. Host environments may also allow storing
+non-WebAssembly values in tables in which case, as with [imports](Modules.md#imports),
+the meaning of using the value is defined by the host environment.
 
 Every WebAssembly [instance](Modules.md) has one specially-designated *default*
 table which is indexed by [`call_indirect`](#calls) and other future
@@ -408,6 +410,9 @@ signature and and trapping if there is a mismatch. Since the callee may be in a
 different module which necessarily has a separate [types section](BinaryEncoding.md#type-section),
 and thus index space of types, the signature match must compare the underlying 
 [`func_type`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/types.ml#L5).
+As noted [above](#table), table elements may also be host-environment-defined
+values in which case the meaning of a call is defined by the host-environment,
+much like calling an import.
 
 In the MVP, the single `call_indirect` operator accesses the [default table](#table).
 
