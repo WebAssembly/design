@@ -317,7 +317,7 @@ The definition index space is used by:
 In the future, an `address_of` operator could be added which, given a definition
 index immediate, returns a first-class [reference](GC.md) to the definition.
 
-Note: the definition index spaces is a validation/compile-time concept, not
+Note: the definition index space is a validation/compile-time concept, not
 runtime state of an instance.
 
 ## Function Index Space
