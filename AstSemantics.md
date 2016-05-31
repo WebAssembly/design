@@ -101,7 +101,7 @@ Every WebAssembly [instance](Modules.md) has one specially-designated *default*
 linear memory which is the linear memory accessed by all the 
 [memory operators below](#linear-memory-access). In the MVP, there are *only*
 default linear memories but [new memory operators](FutureFeatures.md#multiple-tables-and-memories)
-will be added after the MVP which can also access non-default memories.
+may be added after the MVP which can also access non-default memories.
 
 Linear memories (default or otherwise) can either be [imported](Modules.md#imports)
 or [defined inside the module](Modules.md#linear-memory-section), with defaultness
@@ -278,7 +278,7 @@ to hold the array of indirectly-callable functions. Thus, in the MVP:
   this can only be done through the host environment (e.g., the
   the `WebAssembly` [JavaScript API](JS.md#webassemblytable-objects)).
 
-These restrictions will be relaxed in the 
+These restrictions may be relaxed in the 
 [future](FutureFeatures.md#more-table-operators-and-types). 
 
 ## Local variables

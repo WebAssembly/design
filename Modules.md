@@ -42,7 +42,7 @@ instantiation time, by the host environment. There are several kinds of imports:
   table operators in the 
   [future](FutureFeatures.md#more-table-operators-and-types).
 
-In the future, other kinds of imports will be added. Imports are designed to
+In the future, other kinds of imports may be added. Imports are designed to
 allow modules to share code and data while still allowing separate compilation
 and caching.
 
@@ -259,7 +259,7 @@ optional *maximum length*.
 
 In the MVP, the only valid element type is `"function"`, but in the 
 [future](FutureFeatures.md#more-table-operators-and-types), more element
-types will be added.
+types may be added.
 
 In the MVP, tables can only be resized via host-defined APIs (such as
 the JavaScript [`WebAssembly.Table.prototype.grow`](JS.md#webassemblytableprototypegrow)).
