@@ -307,7 +307,7 @@ cannot be arbitrarily aliased as bits.
 Global variables are accessed via an integer index into the module-defined 
 [global index space](Modules.md#global-index-space). Global variables can 
 either be [imported](Modules.md#imports) or [defined inside the module](Modules.md#global-section).
-After import or definition, there is no difference when calling into a table.
+After import or definition, there is no difference when accessing a global.
 
   * `get_global`: get the current value of a global variable
   * `set_global`: set the current value of a global variable
