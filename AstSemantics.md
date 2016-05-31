@@ -315,7 +315,7 @@ After import or definition, there is no difference when calling into a table.
 It is a validation error for a `set_global` to index an immutable global variable.
 
 In the MVP, the primary use case of global variables is to represent
-instantiation-time immutable values as a necessary building block of
+instantiation-time immutable values as a useful building block for
 [dynamic linking](DynamicLinking.md).
 
 After the MVP, when [reference types](GC.md) are added to the set of [value types](#types),
