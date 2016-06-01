@@ -413,8 +413,8 @@ different module which necessarily has a separate [types section](BinaryEncoding
 and thus index space of types, the signature match must compare the underlying 
 [`func_type`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/types.ml#L5).
 As noted [above](#table), table elements may also be host-environment-defined
-values in which case the meaning of a call is defined by the host-environment,
-much like calling an import.
+values in which case the meaning of a call (and how the signature is checked)
+is defined by the host-environment, much like calling an import.
 
 In the MVP, the single `call_indirect` operator accesses the [default table](#table).
 
