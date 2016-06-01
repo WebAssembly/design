@@ -256,10 +256,12 @@ opaque handles/references at the cost of a bounds-checked table indirection.
 The table's element type dynamically constrains the type of elements stored 
 in the table and allows engines to avoid some type checks on table use. 
 When a WebAssembly value is stored in a table, the value's type must precisely
-match the element type. Depending on the operator/API used to store the value,
-this check may be static or dynamic. Host environments may also allow storing
-non-WebAssembly values in tables in which case, as with [imports](Modules.md#imports),
-the meaning of using the value is defined by the host environment.
+match the element type. Just like linear memory, updates to a table are
+observed immediately by all instances that reference the table. Depending on the
+operator/API used to store the value, this check may be static or dynamic. Host
+environments may also allow storing non-WebAssembly values in tables in which
+case, as with [imports](Modules.md#imports), the meaning of using the value is
+defined by the host environment.
 
 Every WebAssembly [instance](Modules.md) has one specially-designated *default*
 table which is indexed by [`call_indirect`](#calls) and other future
