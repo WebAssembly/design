@@ -242,6 +242,7 @@ of the arguments passed to the function.
 
   * `get_local`: read the current value of a local variable
   * `set_local`: set the current value of a local variable
+  * `tee_local`: like `set_local`, but also returns the set value
 
 The details of index space for local variables and their types will be further clarified,
 e.g. whether locals with type `i32` and `i64` must be contiguous and separate from
