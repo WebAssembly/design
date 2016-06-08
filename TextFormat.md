@@ -18,7 +18,7 @@ WebAssembly semantics.
 The text format is neither a subset or superset of JavaScript syntax, and it
 cannot be directly evaluated as JavaScript. Some parts of the syntax resemble
 JavaScript so that it's familiar and readable, however there are also
-substantive reasons to use notation that is different than JavaScript (for
+substantive reasons to use notation that is different from JavaScript (for
 example, WebAssembly has a 32-bit integer type, and it is represented
 in the text format, since that is the natural thing to do for WebAssembly,
 regardless of JavaScript not having such a type). On the other hand,
@@ -40,7 +40,7 @@ support more human-readable representations, but never at the cost of accurate r
 
 ## Philosophy:
 
- - Use JS-style sensibilities when there aren't reasons otherwise.
+ - Use JS-style sensibilities when there aren't reasons to do otherwise.
  - It's a compiler target, not a programming language, but readability still counts.
 
 
