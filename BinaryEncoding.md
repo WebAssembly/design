@@ -25,8 +25,8 @@ compression techniques  stabilize, they can be standardized and moved into nativ
 implementations.
 
 See
-[potential layer 1 compression](https://github.com/WebAssembly/decompressor-prototype/blob/master/CompressionLayer1.md)
-for a proposed future solution for layer 1 structural compression.
+[proposed layer 1 compression](https://github.com/WebAssembly/decompressor-prototype/blob/master/CompressionLayer1.md)
+for a proposal for layer 1 structural compression.
 
 
 # Data types
