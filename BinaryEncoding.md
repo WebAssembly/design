@@ -24,6 +24,11 @@ experimented with by application-level decompressing to the layer below. As
 compression techniques  stabilize, they can be standardized and moved into native 
 implementations.
 
+See
+[proposed layer 1 compression](https://github.com/WebAssembly/decompressor-prototype/blob/master/CompressionLayer1.md)
+for a proposal for layer 1 structural compression.
+
+
 # Data types
 
 ### uint8
