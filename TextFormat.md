@@ -38,7 +38,7 @@ support more human-readable representations, but never at the cost of accurate r
 
 # Official Text Format
 
-## Philosophy:
+## Design Principles:
 
  - Use JS-style sensibilities when there aren't reasons to do otherwise.
  - It's a compiler target, not a programming language, but readability still counts.
