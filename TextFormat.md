@@ -82,13 +82,15 @@ support more human-readable representations, but never at the cost of accurate r
   function $fac-opt ($a:i64) : (i64) {
     var $x:i64;
     $x = 1;
-    br_if ($a <s 2) $end;
-    loop $loop {
-      $x = $x * $a;
-      $a = $a + -1;
-      br_if ($a >s 1) $loop;
+    {
+      br_if ($a <s 2) $end;
+      loop $loop {
+        $x = $x * $a;
+        $a = $a + -1;
+        br_if ($a >s 1) $loop;
+      }
+    $end:
     }
-  $end:
     $x
   }
 ```
