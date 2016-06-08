@@ -106,7 +106,7 @@ of the function syntax, reflecting how function bodies in wasm are block-like.
 The last expression of the function body here acts as its return value. This
 works in all block-like constructs (`block`, function body, `if`, etc.)
 
-`>s` means *signed* greater-than. explicit unsigned or signed operators will be
+`>s` means *signed* greater-than. Explicit unsigned or signed operators will be
 suffixed with 'u' or 's', respectively.
 
 The `$` sigil on user names cleanly ensures that they never collide with wasm
