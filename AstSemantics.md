@@ -253,7 +253,7 @@ accessed by WebAssembly code indirectly through an integer index. This feature
 bridges the gap between low-level, untrusted linear memory and high-level
 opaque handles/references at the cost of a bounds-checked table indirection.
 
-The table's element type dynamically constrains the type of elements stored 
+The table's element type constrains the type of elements stored 
 in the table and allows engines to avoid some type checks on table use. 
 When a WebAssembly value is stored in a table, the value's type must precisely
 match the element type. Just like linear memory, updates to a table are
