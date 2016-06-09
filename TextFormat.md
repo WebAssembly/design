@@ -334,16 +334,22 @@ special syntax.
 
 | Name | Syntax | Example
 | ---- | ---- | ---- |
-| `i32.const` | … | `234`, `0xfff7`
-| `i64.const` | … | `234`, `0xfff7`
-| `f64.const` | … | `0.1p2`, `infinity`, `nan:0x789`
-| `f32.const` | … | `0.1p2`, `infinity`, `nan:0x789`
+| `i32.const` | … | `234`, `0xfff7`, -47
+| `i64.const` | … | `234`, `0xfff7`, -47
+| `f64.const` | … | `0.1p+2`, `infinity`, `nan:0x789`, `-0x1p-2`
+| `f32.const` | … | `0.1p+2`, `infinity`, `nan:0x789`, `-0x1p-2`
 | `get_local` | *name* | `$x + 1`
 | `set_local` | *name* `=` *expr* | `$x = 1`
 | `select` | `select` *expr*, *expr*, *expr* | `select 1, 2, $x < $y`
 | `call` | `call` *name* `(`*expr* `,` … `)` | `call $min(0, 2)`
 | `call_import` | `call_import` *name* `(`*expr* `,` … `)` | `call_import $max(0, 2)`
 | `call_indirect` | `call_indirect` *signature-name* `[` *expr* `] (`*expr* `,` … `)` | `call_indirect $foo [1] (0, 2)`
+
+Note that `-` is also used as a unary negate operator, however grammar is
+defined such that it is parsed as part of the constant, so `-10` is just
+a constant, rather than a negate operator with a constant operand. To
+form an explicit unfolded negate operator with a constant operand, one
+must use parantheses, as `-(10.0)`.
 
 ### Arithmetic operators ([described here](AstSemantics#32-bit-integer-operators))
 
