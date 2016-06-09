@@ -1,7 +1,7 @@
 # Dynamic linking
 
-WebAssembly allows load-time and run-time (`dlopen`) dynamic linking in the
-MVP. This is enabled by having multiple [instantiated modules](Modules.md)
+WebAssembly enables load-time and run-time (`dlopen`) dynamic linking in the
+MVP by having multiple [instantiated modules](Modules.md)
 share functions, [linear memories](AstSemantics.md#linear-memory),
 [tables](AstSemantics.md#table) and [constants](AstSemantics.md#constants)
 using module [imports](Modules.md#imports) and [exports](Modules.md#exports). In
