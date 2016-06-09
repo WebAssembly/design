@@ -361,7 +361,7 @@ Signed and unsigned operators are suffixed with `s` and `u`, respectively,
 so `i32.div_s` looks like `/s`, and so on.
 
 These operators use C/JS-style operator precedence rules, except that in order
-to correct [an old mistake](http://www.lysator.liu.se/c/dmr-on-or.html)),
+to correct [an old mistake](http://www.lysator.liu.se/c/dmr-on-or.html),
 it is not valid to rely on precedence alone between a `&`, `|`, or `^` operator
 and another operator of similar precedence. Parentheses are required in such
 contexts in order to ensure that the code reads as intended.
