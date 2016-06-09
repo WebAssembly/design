@@ -418,8 +418,8 @@ of WebAssembly in browsers:
 
 ## Multiple Tables and Memories
 
-In the MVP, there can only be (at most one) default table/memory and there are
-only operators for accessing the default table/memory.
+The MVP limits modules to at most one memory and at most one table (the default
+ones) and there are only operators for accessing the default table and memory.
 
 After the MVP and after [GC reference types](GC.md) have been added, the default
 limitation can be relaxed so that any number of tables and memories could be
