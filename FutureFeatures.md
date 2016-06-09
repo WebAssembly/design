@@ -451,10 +451,12 @@ could be added:
   `grow_memory`
 * `current_table_length`: like `current_memory`.
 
-Additionally, in the MVP, tables' an only store untyped functions. This could be
-relaxed to:
-* functions with a particular signature, allowing code generators to use
-  multiple homogeneously-typed function tables to replace the implied dynamic
-  signature check of a heterogeneous table with a static validation check
+Additionally, in the MVP, the only allowed element type of tables is a generic
+"function" type which simply means the element can be called but there is no
+static signature validation check. This could be improved by allowing:
+* functions with a particular signature, allowing wasm generators to use
+  multiple homogeneously-typed function tables (instead of a single
+  heterogeneous function table) which eliminates the implied dynamic signature
+  check of a call to a heterogeneous table;
 * any other specific GC reference type, effectively allowing WebAssembly code
-  to implement a variety of rooting API schemes
+  to implement a variety of rooting API schemes.
