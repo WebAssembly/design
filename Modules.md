@@ -274,7 +274,7 @@ space, engines should allocate only the initial size and reallocate on demand.
 
 ## Elements section
 
-The intial contents of a tables' elements are sentinel values (that would throw
+The intial contents of a tables' elements are sentinel values (that would trap
 if called). The *elements section* allows a module to initialize (at
 instantiation time) the elements of any imported or internally-defined table
 with any other definition in the module. This is symmetric to how the 
@@ -305,7 +305,7 @@ available before compilation begins.
 
 The *definition index space* represents the union of all definitions introduced
 by the [import](#imports), [global](#global-section), [memory](#linear-memory-section),
-[table](#table-section), and [code](#code-section) sections. Each of these
+[table](#table-section), and [function](#code-section) sections. Each of these
 sections can introduce zero or more definitions and the definition index space
 simply assigns monotonically increasing indices to these definitions according
 to their absolute order as defined in [BinaryEncoding.md](BinaryEncoding.md).
