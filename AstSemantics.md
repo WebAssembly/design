@@ -275,7 +275,7 @@ In the MVP, the primary purpose of tables is to implement indirect function
 calls in C/C++ using an integer index as the pointer-to-function and the table
 to hold the array of indirectly-callable functions. Thus, in the MVP:
 * tables may only be accessed from WebAssembly code via [`call_indirect`](#calls);
-* the only allowed table element type is "function" (no signature);
+* the only allowed table element type is `anyfunc` (function with any signature);
 * tables may not be directly mutated or resized from WebAssembly code;
   this can only be done through the host environment (e.g., the
   the `WebAssembly` [JavaScript API](JS.md#webassemblytable-objects)).

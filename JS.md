@@ -379,7 +379,7 @@ constructor cannot be called as a function without `new`).
 If `Type(tableDescriptor)` is not Object, a `TypeError` is thrown.
 
 Let `element` be the result of calling [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"element"`).
-If `element` is not the string `"function"`, a `TypeError` is thrown.
+If `element` is not the string `"anyfunc"`, a `TypeError` is thrown.
 (Note: this check is intended to be relaxed in the
 [future](FutureFeatures.md#more-table-operators-and-types) to allow different
 elemtn types.)
