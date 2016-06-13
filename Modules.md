@@ -371,14 +371,17 @@ used to:
  * define the offset of a [data segment](#data-section) or 
    [elements segment](#elements-section)
 
-An initializer expression is simply the binary encoding of a single
-WebAssembly expression, as defined in [BinaryEncoding.md](BinaryEncoding.md).
-Clearly, not all WebAssembly operators can be supported in initializer
-expressions. In the MVP, to keep things simple while still supporting the needs
+An initializer expression is a pure WebAssembly expression that is encoded with
+the same [binary encoding](BinaryEncoding.md) as WebAssembly expressions. Not
+all WebAssembly operators can or should be supported in initializer expressions;
+initializer expressions represent a minimal pure subset of WebAssembly
+expressions.
+
+In the MVP, to keep things simple while still supporting the basic needs
 of [dynamic linking](DynamicLinking.md), initializer expressions are restricted
 to the following nullary operators:
  * the four [constant operators](AstSemantics.md#constants); and
  * `get_global`, where the global index must refer to an immutable import.
 
 In the future, operators like `i32.add` could be added to allow more expressive
-load-time calculations.
+`base + offset` load-time calculations.
