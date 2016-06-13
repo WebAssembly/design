@@ -429,11 +429,10 @@ and `call_indirect` would then be added which took an additional memory/table
 reference operand.
 
 To access an imported or internally-defined non-default table or memory, a
-new `address_of` operator could be added which, given an immediate index into
-the module's [definition index space](Modules.md#definition-index-space), would
-return a first-class reference to that definition. Beyond tables and memories,
-this could also be used for function definitions to get a reference to a function
-(which, since opaque, could be implemented as a raw function pointer).
+new `address_of` operator could be added which, given an index immediate,
+would return a first-class reference. Beyond tables and memories, this could
+also be used for function definitions to get a reference to a function (which,
+since opaque, could be implemented as a raw function pointer).
 
 ## More Table Operators and Types
 

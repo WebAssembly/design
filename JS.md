@@ -183,26 +183,24 @@ function, if present.
 Let `exports` be a list of (string, JS value) pairs that is mapped from 
 `module.exports` as follows (assuming the ML spec 
 [`export`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L128)
-has been modified so that each export simply has a `name` and `index` (into 
-the module's [definition index space](Modules.md#definition-index-space)):
-* If `export.index` refers to an imported definition, then simply re-export the
+has been modified so that each export simply has a `name`, `type` and `index`:
+* If `index` refers to an imported `type` definition, then simply re-export the
   imported JS value.
 * Otherwise (an internal definition):
-  * If `export.index` refers to a function definition, then export
-    an [Exported Function Exotic Object](#exported-function-exotic-objects),
+  * If the `type` is function, then export an 
+    [Exported Function Exotic Object](#exported-function-exotic-objects),
     reusing an existing object if one exists for the given function definition,
     otherwise creating a new object.
-  * If `export.index` refers to a global definition:
+  * If the `type` is global:
     * If the global is not immutable, then throw a `TypeError`.
     * Let `v` be the global variable's initialized value.
     * Otherwise, export [`ToJSValue`](#tojsvalue)`(v)`.
-  * If `export.index` refers to a memory definition, then export a
-    `WebAssembly.Memory` object, reusing an existing object if one exists for
-    the given memory definition, otherwise creating a new object via
-    [`CreateMemoryObject`](#creatememoryobject).
-  * Otherwise (`export.index` refers to a table definition), export a
-    `WebAssembly.Table` object, reusing an existing object if one exists for
-    the given table definition, otherwise creating a new object via:
+  * If the `type` is memory, then export a `WebAssembly.Memory` object, reusing
+    an existing object if one exists for the given memory definition, otherwise
+    creating a new object via [`CreateMemoryObject`](#creatememoryobject).
+  * Otherwise the `type` must be a table so export a `WebAssembly.Table` object,
+    reusing an existing object if one exists for the given table definition,
+    otherwise creating a new object via:
     * Let `values` be a list of JS values that is mapped from the table's
       elements as follows:
       * sentinel values (which throw if called) are given the value `null`

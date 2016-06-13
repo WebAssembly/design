@@ -21,7 +21,6 @@ A module contains the following sections:
 
 A module also defines several *index spaces* which are statically indexed by
 various operators and section fields in the module:
-* the [definition index space](#definition-index-space)
 * the [function index space](#function-index-space)
 * the [global index space](#global-index-space)
 * the [linear memory index space](#linear-memory-index-space)
@@ -106,10 +105,10 @@ native `syscall`. For example, a shell environment could define a builtin
 ## Exports
 
 A module can declare a sequence of **exports** which are returned at
-instantiation time to the host environment. Each export has two fields:
-a *name*, whose meaning is defined by the host environment, and an
-*index* into the modules [definition index space](definition-index-space),
-which indicates which definition to export.
+instantiation time to the host environment. Each export has three fields:
+a *name*, whose meaning is defined by the host environment, a *type*,
+indicating whether the export is a function, global, memory or table, and
+an *index* into the type's corresponding [index space](Modules.md).
 
 All definitions are exportable: functions, globals, linear memories and tables.
 The meaning an exported definition is defined by the host environment. However,
@@ -281,12 +280,14 @@ with any other definition in the module. This is symmetric to how the
 [Data section](#data-section) allows a module to initialize the bytes
 of any imported or defined memory.
 
-Specifically, the elements section contains a possibly-empty array of
-*element segments* which specify the initial contents of fixed
-`(offset, length)` ranges of a given table, specified by its
-[table index](#table-index-space). The `length` is an integer constant value
-(defining the length of the given segment). The `offset` is an
-[initializer expression](#initializer-expression).
+The elements section contains a possibly-empty array of *element segments* which
+specify the initial contents of fixed `(offset, length)` ranges of a given
+table, specified by its [table index](#table-index-space). The `length` is an
+integer constant value (defining the length of the given segment). The `offset`
+is an [initializer expression](#initializer-expression). Elements are specified
+with a `(type, index)` pair where `type` is the type of an 
+[index spaces](Modules.md) that is compatible with the table's element type and
+`index` is an integer immediate into `type`s index space.
 
 ## Function and Code sections
 
@@ -301,39 +302,20 @@ which constitute most of the byte size of the module, near the end so that all
 metadata necessary for recursive module loading and parallel compilation is
 available before compilation begins.
 
-## Definition Index Space
-
-The *definition index space* represents the union of all definitions introduced
-by the [import](#imports), [global](#global-section), [memory](#linear-memory-section),
-[table](#table-section), and [function](#code-section) sections. Each of these
-sections can introduce zero or more definitions and the definition index space
-simply assigns monotonically increasing indices to these definitions according
-to their absolute order as defined in [BinaryEncoding.md](BinaryEncoding.md).
-
-The definition index space is used by:
-* [exports](#exports), to indicate which definition to export
-* [elements sections](#elements-section), to place definitions into tables
-
-In the future, an `address_of` operator could be added which, given a definition
-index immediate, returns a first-class [reference](GC.md) to the definition.
-
-Note: the definition index space is a validation/compile-time concept, not
-runtime state of an instance.
-
 ## Function Index Space
 
-The *function index space* represents the subsequence of the 
-[definition index space](#definition-index-space) obtained by discarding
-non-function definitions.
+The *function index space* indexes all imported and internally-defined
+function definitions, assigning monotonically-increasing indices based on the
+order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 
 The function index space is used by:
 * [calls](AstSemantics.md#calls), to identify the callee of a direct call
 
 ## Global Index Space
 
-The *global index space* represents the subsequence of the
-[definition index space](#definition-index-space) obtained by discarding
-non-global definitions.
+The *global index space* indexes all imported and internally-defined
+global definitions, assigning monotonically-increasing indices based on the
+order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 
 The global index space is used by:
 * [global variable access operators](AstSemantics.md#global-variables), to
@@ -343,9 +325,9 @@ The global index space is used by:
 
 ## Linear Memory Index Space
 
-The *linear memory index space* represents the subsequence of the
-[definition index space](#definition-index-space) obtained by discarding
-non-linear-memory definitions.
+The *linear memory index space* indexes all imported and internally-defined
+linear memory definitions, assigning monotonically-increasing indices based on the
+order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 
 The linear memory index space is only used by the 
 [data section](#data-section). In the MVP, there is at most one linear memory so
@@ -354,9 +336,9 @@ this index space is just a placeholder for when there can be
 
 ## Table Index Space
 
-The *table index space* represents the subsequence of the
-[definition index space](#definition-index-space) obtained by discarding
-non-table definitions.
+The *table index space* indexes all imported and internally-defined
+table definitions, assigning monotonically-increasing indices based on the
+order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 
 The table index space is only used by the [elements section](#elements-section).
 In the MVP, there is at most one table so this index space is just
