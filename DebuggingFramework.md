@@ -76,13 +76,19 @@ translating the wasm program counter to the corresponding source line.
 
 ## About the Debugger
 
-We propose that the debugger be a JavaScript library providing the interface
-described in the next section.  This allows for easy access to the browser, as
-well as ease of implementation because JavaScript is widely known and supported.
+We propose that the debugger implement a JavaScript API (by, for example, being
+a JavaScript library) that provides the actions described in the next section.
+This allows for easy access to the browser, as well as ease of implementation
+because JavaScript is widely known and supported.
 
 This also makes it possible for the debuggee to contain a URL for the debugger
 to be used on it.  This URL can point to any server, allowing debugger reuse
 among many debuggees.
+
+Because wasm [will](GC.md), in the future, be callable from JavaScript, this
+opens up the possibility of a debugger itself being a wasm module.  Similarly,
+this API can, over time, expand to serve the debugging needs of not just wasm
+but also all other scripts on the page (most significantly JavaScript modules).
 
 ## UI -> Debugger Protocol Operations
 
