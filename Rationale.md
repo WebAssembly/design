@@ -231,6 +231,12 @@ producers can use to pre-color variables and give hints to a WebAssembly VM's
 register allocation algorithms, offloading some of the optimization work from
 the WebAssembly VM.
 
+Finally, because it is not possible to take the address of the local variables,
+one can see local variables as virtual registers that do not automatically
+have a designated memory location for storing the temporary calculations.
+WebAssembly locals therefore become whatever the code generator requires to generate
+the code. In some cases, they might become a physical register. In other cases,
+they might become a stack slot.
 
 ## Variable-Length Argument Lists ("varargs")
 
