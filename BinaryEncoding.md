@@ -407,7 +407,7 @@ The counts following the different call opcodes specify the number of preceding 
 | `i64.store` | `0x34` | `memory_immediate` | store to memory |
 | `f32.store` | `0x35` | `memory_immediate` | store to memory |
 | `f64.store` | `0x36` | `memory_immediate` | store to memory |
-| `memory_size` | `0x3b` |  | query the size of memory |
+| `current_memory` | `0x3b` |  | query the size of memory |
 | `grow_memory` | `0x39` |  | grow the size of memory |
 
 The `memory_immediate` type is encoded as follows:
