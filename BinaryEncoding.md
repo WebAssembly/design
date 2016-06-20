@@ -336,6 +336,7 @@ It is legal to have several entries with the same type.
 | `loop` | `0x02` |  | begin a block which can also form control flow loops |
 | `if` | `0x03` | | begin if expression |
 | `else` | `0x04` | | begin else expression of if |
+| `drop` | `0x1a` | | ignore value |
 | `select` | `0x05` | | select one of two values based on condition |
 | `br` | `0x06` | argument_count : `varuint1`, relative_depth : `varuint32` | break that targets an outer nested block |
 | `br_if` | `0x07` | argument_count : `varuint1`, relative_depth : `varuint32` | conditional break that targets an outer nested block |
@@ -372,10 +373,10 @@ out of range, `br_table` branches to the default target.
 | `f32.const` | `0x13` | value : `uint32` | a constant value interpreted as `f32` |
 | `get_local` | `0x14` | local_index : `varuint32` | read a local variable or parameter |
 | `set_local` | `0x15` | local_index : `varuint32` | write a local variable or parameter |
+| `tee_local` | `0x19` | local_index : `varuint32` | write a local variable or parameter and return the same value |
 | `call` | `0x16` | argument_count : `varuint1`, function_index : `varuint32` | call a function by its index |
 | `call_indirect` | `0x17` | argument_count : `varuint1`, type_index : `varuint32` | call a function indirect with an expected signature |
 | `call_import` | `0x18` | argument_count : `varuint1`, import_index : `varuint32` | call an imported function by its index |
-| `tee_local` | `0x19` | local_index : `varuint32` | write a local variable or parameter and return the same value |
 
 The counts following the different call opcodes specify the number of preceding operands taken as arguments.
 
