@@ -33,6 +33,13 @@ in a Web environment (more details [below](Modules.md#integration-with-es6-modul
 WebAssembly modules are defined independently of JavaScript and do not require
 the host environment to include a JavaScript VM.
 
+From a C/C++ perspective, a WebAssembly module is not a single ```.o``` file
+or a single class implementation but rather the
+equivalent of a C/C++ program with all its ```.o``` files linked together. At
+runtime, a module can be loaded by a runtime system, which would load at runtime
+the module. If the module has a start definition, that definition gets called
+before any other function from the module.
+
 ## Imports and Exports
 
 A module defines a set of functions in its
