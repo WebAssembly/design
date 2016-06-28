@@ -92,28 +92,57 @@ but also all other scripts on the page (most significantly JavaScript modules).
 
 ## UI -> Debugger Protocol Operations
 
-First, we list the basic debugger operations that the UI can invoke:
+The following operations are available regardless of the debuggee's execution
+status:
 
-- get a source location given a mangled function name
-- get a function signature given a mangled function name
-- get the source given a location
-- set a breakpoint at a given location
-- interrupt the ongoing debuggee execution
-- get the source location for the current debuggee execution point
-- step into the next source line, descending into function calls
-- step over the next source line
-- get the current value of a given identifier (descending into struct members)
-- set the current value of a given identifier (descending into struct members)
-- get the type of a given identifier (descending into struct members)
-- get the current call stack as a list of source locations
-- return a given value from the current function
+`init(debug_info_url)` the debugger visits the url, obtaining the debug info
+(including how to grab source files).
 
-(TODO: specify parameters and results for the above operations; also describe
-custom types like "source location")
+`sources()` returns a list of handles to all source files.  A handle contains
+the file path and a unique identifier.
+
+`symbol_location(mangled_name)` returns the source location where the named
+symbol is defined.  Locations consist of a file handle, a line number, and a
+column number.
+
+`typeof(mangled_name)` returns the type of the named symbol; for functions,
+returns the entire function type, including the return type and the types of all
+parameters.  (TODO: define type)
+
+`source(file_handle)` returns the source-file text.
+
+`break(location)` sets a breakpoint, returning a handle to it.
+
+`status()` returns a value indicating whether the debuggee is currently running,
+paused, or inactive.
+
+`pause()` if the debuggee is currently running, pauses its execution; otherwise,
+does nothing.
+
+`resume()` if the debuggee is currently paused, resumes its execution;
+otherwise, does nothing.
+
+The following operations are additionally available when the debuggee is paused:
+
+`callstack()` returns the call stack of the debuggee's current execution state.
+The call stack is an array whose elements correspond to stack frames.  Each
+frame has the location, the mangled function name, and argument values.
+
+`step_into()` steps into debuggee's current source line (entering functions).
+
+`step_over()` steps over the current source line (not entering functions).
+
+`value(mangled_name)` returns the current value of the named symbol; the symbol
+is looked up in debuggee's current execution context.
+
+`set(mangled_name, value)` sets the current value of the named symbol; the
+symbol is looked up in the current debuggee execution context.
+
+`return(value)` makes the current function return the given value. (TODO: what
+if the function's return type is void?)
 
 ## Debugger -> UI Notifications
 
-- a step into/over has completed
 - a breakpoint was hit
 - an uncaught exception was thrown
 - `abort()` was called
@@ -129,10 +158,12 @@ specified -- it can be anything that the debugger knows how to interpret.
 
 ## Debugger -> Debuggee Protocol Operations
 
-- interrupt execution
+- pause execution
 - set a breakpoint at a given byte offset
 - get the current call stack
 - execute the current wasm instruction and move on to the next one
+- execute the current wasm instruction, but if it's a function call, execute the
+  whole function
 - get the value of a wasm memory location
 - set the value of a wasm memory location
 
@@ -143,3 +174,43 @@ specified -- it can be anything that the debugger knows how to interpret.
 - an uncaught exception was thrown
 
 (TODO: specify parameters and results)
+
+## Example End-To-End Flows
+
+Here are a few examples of how the user's actions can be implemented using the
+operations listed above:
+
+### Setting and Triggering a Breakpoint
+
+1. The UI initializes the debugger with the debug-info URL from the wasm module.
+2. The UI invokes `sources()` and shows a list of file paths.
+3. The user picks a file.  The UI invokes `source()` on the file's handle to
+   obtain the file's text, then displays it to the user.
+4. The user sets a breakpoint in the displayed source.
+   - The UI constructs a location from the file and the line, then invokes
+     `break()`.  It stores the returned handle in the list of existing
+     breakpoints.
+   - The debugger translates the source location into a wasm byte offset using
+     the debug info, then asks the debuggee to set a breakpoint there.
+5. When the breakpoint is triggered in the debuggee, the debuggee notifies the
+   debugger, which in turn notifies the UI.  The UI looks up the received handle
+   in the list of all breakpoints and informs the user which breakpoint has just
+   triggered.  The UI then invokes `callstack()` and displays it to the user for
+   examining.
+
+### Printing a Paused Program's Variable Value
+
+1. The user selects a symbol from the source listing.  The UI mangles the name
+   and invokes `value()` on it.
+2. The debugger looks up the symbol in the debug info and obtains its location
+   in the wasm memory.  It asks the debuggee for the memory contents and returns
+   the result to the UI, which displays it.
+
+### Stepping over a Source Line
+
+1. The users clicks the UI element for stepping over.  The UI invokes
+   `step_over()`.
+2. The debugger looks up the current location in the debug info.
+3. The debugger then tells the debuggee to execute the current wasm instruction,
+   executing whole functions.
+4. The debugger repeats steps 2 and 3 until the current location changes.
