@@ -24,8 +24,10 @@ and has the following properties:
 
 The following intrinsic objects are added:
 
-* `WebAssembly.Module` : the [`WebAssembly.Module` constructor](#wasmmodule-constructor)
-* `WebAssembly.Instance` : the [`WebAssembly.Instance` constructor](#wasminstance-constructor)
+* `WebAssembly.Module` : the [`WebAssembly.Module` constructor](#webassemblymodule-constructor)
+* `WebAssembly.Instance` : the [`WebAssembly.Instance` constructor](#webassemblyinstance-constructor)
+* `WebAssembly.Memory` : the [`WebAssembly.Memory` constructor](#webassemblymemory-constructor)
+* `WebAssembly.Table` : the [`WebAssembly.Table` constructor](#webassemblytable-constructor)
 * `WebAssembly.CompileError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
    which indicates an error during WebAssembly decoding or validation
 * `WebAssembly.RuntimeError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
@@ -45,7 +47,7 @@ the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpr
 with a `TypeError`.
 
 Otherwise, this function starts an asychronous task to compile a `WebAssembly.Module`
-as described in the [`WebAssembly.Module` constructor](#wasmmodule-constructor).
+as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor).
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `WebAssembly.Module` instance. On failure, the `Promise` is 
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
@@ -84,7 +86,7 @@ Otherwise, this function performs synchronous compilation of the `BufferSource`:
   an AST according to [BinaryEncoding.md](BinaryEncoding.md) and then validated
   according to the rules in [spec/check.ml](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/check.ml#L325).
 * The spec `string` values inside `Ast.module` are decoded as UTF8 as described in 
-  [Web.md](Web.md#function-names).
+  [Web.md](Web.md#names).
 * On success, a new `WebAssembly.Module` instance is returned with [[Module]] set to
   the validated `Ast.module`.
 * On failure, a new `WebAssembly.CompileError` is thrown.
@@ -137,45 +139,87 @@ not Object, a `TypeError` is thrown. If the list of
 [`module.imports`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L215)
 is not empty and `Type(importObject)` is not Object, a `TypeError` is thrown.
 
-Let `imports` by an initially-empty list of JS functions.
+Let `imports` be an initially-empty [`import list`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.mli#L3)
+(assuming the ML spec `Eval.import` type has been extended to be a union of:
+* a function [`value list -> value option`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.mli#L3)
+* a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli#L1)
+* a [`Table.table`](#webassemblytable-objects)
+* a [`Values.value`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/values.ml#L9)
 
 For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L135)
-`i` in `module.imports`:
+`i` in `module.imports` (assuming the ML spec `import` has been extended to have
+function, global, memory and table imports):
 * Let `v` be the resultant value of performing
   [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L139)).
-* If [`i.func_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L140)
+* If [`i.export_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L140)
   is not the empty string:
   * If `Type(v)` is not Object, throw a `TypeError`.
-  * Let `v` instead be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`v`, `i.func_name`)
-* If `IsCallable(v)` is `false`, throw a `TypeError`.
-* Append `v` to `imports`.
+  * Let `v` instead be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`v`, `i.export_name`)
+* If `i` is a function import:
+  * If `IsCallable(v)` is `false`, throw a `TypeError`.
+  * Otherwise, append an anonymous function to `imports` 
+    which calls `v` by coercing WebAssembly arguments to JavaScript arguments
+    via [`ToJSValue`](#tojsvalue) and returns the result by coercing
+    via [`ToWebAssemblyValue`](#towebassemblyvalue).
+  * Otherwise, append the function `v` to `imports`
+* If `i` is a global import:
+  * If `i` is not an immutable global, throw a `TypeError`.
+  * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `imports`.
+* If `i` is a memory import:
+  * If `v` is not a [`WebAssembly.Memory` object](#webassemblymemory-objects),
+    throw a `TypeError`.
+  * Otherwise, append `v.[[Memory]]` to `imports`.
+* Otherwise (`i` is a table import):
+  * If `v` is not a [`WebAssembly.Table` object](#webassemblytable-objects),
+    throw a `TypeError`.
+  * Otherwise, append `v.[[Table]]` to `imports`.
 
 Let `instance` be the result of evaluating 
-[`Eval.init`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L314)
+[`Eval.init`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L319)
 with arguments `module` and `imports`.
 Note: this synchronously executes the [`start`](Modules.md#module-start-function)
 function, if present.
 
-Let `exports` be an initially-empty list of (string, JS function) pairs.
-Let `exportedFunctions` be an initially-empty map from function indices (integers) to
-JS functions.
+Let `exports` be a list of (string, JS value) pairs that is mapped from 
+`module.exports` as follows (assuming the ML spec 
+[`export`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L128)
+has been modified so that each export simply has a `name`, `type` and `index`:
+* If `index` refers to an imported `type` definition, then simply re-export the
+  imported JS value.
+* Otherwise (an internal definition):
+  * If the `type` is function, then export an 
+    [Exported Function Exotic Object](#exported-function-exotic-objects),
+    reusing an existing object if one exists for the given function definition,
+    otherwise creating a new object.
+  * If the `type` is global:
+    * If the global is not immutable, then throw a `TypeError`.
+    * Let `v` be the global variable's initialized value.
+    * Otherwise, export [`ToJSValue`](#tojsvalue)`(v)`.
+  * If the `type` is memory, then export a `WebAssembly.Memory` object, reusing
+    an existing object if one exists for the given memory definition, otherwise
+    creating a new object via [`CreateMemoryObject`](#creatememoryobject).
+  * Otherwise the `type` must be a table so export a `WebAssembly.Table` object,
+    reusing an existing object if one exists for the given table definition,
+    otherwise creating a new object via:
+    * Let `values` be a list of JS values that is mapped from the table's
+      elements as follows:
+      * sentinel values (which throw if called) are given the value `null`
+      * non-sentinel values are given an [Exported Function Exotic Objects](#exported-function-exotic-objects),
+        reusing an existing object if one exists for the given function,
+        otherwise creating a new one.
+    * Create a new `WebAssembly.Table` instance with [[Table]]
+      set to `table` and [[Values]] set to `values`.
 
-For each [exported function](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L128)
-`f` in `module.exports`:
-* Let `index` be the exported function index of `f`.
-* If `index` is not already present in `exportedFunctions`, add a mapping
-  from `index` to the result of creating a new 
-  [Exported Function](#exported-function-exotic-objects) Exotic Object (given `instance` and `index`).
-* Append the pair (`f.name`, `exportedFunctions[index]`) to `exports`
+Let `moduleRecord` be a new [WebAssembly Module Record](#webassembly-module-record)
+(given `exports`).
 
-Let `moduleRecord` be a new [WebAssembly Module Record](#webassembly-module-record) (given `exports`).
-
-Let `exportStrings` be the projected list of only the first (string) components of `exports`.
-Let `moduleNamespace` be the result of calling 
+Let `exportStrings` be the projected list of only the first (string) components
+of `exports`. Let `moduleNamespace` be the result of calling 
 [`ModuleNamespaceCreate(moduleRecord, exportStrings)`](http://tc39.github.io/ecma262/#sec-modulenamespacecreate).
 Set `moduleRecord.[[Namespace]]` to `moduleNamespace`.
 
-Return a new `WebAssembly.Instance` object initializing `[[Instance]]` = `instance` and `exports` = `moduleNamespace`.
+Return a new `WebAssembly.Instance` object setting `[[Instance]]` to `instance`
+and `exports` to `moduleNamespace`.
 
 ### WebAssembly Module Record
 
@@ -185,7 +229,7 @@ has one concrete subclass, [Source Text Module Record](http://tc39.github.io/ecm
 which corresponds to a normal ES6 module. These interfaces are used to define the
 [process of loading a module on the Web](https://html.spec.whatwg.org/multipage/webappapis.html#integration-with-the-javascript-module-system).
 
-When WebAssembly gets [ES6 Module integration](Modules.md#integration-with-es6-modules), 
+When WebAssembly gets [ES6 Module integration](Modules.md#integration-with-es6-modules),
 a new *WebAssembly Module Record* subclass would be added which would specify
 the right thing to do for WebAssembly modules as part of the overall loading process.
 
@@ -208,7 +252,7 @@ Like [Bound Function](http://tc39.github.io/ecma262/#sec-bound-function-exotic-o
 Exported Functions do not have the normal function internal slots but instead have:
  * [[Instance]] : the [`Eval.instance`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L15)
    containing the exported function
- * [[FunctionIndex]] : the index of the function inside the module
+ * [[FunctionIndex]] : an index into the module's [function index space](Modules.md#function-index-space)
 
 as well as the internal slots required of all builtin functions:
  * [[Prototype]] : [%FunctionPrototype%](http://tc39.github.io/ecma262/#sec-well-known-intrinsic-objects)
@@ -224,23 +268,216 @@ WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined
  * Let `argTypes` be the list of value types defined by the signature of [[FunctionIndex]].
  * Let `args` be an empty list of coerced values.
  * For each value type `t` in `argTypes` and value `v` in `argValues`:
-   * Append to `args` `v` coerced to `t` as follows:
-     * coerce `v` to `i32` via [`ToInt32(v)`](http://tc39.github.io/ecma262/#sec-toint32)
-     * throw a `TypeError` if `t` is `i64`
-     * coerce `v` to `f32` by first applying [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
-       and then converting the resulting IEEE754 64-bit double to a 32-bit float using `roundTiesToEven`
-     * coerce `v` to `f64` via [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
- * Perform [`Eval.invoke`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L327)
+   * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `args`.
+ * Let `ret` be the result of calling [`Eval.invoke`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L327)
    passing [[Instance]], [[FunctionIndex]], and `args`.
- * Coerce the result of `Eval.invoke` as follows:
-   * if the return value is `None`, return `undefined`
-   * interpret `i32` as a signed integer and convert that integer to a Number value
-   * throw a `TypeError` if returning an `i64`
-   * return `f32`/`f64` as Number values, possibly performing
-     [canonicalization of NaNs](http://tc39.github.io/ecma262/#sec-setvalueinbuffer)
+ * Return [`ToJSValue`](#tojsvalue)`(ret)`.
 
 Exported Functions do not have a [[Construct]] method and thus it is not possible to 
 call one with the `new` operator.
+
+## `WebAssembly.Memory` Objects
+
+A `WebAssembly.Memory` object contains a single [linear memory](AstSemantics.md#linear-memory)
+which can be simultaneously referenced by multiple `Instance` objects. Each
+`Memory` object has two internal slots:
+ * [[Memory]] : a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli)
+ * [[BufferObject]] : the current `ArrayBuffer` whose [[ArrayBufferByteLength]]
+   matches the current byte length of [[Memory]]
+
+### `WebAssembly.Memory` Constructor
+
+The `WebAssembly.Memory` constructor has the signature:
+```
+new Memory(memoryDescriptor)
+```
+If the NewTarget is `undefined`, a `TypeError` exception is thrown (i.e., this
+constructor cannot be called as a function without `new`).
+
+If `Type(memoryDescriptor)` is not Object, a `TypeError` is thrown.
+
+Let `initial` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"initial"`)).
+
+If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
+then let `maximum` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"maximum"`)).
+Otherwise, let `maximum` be `None`.
+
+Let `memory` be the result of calling 
+[`Memory.create`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli#L18)
+given arguments `initial` and `maximum`. Note that `initial` and `maximum` are
+specified in units of WebAssembly pages (64KiB).
+
+(Note: the ML spec currently doesn't implement the maximum memory limit; we
+assume here it will be extended in the future.)
+
+Return the result of [`CreateMemoryObject`](#creatememoryobject)(`memory`).
+
+### CreateMemoryObject
+
+Given a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli)
+`m`, to create a `WebAssembly.Memory`:
+
+Let `buffer` be a new `ArrayBuffer` whose
+[[[ArrayBufferData]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
+aliases `m` and whose 
+[[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
+is set to the byte length of `m`.
+
+Return a new `WebAssembly.Memory` instance with [[Memory]] set to `m` and
+[[BufferObject]] set to `buffer`.
+
+### `WebAssembly.Memory.prototype.grow`
+
+Let `M` be the `this` value. If `M` is not a `WebAssembly.Memory`,
+a `TypeError` is thrown.
+
+This method performs a [`grow_memory`](AstSemantics.md#resizing) on
+`M.[[Memory]]`, having first performed [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)
+on the first argument. On failure, a `WebAssembly.RuntimeError` is thrown.
+
+If `M.[[Memory]].maximum` is `None`, perform
+[`DetachArrayBuffer`](http://tc39.github.io/ecma262/#sec-detacharraybuffer)(`M.[[BufferObject]]`).
+
+In either case, assign to `M.[[BufferObject]]` a new `ArrayBuffer` whose
+[[[ArrayBufferData]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
+aliases `M.[[Memory]]` and whose 
+[[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
+is set to the new byte length of `M.[[Memory]]`.
+
+### `WebAssembly.Memory.prototype.buffer`
+
+This is an accessor property whose [[Set]] is Undefined and whose [[Get]]
+accessor function performs the following steps:
+
+If `this` is not a `WebAssembly.Memory`, a `TypeError` is thrown. Otherwise
+return `M.[[BufferObject]]`.
+
+## `WebAssembly.Table` Objects
+
+A `WebAssembly.Table` object contains a single [table](AstSemantics.md#table)
+which can be simultaneously referenced by multiple `Instance` objects. Each
+`Table` object has two internal slots:
+ * [[Table]] : a [`Table.table`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli)
+ * [[Values]] : an array whose elements are either `null` or Function Objects
+
+(Note: the ML spec currently represents tables as a single `int list` of
+function indices; we assume here it will be extended in the future with
+a more general `Table` similar to 
+[`Memory`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli).)
+
+### `WebAssembly.Table` Constructor
+
+The `WebAssembly.Table` constructor has the signature:
+```
+new Table(tableDescriptor)
+```
+If the NewTarget is `undefined`, a `TypeError` exception is thrown (i.e., this
+constructor cannot be called as a function without `new`).
+
+If `Type(tableDescriptor)` is not Object, a `TypeError` is thrown.
+
+Let `element` be the result of calling [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"element"`).
+If `element` is not the string `"anyfunc"`, a `TypeError` is thrown.
+(Note: this check is intended to be relaxed in the
+[future](FutureFeatures.md#more-table-operators-and-types) to allow different
+elemtn types.)
+
+Let `initial` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"initial"`)).
+
+If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
+then let `maximum` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"maximum"`)).
+Otherwise, let `maximum` be None.
+
+Let `table` be the result of calling `Table.create` given arguments `initial`
+and `maximum`.
+
+Let `values` be a new empty array of `initial` elements, all with value
+`null`.
+
+Return a new `WebAssemby.Table` instance with [[Table]] set to `table` and
+[[Values]] set to `values`.
+
+### `WebAssembly.Table.prototype.grow`
+
+This method calls `Table.grow`, having performed
+[`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger) on the first argument.
+On failure, a `WebAssembly.RuntimeError` is thrown.
+
+(Note: the ML spec currently doesn't support resizing tables; we assume here it
+will be extended in the future to have a `grow` operation similar to 
+[`Memory.grow`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli#L21).)
+
+### `WebAssembly.Table.prototype.get`
+
+This method has the following signature
+```
+get(index)
+```
+Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a `TypeError`
+is thrown.
+
+Let `i` be the result of [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)(`index`).
+
+Return `T.[[Values]][i]`.
+
+### `WebAssembly.Table.prototype.set`
+
+This method has the following signature
+```
+set(index, value)
+```
+
+Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a `TypeError`
+is thrown.
+
+If [`IsCallable`](http://tc39.github.io/ecma262/#sec-iscallable)(`value`) is 
+false and `Type(value)` is not Null, throw a type error.
+
+Let `i` be the result of [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)(`index`).
+
+If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
+* Set the `i`th element of `T.[[Table]]` to the `v.[[FunctionIndex]]`th function
+  in the module's [function index space](Modules.md#function-index-space).
+
+Otherwise:
+* Set the `i`th element of `T.[[Table]]` to a host-defined value that can be
+  called with *any* signature by coercing its WebAssembly arguments to JavaScript
+  arguments via [ToJSValue](#tojsvalue) and coercing its JavaScript return value
+  to a WebAssembly return value via [ToWebAssemblyValue](#towebassemblyvalue).
+
+Set `T.[[Values]][i]` to `value`.
+
+Return Undefined.
+
+## ToJSValue
+
+To coerce a [WebAssembly value](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/values.ml#L9)
+to a JavaScript value:
+
+* given a WebAssembly `i32` is interpreted as a signed integer, converted (losslessly) to an
+  IEEE754 double and then returned as a JavaScript Number
+* given a WebAssembly `i64`, throw a `TypeError`
+* given a WebAssembly `f32` (single-precision IEEE754), convert (losslessly) to
+  a IEEE754 double, [possibly canonicalize NaN](http://tc39.github.io/ecma262/#sec-setvalueinbuffer),
+  and return as a JavaScript Number
+* given a WebAssembly `f64`, [possibly canonicalize NaN](http://tc39.github.io/ecma262/#sec-setvalueinbuffer)
+  and return as a JavaScript Number
+
+If the WebAssembly value is optional, then given `None`, return JavaScript value
+`undefined`.
+
+## ToWebAssemblyValue
+
+To coerce a JavaScript value to a given [WebAssembly value type](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/types.ml#L3),
+
+* coerce to `i32` via [`ToInt32(v)`](http://tc39.github.io/ecma262/#sec-toint32)
+* for `i64`, throw a `TypeError`
+* coerce to `f32` by first applying [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
+  and then converting the resulting IEEE754 64-bit double to a 32-bit float using `roundTiesToEven`
+* coerce to `f64` via [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
+
+If the value type is optional, then given `None`, the JavaScript value is
+ignored.
 
 ## Sample API Usage
 
@@ -272,7 +509,5 @@ fetch('demo.wasm').then(response =>
 ```
 
 ## TODO
-
-* `WebAssembly.Memory`: imports, exports
-* `WebAssembly.Table`: imports, exports
 * `WebAssembly.Module` `exports`/`imports` properties (reflection)
+* JS API for cyclic imports (perhaps a Promise-returning `WebAssembly.instantiate`?)

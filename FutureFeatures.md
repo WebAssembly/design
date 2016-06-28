@@ -393,16 +393,6 @@ reduce fragmentation issues. Languages like Fortran which limit aliasing would b
 one use case. C/C++ compilers could also determine that some global variables never
 have their address taken.
 
-## Importing linear memory
-
-In the MVP, functions and [linear memory](Modules.md#linear-memory-section) can
-be exported, but only functions can be imported. This feature would additionally
-allow importing linear memory. One use case is sharing linear memories between
-separate WebAssembly [instances](Modules.md). Another use case is allowing, on
-the Web platform, importing a JS `ArrayBuffer` as a linear memory. This would
-allow highly efficient, specialized code to be generated for accessing the
-`ArrayBuffer`.
-
 ## Streaming Compilation
 
 The WebAssembly binary format is designed to allow streaming decoding,
@@ -425,3 +415,47 @@ of WebAssembly in browsers:
   would enable Web apps to perform their own (["layer 1"](BinaryEncoding.md))
   custom compression (on top of the spec-defined binary format, under generic
   HTTP `Content-Encoding` compression).
+
+## Multiple Tables and Memories
+
+The MVP limits modules to at most one memory and at most one table (the default
+ones) and there are only operators for accessing the default table and memory.
+
+After the MVP and after [GC reference types](GC.md) have been added, the default
+limitation can be relaxed so that any number of tables and memories could be
+imported or internally defined and memories/tables could be passed around as
+parameters, return values and locals. New variants of `load`, `store`
+and `call_indirect` would then be added which took an additional memory/table
+reference operand.
+
+To access an imported or internally-defined non-default table or memory, a
+new `address_of` operator could be added which, given an index immediate,
+would return a first-class reference. Beyond tables and memories, this could
+also be used for function definitions to get a reference to a function (which,
+since opaque, could be implemented as a raw function pointer).
+
+## More Table Operators and Types
+
+In the MVP, WebAssembly has limited functionality for operating on 
+[tables](AstSemantics.md#table) and the host-environment can do much more (e.g.,
+see [JavaScript's `WebAssembly.Table` API](JS.md#webassemblytable-objects)).
+It would be useful to be able to do everything from within WebAssembly so, e.g.,
+it was possible to write a WebAssembly dynamic loader in WebAssembly. As a
+prerequisite, WebAssembly would need first-class support for 
+[GC references](GC.md) in expressions and locals. Given that, the following
+could be added:
+* `get_table`/`set_table`: get or set the table element at a given dynamic
+  index; the got/set value would have a GC reference type
+* `grow_table`: grow the current table (up to the optional maximum), similar to
+  `grow_memory`
+* `current_table_length`: like `current_memory`.
+
+Additionally, in the MVP, the only allowed element type of tables is a generic
+"function" type which simply means the element can be called but there is no
+static signature validation check. This could be improved by allowing:
+* functions with a particular signature, allowing wasm generators to use
+  multiple homogeneously-typed function tables (instead of a single
+  heterogeneous function table) which eliminates the implied dynamic signature
+  check of a call to a heterogeneous table;
+* any other specific GC reference type, effectively allowing WebAssembly code
+  to implement a variety of rooting API schemes.

@@ -3,7 +3,7 @@ See [rationale](Rationale.md#feature-testing---motivating-scenarios) for motivat
 # Feature Test
 
 [PostMVP](PostMVP.md), applications will be able to query which features are
-supported via [`has_feature` or a similar API](PostMVP#Feature-Testing). This
+supported via [`has_feature` or a similar API](PostMVP.md#feature-testing). This
 accounts for the pragmatic reality that features are shipped in different orders
 at different times by different engines.
 

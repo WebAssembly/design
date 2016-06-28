@@ -80,29 +80,37 @@ operators.
 
 ## Linear Memory
 
-The main storage of a WebAssembly instance, called the *linear memory*, is a
-contiguous, byte-addressable range of memory spanning from offset `0` and
-extending up to a varying *memory size*.
-This size always is a multiple of the WebAssembly page size,
-which is 64KiB on all engines (though large page support may be added in the
-[future](FutureFeatures.md#large-page-support)).
-The initial state of linear memory is specified by the
-[module](Modules.md#linear-memory-section), and it can be dynamically grown by
-the [`grow_memory`](AstSemantics.md#resizing) operator.
+A *linear memory* is a contiguous, byte-addressable range of memory spanning
+from offset `0` and extending up to a varying *memory size*. This size is always 
+a multiple of the WebAssembly page size, which is fixed to 64KiB (though large
+page support may be added in an opt-in manner in the 
+[future](FutureFeatures.md#large-page-support)). The initial state of a linear
+memory is defined by the module's [linear memory](Modules.md#linear-memory-section) and
+[data](Modules.md#data-section) sections. The memory size can be dynamically
+increased by the [`grow_memory`](AstSemantics.md#resizing) operator.
 
-The linear memory can be considered
-to be an untyped array of bytes, and it is unspecified how embedders map this
-array into their process' own [virtual memory][]. The linear memory is
-sandboxed; it does not alias the execution engine's internal data structures,
-the execution stack, local variables, or other process memory.
+A linear memory can be considered to be an untyped array of bytes, and it is
+unspecified how embedders map this array into their process' own [virtual
+memory][]. Linear memory is sandboxed; it does not alias other linear memories,
+the execution engine's internal data structures, the execution stack, local
+variables, or other process memory.
 
   [virtual memory]: https://en.wikipedia.org/wiki/Virtual_memory
 
-In the MVP, linear memory is not shared between threads of execution. Separate
-instances can execute in separate threads but have their own linear memory and can
-only communicate through messaging, e.g. in browsers using `postMessage`. It
-will be possible to share linear memory between threads of execution when
-[threads](PostMVP.md#threads) are added.
+Every WebAssembly [instance](Modules.md) has one specially-designated *default* 
+linear memory which is the linear memory accessed by all the 
+[memory operators below](#linear-memory-access). In the MVP, there are *only*
+default linear memories but [new memory operators](FutureFeatures.md#multiple-tables-and-memories)
+may be added after the MVP which can also access non-default memories.
+
+Linear memories (default or otherwise) can either be [imported](Modules.md#imports)
+or [defined inside the module](Modules.md#linear-memory-section), with defaultness
+indicated by a flag on the import or definition. After import or definition,
+there is no difference when accessing a linear memory whether it was imported or
+defined internally.
+
+In the MVP, linear memory cannot be shared between threads of execution.
+The addition of [threads](PostMVP.md#threads) will allow this.
 
 ### Linear Memory Accesses
 
@@ -141,6 +149,8 @@ size in which case integer wrapping is implied.
   * `f64.store`: (no conversion) store 8 bytes
 
 Store operators do not produce a value.
+
+The above operators operate on the [default linear memory](#linear-memory).
 
 ### Addressing
 
@@ -209,7 +219,7 @@ the [future](FutureFeatures.md#large-page-support)).
  * `grow_memory` : grow linear memory by a given unsigned delta of pages.
     Return the previous memory size in units of pages or -1 on failure.
 
-When a maximum memory size is declared in the [memory section](Module.md#linear-memory-section),
+When a linear memory has a declared [maximum memory size](Modules.md#linear-memory-section),
 `grow_memory` must fail if it would grow past the maximum. However,
 `grow_memory` may still fail before the maximum if it was not possible to
 reserve the space up front or if enabling the reserved memory fails.
@@ -231,12 +241,53 @@ operator may be added. However, due to normal fragmentation, applications are
 instead expected release unused physical pages from the working set using the
 [`discard`](FutureFeatures.md#finer-grained-control-over-memory) future feature.
 
+The above operators operate on the [default linear memory](#linear-memory).
+
+## Table
+
+A *table* is similar to a linear memory whose elements, instead of being bytes,
+are opaque values of a particular *table element type*. This allows the table to
+contain values—like GC references, raw OS handles, or native pointers—that are
+accessed by WebAssembly code indirectly through an integer index. This feature
+bridges the gap between low-level, untrusted linear memory and high-level
+opaque handles/references at the cost of a bounds-checked table indirection.
+
+The table's element type constrains the type of elements stored 
+in the table and allows engines to avoid some type checks on table use. 
+When a WebAssembly value is stored in a table, the value's type must precisely
+match the element type. Just like linear memory, updates to a table are
+observed immediately by all instances that reference the table. Depending on the
+operator/API used to store the value, this check may be static or dynamic. Host
+environments may also allow storing non-WebAssembly values in tables in which
+case, as with [imports](Modules.md#imports), the meaning of using the value is
+defined by the host environment.
+
+Every WebAssembly [instance](Modules.md) has one specially-designated *default*
+table which is indexed by [`call_indirect`](#calls) and other future
+table operators. Tables can either be [imported](Modules.md#imports) or 
+[defined inside the module](Modules.md#table-section), with defaultness
+indicated by a flag on the import or definition. After import or definition,
+there is no difference when calling into a table whether it was imported or
+defined internally.
+
+In the MVP, the primary purpose of tables is to implement indirect function
+calls in C/C++ using an integer index as the pointer-to-function and the table
+to hold the array of indirectly-callable functions. Thus, in the MVP:
+* tables may only be accessed from WebAssembly code via [`call_indirect`](#calls);
+* the only allowed table element type is `anyfunc` (function with any signature);
+* tables may not be directly mutated or resized from WebAssembly code;
+  this can only be done through the host environment (e.g., the
+  the `WebAssembly` [JavaScript API](JS.md#webassemblytable-objects)).
+
+These restrictions may be relaxed in the 
+[future](FutureFeatures.md#more-table-operators-and-types). 
+
 ## Local variables
 
-Each function has a fixed, pre-declared number of local variables which occupy a single
+Each function has a fixed, pre-declared number of *local variables* which occupy a single
 index space local to the function. Parameters are addressed as local variables. Local
 variables do not have addresses and are not aliased by linear memory. Local
-variables have value types and are initialized to the appropriate zero value for their
+variables have [value types](#types) and are initialized to the appropriate zero value for their
 type at the beginning of the function, except parameters which are initialized to the values
 of the arguments passed to the function.
 
@@ -247,6 +298,32 @@ of the arguments passed to the function.
 The details of index space for local variables and their types will be further clarified,
 e.g. whether locals with type `i32` and `i64` must be contiguous and separate from
 others, etc.
+
+## Global variables
+
+A *global variable* stores a single value of a fixed [value type](#types) and may be
+declared either *mutable* or *immutable*. This provides WebAssembly with memory
+locations that are disjoint from any [linear memory](#linear-memory) and thus
+cannot be arbitrarily aliased as bits.
+
+Global variables are accessed via an integer index into the module-defined 
+[global index space](Modules.md#global-index-space). Global variables can 
+either be [imported](Modules.md#imports) or [defined inside the module](Modules.md#global-section).
+After import or definition, there is no difference when accessing a global.
+
+  * `get_global`: get the current value of a global variable
+  * `set_global`: set the current value of a global variable
+
+It is a validation error for a `set_global` to index an immutable global variable.
+
+In the MVP, the primary use case of global variables is to represent
+instantiation-time immutable values as a useful building block for
+[dynamic linking](DynamicLinking.md).
+
+After the MVP, when [reference types](GC.md) are added to the set of [value types](#types),
+global variables will be necessary to allow sharing reference types between
+[threads](PostMVP.md#threads) since shared linear memory cannot load or store
+references.
 
 ## Control flow structures
 
@@ -315,43 +392,32 @@ explicit accesses to linear memory.
 In the MVP, the length of the return types sequence may only be 0 or 1. This
 restriction may be lifted in the future.
 
-Direct calls to a function specify the callee by index into a *main function table*.
+Direct calls to a function specify the callee by an index into the 
+[function index space](Modules.md#function-index-space).
 
   * `call`: call function directly
 
 A direct call to a function with a mismatched signature is a module verification error.
 
-Like direct calls, calls to [imports](Modules.md#imports-and-exports) specify
-the callee by index into an *imported function table* defined by the sequence of import
-declarations in the module import section. A direct call to an imported function with a
-mismatched signature is a module verification error.
-
-  * `call_import` : call imported function directly
-
-Indirect calls allow calling target functions that are unknown at compile time.
-The target function is an expression of value type `i32` and is always the first
-input into the indirect call.
-
-A `call_indirect` specifies the *expected* signature of the target function with
-an index into a *signature table* defined by the module. An indirect call to a
-function with a mismatched signature causes a trap.
+Indirect calls to a function indicate the callee with an `i32` index into
+a [table](#table). The *expected* signature of the target function (specified
+by its index in the [types section](BinaryEncoding.md#type-section)) is given as
+a second immediate.
 
   * `call_indirect`: call function indirectly
 
-Functions from the main function table are made addressable by defining an
-*indirect function table* that consists of a sequence of indices into the
-module's main function table. A function from the main table may appear more
-than once in the indirect function table. Functions not appearing in the
-indirect function table cannot be called indirectly.
+Unlike `call`, which checks that the caller and callee signatures match
+statically as part of validation, `call_indirect` checks for signature match
+*dynamically*, comparing the caller's expected signature with the callee function's
+signature and and trapping if there is a mismatch. Since the callee may be in a
+different module which necessarily has a separate [types section](BinaryEncoding.md#type-section),
+and thus index space of types, the signature match must compare the underlying 
+[`func_type`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/types.ml#L5).
+As noted [above](#table), table elements may also be host-environment-defined
+values in which case the meaning of a call (and how the signature is checked)
+is defined by the host-environment, much like calling an import.
 
-In the MVP, indices into the indirect function table are local to a single
-module, so wasm modules may use `i32` constants to refer to entries in their own
-indirect function table. The [dynamic linking](DynamicLinking.md) feature is
-necessary for two modules to pass function pointers back and forth. This will
-mean concatenating indirect function tables and adding an operator `address_of`
-that computes the absolute index into the concatenated table from an index in a
-module's local indirect table. JITing may also mean appending more functions to
-the end of the indirect function table.
+In the MVP, the single `call_indirect` operator accesses the [default table](#table).
 
 Multiple return value calls will be possible, though possibly not in the
 MVP. The details of multiple-return-value calls needs clarification. Calling a
