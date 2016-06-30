@@ -12,7 +12,7 @@ WebAssembly is currently being designed as an open standard by a [W3C Community 
 
 - **WebAssembly is efficient and fast**: The wasm [AST](AstSemantics.md) is designed to be encoded in a size- and load-time-efficient [binary format](BinaryEncoding.md). WebAssembly aims to execute at native speed by taking advantage of [common hardware capabilities](Portability.md#assumptions-for-efficient-execution) available on a wide range of platforms.
 
-- **WebAssembly is safe**: WebAssembly describes a memory-safe, sandboxed [execution environment](AstSemantics.md#linear-memory) that may even be implemented inside existing JavaScript virtual machines.  When [embedded in the web](Web.md), WebAssembly will enforce the same-origin and permissions security policies of the browser.
+- **WebAssembly is safe**: WebAssembly describes a [memory-safe](Security.md#memory-safety), sandboxed [execution environment](AstSemantics.md#linear-memory) that may even be implemented inside existing JavaScript virtual machines.  When [embedded in the web](Web.md), WebAssembly will enforce the same-origin and permissions security policies of the browser.
 
 - **WebAssembly is open and debuggable**: WebAssembly is designed to be pretty-printed in a [textual format](TextFormat.md) for debugging, testing, experimenting, optimizing, learning, teaching, and writing programs by hand. The textual format will be used when [viewing the source](FAQ.md#will-webassembly-support-view-source-on-the-web) of wasm modules on the web.
 

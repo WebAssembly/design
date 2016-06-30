@@ -95,10 +95,10 @@ And in practice, popular C and C++ compilers do optimize on the assumption that
 alignment rules are followed, meaning that they don't always preserve program
 behavior otherwise.
 
-On WebAssembly, the primary invariants
-[are always maintained](Nondeterminism.md). Demons can't actually fly out your
-nose, as that would constitute an escape from the sandbox. And, callstacks can't
-become corrupted.
+On WebAssembly, the primary [nondeterminism](Nondeterminism.md) and
+[security](Security.md) invariants are always maintained. Demons can't actually
+fly out your nose, as that would constitute an escape from the sandbox. And,
+callstacks can't become corrupted.
 
 Other than that, programs which invoke undefined behavior at the source language
 level may be compiled into WebAssembly programs which do anything else,

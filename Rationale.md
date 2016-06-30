@@ -192,9 +192,9 @@ may be added in the future.
 
 ## Nop
 
-The nop operator does not produce a value or cause side effects. 
+The nop operator does not produce a value or cause side effects.
 It is nevertheless useful for compilers and tools, which sometimes need to replace instructions with a ```nop```. Without a ```nop``` instruction, code generators would use alternative *does-nothing* opcode patterns that consume space in a module and may have a runtime cost. Finding an appropriate opcode that does nothing but has the appropriate type for the node's location is nontrivial. The existence of many different ways to encode ```nop``` - often mixed in the same module - would reduce the efficiency of compression algorithms.
- 
+
 
 ## Locals
 
@@ -317,7 +317,7 @@ practical way to:
 * Reduce implementation complexity (both of WebAssembly VMs as well as compilers
   generating WebAssembly binaries).
 * Allow usage of new hardware features.
-* Allows implementations to security-harden certain usecases.
+* Allows implementations to [security-harden](Security.md) certain usecases.
 
 When nondeterminism is allowed into WebAssembly it is always done in a limited
 and local manner. This prevents the entire program from being invalid, as would

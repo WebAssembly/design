@@ -1,7 +1,7 @@
 # Nondeterminism in WebAssembly
 
-WebAssembly is a [portable](Portability.md) sandboxed platform with limited,
-local, nondeterminism. 
+WebAssembly is a [portable](Portability.md) [sandboxed](Security.md) platform
+with limited, local, nondeterminism.
   * *Limited*: nondeterministic execution can only occur in a small number of
     well-defined cases (described below) and, in those cases, the implementation
     may select from a limited set of possible behaviors.
@@ -10,15 +10,6 @@ local, nondeterminism.
 
 The [rationale](Rationale.md) document details why WebAssembly is designed as
 detailed in this document.
-
-The limited, local, nondeterministic model implies:
-  * Applications can't access data outside the sandbox without going through
-    appropriate APIs, or otherwise escape the sandbox.
-  * WebAssembly always maintains valid, trusted callstacks; stray pointer writes
-    cannot corrupt return addresses or spilled variables on the stack.
-  * Calls and branches always have valid destinations ensuring 
-    [Control Flow Integrity](https://research.microsoft.com/apps/pubs/default.aspx?id=64250).
-  * WebAssembly has no [nasal demons](https://en.wikipedia.org/w/index.php?title=Nasal_demons).
 
 The following is a list of the places where the WebAssembly specification
 currently admits nondeterminism:

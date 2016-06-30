@@ -32,13 +32,13 @@ The tooling we expect to support includes:
     programs, inspecting their state, modifying their state.
   - Debug information is better delivered on-demand instead of built-in to a
     WebAssembly module.
-* Sanitizers for non-memory-safe languages: asan, tsan, msan, ubsan. Efficient
-  support of sanitizers may require improving:
+* Sanitizers for [non-memory-safe](Security.md#memory-safety) languages: asan,
+  tsan, msan, ubsan. Efficient support of sanitizers may require improving:
   - Trapping support;
   - Shadow stack techniques (often implemented through `mmap`'s `MAP_FIXED`).
-* Opt-in security enhancements for developers' own code: developers targeting
-  WebAssembly may want their own code to be sandboxed further than what
-  WebAssembly implementations require to protect users.
+* Opt-in [security](Security.md) enhancements for developers' own code:
+  developers targeting WebAssembly may want their own code to be sandboxed
+  further than what WebAssembly implementations require to protect users.
 * Profilers:
   - Sample-based;
   - Instrumentation-based.
