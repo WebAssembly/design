@@ -340,23 +340,20 @@ architectures there may be a need to revisit some of the decisions:
 ## NaN bit pattern propagation
 
 In general, WebAssembly's floating point operations provide the guarantee that
-a NaN returned from an operation won't have new bits set in its fractional
-field, except the most significant bit.
+if all NaNs passed to an operation are "canonical", the result is "canonical",
+where canonical means the most significant bit of the fraction field is 1, and
+the trailing bits are all 0.
 
 This is intended to support interpreters running on WebAssembly that use
-NaN-boxing, because they can rely on the property that if an arithmetic
-operation has no non-canonical NaNs as input, its output is also canonical.
+NaN-boxing, because they don't have to canonicalize the output of an arithmetic
+instruction if they know the inputs are canonical.
 
-The specific bit-pattern rules are modeled after what numerous popular
-hardware architectures do. Note that IEEE 754-1985 had looser rules for NaN
-bit pattern encodings than IEEE 754-2008, and some hardware architectures,
-notably MIPS, historically behaved differently than other architectures.
-However, since the publication of IEEE 754-2008, MIPS has added a configuration
-mode (NAN2008) which enables support for the new rules.
+When the inputs are non-canonical, the resulting NaN is nondeterministic, to
+accomodate a variety of known hardware behaviors: returning one of the input
+NaNs, returning a canonical NaN, or bitwise-or'ing the input NaNs together.
 
-In particular, the sign bit of generated NaNs is nondeterministic since x86
-generates NaNs with it set to 1 while other architectures generate NaNs with it
-set to 0.
+The sign bit of generated NaNs is always nondeterministic since x86 generates
+NaNs with it set to 1 while other architectures generate NaNs with it set to 0.
 
 
 ## Integer operations
