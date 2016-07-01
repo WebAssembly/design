@@ -255,7 +255,7 @@ implementation similarly to how PNaCl and Emscripten do today.
 
 Optimizing compilers commonly have fast-math flags which permit the compiler to
 relax the rules around floating point in order to optimize more
-aggressively. This can including assuming that NaNs or infinities don't occur,
+aggressively. This can include assuming that NaNs or infinities don't occur,
 ignoring the difference between negative zero and positive zero, making
 algebraic manipulations which change how rounding is performed or when overflow
 might occur, or replacing operators with approximations that are cheaper to
