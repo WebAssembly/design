@@ -61,6 +61,14 @@ Support for explicit tail calls is planned in
 which would add an explicit tail-call operator with well-defined effects
 on stack introspection.
 
+## Invalid AST Reporting
+
+An invalid AST can occur during compilation if there is an unknown or malformed
+construct in the source or if the implementor doesn't support a feature.
+
+This results in a [trap](#traps) that is reported once the function with the
+error is called.
+
 ## Types
 
 WebAssembly has the following *value types*:
