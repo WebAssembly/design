@@ -451,7 +451,7 @@ could be added:
 * `current_table_length`: like `current_memory`.
 
 Additionally, in the MVP, the only allowed element type of tables is a generic
-"function" type which simply means the element can be called but there is no
+"anyfunc" type which simply means the element can be called but there is no
 static signature validation check. This could be improved by allowing:
 * functions with a particular signature, allowing wasm generators to use
   multiple homogeneously-typed function tables (instead of a single
