@@ -256,7 +256,7 @@ if there is a table definition, it *must* declare itself the default
 Each table definition also includes an *element type*, *initial length*, and
 optional *maximum length*.
 
-In the MVP, the only valid element type is `"function"`, but in the 
+In the MVP, the only valid element type is `"anyfunc"`, but in the
 [future](FutureFeatures.md#more-table-operators-and-types), more element
 types may be added.
 
@@ -285,8 +285,8 @@ specify the initial contents of fixed `(offset, length)` ranges of a given
 table, specified by its [table index](#table-index-space). The `length` is an
 integer constant value (defining the length of the given segment). The `offset`
 is an [initializer expression](#initializer-expression). Elements are specified
-with a `(type, index)` pair where `type` is the type of an 
-[index spaces](Modules.md) that is compatible with the table's element type and
+with a `(type, index)` pair where `type` is the element type of an
+[index space](Modules.md) that is compatible with the table's element type and
 `index` is an integer immediate into `type`s index space.
 
 ## Function and Code sections
