@@ -58,10 +58,10 @@ rule is only mandatory for Web embedding.
 
 ## Security
 
-WebAssembly's security model should depend on [CORS][] and
-[subresource integrity][] to enable distribution, especially through content
-distribution networks and to implement
-[dynamic linking](DynamicLinking.md).
+WebAssembly's [security](Security.md) model should depend on the
+[same-origin policy][], with [cross-origin resource sharing (CORS)][] and
+[subresource integrity][] to enable distribution through content
+distribution networks and to implement [dynamic linking](DynamicLinking.md).
 
 ## SIMD
 
@@ -75,6 +75,7 @@ Once [SIMD is supported](PostMVP.md#fixed-width-simd) WebAssembly would:
 Once [GC is supported](GC.md), WebAssembly code would be able to reference
 and access JavaScript, DOM, and general WebIDL-defined objects.
 
-  [CORS]: https://www.w3.org/TR/cors/
+  [same-origin policy]: https://www.w3.org/Security/wiki/Same_Origin_Policy
+  [cross-origin resource sharing (CORS)]: https://www.w3.org/TR/cors/
   [subresource integrity]: https://www.w3.org/TR/SRI/
   [SIMD.js-in-asm.js]: http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js
