@@ -67,8 +67,8 @@ support more human-readable representations, but never at the cost of accurate r
 
  - Typescript-style `name: type` declarations.
 
- - Parentheses around call arguments, eg. `call $functionname(arg, arg, arg)`,
-   and `if` conditions, eg. `if ($condition) { call $then() } else { call $else() }`,
+ - Parentheses around call arguments, eg. `$functionname(arg, arg, arg)`,
+   and `if` conditions, eg. `if ($condition) { $then() } else { $else() }`,
    because they're familiar to many people and not too intrusive.
 
  - Put labels "where they go".
@@ -341,7 +341,7 @@ special syntax.
 | `get_local` | *name* | `$x + 1`
 | `set_local` | *name* `=` *expr* | `$x = 1`
 | `select` | `select` *expr*, *expr*, *expr* | `select 1, 2, $x < $y`
-| `call` | `call` *name* `(`*expr* `,` … `)` | `call $min(0, 2)`
+| `call` | *name* `(`*expr* `,` … `)` | `$min(0, 2)`
 | `call_import` | `call_import` *name* `(`*expr* `,` … `)` | `call_import $max(0, 2)`
 | `call_indirect` | `call_indirect` *signature-name* `[` *expr* `] (`*expr* `,` … `)` | `call_indirect $foo [1] (0, 2)`
 
