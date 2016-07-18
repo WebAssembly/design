@@ -59,6 +59,32 @@ A single-byte unsigned integer indicating a [value type](AstSemantics.md#types).
 * `3` indicating type `f32` 
 * `4` indicating type `f64`
 
+### definition_kind
+A single-byte unsigned integer indicating the kind of definition being imported or defined:
+* `0` indicating a `Function` [import](Modules.md#imports) or [definition](Modules.md#function-and-code-sections)
+* `1` indicating a `Table` [import](Modules.md#imports) or [definition](Modules.md#table-section)
+* `2` indicating a `Memory` [import](Modules.md#imports) or [definition](Modules.md#linear-memory-section)
+* `3` indicating a `Global` [import](Modules.md#imports) or [definition](Modules.md#global-section)
+
+### resizable_definition
+A packed tuple that describes the import or definition of a resizable 
+[table](AstSemantics.md#table) or [memory](AstSemantics.md#resizing):
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| flags | `varuint32` | described below |
+| initial | `varuint32` | initial length (in units of table elements or wasm pages) |
+| maximum | `varuint32`? | only present if specified by `flags` |
+
+The `varuint32` "flags" field assigns the following meaning to the bits:
+* `0x1` : this is a *default* [table](AstSemantics.md#table)/[memory](AstSemantics.md#linear-memory)
+          (in the MVP, *every* memory/table import/definition must be flagged as default)
+* `0x2` : indicates that the memory/table has a specified maximum
+
+### init_expr
+The encoding of an [initializer expression](Modules.md#initializer-expression)
+is simply the encoding of the operator (`*.const` or `get_global`) followed by
+its immediate (constant value or global index).
 
 # Definitions
 
@@ -110,6 +136,7 @@ The content of each section is encoded in its `payload_str`.
 * [Function](#function-section) section
 * [Table](#table-section) section
 * [Memory](#memory-section) section
+* [Global](#global-section) section
 * [Export](#export-section) section
 * [Start](#start-section) section
 * [Code](#code-section) section
@@ -127,13 +154,13 @@ ID: `type`
 The type section declares all function signatures that will be used in the module.
 
 | Field | Type | Description |
-| ----- |  ----- | ----- |
+| ----- | ---- | ----------- |
 | count | `varuint32` | count of type entries to follow |
 | entries | `type_entry*` | repeated type entries as described below |
 
 #### Type entry
 | Field | Type | Description |
-| ----- |  ----- | ----- |
+| ----- | ---- | ----------- |
 | form | `varuint7` | `0x40`, indicating a function type |
 | param_count | `varuint32` | the number of parameters to the function |
 | param_types | `value_type*` | the parameter types of the function |
@@ -149,18 +176,45 @@ ID: `import`
 The import section declares all imports that will be used in the module.
 
 | Field | Type | Description |
-| ----- |  ----- | ----- |
+| ----- | ---- | ----------- |
 | count | `varuint32` | count of import entries to follow |
 | entries | `import_entry*` | repeated import entries as described below |
 
 #### Import entry
 | Field | Type | Description |
-| ----- |  ----- | ----- |
-| sig_index | `varuint32` | signature index of the import |
+| ----- | ---- | ----------- |
 | module_len | `varuint32` | module string length |
 | module_str | `bytes` | module string of `module_len` bytes |
-| function_len | `varuint32` | function string length |
-| function_str | `bytes` | function string of `function_len` bytes |
+| field_len | `varuint32` | field name length |
+| field_str | `bytes` | field name string of `field_len` bytes |
+| kind | `definition_kind` | the kind of definition being imported |
+
+Followed by, if the `kind` is `Function`:
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| sig_index | `varuint32` | signature index of the import |
+
+or, if the `kind` is `Table`:
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| table_index | `varuint32` | [table index](Modules.md#table-index-space); must be 0 in the MVP |
+| | `resizable_definition` | see [above](#resizable_definition) |
+
+or, if the `kind` is `Memory`:
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| memory_index | `varuint32` | [linear memory index](Modules.md#linear-memory-index-space); must be 0 in the MVP |
+| | `resizable_definition` | see [above](#resizable_definition) |
+
+or, if the `kind` is `Global`:
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| type | `value_type` | type of the imported global |
+| mutability | `uint8` | `0` if immutable, `1` if mutable; must be `0` in the MVP |
 
 ### Function section
 
@@ -170,7 +224,7 @@ The function section _declares_ the signatures of all functions in the
 module (their definitions appear in the [code section](#code-section)).
 
 | Field | Type | Description |
-| ----- |  ----- | ----- |
+| ----- | ---- | ----------- |
 | count | `varuint32` | count of signature indices to follow |
 | types | `varuint32*` | sequence of indices into the type section |
 
@@ -178,44 +232,71 @@ module (their definitions appear in the [code section](#code-section)).
 
 ID: `table`
 
-The table section defines the module's
-[indirect function table](AstSemantics.md#calls).
+The encoding of a [Table section](Modules.md#table-section):
 
 | Field | Type | Description |
-| ----- |  ----- | ----- |
-| count | `varuint32` | count of entries to follow |
-| entries | `varuint32*` | repeated indexes into the function section |
+| ----- | ---- | ----------- |
+| element_type | `varuint7` | `0x40`, indicating [`anyfunc`](AstSemantics.md#table) |
+| | `resizable_definition` | see [above](#resizable_definition) |
 
 ### Memory section
 
 ID: `memory`
 
-The memory section declares the size and characteristics of the memory
-associated with the module.
+The encoding of a [Memory section](Modules.md#linear-memory-section) is simply
+a `resizable_definition`:
 
 | Field | Type | Description |
-| ----- |  ----- | ----- |
-| initial | `varuint32` | initial memory size in 64KiB pages |
-| maximum | `varuint32` | maximum memory size in 64KiB pages |
-| exported | `uint8` | `1` if the memory is visible outside the module |
+| ----- | ---- | ----------- |
+| | `resizable_definition` | see [above](#resizable_definition) |
+
+Note that the initial/maximum fields are specified in units of 
+[WebAssembly pages](AstSemantics.md#linear-memory).
+
+### Global section
+
+ID: `global`
+
+The encoding of the [Global section](Modules.md#global-section):
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| count | `variable_entry` | count of global [variable entries](#variable-entry) as described below |
+| globals | `global_entry*` | global variable entries, as described below |
+
+#### Global Entry
+
+Each `global_entry` declares a number of global variables of a given type and mutability.
+It is legal to have several entries with the same type.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| count | `varuint32` | number of global variables of the following type/mutability |
+| type | `value_type` | type of the variables |
+| mutability | `uint8` | `0` if immutable, `1` if mutable |
 
 ### Export section
 
 ID: `export`
 
-The export section declares all exports from the module.
+The encoding of the [Export section](Modules.md#exports):
 
 | Field | Type | Description |
-| ----- |  ----- | ----- |
+| ----- | ---- | ----------- |
 | count | `varuint32` | count of export entries to follow |
 | entries | `export_entry*` | repeated export entries as described below |
 
 #### Export entry
 | Field | Type | Description |
-| ----- |  ----- | ----- |
-| func_index | `varuint32` | index into the function table |
-| function_len | `varuint32` | function string length |
-| function_str | `bytes` | function string of `function_len` bytes |
+| ----- | ---- | ----------- |
+| field_len | `varuint32` | field name string length |
+| field_str | `bytes` | field name string of `field_len` bytes |
+| kind | `definition_kind` | the kind of definition being exported |
+| index | `varuint32` | the index into the corresponding [index space](Modules.md) |
+
+For example, if the "kind" is `Function`, then "index" is a 
+[function index](Modules.md#function-index-space). Note that, in the MVP, the
+only valid index value for a memory or table export is 0.
 
 ### Start section
 
@@ -224,7 +305,7 @@ ID: `start`
 The start section declares the [start function](Modules.md#module-start-function).
 
 | Field | Type | Description |
-| ----- |  ----- | ----- |
+| ----- | ---- | ----------- |
 | index | `varuint32` | start function index |
 
 ### Code section
@@ -236,8 +317,8 @@ The count of function declared in the [function section](#function-section)
 and function bodies defined in this section must be the same and the `i`th
 declaration corresponds to the `i`th function body.
 
-| Field | Type |  Description |
-| ----- |  ----- |  ----- |  ----- |
+| Field | Type | Description |
+| ----- | ---- | ----------- |
 | count | `varuint32` | count of function bodies to follow |
 | bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
 
@@ -249,17 +330,38 @@ The data section declares the initialized data that is loaded
 into the linear memory.
 
 | Field | Type | Description |
-| ----- |  ----- | ----- |
+| ----- | ---- | ----------- |
 | count | `varuint32` | count of data segments to follow |
 | entries | `data_segment*` | repeated data segments as described below |
 
 a `data_segment` is:
 
 | Field | Type | Description |
-| ----- |  ----- | ----- |
-| offset | `varuint32` | the offset in linear memory at which to store the data |
+| ----- | ---- | ----------- |
+| index | `varuint32` | the [linear memory index](Modules.md#linear-memory-index-space) (0 in the MVP) |
+| offset | `init_expr` | an `i32` initializer expression that computes the offset at which to place the data |
 | size | `varuint32` | size of `data` (in bytes) |
 | data | `bytes` | sequence of `size` bytes |
+
+### Element section
+
+ID: `elem`
+
+The encoding of the [Elements section](Modules.md#elements-section):
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| count | `varuint32` | count of element segments to follow |
+| entries | `elem_segment*` | repeated element segments as described below |
+
+a `elem_segment` is:
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| index | `varuint32` | the [table index](Modules.md#table-index-space) (0 in the MVP) |
+| offset | `init_expr` | an `i32` initializer expression that computes the offset at which to place the elements |
+| num_elem | `varuint32` | number of elements to follow |
+| elems | `varuint32*` | sequence of [function indices](Modules.md#function-index-space) |
 
 ### Name section
 
@@ -273,7 +375,7 @@ environment, the names in this section will be used as the names of functions
 and locals in the [text format](TextFormat.md).
 
 | Field | Type | Description |
-| ----- |  ----- | ----- |
+| ----- | ---- | ----------- |
 | count | `varuint32` | count of entries to follow |
 | entries | `function_names*` | sequence of names |
 
@@ -284,7 +386,7 @@ functions.
 #### Function names
 
 | Field | Type | Description |
-| ----- |  ----- | ----- |
+| ----- | ---- | ----------- |
 | fun_name_len | `varuint32` | string length, in bytes |
 | fun_name_str | `bytes` | valid utf8 encoding |
 | local_count | `varuint32` | count of local names to follow |
@@ -296,7 +398,7 @@ count may be greater or less than the actual number of locals.
 #### Local name
 
 | Field | Type | Description |
-| ----- |  ----- | ----- |
+| ----- | ---- | ----------- |
 | local_name_len | `varuint32` | string length, in bytes |
 | local_name_str | `bytes` | valid utf8 encoding |
 
@@ -309,8 +411,8 @@ Each node in the abstract syntax tree corresponds to an operator, such as `i32.a
 Operators are encoding by an opcode byte followed by immediate bytes (if any), followed by children 
 nodes (if any).
 
-| Field | Type |Description |
-| ----- | ----- | ----- |
+| Field | Type | Description |
+| ----- | ---- | ----------- |
 | body_size | `varuint32` | size of function body to follow, in bytes |
 | local_count | `varuint32` | number of local entries |
 | locals | `local_entry*` | local variables |
@@ -322,7 +424,7 @@ Each local entry declares a number of local variables of a given type.
 It is legal to have several entries with the same type.
 
 | Field | Type | Description |
-| ----- | ----- | ----- |
+| ----- | ---- | ----------- |
 | count | `varuint32` | number of local variables of the following type |
 | type | `value_type` | type of the variables |
 
@@ -374,9 +476,10 @@ out of range, `br_table` branches to the default target.
 | `get_local` | `0x14` | local_index : `varuint32` | read a local variable or parameter |
 | `set_local` | `0x15` | local_index : `varuint32` | write a local variable or parameter |
 | `tee_local` | `0x19` | local_index : `varuint32` | write a local variable or parameter and return the same value |
-| `call` | `0x16` | argument_count : `varuint1`, function_index : `varuint32` | call a function by its index |
+| `get_global` | `0x18` | global_index : `varuint32` | read a global variable |
+| `set_global` | `0x19` | global_index : `varuint32` | write a global variable |
+| `call` | `0x16` | argument_count : `varuint1`, function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
 | `call_indirect` | `0x17` | argument_count : `varuint1`, type_index : `varuint32` | call a function indirect with an expected signature |
-| `call_import` | `0x18` | argument_count : `varuint1`, import_index : `varuint32` | call an imported function by its index |
 
 The counts following the different call opcodes specify the number of preceding operands taken as arguments.
 
