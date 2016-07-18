@@ -397,6 +397,16 @@ Let `values` be a new empty array of `initial` elements, all with value
 Return a new `WebAssemby.Table` instance with [[Table]] set to `table` and
 [[Values]] set to `values`.
 
+### `WebAssembly.Table.prototype.length`
+
+This is an accessor property whose [[Set]] is Undefined and whose [[Get]]
+accessor function performs the following steps:
+
+Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a `TypeError`
+is thrown.
+
+Return `T.[[Values]].length`.
+
 ### `WebAssembly.Table.prototype.grow`
 
 This method calls `Table.grow`, having performed
