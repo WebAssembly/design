@@ -199,14 +199,13 @@ or, if the `kind` is `Table`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| table_index | `varuint32` | [table index](Modules.md#table-index-space); must be 0 in the MVP |
+| element_type | `varuint7` | `0x40`, indicating [`anyfunc`](AstSemantics.md#table) |
 | | `resizable_definition` | see [above](#resizable_definition) |
 
 or, if the `kind` is `Memory`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| memory_index | `varuint32` | [linear memory index](Modules.md#linear-memory-index-space); must be 0 in the MVP |
 | | `resizable_definition` | see [above](#resizable_definition) |
 
 or, if the `kind` is `Global`:
