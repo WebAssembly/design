@@ -151,10 +151,8 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spe
 function, global, memory and table imports):
 * Let `v` be the resultant value of performing
   [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L139)).
-* If [`i.export_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L140)
-  is not the empty string:
-  * If `Type(v)` is not Object, throw a `TypeError`.
-  * Let `v` instead be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`v`, `i.export_name`)
+* If `Type(v)` is not Object, throw a `TypeError`.
+* Let `v` be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`v`, `i.export_name`)
 * If `i` is a function import:
   * If `IsCallable(v)` is `false`, throw a `TypeError`.
   * Otherwise, append an anonymous function to `imports` 
