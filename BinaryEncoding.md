@@ -262,18 +262,18 @@ The encoding of the [Global section](Modules.md#global-section):
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | count | `variable_entry` | count of global [variable entries](#variable-entry) as described below |
-| globals | `global_entry*` | global variable entries, as described below |
+| globals | `global_variable*` | global variables, as described below |
 
 #### Global Entry
 
-Each `global_entry` declares a number of global variables of a given type and mutability.
-It is legal to have several entries with the same type.
+Each `global_variable` declares a single global variable of a given type, mutability
+and with the given initializer.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| count | `varuint32` | number of global variables of the following type/mutability |
 | type | `value_type` | type of the variables |
-| mutability | `uint8` | `0` if immutable, `1` if mutable |
+| mutability | `varuint1` | `0` if immutable, `1` if mutable |
+| init | `init_expr` | the initial value of the global |
 
 ### Export section
 
