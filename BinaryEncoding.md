@@ -66,8 +66,8 @@ A single-byte unsigned integer indicating the kind of definition being imported 
 * `2` indicating a `Memory` [import](Modules.md#imports) or [definition](Modules.md#linear-memory-section)
 * `3` indicating a `Global` [import](Modules.md#imports) or [definition](Modules.md#global-section)
 
-### resizable_definition
-A packed tuple that describes the import or definition of a resizable 
+### resizable_limits
+A packed tuple that describes the limits of a
 [table](AstSemantics.md#table) or [memory](AstSemantics.md#resizing):
 
 | Field | Type | Description |
@@ -200,13 +200,13 @@ or, if the `kind` is `Table`:
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | element_type | `varuint7` | `0x40`, indicating [`anyfunc`](AstSemantics.md#table) |
-| | `resizable_definition` | see [above](#resizable_definition) |
+| | `resizable_limits` | see [above](#resizable_limits) |
 
 or, if the `kind` is `Memory`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| | `resizable_definition` | see [above](#resizable_definition) |
+| | `resizable_limits` | see [above](#resizable_limits) |
 
 or, if the `kind` is `Global`:
 
@@ -236,18 +236,18 @@ The encoding of a [Table section](Modules.md#table-section):
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | element_type | `varuint7` | `0x40`, indicating [`anyfunc`](AstSemantics.md#table) |
-| | `resizable_definition` | see [above](#resizable_definition) |
+| | `resizable_limits` | see [above](#resizable_limits) |
 
 ### Memory section
 
 ID: `memory`
 
 The encoding of a [Memory section](Modules.md#linear-memory-section) is simply
-a `resizable_definition`:
+a `resizable_limits`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| | `resizable_definition` | see [above](#resizable_definition) |
+| | `resizable_limits` | see [above](#resizable_limits) |
 
 Note that the initial/maximum fields are specified in units of 
 [WebAssembly pages](AstSemantics.md#linear-memory).
