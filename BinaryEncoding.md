@@ -275,6 +275,8 @@ and with the given initializer.
 | mutability | `varuint1` | `0` if immutable, `1` if mutable |
 | init | `init_expr` | the initial value of the global |
 
+Note that, in the MVP, only immutable global variables can be exported.
+
 ### Export section
 
 ID: `export`
