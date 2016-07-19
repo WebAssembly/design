@@ -200,7 +200,7 @@ or, if the `kind` is `Table`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| element_type | `varuint7` | `0x40`, indicating [`anyfunc`](AstSemantics.md#table) |
+| element_type | `varuint7` | `0x20`, indicating [`anyfunc`](AstSemantics.md#table) |
 | | `resizable_limits` | see [above](#resizable_limits) |
 
 or, if the `kind` is `Memory`:
@@ -236,7 +236,7 @@ The encoding of a [Table section](Modules.md#table-section):
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| element_type | `varuint7` | `0x40`, indicating [`anyfunc`](AstSemantics.md#table) |
+| element_type | `varuint7` | `0x20`, indicating [`anyfunc`](AstSemantics.md#table) |
 | | `resizable_limits` | see [above](#resizable_limits) |
 
 ### Memory section
