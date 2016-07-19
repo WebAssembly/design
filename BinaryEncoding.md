@@ -214,7 +214,7 @@ or, if the `kind` is `Global`:
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | type | `value_type` | type of the imported global |
-| mutability | `uint8` | `0` if immutable, `1` if mutable; must be `0` in the MVP |
+| mutability | `varuint1` | `0` if immutable, `1` if mutable; must be `0` in the MVP |
 
 ### Function section
 
