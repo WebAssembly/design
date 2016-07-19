@@ -86,6 +86,10 @@ The encoding of an [initializer expression](Modules.md#initializer-expression)
 is the normal encoding of the expression followed by the `end` opcode as a
 delimiter.
 
+Note that `get_global` in an initializer expression can only refer to immutable
+imported globals and all uses of `init_expr` can only appear after the Imports
+section.
+
 # Definitions
 
 ### Post-order encoding
