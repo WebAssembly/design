@@ -140,6 +140,7 @@ The content of each section is encoded in its `payload_str`.
 * [Export](#export-section) section
 * [Start](#start-section) section
 * [Code](#code-section) section
+* [Element](#element-section) section
 * [Data](#data-section) section
 * [Name](#name-section) section
 
@@ -321,6 +322,26 @@ declaration corresponds to the `i`th function body.
 | count | `varuint32` | count of function bodies to follow |
 | bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
 
+### Element section
+
+ID: `elem`
+
+The encoding of the [Elements section](Modules.md#elements-section):
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| count | `varuint32` | count of element segments to follow |
+| entries | `elem_segment*` | repeated element segments as described below |
+
+a `elem_segment` is:
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| index | `varuint32` | the [table index](Modules.md#table-index-space) (0 in the MVP) |
+| offset | `init_expr` | an `i32` initializer expression that computes the offset at which to place the elements |
+| num_elem | `varuint32` | number of elements to follow |
+| elems | `varuint32*` | sequence of [function indices](Modules.md#function-index-space) |
+
 ### Data section
 
 ID: `data`
@@ -341,26 +362,6 @@ a `data_segment` is:
 | offset | `init_expr` | an `i32` initializer expression that computes the offset at which to place the data |
 | size | `varuint32` | size of `data` (in bytes) |
 | data | `bytes` | sequence of `size` bytes |
-
-### Element section
-
-ID: `elem`
-
-The encoding of the [Elements section](Modules.md#elements-section):
-
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| count | `varuint32` | count of element segments to follow |
-| entries | `elem_segment*` | repeated element segments as described below |
-
-a `elem_segment` is:
-
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| index | `varuint32` | the [table index](Modules.md#table-index-space) (0 in the MVP) |
-| offset | `init_expr` | an `i32` initializer expression that computes the offset at which to place the elements |
-| num_elem | `varuint32` | number of elements to follow |
-| elems | `varuint32*` | sequence of [function indices](Modules.md#function-index-space) |
 
 ### Name section
 
