@@ -109,10 +109,9 @@ default linear memories but [new memory operators](FutureFeatures.md#multiple-ta
 may be added after the MVP which can also access non-default memories.
 
 Linear memories (default or otherwise) can either be [imported](Modules.md#imports)
-or [defined inside the module](Modules.md#linear-memory-section), with defaultness
-indicated by a flag on the import or definition. After import or definition,
-there is no difference when accessing a linear memory whether it was imported or
-defined internally.
+or [defined inside the module](Modules.md#linear-memory-section). After import
+or definition, there is no difference when accessing a linear memory whether it
+was imported or defined internally.
 
 In the MVP, linear memory cannot be shared between threads of execution.
 The addition of [threads](PostMVP.md#threads) will allow this.
@@ -270,10 +269,9 @@ defined by the host environment.
 Every WebAssembly [instance](Modules.md) has one specially-designated *default*
 table which is indexed by [`call_indirect`](#calls) and other future
 table operators. Tables can either be [imported](Modules.md#imports) or 
-[defined inside the module](Modules.md#table-section), with defaultness
-indicated by a flag on the import or definition. After import or definition,
-there is no difference when calling into a table whether it was imported or
-defined internally.
+[defined inside the module](Modules.md#table-section). After import or
+definition, there is no difference when calling into a table whether it was
+imported or defined internally.
 
 In the MVP, the primary purpose of tables is to implement indirect function
 calls in C/C++ using an integer index as the pointer-to-function and the table

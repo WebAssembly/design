@@ -72,14 +72,12 @@ A packed tuple that describes the limits of a
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| flags | `varuint32` | described below |
+| flags | `varuint32` | bit `0x1` is set if the maximum field is present |
 | initial | `varuint32` | initial length (in units of table elements or wasm pages) |
 | maximum | `varuint32`? | only present if specified by `flags` |
 
-The `varuint32` "flags" field assigns the following meaning to the bits:
-* `0x1` : this is a *default* [table](AstSemantics.md#table)/[memory](AstSemantics.md#linear-memory)
-          (in the MVP, *every* memory/table import/definition must be flagged as default)
-* `0x2` : indicates that the memory/table has a specified maximum
+The "flags" field may later be extended to include a flag for sharing (between
+threads).
 
 ### init_expr
 The encoding of an [initializer expression](Modules.md#initializer-expression)

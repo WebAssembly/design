@@ -64,7 +64,7 @@ of the global variable. These fields have the same meaning as in the
 [Global section](#global-section).
 
 A *linear memory import* includes the same set of fields defined in the
-[Linear Memory section](#linear-memory-section): *default flag*, *initial
+[Linear Memory section](#linear-memory-section):  *initial
 length* and optional *maximum length*. The host environment must only allow
 imports of WebAssembly linear memories that have initial length
 *greater-or-equal* than the initial length declared in the import and that have
@@ -72,20 +72,17 @@ maximum length *less-or-equal* than the maximum length declared in the import.
 This ensures that separate compilation can assume: memory accesses below the
 declared initial length are always in-bounds, accesses above the declared
 maximum length are always out-of-bounds and if initial equals maximum, the
-length is fixed. If the default flag is set, the imported memory is used as
-the [default memory](AstSemantics.md#linear-memory) and at most one linear
-memory definition (import or internal) may have the default flag set. In the
-MVP, it is a validation error not to set the default flag.
+length is fixed. In the MVP, every memory is a [default memory](AstSemantics.md#linear-memory)
+and thus there may be at most one linear memory import or linear memory
+section.
 
 A *table import* includes the same set of fields defined in the 
-[Table section](#table-section): *default flag*, *element type*, *initial
+[Table section](#table-section): *element type*, *initial
 length* and optional *maximum length*. As with the linear memory section, the
 host environment must ensure only WebAssembly tables are imported with
 exactly-matching element type, greater-or-equal initial length, and
-less-or-equal maximum length. If the default flag is set, the imported table
-is used as the [default table](AstSemantics.md#table) and at most one table
-definition (import or internal) may have the default flag set. In the MVP, it is
-a validation error not to set the default flag.
+less-or-equal maximum length. In the MVP, every table is a [default table](AstSemantics.md#table)
+and thus there may be at most one table import or table section.
 
 Since the WebAssembly spec does not define how import names are interpreted:
 * the [Web environment](Web.md#names) defines names to be UTF8-encoded strings;
@@ -207,16 +204,10 @@ Each global variable internal definition declares its *type*
 
 ## Linear memory section
 
-The *linear memory section* provides an internal definition of zero or more
-[linear memories](AstSemantics.md#linear-memory). In the MVP, the total number
-of linear memory definitions is limited to 1, but this may be relaxed in the
-[future](FutureFeatures.md#multiple-tables-and-memories).
-
-A linear memory definition may declare itself to be the 
-[default](AstSemantics.md#linear-memory) linear memory of the module. At most
-one linear memory definition may declare itself to be the default. In the MVP,
-if there is a linear memory definition, it *must* declare itself the default
-(there is no way to access non-default linear memories anyhow).
+The *linear memory section* provides an internal definition of one
+[linear memory](AstSemantics.md#linear-memory). In the MVP, every memory is a
+default memory and thus there may be at most one linear memory import or linear
+memory section.
 
 Each linear memory section declares an *initial* [memory size](AstSemantics.md#linear-memory)
 (which may be subsequently increased by [`grow_memory`](AstSemantics.md#resizing)) and an
@@ -243,17 +234,10 @@ value (defining the length of the given segment). The `offset` is an
 ## Table section
 
 The *table section* contains zero or more definitions of distinct 
-[tables](AstSemantics.md#table). In the MVP, the total number
-of table definitions is limited to 1, but this may be relaxed in the
-[future](FutureFeatures.md#multiple-tables-and-memories).
+[tables](AstSemantics.md#table). In the MVP, every table is a 
+default table and thus there may be at most one table import or table section.
 
-A table definition may declare itself to be the
-[default](AstSemantics.md#table) table of the module. At most
-one table definition may declare itself to be the default. In the MVP,
-if there is a table definition, it *must* declare itself the default
-(there is no way to access non-default tables anyhow).
-
-Each table definition also includes an *element type*, *initial length*, and
+Each table definition declares an *element type*, *initial length*, and
 optional *maximum length*.
 
 In the MVP, the only valid element type is `"anyfunc"`, but in the
