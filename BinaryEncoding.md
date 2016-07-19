@@ -59,7 +59,7 @@ A single-byte unsigned integer indicating a [value type](AstSemantics.md#types).
 * `3` indicating type `f32` 
 * `4` indicating type `f64`
 
-### definition_kind
+### external_kind
 A single-byte unsigned integer indicating the kind of definition being imported or defined:
 * `0` indicating a `Function` [import](Modules.md#imports) or [definition](Modules.md#function-and-code-sections)
 * `1` indicating a `Table` [import](Modules.md#imports) or [definition](Modules.md#table-section)
@@ -187,7 +187,7 @@ The import section declares all imports that will be used in the module.
 | module_str | `bytes` | module string of `module_len` bytes |
 | field_len | `varuint32` | field name length |
 | field_str | `bytes` | field name string of `field_len` bytes |
-| kind | `definition_kind` | the kind of definition being imported |
+| kind | `external_kind` | the kind of definition being imported |
 
 Followed by, if the `kind` is `Function`:
 
@@ -290,7 +290,7 @@ The encoding of the [Export section](Modules.md#exports):
 | ----- | ---- | ----------- |
 | field_len | `varuint32` | field name string length |
 | field_str | `bytes` | field name string of `field_len` bytes |
-| kind | `definition_kind` | the kind of definition being exported |
+| kind | `external_kind` | the kind of definition being exported |
 | index | `varuint32` | the index into the corresponding [index space](Modules.md) |
 
 For example, if the "kind" is `Function`, then "index" is a 
