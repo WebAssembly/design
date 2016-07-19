@@ -83,8 +83,8 @@ The `varuint32` "flags" field assigns the following meaning to the bits:
 
 ### init_expr
 The encoding of an [initializer expression](Modules.md#initializer-expression)
-is simply the encoding of the operator (`*.const` or `get_global`) followed by
-its immediate (constant value or global index).
+is the normal encoding of the expression followed by the `end` opcode as a
+delimiter.
 
 # Definitions
 
