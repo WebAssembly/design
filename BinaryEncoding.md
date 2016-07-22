@@ -480,8 +480,8 @@ out of range, `br_table` branches to the default target.
 | `get_local` | `0x14` | local_index : `varuint32` | read a local variable or parameter |
 | `set_local` | `0x15` | local_index : `varuint32` | write a local variable or parameter |
 | `tee_local` | `0x19` | local_index : `varuint32` | write a local variable or parameter and return the same value |
-| `get_global` | `0x18` | global_index : `varuint32` | read a global variable |
-| `set_global` | `0x19` | global_index : `varuint32` | write a global variable |
+| `get_global` | `0xbb` | global_index : `varuint32` | read a global variable |
+| `set_global` | `0xbc` | global_index : `varuint32` | write a global variable |
 | `call` | `0x16` | argument_count : `varuint1`, function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
 | `call_indirect` | `0x17` | argument_count : `varuint1`, type_index : `varuint32` | call a function indirect with an expected signature |
 
