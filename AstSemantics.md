@@ -580,7 +580,7 @@ follows:
   * `f64.min`: minimum (binary operator); if either operand is NaN, returns NaN
   * `f64.max`: maximum (binary operator); if either operand is NaN, returns NaN
 
-`min` and `max` operators treat `-0.0` as being effectively less than `0.0`.
+`min` and `max` operators return the first operand if the operands are `0.0` and `-0.0`.
 
 In floating point comparisons, the operands are *unordered* if either operand
 is NaN, and *ordered* otherwise.
