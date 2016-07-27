@@ -342,6 +342,7 @@ It is legal to have several entries with the same type.
 | `br_table` | `0x08` | see below | branch table control flow construct |
 | `return` | `0x09` | argument_count : `varuint1` | return zero or one value from this function |
 | `unreachable` | `0x0a` | | trap immediately |
+| `drop` | `0x0b` | | ignore value |
 | `end` | `0x0f` | | end a block, loop, or if |
 
 Note that there is no explicit `if_else` opcode, as the else clause is encoded with the `else` bytecode.
@@ -372,6 +373,7 @@ out of range, `br_table` branches to the default target.
 | `f32.const` | `0x13` | value : `uint32` | a constant value interpreted as `f32` |
 | `get_local` | `0x14` | local_index : `varuint32` | read a local variable or parameter |
 | `set_local` | `0x15` | local_index : `varuint32` | write a local variable or parameter |
+| `tee_local` | `0x19` | local_index : `varuint32` | write a local variable or parameter and return the same value |
 | `call` | `0x16` | argument_count : `varuint1`, function_index : `varuint32` | call a function by its index |
 | `call_indirect` | `0x17` | argument_count : `varuint1`, type_index : `varuint32` | call a function indirect with an expected signature |
 | `call_import` | `0x18` | argument_count : `varuint1`, import_index : `varuint32` | call an imported function by its index |
@@ -405,7 +407,7 @@ The counts following the different call opcodes specify the number of preceding 
 | `i64.store` | `0x34` | `memory_immediate` | store to memory |
 | `f32.store` | `0x35` | `memory_immediate` | store to memory |
 | `f64.store` | `0x36` | `memory_immediate` | store to memory |
-| `memory_size` | `0x3b` |  | query the size of memory |
+| `current_memory` | `0x3b` |  | query the size of memory |
 | `grow_memory` | `0x39` |  | grow the size of memory |
 
 The `memory_immediate` type is encoded as follows:
