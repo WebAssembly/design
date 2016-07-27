@@ -524,14 +524,15 @@ When the result of any arithmetic operation other than `neg`, `abs`, or
 the implicit leading digit of the significand) of the NaN are computed as
 follows:
 
- - If the operation has any NaN input values, implementations may select any of
-   them to be the result value, but with the most significant bit of the
-   fraction field overwritten to be 1.
+ - If the fraction fields of all NaN inputs to the instruction all consist
+   of 1 in the most significant bit and 0 in the remaining bits, or if there are
+   no NaN inputs, the result is a NaN with a nondeterministic sign bit, 1 in the
+   most significant bit of the fraction field, and all zeros in the remaining
+   bits of the fraction field.
 
- - If the implementation does not choose to use an input NaN as a result value,
-   or if there are no input NaNs, the result value has a nondeterministic sign
-   bit, a fraction field with 1 in the most significant bit and 0 in the
-   remaining bits.
+ - Otherwise the result is a NaN with a nondeterministic sign bit, 1 in the most
+   significant bit of the fraction field, and nondeterminsitic values in the
+   remaining bits of the fraction field.
 
 32-bit floating point operations are as follows:
 
