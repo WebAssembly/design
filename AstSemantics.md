@@ -521,17 +521,20 @@ implementations of the remaining required operators.
 
 When the result of any arithmetic operation other than `neg`, `abs`, or
 `copysign` is a NaN, the sign bit and the fraction field (which does not include
-the implicit leading digit of the significand) of the NaN are computed as
-follows:
+the implicit leading digit of the significand) of the NaN are computed according
+to a nondeterministic choice between the following alternatives:
 
- - If the operation has any NaN input values, implementations may select any of
-   them to be the result value, but with the most significant bit of the
-   fraction field overwritten to be 1.
+ - If the operation has any NaN input values, implementations may choose any one
+   of them, nondeterministically, to be the result value, but with the most
+   significant bit of the fraction field overwritten to be 1.
 
- - If the implementation does not choose to use an input NaN as a result value,
-   or if there are no input NaNs, the result value has a nondeterministic sign
-   bit, a fraction field with 1 in the most significant bit and 0 in the
-   remaining bits.
+ - If the operation has any NaN input values, implementations may alternatively
+   choose to produce a NaN containing the bitwise-or of all the bits of the
+   input NaN values, also with the most significant bit of the fraction field
+   overwritten to be 1.
+
+ - Otherwise, the result value has a nondeterministic sign bit, a fraction field
+   with 1 in the most significant bit and 0 in the remaining bits.
 
 32-bit floating point operations are as follows:
 
