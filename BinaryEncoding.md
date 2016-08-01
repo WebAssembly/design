@@ -117,42 +117,45 @@ The module starts with a preamble of two fields:
 | magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
 | version | `uint32` | Version number, currently 10. The version for MVP will be reset to 1. |
 
-This preamble is followed by a sequence of sections. Each section is identified by an
-immediate string. Sections whose identity is unknown to the WebAssembly
-implementation are ignored and this is supported by including the size in bytes
-for all sections. The encoding of sections is structured as follows:
+This preamble is followed by a sequence of sections. Each section is identified by `varint32` 
+that encodes either a known section or a user-defined section.
+Known sections have negative ids, while user-defined sections have positive ids that encode 
+the length of a string identifier immediately to follow.
+After the section identification, the section length and data follow.
+All sections unknown to the WebAssembly implementation are ignored.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| id_len | `varuint32` | section identifier string length |
-| id_str | `bytes` | section identifier string of id_len bytes |
+| id | `varint32` | section identifier code |
+| id_str | `bytes` | section identifier string, of length `max(id, 0)` bytes |
 | payload_len  | `varuint32` | size of this section in bytes |
-| payload_str  | `bytes` | content of this section, of length payload_len |
+| payload_data  | `bytes` | content of this section, of length `payload_len` |
 
 Each section is optional and may appear at most once.
 Known sections (from this list) may not appear out of order.
-The content of each section is encoded in its `payload_str`.
+The content of each section is encoded in its `payload_data`.
 
-* [Type](#type-section) section
-* [Import](#import-section) section
-* [Function](#function-section) section
-* [Table](#table-section) section
-* [Memory](#memory-section) section
-* [Global](#global-section) section
-* [Export](#export-section) section
-* [Start](#start-section) section
-* [Code](#code-section) section
-* [Element](#element-section) section
-* [Data](#data-section) section
-* [Name](#name-section) section
+| Section Name | Code | Description |
+| ------------ | ---- | ----------- |
+| [Type](#type-section) | `-1` | Function signature declarations |
+| [Import](#import-section) | `-2` | Import declarations |
+| [Function](#function-section) | `-3` | Function declarations |
+| [Table](#table-section) | `-4` | Indirect function table and other tables |
+| [Memory](#memory-section) | `-5` | Memory attributes |
+| [Global](#global-section) | `-6` | Global declarations |
+| [Export](#export-section) | `-7` | Exports | 
+| [Start](#start-section) | `-8` | Start function declaration |
+| [Code](#code-section) | `-9` | Function bodies (code) |
+| [Element](#element-section) | `-10` | Elements section |
+| [Data](#data-section) | `-11` | Data segments |
+| [Name](#name-section) | `-12`| Names section|
+
 
 The end of the last present section must coincide with the last byte of the
 module. The shortest valid module is 8 bytes (`magic number`, `version`,
 followed by zero sections).
 
 ### Type section
-
-ID: `type`
 
 The type section declares all function signatures that will be used in the module.
 
@@ -173,8 +176,6 @@ The type section declares all function signatures that will be used in the modul
 (Note: In the future, this section may contain other forms of type entries as well, which can be distinguished by the `form` field.)
 
 ### Import section
-
-ID: `import`
 
 The import section declares all imports that will be used in the module.
 
@@ -220,8 +221,6 @@ or, if the `kind` is `Global`:
 
 ### Function section
 
-ID: `function`
-
 The function section _declares_ the signatures of all functions in the
 module (their definitions appear in the [code section](#code-section)).
 
@@ -232,8 +231,6 @@ module (their definitions appear in the [code section](#code-section)).
 
 ### Table section
 
-ID: `table`
-
 The encoding of a [Table section](Modules.md#table-section):
 
 | Field | Type | Description |
@@ -242,8 +239,6 @@ The encoding of a [Table section](Modules.md#table-section):
 | | `resizable_limits` | see [above](#resizable_limits) |
 
 ### Memory section
-
-ID: `memory`
 
 The encoding of a [Memory section](Modules.md#linear-memory-section) is simply
 a `resizable_limits`:
@@ -256,8 +251,6 @@ Note that the initial/maximum fields are specified in units of
 [WebAssembly pages](AstSemantics.md#linear-memory).
 
 ### Global section
-
-ID: `global`
 
 The encoding of the [Global section](Modules.md#global-section):
 
@@ -281,8 +274,6 @@ Note that, in the MVP, only immutable global variables can be exported.
 
 ### Export section
 
-ID: `export`
-
 The encoding of the [Export section](Modules.md#exports):
 
 | Field | Type | Description |
@@ -304,8 +295,6 @@ only valid index value for a memory or table export is 0.
 
 ### Start section
 
-ID: `start`
-
 The start section declares the [start function](Modules.md#module-start-function).
 
 | Field | Type | Description |
@@ -313,8 +302,6 @@ The start section declares the [start function](Modules.md#module-start-function
 | index | `varuint32` | start function index |
 
 ### Code section
-
-ID: `code`
 
 The code section contains a body for every function in the module.
 The count of function declared in the [function section](#function-section)
@@ -327,8 +314,6 @@ declaration corresponds to the `i`th function body.
 | bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
 
 ### Element section
-
-ID: `elem`
 
 The encoding of the [Elements section](Modules.md#elements-section):
 
@@ -348,8 +333,6 @@ a `elem_segment` is:
 
 ### Data section
 
-ID: `data`
-
 The data section declares the initialized data that is loaded
 into the linear memory.
 
@@ -368,8 +351,6 @@ a `data_segment` is:
 | data | `bytes` | sequence of `size` bytes |
 
 ### Name section
-
-ID: `name`
 
 The names section does not change execution semantics and a validation error in
 this section does not cause validation for the whole module to fail and is
