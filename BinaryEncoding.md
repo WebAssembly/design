@@ -89,40 +89,42 @@ The module starts with a preamble of two fields:
 | magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
 | version | `uint32` | Version number, currently 10. The version for MVP will be reset to 1. |
 
-This preamble is followed by a sequence of sections. Each section is identified by an
-immediate string. Sections whose identity is unknown to the WebAssembly
-implementation are ignored and this is supported by including the size in bytes
-for all sections. The encoding of sections is structured as follows:
+This preamble is followed by a sequence of sections. Each section is identified by `varint32` 
+that encodes either a known section or a user-defined section.
+Known sections have negative ids, while user-defined sections have positive ids that encode 
+the length of a string identifier immediately to follow.
+After the section identification, the section length and data follow.
+All sections unknown to the WebAssembly implementation are ignored.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| id_len | `varuint32` | section identifier string length |
-| id_str | `bytes` | section identifier string of id_len bytes |
+| id | `varint32` | section identifier code |
+| id_str | `bytes` | section identifier string, of length `max(id, 0)` bytes |
 | payload_len  | `varuint32` | size of this section in bytes |
-| payload_str  | `bytes` | content of this section, of length payload_len |
+| payload_data  | `bytes` | content of this section, of length `payload_len` |
 
 Each section is optional and may appear at most once.
 Known sections (from this list) may not appear out of order.
 The content of each section is encoded in its `payload_str`.
 
-* [Type](#type-section) section
-* [Import](#import-section) section
-* [Function](#function-section) section
-* [Table](#table-section) section
-* [Memory](#memory-section) section
-* [Export](#export-section) section
-* [Start](#start-section) section
-* [Code](#code-section) section
-* [Data](#data-section) section
-* [Name](#name-section) section
+| Section Name | Code | Description |
+| ------------ | ---- | ----------- |
+| [Type](#type-section) | `-1` | Function signature declarations |
+| [Import](#import-section) | `-2` | Import declarations |
+| [Function](#function-section) | `-3` | Function declarations |
+| [Table](#table-section) | `-4` | Indirect function table and other tables |
+| [Memory](#memory-section) | `-5` | Memory attributes |
+| [Export](#export-section) | `-6` | Exports | 
+| [Start](#start-section) | `-7` | Start function declaration |
+| [Code](#code-section) | `-8` | Function bodies (code) |
+| [Data](#data-section) | `-9` | Data segments |
+| [Name](#name-section) | `-10`| Names section|
 
 The end of the last present section must coincide with the last byte of the
 module. The shortest valid module is 8 bytes (`magic number`, `version`,
 followed by zero sections).
 
 ### Type section
-
-ID: `type`
 
 The type section declares all function signatures that will be used in the module.
 
@@ -144,8 +146,6 @@ The type section declares all function signatures that will be used in the modul
 
 ### Import section
 
-ID: `import`
-
 The import section declares all imports that will be used in the module.
 
 | Field | Type | Description |
@@ -164,8 +164,6 @@ The import section declares all imports that will be used in the module.
 
 ### Function section
 
-ID: `function`
-
 The function section _declares_ the signatures of all functions in the
 module (their definitions appear in the [code section](#code-section)).
 
@@ -175,8 +173,6 @@ module (their definitions appear in the [code section](#code-section)).
 | types | `varuint32*` | sequence of indices into the type section |
 
 ### Table section
-
-ID: `table`
 
 The table section defines the module's
 [indirect function table](AstSemantics.md#calls).
@@ -188,8 +184,6 @@ The table section defines the module's
 
 ### Memory section
 
-ID: `memory`
-
 The memory section declares the size and characteristics of the memory
 associated with the module.
 
@@ -200,8 +194,6 @@ associated with the module.
 | exported | `uint8` | `1` if the memory is visible outside the module |
 
 ### Export section
-
-ID: `export`
 
 The export section declares all exports from the module.
 
@@ -219,8 +211,6 @@ The export section declares all exports from the module.
 
 ### Start section
 
-ID: `start`
-
 The start section declares the [start function](Modules.md#module-start-function).
 
 | Field | Type | Description |
@@ -228,8 +218,6 @@ The start section declares the [start function](Modules.md#module-start-function
 | index | `varuint32` | start function index |
 
 ### Code section
-
-ID: `code`
 
 The code section contains a body for every function in the module.
 The count of function declared in the [function section](#function-section)
@@ -242,8 +230,6 @@ declaration corresponds to the `i`th function body.
 | bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
 
 ### Data section
-
-ID: `data`
 
 The data section declares the initialized data that is loaded
 into the linear memory.
@@ -262,8 +248,6 @@ a `data_segment` is:
 | data | `bytes` | sequence of `size` bytes |
 
 ### Name section
-
-ID: `name`
 
 The names section does not change execution semantics and a validation error in
 this section does not cause validation for the whole module to fail and is
