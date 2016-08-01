@@ -10,9 +10,6 @@
     * a [Minimum Viable Product (MVP)](MVP.md) for the standard with
       roughly the same functionality as [asm.js](http://asmjs.org), primarily
       aimed at [C/C++](CAndC++.md);
-    * an effective and efficient [polyfill](Polyfill.md) library for the
-      MVP that translates WebAssembly code into JavaScript in the client so that
-      WebAssembly MVP can run on existing browsers;
     * a [follow-up to the MVP](PostMVP.md) which adds several more
       essential features; and
     * [additional features](FutureFeatures.md), specified iteratively and
