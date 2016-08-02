@@ -439,28 +439,25 @@ It is legal to have several entries with the same type.
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
 | `unreachable` | `0x00` | | trap immediately |
-| `block` | `0x01` |  | begin a sequence of expressions, the last of which yields a value |
-| `loop` | `0x02` |  | begin a block which can also form control flow loops |
-| `if` | `0x03` | | begin if expression |
+| `block` | `0x01` | arity : `varuint1` | begin a sequence of expressions, the last of which yields a value |
+| `loop` | `0x02` | arity : `varuint1` | begin a block which can also form control flow loops |
+| `if` | `0x03` | arity : `varuint1` | begin if expression |
 | `else` | `0x04` | | begin else expression of if |
 | `select` | `0x05` | | select one of two values based on condition |
-| `br` | `0x06` | argument_count : `varuint1`, relative_depth : `varuint32` | break that targets an outer nested block |
-| `br_if` | `0x07` | argument_count : `varuint1`, relative_depth : `varuint32` | conditional break that targets an outer nested block |
+| `br` | `0x06` | relative_depth : `varuint32` | break that targets an outer nested block |
+| `br_if` | `0x07` | relative_depth : `varuint32` | conditional break that targets an outer nested block |
 | `br_table` | `0x08` | see below | branch table control flow construct |
-| `return` | `0x09` | argument_count : `varuint1` | return zero or one value from this function |
+| `return` | `0x09` | | return zero or one value from this function |
 | `drop` | `0x0b` | | ignore value |
 | `nop` | `0x0a` | | no operation |
 | `end` | `0x0f` | | end a block, loop, or if |
 
-Note that there is no explicit `if_else` opcode, as the else clause is encoded with the `else` bytecode.
-
-The counts following the break and return operators specify how many preceding operands are taken as transfer arguments; in the MVP, all these values must be either 0 or 1.
+The _arities_ of `block`, `loop` and `if` operators specify how many values they leave on the operand stack; in the MVP, all arities must be either 0 or 1.
 
 The `br_table` operator has an immediate operand which is encoded as follows:
 
 | Field | Type | Description |
 | ---- | ---- | ---- |
-| arity | `varuint1` | number of arguments |
 | target_count | `varuint32` | number of targets in the target_table |
 | target_table | `uint32*` | target entries that indicate an outer block or loop to which to break |
 | default_target | `uint32` | an outer block or loop to which to break in the default case |
@@ -483,10 +480,8 @@ out of range, `br_table` branches to the default target.
 | `tee_local` | `0x19` | local_index : `varuint32` | write a local variable or parameter and return the same value |
 | `get_global` | `0xbb` | global_index : `varuint32` | read a global variable |
 | `set_global` | `0xbc` | global_index : `varuint32` | write a global variable |
-| `call` | `0x16` | argument_count : `varuint1`, function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
-| `call_indirect` | `0x17` | argument_count : `varuint1`, type_index : `varuint32` | call a function indirect with an expected signature |
-
-The counts following the different call opcodes specify the number of preceding operands taken as arguments.
+| `call` | `0x16` | function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
+| `call_indirect` | `0x17` | type_index : `varuint32` | call a function indirect with an expected signature |
 
 ## Memory-related operators ([described here](AstSemantics.md#linear-memory-accesses))
 
