@@ -439,8 +439,8 @@ It is legal to have several entries with the same type.
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
 | `unreachable` | `0x00` | | trap immediately |
-| `block` | `0x01` | arity : `varuint1` | begin a sequence of expressions, the last of which yields a value |
-| `loop` | `0x02` | arity : `varuint1` | begin a block which can also form control flow loops |
+| `block` | `0x01` | arity : `varuint1` | begin a sequence of expressions, yielding 0 or 1 values |
+| `loop` | `0x02` | arity : `varuint1` | begin a block which can form control flow loops |
 | `if` | `0x03` | arity : `varuint1` | begin if expression |
 | `else` | `0x04` | | begin else expression of if |
 | `select` | `0x05` | | select one of two values based on condition |
