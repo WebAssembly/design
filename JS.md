@@ -155,6 +155,8 @@ function, global, memory and table imports):
 * Let `v` be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`v`, `i.export_name`)
 * If `i` is a function import:
   * If `IsCallable(v)` is `false`, throw a `TypeError`.
+  * If `v` is a WebAssembly [Exported Function Exotic Object](#exported-function-exotic-objects)
+    and `v`'s signature does not match `i`'s signature, throw a `TypeError`.
   * Otherwise, append an anonymous function to `imports` 
     which calls `v` by coercing WebAssembly arguments to JavaScript arguments
     via [`ToJSValue`](#tojsvalue) and returns the result by coercing
