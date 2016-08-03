@@ -22,6 +22,3 @@ documents:
   [textual projection](TextFormat.md) of a module's AST.
 * WebAssembly is designed to be implemented both [by web browsers](Web.md)
   and [completely different execution environments](NonWeb.md).
-* To ease the transition to WebAssembly while native support is still
-  being deployed, the WebAssembly MVP is designed to allow an effective
-  and efficient [polyfill to JavaScript](Polyfill.md).

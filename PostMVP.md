@@ -1,8 +1,7 @@
 # Essential Post-MVP Features
 
 Some features are known to be essential and needed as soon as possible but aren't
-in the [Minimum Viable Product (MVP)](MVP.md) because there isn't yet a
-portably-efficient [polyfill](Polyfill.md) via JavaScript. There is a much
+in the [Minimum Viable Product (MVP)](MVP.md). There is a much
 bigger [list of features](FutureFeatures.md) that will be added after these
 essential features.
 
@@ -46,7 +45,7 @@ operators (no different from `i32.add`) or exports of a builtin SIMD module.
 
 ## Zero-cost Exception Handling
 
-The WebAssembly MVP (compilers and polyfills) may support four no-exception
+The WebAssembly MVP may support four no-exception
 modes for C++:
 * Compiler transforms `throw` to `abort()`.
 * Compiler-enforced `-fno-exceptions` mode (note [caveats][]).

@@ -51,47 +51,37 @@ outweigh the costs.
 WebAssembly was designed with [a variety of use cases in mind](UseCases.md).
 
 
-## Can the polyfill really be efficient?
+## Can WebAssembly be polyfilled?
 
-Yes, this is a [high-level goal](HighLevelGoals.md) and there is a 
+We think so. There was an early
 [prototype](https://github.com/WebAssembly/polyfill-prototype-1) with demos 
 [[1](https://lukewagner.github.io/AngryBotsPacked), 
-[2](https://lukewagner.github.io/PlatformerGamePacked)].  Although the 
-[binary format](BinaryEncoding.md) is not yet specified in any detail, the format used 
-by the prototype has promising initial experimental results. To allow direct comparison with asm.js, 
-the prototype has a tool to [pack asm.js](https://github.com/WebAssembly/polyfill-prototype-1/blob/master/src/pack-asmjs.cpp#L3117)
-into the prototype's binary format. Using this tool, we can see significant size savings before and 
-after `gzip` compression:
+[2](https://lukewagner.github.io/PlatformerGamePacked)], which showed
+that decoding a binary WebAssembly-like format into asm.js can be efficient.
+And as the WebAssembly design has changed there have been
+[more](https://github.com/WebAssembly/polyfill-prototype-2)
+[experiments](https://github.com/WebAssembly/binaryen/blob/master/src/wasm2asm.h)
+with polyfilling.
 
-| Demo | asm.js | binary | `gzip` asm.js | `gzip` binary |
-|------|--------|--------|---------------|---------------|
-| [AngryBots](https://lukewagner.github.io/AngryBotsPacked) | 19MiB | 6.3MiB | 4.1MiB | 3.0MiB |
-| [PlatformerGame](https://lukewagner.github.io/PlatformerGamePacked) | 49MiB | 18MiB | 11MiB | 7.3MiB |
+Overall, optimism has been increasing for quick adoption of WebAssembly in
+browsers, which is great, but it has decreased the motivation to work on a
+polyfill.
 
-By writing the [decoder prototype in C++](https://github.com/WebAssembly/polyfill-prototype-1/blob/611ec5c8c41b08b112cf064ec49b13bf87e400cd/src/unpack.cpp#L2306) 
-and Emscripten-compiling to asm.js, the polyfill is able to perform the translation to asm.js
-faster than a native JavaScript parser can parse the result (results measured in Firefox 41 
-on an Intel® Xeon® E5-2665 @ 2.40GHz):
+It is also the case that polyfilling WebAssembly to asm.js is less urgent
+because of the existence of alternatives, for example, a reverse polyfill -
+compiling
+[asm.js to WebAssembly](https://github.com/WebAssembly/binaryen/blob/master/src/asm2wasm.h) -
+exists, and it allows shipping a single build that can run as either
+asm.js or WebAssembly. It is also possible to build a project into
+two parallel asm.js and WebAssembly builds by just
+[flipping a switch](https://github.com/kripken/emscripten/wiki/WebAssembly)
+in emscripten, which avoids polyfill time on the client entirely. A third
+option, for non-performant code, is to use a compiled WebAssembly interpreter
+such as
+[binaryen.js](https://github.com/WebAssembly/binaryen/blob/master/test/binaryen.js/test.js).
 
-| Demo  | binary | time to decode into asm.js |
-|-------|--------|----------------------------|
-| [AngryBots](https://lukewagner.github.io/AngryBotsPacked) | 6.3MiB | 240ms |
-| [PlatformerGame](https://lukewagner.github.io/PlatformerGamePacked)  | 18MiB  | 550ms |
-
-Since the polyfill algorithm (at least in the prototype) is simple and single-pass, 
-memory usage is basically the size of the input plus the size of the decoded text.
-
-Additionally, there are two further improvements that can be made in the real polyfill:
-  1. Decode while downloading using either chunked files, HTTP `Range` requests or (eventually) 
-     the [Streams API](https://streams.spec.whatwg.org/).
-  2. Include optional better-than-`gzip` compression in the polyfill.  For example, the 
-     [lzham](https://github.com/richgel999/lzham_codec) library shows an *additional* 24% 
-     improvement over the above "`gzip` binary" figures while maintaining high decode rates.
-
-Extrapolating from the prototype, these extensions would provide a roughly 45% over-the-wire size 
-reduction (compared to current gzipped asm.js) without hurting load time (assuming moderate network 
-speeds and more than one core).  Developers may even want to switch to WebAssembly with the polyfill 
-even before there is any native support.
+However, a WebAssembly polyfill is still an interesting idea and should in
+principle be possible.
 
 
 ## Is WebAssembly only for C/C++ programmers?
