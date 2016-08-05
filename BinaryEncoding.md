@@ -447,7 +447,7 @@ It is legal to have several entries with the same type.
 | `br` | `0x06` | relative_depth : `varuint32` | break that targets an outer nested block |
 | `br_if` | `0x07` | relative_depth : `varuint32` | conditional break that targets an outer nested block |
 | `br_table` | `0x08` | see below | branch table control flow construct |
-| `return` | `0x09` | | return zero or one value from this function |
+| `return` | `0x09` | argument_count : `varuint1` | return zero or one value from this function |
 | `drop` | `0x0b` | | ignore value |
 | `nop` | `0x0a` | | no operation |
 | `end` | `0x0f` | | end a block, loop, or if |
@@ -480,8 +480,10 @@ out of range, `br_table` branches to the default target.
 | `tee_local` | `0x19` | local_index : `varuint32` | write a local variable or parameter and return the same value |
 | `get_global` | `0xbb` | global_index : `varuint32` | read a global variable |
 | `set_global` | `0xbc` | global_index : `varuint32` | write a global variable |
-| `call` | `0x16` | function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
-| `call_indirect` | `0x17` | type_index : `varuint32` | call a function indirect with an expected signature |
+| `call` | `0x16` | argument_count : `varuint1`, function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
+| `call_indirect` | `0x17` | argument_count : `varuint1`, type_index : `varuint32` | call a function indirect with an expected signature |
+
+The counts following the different call opcodes specify the number of preceding operands taken as arguments.
 
 ## Memory-related operators ([described here](AstSemantics.md#linear-memory-accesses))
 
