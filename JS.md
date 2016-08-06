@@ -35,6 +35,19 @@ The following intrinsic objects are added:
 
 ### Function Properties of the `WebAssembly` object
 
+#### `WebAssembly.validate`
+
+The `validate` function has the signature:
+```
+Boolean validate(BufferSource bytes)
+```
+If the given `bytes` argument is not a
+[`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
+then a `TypeError` is thrown.
+
+Otherwise, this function performs *validation* as defined by the WebAssembly
+spec and returns `true` if validation succeeded, `false` if validation failed.
+
 #### `WebAssembly.compile`
 
 The `compile` function has the signature:
