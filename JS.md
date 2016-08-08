@@ -484,6 +484,10 @@ To coerce a JavaScript value to a given [WebAssembly value type](https://github.
   and then converting the resulting IEEE754 64-bit double to a 32-bit float using `roundTiesToEven`
 * coerce to `f64` via [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
 
+The [current Realm Record](http://tc39.github.io/ecma262/#current-realm) of the 
+[`WebAssembly.Instance` constructor](#webassemblyinstance-constructor) defines the realm of
+[`ToWebAssemblyValue`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/values.ml#L9).
+
 If the value type is optional, then given `None`, the JavaScript value is
 ignored.
 
