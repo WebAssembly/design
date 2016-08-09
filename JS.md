@@ -255,7 +255,7 @@ Exported Functions do not have the normal function internal slots but instead ha
 as well as the internal slots required of all builtin functions:
  * [[Prototype]] : [%FunctionPrototype%](http://tc39.github.io/ecma262/#sec-well-known-intrinsic-objects)
  * [[Extensible]] : `true`
- * [[Realm]] : the [current Realm Record](http://tc39.github.io/ecma262/#current-realm)
+ * [[Realm]] : the [current Realm Record](http://tc39.github.io/ecma262/#current-realm) at the time the Exported Function was instantiated
  * [[ScriptOrModule]] : [`GetActiveScriptOrModule`](http://tc39.github.io/ecma262/#sec-getactivescriptormodule)
 
 Exported Functions also have the following data properties:
@@ -266,7 +266,7 @@ WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined
  * Let `argTypes` be the list of value types defined by the signature of [[FunctionIndex]].
  * Let `args` be an empty list of coerced values.
  * For each value type `t` in `argTypes` and value `v` in `argValues`:
-   * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `args`.
+   * Execute [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` in the [[Realm]] of the Exported Function and append the result to `args`.
  * Let `ret` be the result of calling [`Eval.invoke`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L327)
    passing [[Instance]], [[FunctionIndex]], and `args`.
  * Return [`ToJSValue`](#tojsvalue)`(ret)`.
@@ -483,10 +483,6 @@ To coerce a JavaScript value to a given [WebAssembly value type](https://github.
 * coerce to `f32` by first applying [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
   and then converting the resulting IEEE754 64-bit double to a 32-bit float using `roundTiesToEven`
 * coerce to `f64` via [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
-
-The [current Realm Record](http://tc39.github.io/ecma262/#current-realm) of the 
-[`WebAssembly.Instance` constructor](#webassemblyinstance-constructor) defines the realm of
-[`ToWebAssemblyValue`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/values.ml#L9).
 
 If the value type is optional, then given `None`, the JavaScript value is
 ignored.
