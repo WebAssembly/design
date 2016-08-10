@@ -43,8 +43,7 @@ Promise<WebAssembly.Module> compile(BufferSource bytes)
 ```
 If the given `bytes` argument is not a
 [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
-the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
-with a `TypeError`.
+a `TypeError` is thrown.
 
 Otherwise, this function starts an asychronous task to compile a `WebAssembly.Module`
 as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor).
