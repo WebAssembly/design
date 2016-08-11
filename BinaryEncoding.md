@@ -488,6 +488,8 @@ out of range, `br_table` branches to the default target.
 
 The counts following the different call opcodes specify the number of preceding operands taken as arguments.
 
+The `call_indirect` operator takes a list of function arguments and as the last operand the index into the table.
+
 ## Memory-related operators ([described here](AstSemantics.md#linear-memory-accesses))
 
 | Name | Opcode | Immediate | Description |
