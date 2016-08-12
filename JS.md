@@ -255,7 +255,7 @@ Exported Functions do not have the normal function internal slots but instead ha
 as well as the internal slots required of all builtin functions:
  * [[Prototype]] : [%FunctionPrototype%](http://tc39.github.io/ecma262/#sec-well-known-intrinsic-objects)
  * [[Extensible]] : `true`
- * [[Realm]] : the [current Realm Record](http://tc39.github.io/ecma262/#current-realm) at the time the Exported Function was instantiated
+ * [[Realm]] : the [current Realm Record](http://tc39.github.io/ecma262/#current-realm)
  * [[ScriptOrModule]] : [`GetActiveScriptOrModule`](http://tc39.github.io/ecma262/#sec-getactivescriptormodule)
 
 Exported Functions also have the following data properties:
