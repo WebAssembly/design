@@ -266,10 +266,12 @@ WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined
  * Let `argTypes` be the list of value types defined by the signature of [[FunctionIndex]].
  * Let `args` be an empty list of coerced values.
  * For each value type `t` in `argTypes` and value `v` in `argValues`:
-   * Execute [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` in the [[Realm]] of the Exported Function and append the result to `args`.
+   * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `args`.
  * Let `ret` be the result of calling [`Eval.invoke`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L327)
    passing [[Instance]], [[FunctionIndex]], and `args`.
  * Return [`ToJSValue`](#tojsvalue)`(ret)`.
+
+`[[Call]](this, argValues)` executes in the [[Realm]] of the callee Exported Function. This corresponds to [the requirements of builtin function objects in JavaScript](https://tc39.github.io/ecma262/#sec-built-in-function-objects).
 
 Exported Functions do not have a [[Construct]] method and thus it is not possible to 
 call one with the `new` operator.
