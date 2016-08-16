@@ -271,6 +271,8 @@ WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined
    passing [[Instance]], [[FunctionIndex]], and `args`.
  * Return [`ToJSValue`](#tojsvalue)`(ret)`.
 
+`[[Call]](this, argValues)` executes in the [[Realm]] of the callee Exported Function. This corresponds to [the requirements of builtin function objects in JavaScript](https://tc39.github.io/ecma262/#sec-built-in-function-objects).
+
 Exported Functions do not have a [[Construct]] method and thus it is not possible to 
 call one with the `new` operator.
 
