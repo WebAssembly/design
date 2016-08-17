@@ -38,13 +38,13 @@ _N_ is either 8, 16, or 32.
 
 ### varuintN
 A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to _N_ bits (i.e., the values [0, 2^_N_-1]),
-represented by at most trunc(_N_/7)+1 bytes that may contain padding zero bytes.
+represented by at most ceil(_N_/7) bytes that may contain padding zero bytes.
 Currently, the only sizes _N_ used are 1, 7, and 32,
 where the former are used for compatibility with potential future extensions.
 
 ### varintN
 A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to _N_ bits (i.e., the values [-2^(_N_-1), +2^(_N_-1)-1]),
-represented by at most trunc(_N_/7)+1 bytes that may contain padding zero or all-one bytes.
+represented by at most ceil(_N_/7) bytes that may contain padding zero or all-one bytes.
 Currently, the only sizes _N_ used are 32 and 64.
 
 ### value_type
