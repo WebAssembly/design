@@ -44,7 +44,7 @@ Promise<WebAssembly.Module> compile(BufferSource bytes)
 If the given `bytes` argument is not a
 [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
 the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
-with a `TypeError`.
+with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 Otherwise, this function starts an asychronous task to compile a `WebAssembly.Module`
 as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor).
@@ -74,12 +74,13 @@ The `WebAssembly.Module` constructor has the signature:
 ```
 new Module(BufferSource bytes)
 ```
-If the NewTarget is `undefined`, a `TypeError` exception is thrown (i.e., this
-constructor cannot be called as a function without `new`).
+If the NewTarget is `undefined`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+exception is thrown (i.e., this constructor cannot be called as a function without `new`).
 
 If the given `bytes` argument is not a
 [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
-a `TypeError` exception is thrown.
+a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+exception is thrown.
 
 Otherwise, this function performs synchronous compilation of the `BufferSource`:
 * The byte range delimited by the `BufferSource` is first logically decoded into
@@ -126,18 +127,22 @@ The `WebAssembly.Instance` constructor has the signature:
 ```
 new Instance(moduleObject [, importObject])
 ```
-If the NewTarget is `undefined`, a `TypeError` exception is thrown (i.e., this
+If the NewTarget is `undefined`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+exception is thrown (i.e., this
 constructor cannot be called as a function without `new`).
 
-If `moduleObject` is not a `WebAssembly.Module` instance, a `TypeError` is thrown.
+If `moduleObject` is not a `WebAssembly.Module` instance, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
 
 Let `module` be the [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L211)
 `moduleObject.[[Module]]`.
 
 If the `importObject` parameter is not `undefined` and `Type(importObject)` is
-not Object, a `TypeError` is thrown. If the list of 
+not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown. If the list of 
 [`module.imports`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L215)
-is not empty and `Type(importObject)` is not Object, a `TypeError` is thrown.
+is not empty and `Type(importObject)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
 
 Let `imports` be an initially-empty [`import list`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.mli#L3)
 (assuming the ML spec `Eval.import` type has been extended to be a union of:
@@ -151,25 +156,25 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spe
 function, global, memory and table imports):
 * Let `v` be the resultant value of performing
   [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L139)).
-* If `Type(v)` is not Object, throw a `TypeError`.
+* If `Type(v)` is not Object, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 * Let `v` be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`v`, `i.export_name`)
 * If `i` is a function import:
-  * If `IsCallable(v)` is `false`, throw a `TypeError`.
+  * If `IsCallable(v)` is `false`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * Otherwise, append an anonymous function to `imports` 
     which calls `v` by coercing WebAssembly arguments to JavaScript arguments
     via [`ToJSValue`](#tojsvalue) and returns the result by coercing
     via [`ToWebAssemblyValue`](#towebassemblyvalue).
   * Otherwise, append the function `v` to `imports`
 * If `i` is a global import:
-  * If `i` is not an immutable global, throw a `TypeError`.
+  * If `i` is not an immutable global, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `imports`.
 * If `i` is a memory import:
   * If `v` is not a [`WebAssembly.Memory` object](#webassemblymemory-objects),
-    throw a `TypeError`.
+    throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * Otherwise, append `v.[[Memory]]` to `imports`.
 * Otherwise (`i` is a table import):
   * If `v` is not a [`WebAssembly.Table` object](#webassemblytable-objects),
-    throw a `TypeError`.
+    throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * Otherwise, append `v.[[Table]]` to `imports`.
 
 Let `instance` be the result of evaluating 
@@ -190,7 +195,7 @@ has been modified so that each export simply has a `name`, `type` and `index`:
     reusing an existing object if one exists for the given function definition,
     otherwise creating a new object.
   * If the `type` is global:
-    * If the global is not immutable, then throw a `TypeError`.
+    * If the global is not immutable, then throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
     * Let `v` be the global variable's initialized value.
     * Otherwise, export [`ToJSValue`](#tojsvalue)`(v)`.
   * If the `type` is memory, then export a `WebAssembly.Memory` object, reusing
@@ -291,10 +296,11 @@ The `WebAssembly.Memory` constructor has the signature:
 ```
 new Memory(memoryDescriptor)
 ```
-If the NewTarget is `undefined`, a `TypeError` exception is thrown (i.e., this
-constructor cannot be called as a function without `new`).
+If the NewTarget is `undefined`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+exception is thrown (i.e., this constructor cannot be called as a function without `new`).
 
-If `Type(memoryDescriptor)` is not Object, a `TypeError` is thrown.
+If `Type(memoryDescriptor)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
 
 Let `initial` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"initial"`)).
 
@@ -329,7 +335,8 @@ Return a new `WebAssembly.Memory` instance with [[Memory]] set to `m` and
 ### `WebAssembly.Memory.prototype.grow`
 
 Let `M` be the `this` value. If `M` is not a `WebAssembly.Memory`,
-a `TypeError` is thrown.
+a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
 
 This method performs a [`grow_memory`](AstSemantics.md#resizing) on
 `M.[[Memory]]`, having first performed [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)
@@ -349,8 +356,8 @@ is set to the new byte length of `M.[[Memory]]`.
 This is an accessor property whose [[Set]] is Undefined and whose [[Get]]
 accessor function performs the following steps:
 
-If `this` is not a `WebAssembly.Memory`, a `TypeError` is thrown. Otherwise
-return `M.[[BufferObject]]`.
+If `this` is not a `WebAssembly.Memory`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown. Otherwise return `M.[[BufferObject]]`.
 
 ## `WebAssembly.Table` Objects
 
@@ -371,16 +378,18 @@ The `WebAssembly.Table` constructor has the signature:
 ```
 new Table(tableDescriptor)
 ```
-If the NewTarget is `undefined`, a `TypeError` exception is thrown (i.e., this
-constructor cannot be called as a function without `new`).
+If the NewTarget is `undefined`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+exception is thrown (i.e., this constructor cannot be called as a function without `new`).
 
-If `Type(tableDescriptor)` is not Object, a `TypeError` is thrown.
+If `Type(tableDescriptor)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
 
 Let `element` be the result of calling [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"element"`).
-If `element` is not the string `"anyfunc"`, a `TypeError` is thrown.
+If `element` is not the string `"anyfunc"`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
 (Note: this check is intended to be relaxed in the
 [future](FutureFeatures.md#more-table-operators-and-types) to allow different
-elemtn types.)
+element types.)
 
 Let `initial` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"initial"`)).
 
@@ -402,7 +411,7 @@ Return a new `WebAssemby.Table` instance with [[Table]] set to `table` and
 This is an accessor property whose [[Set]] is Undefined and whose [[Get]]
 accessor function performs the following steps:
 
-Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a `TypeError`
+Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
 Return `T.[[Values]].length`.
@@ -423,7 +432,7 @@ This method has the following signature
 ```
 get(index)
 ```
-Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a `TypeError`
+Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
 Let `i` be the result of [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)(`index`).
@@ -437,7 +446,7 @@ This method has the following signature
 set(index, value)
 ```
 
-Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a `TypeError`
+Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
 If [`IsCallable`](http://tc39.github.io/ecma262/#sec-iscallable)(`value`) is 
@@ -466,7 +475,7 @@ to a JavaScript value:
 
 * given a WebAssembly `i32` is interpreted as a signed integer, converted (losslessly) to an
   IEEE754 double and then returned as a JavaScript Number
-* given a WebAssembly `i64`, throw a `TypeError`
+* given a WebAssembly `i64`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 * given a WebAssembly `f32` (single-precision IEEE754), convert (losslessly) to
   a IEEE754 double, [possibly canonicalize NaN](http://tc39.github.io/ecma262/#sec-setvalueinbuffer),
   and return as a JavaScript Number
@@ -481,7 +490,7 @@ If the WebAssembly value is optional, then given `None`, return JavaScript value
 To coerce a JavaScript value to a given [WebAssembly value type](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/types.ml#L3),
 
 * coerce to `i32` via [`ToInt32(v)`](http://tc39.github.io/ecma262/#sec-toint32)
-* for `i64`, throw a `TypeError`
+* for `i64`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 * coerce to `f32` by first applying [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
   and then converting the resulting IEEE754 64-bit double to a 32-bit float using `roundTiesToEven`
 * coerce to `f64` via [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
