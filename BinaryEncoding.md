@@ -38,19 +38,19 @@ A single-byte unsigned integer.
 A four-byte little endian unsigned integer.
 
 ### varint32
-A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int32 values.
+A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int32 values. `varint32` values may contain leading zero or one bits and must be at most 5 bytes.
 
 ### varuint1
-A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values 0 or 1. `varuint1` values may contain leading zeros. (This type is mainly used for compatibility with potential future extensions.)
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values 0 or 1. `varuint1` values must be exactly one byte. (This type is mainly used for compatibility with potential future extensions.)
 
 ### varuint7
-A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values [0, 127]. `varuint7` values may contain leading zeros. (This type is mainly used for compatibility with potential future extensions.)
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values [0, 127]. `varuint7` values must be exactly one byte. (This type is mainly used for compatibility with potential future extensions.)
 
 ### varuint32
-A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values. `varuint32` values may contain leading zeros.
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values. `varuint32` values may contain leading zeros and must be at most 5 bytes.
 
 ### varint64
-A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int64 values.
+A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int64 values. `varint64` values may contain leading zero or one bits and must be at most 10 bytes.
 
 ### value_type
 A single-byte unsigned integer indicating a [value type](AstSemantics.md#types). These types are encoded as:
