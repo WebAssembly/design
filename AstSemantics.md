@@ -557,8 +557,6 @@ follows:
   * `f32.gt`: compare ordered and greater than
   * `f32.ge`: compare ordered and greater than or equal
   * `f32.sqrt`: square root
-  * `f32.min`: minimum (binary operator); if either operand is NaN, returns NaN
-  * `f32.max`: maximum (binary operator); if either operand is NaN, returns NaN
 
 64-bit floating point operators:
 
@@ -580,10 +578,6 @@ follows:
   * `f64.gt`: compare ordered and greater than
   * `f64.ge`: compare ordered and greater than or equal
   * `f64.sqrt`: square root
-  * `f64.min`: minimum (binary operator); if either operand is NaN, returns NaN
-  * `f64.max`: maximum (binary operator); if either operand is NaN, returns NaN
-
-`min` and `max` operators treat `-0.0` as being effectively less than `0.0`.
 
 In floating point comparisons, the operands are *unordered* if either operand
 is NaN, and *ordered* otherwise.

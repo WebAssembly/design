@@ -595,8 +595,6 @@ natural alignment. The bits after the
 | `f32.sub` | `0x76` | | |
 | `f32.mul` | `0x77` | | |
 | `f32.div` | `0x78` | | |
-| `f32.min` | `0x79` | | |
-| `f32.max` | `0x7a` | | |
 | `f32.abs` | `0x7b` | | |
 | `f32.neg` | `0x7c` | | |
 | `f32.copysign` | `0x7d` | | |
@@ -615,8 +613,6 @@ natural alignment. The bits after the
 | `f64.sub` | `0x8a` | | |
 | `f64.mul` | `0x8b` | | |
 | `f64.div` | `0x8c` | | |
-| `f64.min` | `0x8d` | | |
-| `f64.max` | `0x8e` | | |
 | `f64.abs` | `0x8f` | | |
 | `f64.neg` | `0x90` | | |
 | `f64.copysign` | `0x91` | | |
