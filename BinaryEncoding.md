@@ -31,26 +31,21 @@ for a proposal for layer 1 structural compression.
 
 # Data types
 
-### uint8
-A single-byte unsigned integer.
+### uintN
+An unsigned integer of _N_ bits,
+represented in _N_/8 bytes in [little endian](https://en.wikipedia.org/wiki/Endianness#Little-endian) order.
+_N_ is either 8, 16, or 32.
 
-### uint32
-A four-byte little endian unsigned integer.
+### varuintN
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to _N_ bits (i.e., the values [0, 2^_N_-1]),
+represented by at most trunc(_N_/7)+1 bytes that may contain padding zero bytes.
+Currently, the only sizes _N_ used are 1, 7, and 32,
+where the former are used for compatibility with potential future extensions.
 
-### varint32
-A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int32 values. `varint32` values may contain leading zero or one bits and must be at most 5 bytes.
-
-### varuint1
-A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values 0 or 1. `varuint1` values must be exactly one byte. (This type is mainly used for compatibility with potential future extensions.)
-
-### varuint7
-A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values [0, 127]. `varuint7` values must be exactly one byte. (This type is mainly used for compatibility with potential future extensions.)
-
-### varuint32
-A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values. `varuint32` values may contain leading zeros and must be at most 5 bytes.
-
-### varint64
-A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int64 values. `varint64` values may contain leading zero or one bits and must be at most 10 bytes.
+### varintN
+A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to _N_ bits (i.e., the values [-2^(_N_-1), +2^(_N_-1)-1]),
+represented by at most trunc(_N_/7)+1 bytes that may contain padding zero or all-one bytes.
+Currently, the only sizes _N_ used are 32 and 64.
 
 ### value_type
 A single-byte unsigned integer indicating a [value type](AstSemantics.md#types). These types are encoded as:
