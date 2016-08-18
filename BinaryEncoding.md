@@ -31,37 +31,39 @@ for a proposal for layer 1 structural compression.
 
 # Data types
 
-### uintN
+### `uintN`
 An unsigned integer of _N_ bits,
 represented in _N_/8 bytes in [little endian](https://en.wikipedia.org/wiki/Endianness#Little-endian) order.
 _N_ is either 8, 16, or 32.
 
-### varuintN
+### `varuintN`
 A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to _N_ bits (i.e., the values [0, 2^_N_-1]),
-represented by at most ceil(_N_/7) bytes that may contain padding zero bytes.
-Currently, the only sizes _N_ used are 1, 7, and 32,
-where the former are used for compatibility with potential future extensions.
+represented by _at most_ ceil(_N_/7) bytes that may contain padding `0x80` bytes.
 
-### varintN
+Note: Currently, the only sizes used are `varuint1`, `varuint7`, and `varuint32`,
+where the former two are used for compatibility with potential future extensions.
+
+### `varintN`
 A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to _N_ bits (i.e., the values [-2^(_N_-1), +2^(_N_-1)-1]),
-represented by at most ceil(_N_/7) bytes that may contain padding zero or all-one bytes.
-Currently, the only sizes _N_ used are 32 and 64.
+represented by _at most_ ceil(_N_/7) bytes that may contain padding `0x80` or `0xFF` bytes.
 
-### value_type
+Note: Currently, the only sizes used are `varuint32` and `varuint64`.
+
+### `value_type`
 A single-byte unsigned integer indicating a [value type](AstSemantics.md#types). These types are encoded as:
 * `1` indicating type `i32` 
 * `2` indicating type `i64` 
 * `3` indicating type `f32` 
 * `4` indicating type `f64`
 
-### external_kind
+### `external_kind`
 A single-byte unsigned integer indicating the kind of definition being imported or defined:
 * `0` indicating a `Function` [import](Modules.md#imports) or [definition](Modules.md#function-and-code-sections)
 * `1` indicating a `Table` [import](Modules.md#imports) or [definition](Modules.md#table-section)
 * `2` indicating a `Memory` [import](Modules.md#imports) or [definition](Modules.md#linear-memory-section)
 * `3` indicating a `Global` [import](Modules.md#imports) or [definition](Modules.md#global-section)
 
-### resizable_limits
+### `resizable_limits`
 A packed tuple that describes the limits of a
 [table](AstSemantics.md#table) or [memory](AstSemantics.md#resizing):
 
@@ -74,7 +76,7 @@ A packed tuple that describes the limits of a
 The "flags" field may later be extended to include a flag for sharing (between
 threads).
 
-### init_expr
+### `init_expr`
 The encoding of an [initializer expression](Modules.md#initializer-expression)
 is the normal encoding of the expression followed by the `end` opcode as a
 delimiter.
