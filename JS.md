@@ -268,9 +268,8 @@ Exported Functions also have the following data properties:
 * the `name` is set to `index` as a Number value
 
 WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined as:
- * Let `argTypes` be the list of value types defined by the signature of [[FunctionIndex]].
  * Let `args` be an empty list of coerced values.
- * For each value type `t` in `argTypes` and value `v` in `argValues`:
+ * For each value `v` in `argValues`, in the order they appear in `argValues`:
    * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `args`.
  * Let `ret` be the result of calling [`Eval.invoke`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L327)
    passing [[Instance]], [[FunctionIndex]], and `args`.
