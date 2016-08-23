@@ -618,22 +618,17 @@ Promotion and demotion of floating point values always succeed.
 Demotion of floating point values uses round-to-nearest ties-to-even rounding,
 and may overflow to infinity or negative infinity as specified by IEEE 754-2008.
 
-If the operand of promotion is a NaN, the result is nondeterministically chosen
-between the following:
- - a NaN with a nondeterministic sign bit and a fraction field with 1 in the
-   most significant bit and 0 in the remaining bits.
- - a NaN with the sign bit of the operand and a fraction field consisting of
-   1 in the most significant bit, followed by all but the most significant
-   bit of the fraction field of the operand, followed by all 0s.
+If the operand of promotion or demotion is a NaN, the result is a NaN with the
+following sign bit and fraction field (which does not include the implicit
+leading digit of the significand):
 
-If the operand of demotion is a NaN, the result is nondeterministically chosen
-between the following:
- - a NaN with a nondeterministic sign bit and a fraction field with 1 in the
-   most significant bit and 0 in the remaining bits.
- - a NaN with the sign bit of the operand and a fraction field consisting of
-   1 in the most significant bit, followed by all but the most significant bit
-   of the fraction field of the operand, discarding the least significant bits
-   that don't fit.
+- If the fraction fields of the operand consists of 1 in the most significant bit
+  and 0 in the remaining bits, the result is a NaN with a nondeterministic sign
+  bit, 1 in the most significant bit of the fraction field, and all zeros in the
+  remaining bits of the fraction field.
+- Otherwise the result is a NaN with a nondeterministic sign bit, 1 in the most
+  significant bit of the fraction field, and nondeterminsitic values in the
+  remaining bits of the fraction field.
 
 Reinterpretations always succeed.
 
