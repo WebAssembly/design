@@ -123,7 +123,7 @@ Known sections have negative ids, while user-defined sections have positive ids 
 the length of a string identifier immediately to follow.
 After the section identification, the section length and data follow.
 All sections unknown to the WebAssembly implementation are ignored.
-A validation error user-defined sections does not cause validation for the whole module to fail and is
+A validation error in a user-defined section does not cause validation for the whole module to fail and is
 instead treated as if the section was absent.
 
 | Field | Type | Description |
