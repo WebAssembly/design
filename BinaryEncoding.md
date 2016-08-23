@@ -148,7 +148,6 @@ The content of each section is encoded in its `payload_data`.
 | [Code](#code-section) | `-9` | Function bodies (code) |
 | [Element](#element-section) | `-10` | Elements section |
 | [Data](#data-section) | `-11` | Data segments |
-| [Name](#name-section) | `-12`| Names section|
 
 
 The end of the last present section must coincide with the last byte of the
@@ -352,8 +351,11 @@ a `data_segment` is:
 
 ### Name section
 
-The names section does not change execution semantics and a validation error in
-this section does not cause validation for the whole module to fail and is
+Section string: `"name"`
+
+The names section does not change execution semantics, and thus is not allocated
+a section opcode.
+A validation error in this section does not cause validation for the whole module to fail and is
 instead treated as if the section was absent. The expectation is that, when a
 binary WebAssembly module is viewed in a browser or other development
 environment, the names in this section will be used as the names of functions
