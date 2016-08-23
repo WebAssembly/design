@@ -263,7 +263,7 @@ The encoding of the [Global section](Modules.md#global-section):
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| count | `variable_entry` | count of global [variable entries](#variable-entry) as described below |
+| count | `varuint32` | count of global variable entries |
 | globals | `global_variable*` | global variables, as described below |
 
 #### Global Entry
