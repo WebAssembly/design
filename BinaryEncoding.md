@@ -123,6 +123,8 @@ Known sections have negative ids, while user-defined sections have positive ids 
 the length of a string identifier immediately to follow.
 After the section identification, the section length and data follow.
 All sections unknown to the WebAssembly implementation are ignored.
+A validation error user-defined sections does not cause validation for the whole module to fail and is
+instead treated as if the section was absent.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -351,13 +353,12 @@ a `data_segment` is:
 
 ### Name section
 
-Section string: `"name"`
+User-defined section string: `"name"`
 
 The names section does not change execution semantics, and thus is not allocated
 a section opcode.
-A validation error in this section does not cause validation for the whole module to fail and is
-instead treated as if the section was absent. The expectation is that, when a
-binary WebAssembly module is viewed in a browser or other development
+Like all user-defined sections, a validation error in this section does not cause validation of the module to fail.
+The expectation is that, when a binary WebAssembly module is viewed in a browser or other development
 environment, the names in this section will be used as the names of functions
 and locals in the [text format](TextFormat.md).
 
