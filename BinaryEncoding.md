@@ -117,19 +117,19 @@ The module starts with a preamble of two fields:
 | magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
 | version | `uint32` | Version number, currently 10. The version for MVP will be reset to 1. |
 
-This preamble is followed by a sequence of sections. Each section is identified by `varint32` 
-that encodes either a known section or a user-defined section.
-Known sections have negative ids, while user-defined sections have positive ids that encode 
-the length of a string identifier immediately to follow.
-After the section identification, the section length and data follow.
+The module preamble is followed by a sequence of sections.
+Each section is identified by a 1-byte *section code* that encodes either a known section or a user-defined section.
+Known sections have non-zero ids, while user-defined sections have a zero id followed by a string identifier.
+The section length and data immediately follow the section identification.
 All sections unknown to the WebAssembly implementation are ignored.
 A validation error in a user-defined section does not cause validation for the whole module to fail and is
 instead treated as if the section was absent.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| id | `varint32` | section identifier code |
-| id_str | `bytes` | section identifier string, of length `max(id, 0)` bytes |
+| id | `uint8` | section code |
+| name_length | `varuint32` ? | length of section name, present if `id == 0` |
+| name |  `bytes` ? | section name string, of length `name_length` bytes, present if `id == 0` |
 | payload_len  | `varuint32` | size of this section in bytes |
 | payload_data  | `bytes` | content of this section, of length `payload_len` |
 
@@ -139,18 +139,17 @@ The content of each section is encoded in its `payload_data`.
 
 | Section Name | Code | Description |
 | ------------ | ---- | ----------- |
-| [Type](#type-section) | `-1` | Function signature declarations |
-| [Import](#import-section) | `-2` | Import declarations |
-| [Function](#function-section) | `-3` | Function declarations |
-| [Table](#table-section) | `-4` | Indirect function table and other tables |
-| [Memory](#memory-section) | `-5` | Memory attributes |
-| [Global](#global-section) | `-6` | Global declarations |
-| [Export](#export-section) | `-7` | Exports | 
-| [Start](#start-section) | `-8` | Start function declaration |
-| [Code](#code-section) | `-9` | Function bodies (code) |
-| [Element](#element-section) | `-10` | Elements section |
-| [Data](#data-section) | `-11` | Data segments |
-
+| [Type](#type-section) | `1` | Function signature declarations |
+| [Import](#import-section) | `2` | Import declarations |
+| [Function](#function-section) | `3` | Function declarations |
+| [Table](#table-section) | `4` | Indirect function table and other tables |
+| [Memory](#memory-section) | `5` | Memory attributes |
+| [Global](#global-section) | `6` | Global declarations |
+| [Export](#export-section) | `7` | Exports | 
+| [Start](#start-section) | `8` | Start function declaration |
+| [Code](#code-section) | `9` | Function bodies (code) |
+| [Element](#element-section) | `10` | Elements section |
+| [Data](#data-section) | `11` | Data segments |
 
 The end of the last present section must coincide with the last byte of the
 module. The shortest valid module is 8 bytes (`magic number`, `version`,
@@ -356,7 +355,7 @@ a `data_segment` is:
 User-defined section string: `"name"`
 
 The names section does not change execution semantics, and thus is not allocated
-a section opcode.
+a section code.
 Like all user-defined sections, a validation error in this section does not cause validation of the module to fail.
 The expectation is that, when a binary WebAssembly module is viewed in a browser or other development
 environment, the names in this section will be used as the names of functions
