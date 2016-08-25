@@ -124,7 +124,7 @@ The section length and data immediately follow the section code.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| id | `uint8` | section code |
+| id | `varint7` | section code |
 | payload_len  | `varuint32` | size of this section in bytes |
 | payload_data  | `bytes` | content of this section, of length `payload_len` |
 
