@@ -119,22 +119,17 @@ The module starts with a preamble of two fields:
 
 The module preamble is followed by a sequence of sections.
 Each section is identified by a 1-byte *section code* that encodes either a known section or a user-defined section.
-Known sections have non-zero ids, while user-defined sections have a zero id followed by a string identifier.
-The section length and data immediately follow the section identification.
-All sections unknown to the WebAssembly implementation are ignored.
-A validation error in a user-defined section does not cause validation for the whole module to fail and is
-instead treated as if the section was absent.
+Known sections have non-zero ids, while unkown sections simply have a zero id and are ignored by the WebAssembly implementation.
+The section length and data immediately follow the section code.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | id | `uint8` | section code |
-| name_length | `varuint32` ? | length of section name, present if `id == 0` |
-| name |  `bytes` ? | section name string, of length `name_length` bytes, present if `id == 0` |
 | payload_len  | `varuint32` | size of this section in bytes |
 | payload_data  | `bytes` | content of this section, of length `payload_len` |
 
 Each section is optional and may appear at most once.
-Known sections (from this list) may not appear out of order.
+Known sections from this list may not appear out of order.
 The content of each section is encoded in its `payload_data`.
 
 | Section Name | Code | Description |
@@ -354,15 +349,17 @@ a `data_segment` is:
 
 User-defined section string: `"name"`
 
-The names section does not change execution semantics, and thus is not allocated
-a section code.
-Like all user-defined sections, a validation error in this section does not cause validation of the module to fail.
+The names section does not change execution semantics, and thus is not allocated a section code.
+It is encoded as an unknown section (id `0`) with the first few payload bytes identifying this section as a string.
+Like all unknown sections, a validation error in this section does not cause validation of the module to fail.
 The expectation is that, when a binary WebAssembly module is viewed in a browser or other development
 environment, the names in this section will be used as the names of functions
 and locals in the [text format](TextFormat.md).
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
+| name_length | `varint7` | length of the "name" string = 4 |
+| name_string | `bytes` | the literal string "name" of length 4 |
 | count | `varuint32` | count of entries to follow |
 | entries | `function_names*` | sequence of names |
 
