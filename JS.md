@@ -160,11 +160,19 @@ function, global, memory and table imports):
 * Let `v` be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`v`, `i.export_name`)
 * If `i` is a function import:
   * If `IsCallable(v)` is `false`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
-  * Otherwise, append an anonymous function to `imports` 
-    which calls `v` by coercing WebAssembly arguments to JavaScript arguments
-    via [`ToJSValue`](#tojsvalue) and returns the result by coercing
-    via [`ToWebAssemblyValue`](#towebassemblyvalue).
-  * Otherwise, append the function `v` to `imports`
+  * If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
+    * If `v`s signature does not match `i`s signature, a 
+      [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+      is thrown.
+    * Otherwise, append `v` to `imports`.
+  * Otherwise:
+    * If `i` is referenced by any element of any [Elements section](Modules.md#elements-section),
+      a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+      is thrown.
+    * Otherwise, append an anonymous function to `imports` 
+      which calls `v` by coercing WebAssembly arguments to JavaScript arguments
+      via [`ToJSValue`](#tojsvalue) and returns the result by coercing
+      via [`ToWebAssemblyValue`](#towebassemblyvalue).
 * If `i` is a global import:
   * If `i` is not an immutable global, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `imports`.
@@ -448,8 +456,8 @@ set(index, value)
 Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-If [`IsCallable`](http://tc39.github.io/ecma262/#sec-iscallable)(`value`) is 
-false and `Type(value)` is not Null, throw a type error.
+If `value` is not an [Exported Function Exotic Object](#exported-function-exotic-objects)
+or `null`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 Let `i` be the result of [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)(`index`).
 
@@ -457,11 +465,9 @@ If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects
 * Set the `i`th element of `T.[[Table]]` to the `v.[[FunctionIndex]]`th function
   in the module's [function index space](Modules.md#function-index-space).
 
-Otherwise:
-* Set the `i`th element of `T.[[Table]]` to a host-defined value that can be
-  called with *any* signature by coercing its WebAssembly arguments to JavaScript
-  arguments via [ToJSValue](#tojsvalue) and coercing its JavaScript return value
-  to a WebAssembly return value via [ToWebAssemblyValue](#towebassemblyvalue).
+Otherwise `v` is `null`:
+* Set the `i`th element of `T.[[Table]]` to an appropriately-defined function
+  that throws a `WebAssembly.RuntimeError` if called.
 
 Set `T.[[Values]][i]` to `value`.
 
