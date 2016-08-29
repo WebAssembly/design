@@ -138,8 +138,8 @@ The content of each section is encoded in its `payload_str`.
 * [Global](#global-section) section
 * [Export](#export-section) section
 * [Start](#start-section) section
-* [Code](#code-section) section
 * [Element](#element-section) section
+* [Code](#code-section) section
 * [Data](#data-section) section
 * [Name](#name-section) section
 
@@ -309,20 +309,6 @@ The start section declares the [start function](Modules.md#module-start-function
 | ----- | ---- | ----------- |
 | index | `varuint32` | start function index |
 
-### Code section
-
-ID: `code`
-
-The code section contains a body for every function in the module.
-The count of function declared in the [function section](#function-section)
-and function bodies defined in this section must be the same and the `i`th
-declaration corresponds to the `i`th function body.
-
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| count | `varuint32` | count of function bodies to follow |
-| bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
-
 ### Element section
 
 ID: `elem`
@@ -342,6 +328,20 @@ a `elem_segment` is:
 | offset | `init_expr` | an `i32` initializer expression that computes the offset at which to place the elements |
 | num_elem | `varuint32` | number of elements to follow |
 | elems | `varuint32*` | sequence of [function indices](Modules.md#function-index-space) |
+
+### Code section
+
+ID: `code`
+
+The code section contains a body for every function in the module.
+The count of function declared in the [function section](#function-section)
+and function bodies defined in this section must be the same and the `i`th
+declaration corresponds to the `i`th function body.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| count | `varuint32` | count of function bodies to follow |
+| bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
 
 ### Data section
 
