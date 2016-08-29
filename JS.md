@@ -159,9 +159,10 @@ function, global, memory and table imports):
 * If `Type(v)` is not Object, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 * Let `v` be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`v`, `i.export_name`)
 * If `i` is a function import:
-  * If `IsCallable(v)` is `false`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+  * If [`IsCallable(v)`](https://tc39.github.io/ecma262/#sec-iscallable) is `false`,
+    throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
-    * If `v`s signature does not match `i`s signature, a 
+    * If the signature of `v` does not match the signature of `i`, a 
       [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
       is thrown.
     * Otherwise, append `v` to `imports`.
