@@ -61,7 +61,8 @@ mismatch.
 
 A *global variable import* includes the *value type* and *mutability*
 of the global variable. These fields have the same meaning as in the
-[Global section](#global-section).
+[Global section](#global-section). In the MVP, global variable imports must be
+*immutable*.
 
 A *linear memory import* includes the same set of fields defined in the
 [Linear Memory section](#linear-memory-section): *default flag*, *initial
@@ -115,6 +116,8 @@ The meaning an exported definition is defined by the host environment. However,
 if another WebAssembly instance imports the definition, then both instances
 will share the same definition and the associated state (global variable value,
 linear memory bytes, table elements) is shared.
+
+In the MVP, only *immutable* global variables can be exported.
 
 ## Integration with ES6 modules
 

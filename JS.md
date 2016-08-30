@@ -199,11 +199,10 @@ function, global, memory and table imports):
     throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * Otherwise, append `v.[[Table]]` to `imports`.
 
-Let `instance` be the result of evaluating 
-[`Eval.init`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L319)
-with arguments `module` and `imports`.
-Note: this synchronously executes the [`start`](Modules.md#module-start-function)
-function, if present.
+Let `instance` be the result of creating a new
+[`Eval.instance`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L15)
+given `module` and `imports`. Note: this step does not mutate imported memories
+or tables.
 
 Let `exports` be a list of (string, JS value) pairs that is mapped from 
 `module.exports` as follows (assuming the ML spec 
@@ -215,11 +214,11 @@ has been modified so that each export simply has a `name`, `type` and `index`:
   * If the `type` is function, then export an 
     [Exported Function Exotic Object](#exported-function-exotic-objects),
     reusing an existing object if one exists for the given function definition,
-    otherwise creating a new object.
+    otherwise creating a new object given `instance` and `index`.
   * If the `type` is global:
-    * If the global is not immutable, then throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+    * Assert: the global is immutable by MVP validation constraint.
     * Let `v` be the global variable's initialized value.
-    * Otherwise, export [`ToJSValue`](#tojsvalue)`(v)`.
+    * Export [`ToJSValue`](#tojsvalue)`(v)`.
   * If the `type` is memory, then export a `WebAssembly.Memory` object, reusing
     an existing object if one exists for the given memory definition, otherwise
     creating a new object via [`CreateMemoryObject`](#creatememoryobject).
@@ -243,8 +242,30 @@ of `exports`. Let `moduleNamespace` be the result of calling
 [`ModuleNamespaceCreate(moduleRecord, exportStrings)`](http://tc39.github.io/ecma262/#sec-modulenamespacecreate).
 Set `moduleRecord.[[Namespace]]` to `moduleNamespace`.
 
-Return a new `WebAssembly.Instance` object setting `[[Instance]]` to `instance`
-and `exports` to `moduleNamespace`.
+Let `instanceObject` be a new `WebAssembly.Instance` object setting
+`[[Instance]]` to `instance` and `exports` to `moduleNamespace`.
+
+If any of the elements of an [Elements section](Modules.md#elements-section)
+refer to an imported function which is not an
+[Exported Function Exotic Object](#exported-function-exotic-objects), throw a
+[`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+
+If, after evaluating the `offset` [initializer expression](Modules.md#initializer-expression)
+of every [Data](Modules.md#data-section) and [Element](Modules.md#elements-section)
+Segment, any of the segments do not fit in their respective Memory or Table, throw a 
+[`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
+
+Apply all Data and Element segments to their respective Memory or Table in the
+order in which they appear in the module. Segments may overlap and, if they do,
+the final value is the last value written in order. Note: there should be no
+errors possible that would cause this operation to fail partway through. After
+this operation completes, elements of `instance` may are now visible and callable
+through imported Tables, even if `start` fails.
+
+If a [`start`](Modules.md#module-start-function) is present, it is evaluated
+given `instance`. Any errors thrown by `start` are propagated to the caller.
+
+Return `instanceObject`.
 
 ### WebAssembly Module Record
 
