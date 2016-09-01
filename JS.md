@@ -216,7 +216,8 @@ has been modified so that each export simply has a `name`, `type` and `index`:
     reusing an existing object if one exists for the given function definition,
     otherwise creating a new object given `instance` and `index`.
   * If the `type` is global:
-    * Assert: the global is immutable by MVP validation constraint.
+    * [Assert](https://tc39.github.io/ecma262/#assert): the global is immutable
+      by MVP validation constraint.
     * Let `v` be the global variable's initialized value.
     * Export [`ToJSValue`](#tojsvalue)`(v)`.
   * If the `type` is memory, then export a `WebAssembly.Memory` object, reusing
