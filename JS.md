@@ -247,7 +247,7 @@ Let `instanceObject` be a new `WebAssembly.Instance` object setting
 `[[Instance]]` to `instance` and `exports` to `moduleNamespace`.
 
 If any of the elements of an [Elements section](Modules.md#elements-section)
-refer to an imported function which is not an
+refers to an imported function which is not an
 [Exported Function Exotic Object](#exported-function-exotic-objects), throw a
 [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
@@ -260,8 +260,8 @@ Apply all Data and Element segments to their respective Memory or Table in the
 order in which they appear in the module. Segments may overlap and, if they do,
 the final value is the last value written in order. Note: there should be no
 errors possible that would cause this operation to fail partway through. After
-this operation completes, elements of `instance` may are now visible and callable
-through imported Tables, even if `start` fails.
+this operation completes, elements of `instance` are visible and callable
+through [imported Tables](Modules.md#imports), even if `start` fails.
 
 If a [`start`](Modules.md#module-start-function) is present, it is evaluated
 given `instance`. Any errors thrown by `start` are propagated to the caller.
