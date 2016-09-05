@@ -115,6 +115,8 @@ The addition of [threads](PostMVP.md#threads) will allow this.
 ### Linear Memory Accesses
 
 Linear memory access is accomplished with explicit `load` and `store` operators.
+All `load` and `store` operators use little-endian byte order when translating
+between values and bytes.
 Integer loads can specify a *storage size* which is smaller than the result type as
 well as a signedness which determines whether the bytes are sign- or zero-
 extended into the result type.
