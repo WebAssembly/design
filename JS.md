@@ -393,10 +393,9 @@ Let `ret` be the result of performing a
 
 If `ret` is `-1`, a `WebAssembly.RuntimeError` is thrown.
 
-If `M.[[Memory]].maximum` is `None`, perform
-[`DetachArrayBuffer`](http://tc39.github.io/ecma262/#sec-detacharraybuffer)(`M.[[BufferObject]]`).
+Perform [`DetachArrayBuffer`](http://tc39.github.io/ecma262/#sec-detacharraybuffer)(`M.[[BufferObject]]`).
 
-In either case, assign to `M.[[BufferObject]]` a new `ArrayBuffer` whose
+Assign to `M.[[BufferObject]]` a new `ArrayBuffer` whose
 [[[ArrayBufferData]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
 aliases `M.[[Memory]]` and whose 
 [[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
