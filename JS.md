@@ -377,13 +377,21 @@ Return a new `WebAssembly.Memory` instance with [[Memory]] set to `m` and
 
 ### `WebAssembly.Memory.prototype.grow`
 
+The `grow` method has the signature:
+```
+grow(delta)
+```
+
 Let `M` be the `this` value. If `M` is not a `WebAssembly.Memory`,
 a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-This method performs a [`grow_memory`](AstSemantics.md#resizing) on
-`M.[[Memory]]`, having first performed [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)
-on the first argument. On failure, a `WebAssembly.RuntimeError` is thrown.
+Let `d` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)(`delta`).
+
+Let `ret` be the result of performing a
+[`grow_memory`](AstSemantics.md#resizing) operation given delta `d`.
+
+If `ret` is `-1`, a `WebAssembly.RuntimeError` is thrown.
 
 If `M.[[Memory]].maximum` is `None`, perform
 [`DetachArrayBuffer`](http://tc39.github.io/ecma262/#sec-detacharraybuffer)(`M.[[BufferObject]]`).
@@ -393,6 +401,8 @@ In either case, assign to `M.[[BufferObject]]` a new `ArrayBuffer` whose
 aliases `M.[[Memory]]` and whose 
 [[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
 is set to the new byte length of `M.[[Memory]]`.
+
+Return `ret`.
 
 ### `WebAssembly.Memory.prototype.buffer`
 
