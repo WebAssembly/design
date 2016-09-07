@@ -402,7 +402,7 @@ aliases `M.[[Memory]]` and whose
 [[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
 is set to the new byte length of `M.[[Memory]]`.
 
-Return `ret`.
+Return [`ToJSValue`](#ToJSValue)(`ret`).
 
 ### `WebAssembly.Memory.prototype.buffer`
 
