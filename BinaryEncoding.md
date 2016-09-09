@@ -464,7 +464,6 @@ The `br_table` operator has an immediate operand which is encoded as follows:
 
 | Field | Type | Description |
 | ---- | ---- | ---- |
-| arity | `varuint1` | number of arguments |
 | target_count | `varuint32` | number of entries in the target_table |
 | target_table | `varuint32*` | target entries that indicate an outer block or loop to which to break |
 | default_target | `varuint32` | an outer block or loop to which to break in the default case |
