@@ -58,11 +58,11 @@ A single-byte unsigned integer indicating a [value type](AstSemantics.md#types).
 
 ### `inline_signature_type`
 A single-byte unsigned integer indicating a signature. These types are encoded as:
-* `0` indicating a signature with 0 arguments and 0 results.
-* `1` indicating a signature with 0 arguments and 1 result of type `i32`.
-* `2` indicating a signature with 0 arguments and 1 result of type `i64`.
-* `3` indicating a signature with 0 arguments and 1 result of type `f32`.
-* `4` indicating a signature with 0 arguments and 1 result of type `f64`.
+* `0` indicating a signature with 0 results.
+* `1` indicating a signature with 1 result of type `i32`.
+* `2` indicating a signature with 1 result of type `i64`.
+* `3` indicating a signature with 1 result of type `f32`.
+* `4` indicating a signature with 1 result of type `f64`.
 
 ### `external_kind`
 A single-byte unsigned integer indicating the kind of definition being imported or defined:
