@@ -8,7 +8,7 @@ See the [rationale document](Rationale.md#why-a-binary-encoding) for more detail
 
 The encoding is split into three layers:
 
-* **Layer 0** is a simple post-order encoding of the AST and related data structures.
+* **Layer 0** is a simple binary encoding of the bytecode instructions and related data structures.
   The encoding is dense and trivial to interact with, making it suitable for
   scenarios like JIT, instrumentation tools, and debugging.
 * **Layer 1** provides structural compression on top of layer 0, exploiting
@@ -84,22 +84,6 @@ delimiter.
 Note that `get_global` in an initializer expression can only refer to immutable
 imported globals and all uses of `init_expr` can only appear after the Imports
 section.
-
-# Definitions
-
-### Post-order encoding
-Refers to an approach for encoding syntax trees, where each node begins with an identifying binary
-sequence, then followed recursively by any child nodes. 
-
-* Examples
-  * Given a simple AST node: `i32.add(left: AstNode, right: AstNode)`
-    * First recursively write the left and right child nodes.
-    * Then write the opcode for `i32.add` (uint8)
-
-  * Given a call AST node: `call(args: AstNode[], callee_index: varuint32)`
-    * First recursively write each argument node.
-    * Then write the (variable-length) integer `callee_index` (varuint32)
-    * Finally write the opcode of `Call` (uint8)
 
 # Module structure
 
@@ -419,18 +403,15 @@ count may be greater or less than the actual number of locals.
 
 # Function Bodies
 
-Function bodies consist of a sequence of local variable declarations followed by a 
-dense post-order encoding of an [Abstract Syntax Tree](AstSemantics.md).
-Each node in the abstract syntax tree corresponds to an operator, such as `i32.add` or `if` or `block`.
-Operators are encoding by an opcode byte followed by immediate bytes (if any), followed by children 
-nodes (if any).
+Function bodies consist of a sequence of local variable declarations followed by 
+[bytecode instructions](AstSemantics.md). Each function body must end with the `end` opcode.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | body_size | `varuint32` | size of function body to follow, in bytes |
 | local_count | `varuint32` | number of local entries |
 | locals | `local_entry*` | local variables |
-| ast | `byte*` | post-order encoded AST |
+| code | `byte*` | bytecode of the function |
 | end | `byte` | `0x0f`, indicating the end of the body |
 
 #### Local Entry
