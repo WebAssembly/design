@@ -345,10 +345,10 @@ exception is thrown (i.e., this constructor cannot be called as a function witho
 If `Type(memoryDescriptor)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-Let `initial` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"initial"`)).
+Let `initial` be [`ToNonWrappingUint32`](#ToNonWrappingUint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"initial"`)).
 
 If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
-then let `maximum` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"maximum"`)).
+then let `maximum` be [`ToNonWrappingUint32`](#ToNonWrappingUint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"maximum"`)).
 Otherwise, let `maximum` be `None`.
 
 Let `memory` be the result of calling 
@@ -386,7 +386,7 @@ Let `M` be the `this` value. If `M` is not a `WebAssembly.Memory`,
 a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-Let `d` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)(`delta`).
+Let `d` be [`ToNonWrappingUint32`](#ToNonWrappingUint32)(`delta`).
 
 Let `ret` be the result of performing a
 [`grow_memory`](AstSemantics.md#resizing) operation given delta `d`.
@@ -444,10 +444,10 @@ is thrown.
 [future](FutureFeatures.md#more-table-operators-and-types) to allow different
 element types.)
 
-Let `initial` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"initial"`)).
+Let `initial` be [`ToNonWrappingUint32`](#ToNonWrappingUint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"initial"`)).
 
 If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
-then let `maximum` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"maximum"`)).
+then let `maximum` be [`ToNonWrappingUint32`](#ToNonWrappingUint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"maximum"`)).
 Otherwise, let `maximum` be None.
 
 Let `table` be the result of calling `Table.create` given arguments `initial`
@@ -472,7 +472,7 @@ Return `T.[[Values]].length`.
 ### `WebAssembly.Table.prototype.grow`
 
 This method calls `Table.grow`, having performed
-[`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger) on the first argument.
+[`ToNonWrappingUint32`](#ToNonWrappingUint32) on the first argument.
 On failure, a `WebAssembly.RuntimeError` is thrown.
 
 (Note: the ML spec currently doesn't support resizing tables; we assume here it
@@ -488,7 +488,7 @@ get(index)
 Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-Let `i` be the result of [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)(`index`).
+Let `i` be the result of [`ToNonWrappingUint32`](#ToNonWrappingUint32)(`index`).
 
 Return `T.[[Values]][i]`.
 
@@ -505,7 +505,7 @@ is thrown.
 If `value` is not an [Exported Function Exotic Object](#exported-function-exotic-objects)
 or `null`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
-Let `i` be the result of [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)(`index`).
+Let `i` be the result of [`ToNonWrappingUint32`](#ToNonWrappingUint32)(`index`).
 
 If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
 * Set the `i`th element of `T.[[Table]]` to the `v.[[FunctionIndex]]`th function
@@ -548,6 +548,18 @@ To coerce a JavaScript value to a given [WebAssembly value type](https://github.
 
 If the value type is optional, then given `None`, the JavaScript value is
 ignored.
+
+## ToNonWrappingUint32
+
+To convert a JavaScript value `v` to an unsigned integer in the range [0, `UINT32_MAX`]:
+
+Let `i` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)(`v`).
+
+If `i` is negative or greater than `UINT32_MAX`, 
+[`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror)
+is thrown.
+
+Return `i`.
 
 ## Sample API Usage
 
