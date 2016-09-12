@@ -234,16 +234,27 @@ ID: `table`
 The encoding of a [Table section](Modules.md#table-section):
 
 | Field | Type | Description |
+| ----- |  ----- | ----- |
+| count | `varuint32` | indicating the number of tables defined by the module |
+| entries | `table_type*` | repeated `table_type` entries as described below |
+
+| Field | Type | Description |
 | ----- | ---- | ----------- |
 | element_type | `varuint7` | `0x20`, indicating [`anyfunc`](AstSemantics.md#table) |
 | | `resizable_limits` | see [above](#resizable_limits) |
+
+In the MVP, the number of tables must be no more than 1.
 
 ### Memory section
 
 ID: `memory`
 
-The encoding of a [Memory section](Modules.md#linear-memory-section) is simply
-a `resizable_limits`:
+The encoding of a [Memory section](Modules.md#linear-memory-section):
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| count | `varuint32` | indicating the number of memories defined by the module |
+| entries | `memory_type*` | repeated `memory_type` entries as described below |
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
@@ -251,6 +262,8 @@ a `resizable_limits`:
 
 Note that the initial/maximum fields are specified in units of 
 [WebAssembly pages](AstSemantics.md#linear-memory).
+
+In the MVP, the number of memories must be no more than 1.
 
 ### Global section
 
