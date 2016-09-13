@@ -254,15 +254,15 @@ accessed by WebAssembly code indirectly through an integer index. This feature
 bridges the gap between low-level, untrusted linear memory and high-level
 opaque handles/references at the cost of a bounds-checked table indirection.
 
-The table's element type constrains the type of elements stored 
-in the table and allows engines to avoid some type checks on table use. 
-When a WebAssembly value is stored in a table, the value's type must precisely
-match the element type. Just like linear memory, updates to a table are
-observed immediately by all instances that reference the table. Depending on the
-operator/API used to store the value, this check may be static or dynamic. Host
-environments may also allow storing non-WebAssembly values in tables in which
-case, as with [imports](Modules.md#imports), the meaning of using the value is
-defined by the host environment.
+The table's element type constrains the type of elements stored in the table
+and allows engines to avoid some type checks on table use. When a WebAssembly
+value is stored in a table, the value's type must precisely match the element
+type. Depending on the operator/API used to store the value, this check may be
+static or dynamic. Just like linear memory, updates to a table are observed
+immediately by all instances that reference the table. Host environments may
+also allow storing non-WebAssembly values in tables in which case, as with
+[imports](Modules.md#imports), the meaning of using the value is defined by the
+host environment.
 
 Every WebAssembly [instance](Modules.md) has one specially-designated *default*
 table which is indexed by [`call_indirect`](#calls) and other future
@@ -278,8 +278,8 @@ to hold the array of indirectly-callable functions. Thus, in the MVP:
 * tables may only be accessed from WebAssembly code via [`call_indirect`](#calls);
 * the only allowed table element type is `anyfunc` (function with any signature);
 * tables may not be directly mutated or resized from WebAssembly code;
-  this can only be done through the host environment (e.g., the
-  the `WebAssembly` [JavaScript API](JS.md#webassemblytable-objects)).
+  this can only be done through the host environment (e.g., the `WebAssembly`
+  [JavaScript API](JS.md#webassemblytable-objects)).
 
 These restrictions may be relaxed in the 
 [future](FutureFeatures.md#more-table-operators-and-types). 
