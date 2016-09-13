@@ -357,9 +357,8 @@ further see the parallel, note that a `br` to a `block`'s label is functionally
 equivalent to a labeled `break` in high-level languages in that a `br` simply
 breaks out of a `block`.
 
-Branches that exit a `block`, `loop`, or `br_table` may take a subexpression
-that yields a value for the exited construct. If present, it is the first operand
-before any others.
+`br` and `br_table` may take a subexpression that yields a value for the exited
+construct. If present, it is the first operand before any others.
 
 ### Yielding values from control constructs
 
