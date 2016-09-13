@@ -357,17 +357,17 @@ further see the parallel, note that a `br` to a `block`'s label is functionally
 equivalent to a labeled `break` in high-level languages in that a `br` simply
 breaks out of a `block`.
 
-Branches that exit a `block`, `loop`, or `br_table` may take a subexpression
+Branches that exit a `block` may take a subexpression
 that yields a value for the exited construct. If present, it is the first operand
 before any others.
 
 ### Yielding values from control constructs
 
-The `nop`, `br`, `br_if`, `br_table`, and `return` constructs do not yield values.
-Other control constructs may yield values if their subexpressions yield values:
+The `nop`, `br`, `br_if`, `br_table`, `return`, and `loop` constructs do not
+yield values. Other control constructs may yield values if their subexpressions
+yield values:
 
 * `block`: yields either the value of the last expression in the block or the result of an inner branch that targeted the label of the block
-* `loop`: yields either the value of the last expression in the loop or the result of an inner branch that targeted the end label of the loop
 * `if`: yields either the value of the last *then* expression or the last *else* expression or the result of an inner branch that targeted the label of one of these.
 
 In all constructs containing block-like sequences of expressions, all expressions but the last must not yield a value.
