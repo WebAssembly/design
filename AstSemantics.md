@@ -370,7 +370,7 @@ The `nop`, `br`, `br_if`, `br_table`, and `return` constructs do not yield value
 Other control constructs may yield values if their subexpressions yield values:
 
 * `block`: yields either the value of the last expression in the block or the result of an inner branch that targeted the label of the block
-* `loop`: yields either the value of the last expression in the loop
+* `loop`: yields the value of the last expression in the loop
 * `if`: yields either the value of the last *then* expression or the last *else* expression or the result of an inner branch that targeted the label of one of these.
 
 In all constructs containing block-like sequences of expressions, all expressions but the last must not yield a value.
