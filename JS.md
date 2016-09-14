@@ -18,7 +18,7 @@ as defined below and will be removed at some point in the future.*
 Whenever WebAssembly semantics specify a [trap](AstSemantics.md#traps),
 a `WebAssembly.RuntimeError` object is thrown. WebAssembly code (currently)
 has no way to catch this exception and thus the exception will necessarily
-propagate to the innermost non-WebAssembly caller (either the browser or
+propagate to the enclosing non-WebAssembly caller (either the browser or
 JavaScript) where it is handled like a normal JavaScript exception.
 
 If WebAssembly calls JavaScript via import and the JavaScript throws an
