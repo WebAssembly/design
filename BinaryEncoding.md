@@ -119,17 +119,19 @@ The module starts with a preamble of two fields:
 
 The module preamble is followed by a sequence of sections.
 Each section is identified by a 1-byte *section code* that encodes either a known section or a user-defined section.
-Known sections have non-zero ids, while unknown sections have a `0` id followed by an identifying string. 
-Unknown sections are ignored by the WebAssembly implementation.
-The section length and data immediately follow the section code.
+The section length and payload data then follow.
+Known sections have non-zero ids, while unknown sections have a `0` id followed by an identifying string as
+part of the payload.
+Unknown sections are ignored by the WebAssembly implementation, and thus validation errors within them do not
+invalidate a module.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | id | `varint7` | section code |
+| payload_len  | `varuint32` | size of this section in bytes |
 | name_len | `varuint32` ? | length of the section name in bytes, present if `id == 0` |
 | name | `bytes` ? | section name string, present if `id == 0` |
-| payload_len  | `varuint32` | size of this section in bytes |
-| payload_data  | `bytes` | content of this section, of length `payload_len` |
+| payload_data  | `bytes` | content of this section, of length `payload_len - sizeof(name) - sizeof(name_len)` |
 
 Each section is optional and may appear at most once.
 Known sections from this list may not appear out of order.
