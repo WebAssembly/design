@@ -345,10 +345,10 @@ exception is thrown (i.e., this constructor cannot be called as a function witho
 If `Type(memoryDescriptor)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-Let `initial` be [`ToNonWrappingUint32`](#ToNonWrappingUint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"initial"`)).
+Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"initial"`)).
 
 If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
-then let `maximum` be [`ToNonWrappingUint32`](#ToNonWrappingUint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"maximum"`)).
+then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"maximum"`)).
 Otherwise, let `maximum` be `None`.
 
 Let `memory` be the result of calling 
@@ -386,7 +386,7 @@ Let `M` be the `this` value. If `M` is not a `WebAssembly.Memory`,
 a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-Let `d` be [`ToNonWrappingUint32`](#ToNonWrappingUint32)(`delta`).
+Let `d` be [`ToNonWrappingUint32`](#tononwrappinguint32)(`delta`).
 
 Let `ret` be the result of performing a
 [`grow_memory`](AstSemantics.md#resizing) operation given delta `d`.
@@ -443,10 +443,10 @@ is thrown.
 [future](FutureFeatures.md#more-table-operators-and-types) to allow different
 element types.)
 
-Let `initial` be [`ToNonWrappingUint32`](#ToNonWrappingUint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"initial"`)).
+Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"initial"`)).
 
 If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
-then let `maximum` be [`ToNonWrappingUint32`](#ToNonWrappingUint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"maximum"`)).
+then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"maximum"`)).
 Otherwise, let `maximum` be None.
 
 Let `table` be the result of calling `Table.create` given arguments `initial`
@@ -471,7 +471,7 @@ Return `T.[[Values]].length`.
 ### `WebAssembly.Table.prototype.grow`
 
 This method calls `Table.grow`, having performed
-[`ToNonWrappingUint32`](#ToNonWrappingUint32) on the first argument.
+[`ToNonWrappingUint32`](#tononwrappinguint32) on the first argument.
 On failure, a `WebAssembly.RuntimeError` is thrown.
 
 (Note: the ML spec currently doesn't support resizing tables; we assume here it
@@ -487,7 +487,7 @@ get(index)
 Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-Let `i` be the result of [`ToNonWrappingUint32`](#ToNonWrappingUint32)(`index`).
+Let `i` be the result of [`ToNonWrappingUint32`](#tononwrappinguint32)(`index`).
 
 Return `T.[[Values]][i]`.
 
@@ -504,7 +504,7 @@ is thrown.
 If `value` is not an [Exported Function Exotic Object](#exported-function-exotic-objects)
 or `null`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
-Let `i` be the result of [`ToNonWrappingUint32`](#ToNonWrappingUint32)(`index`).
+Let `i` be the result of [`ToNonWrappingUint32`](#tononwrappinguint32)(`index`).
 
 If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
 * Set the `i`th element of `T.[[Table]]` to the `v.[[FunctionIndex]]`th function
