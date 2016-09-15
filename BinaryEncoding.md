@@ -106,42 +106,45 @@ The module starts with a preamble of two fields:
 | magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
 | version | `uint32` | Version number, currently 12. The version for MVP will be reset to 1. |
 
-This preamble is followed by a sequence of sections. Each section is identified by an
-immediate string. Sections whose identity is unknown to the WebAssembly
-implementation are ignored and this is supported by including the size in bytes
-for all sections. The encoding of sections is structured as follows:
+The module preamble is followed by a sequence of sections.
+Each section is identified by a 1-byte *section code* that encodes either a known section or a user-defined section.
+The section length and payload data then follow.
+Known sections have non-zero ids, while unknown sections have a `0` id followed by an identifying string as
+part of the payload.
+Unknown sections are ignored by the WebAssembly implementation, and thus validation errors within them do not
+invalidate a module.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| id_len | `varuint32` | section identifier string length |
-| id_str | `bytes` | section identifier string of id_len bytes |
+| id | `varint7` | section code |
 | payload_len  | `varuint32` | size of this section in bytes |
-| payload_str  | `bytes` | content of this section, of length payload_len |
+| name_len | `varuint32` ? | length of the section name in bytes, present if `id == 0` |
+| name | `bytes` ? | section name string, present if `id == 0` |
+| payload_data  | `bytes` | content of this section, of length `payload_len - sizeof(name) - sizeof(name_len)` |
 
 Each section is optional and may appear at most once.
-Known sections (from this list) may not appear out of order.
-The content of each section is encoded in its `payload_str`.
+Known sections from this list may not appear out of order.
+The content of each section is encoded in its `payload_data`.
 
-* [Type](#type-section) section
-* [Import](#import-section) section
-* [Function](#function-section) section
-* [Table](#table-section) section
-* [Memory](#memory-section) section
-* [Global](#global-section) section
-* [Export](#export-section) section
-* [Start](#start-section) section
-* [Element](#element-section) section
-* [Code](#code-section) section
-* [Data](#data-section) section
-* [Name](#name-section) section
+| Section Name | Code | Description |
+| ------------ | ---- | ----------- |
+| [Type](#type-section) | `1` | Function signature declarations |
+| [Import](#import-section) | `2` | Import declarations |
+| [Function](#function-section) | `3` | Function declarations |
+| [Table](#table-section) | `4` | Indirect function table and other tables |
+| [Memory](#memory-section) | `5` | Memory attributes |
+| [Global](#global-section) | `6` | Global declarations |
+| [Export](#export-section) | `7` | Exports | 
+| [Start](#start-section) | `8` | Start function declaration |
+| [Element](#element-section) | `9` | Elements section |
+| [Code](#code-section) | `10` | Function bodies (code) |
+| [Data](#data-section) | `11` | Data segments |
 
 The end of the last present section must coincide with the last byte of the
 module. The shortest valid module is 8 bytes (`magic number`, `version`,
 followed by zero sections).
 
 ### Type section
-
-ID: `type`
 
 The type section declares all function signatures that will be used in the module.
 
@@ -162,8 +165,6 @@ The type section declares all function signatures that will be used in the modul
 (Note: In the future, this section may contain other forms of type entries as well, which can be distinguished by the `form` field.)
 
 ### Import section
-
-ID: `import`
 
 The import section declares all imports that will be used in the module.
 
@@ -209,8 +210,6 @@ or, if the `kind` is `Global`:
 
 ### Function section
 
-ID: `function`
-
 The function section _declares_ the signatures of all functions in the
 module (their definitions appear in the [code section](#code-section)).
 
@@ -220,8 +219,6 @@ module (their definitions appear in the [code section](#code-section)).
 | types | `varuint32*` | sequence of indices into the type section |
 
 ### Table section
-
-ID: `table`
 
 The encoding of a [Table section](Modules.md#table-section):
 
@@ -259,8 +256,6 @@ In the MVP, the number of memories must be no more than 1.
 
 ### Global section
 
-ID: `global`
-
 The encoding of the [Global section](Modules.md#global-section):
 
 | Field | Type | Description |
@@ -283,8 +278,6 @@ Note that, in the MVP, only immutable global variables can be exported.
 
 ### Export section
 
-ID: `export`
-
 The encoding of the [Export section](Modules.md#exports):
 
 | Field | Type | Description |
@@ -306,8 +299,6 @@ only valid index value for a memory or table export is 0.
 
 ### Start section
 
-ID: `start`
-
 The start section declares the [start function](Modules.md#module-start-function).
 
 | Field | Type | Description |
@@ -315,8 +306,6 @@ The start section declares the [start function](Modules.md#module-start-function
 | index | `varuint32` | start function index |
 
 ### Element section
-
-ID: `elem`
 
 The encoding of the [Elements section](Modules.md#elements-section):
 
@@ -350,8 +339,6 @@ declaration corresponds to the `i`th function body.
 
 ### Data section
 
-ID: `data`
-
 The data section declares the initialized data that is loaded
 into the linear memory.
 
@@ -371,12 +358,12 @@ a `data_segment` is:
 
 ### Name section
 
-ID: `name`
+User-defined section string: `"name"`
 
-The names section does not change execution semantics and a validation error in
-this section does not cause validation for the whole module to fail and is
-instead treated as if the section was absent. The expectation is that, when a
-binary WebAssembly module is viewed in a browser or other development
+The names section does not change execution semantics, and thus is not allocated a section code.
+It is encoded as an unknown section (id `0`) followed by the identification string `"name"`.
+Like all unknown sections, a validation error in this section does not cause validation of the module to fail.
+The expectation is that, when a binary WebAssembly module is viewed in a browser or other development
 environment, the names in this section will be used as the names of functions
 and locals in the [text format](TextFormat.md).
 
