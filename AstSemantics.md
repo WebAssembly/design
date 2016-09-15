@@ -346,9 +346,12 @@ a value and may appear as children of other expressions.
 ### Branches and nesting
 
 The `br` and `br_if` constructs express low-level branching.
-Branches may only reference labels defined by an outer *enclosing construct*.
-This means that, for example, references to a `block`'s label can only occur 
-within the `block`'s body.
+Branches may only reference labels defined by an outer *enclosing construct*,
+which can be a `block` (with a label at the `end`), `loop` (with a label at the
+beginning), `if` (with a label at the `end` or `else`), `else` (with a label at
+the `end), or the function body (with a label at the `end`). This means that,
+for example, references to a `block`'s label can only occur within the
+`block`'s body.
 
 In practice, outer `block`s can be used to place labels for any given branching
 pattern, except for one restriction: one can't branch into the middle of a loop
@@ -368,7 +371,7 @@ The `nop`, `br`, `br_if`, `br_table`, and `return` constructs do not yield value
 Other control constructs may yield values if their subexpressions yield values:
 
 * `block`: yields either the value of the last expression in the block or the result of an inner branch that targeted the label of the block
-* `loop`: yields either the value of the last expression in the loop or the result of an inner branch that targeted the end label of the loop
+* `loop`: yields the value of the last expression in the loop
 * `if`: yields either the value of the last *then* expression or the last *else* expression or the result of an inner branch that targeted the label of one of these.
 
 In all constructs containing block-like sequences of expressions, all expressions but the last must not yield a value.
