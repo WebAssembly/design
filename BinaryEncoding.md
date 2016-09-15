@@ -8,7 +8,7 @@ See the [rationale document](Rationale.md#why-a-binary-encoding) for more detail
 
 The encoding is split into three layers:
 
-* **Layer 0** is a simple post-order encoding of the AST and related data structures.
+* **Layer 0** is a simple binary encoding of the bytecode instructions and related data structures.
   The encoding is dense and trivial to interact with, making it suitable for
   scenarios like JIT, instrumentation tools, and debugging.
 * **Layer 1** provides structural compression on top of layer 0, exploiting
@@ -31,42 +31,47 @@ for a proposal for layer 1 structural compression.
 
 # Data types
 
-### uint8
-A single-byte unsigned integer.
+### `uintN`
+An unsigned integer of _N_ bits,
+represented in _N_/8 bytes in [little endian](https://en.wikipedia.org/wiki/Endianness#Little-endian) order.
+_N_ is either 8, 16, or 32.
 
-### uint32
-A four-byte little endian unsigned integer.
+### `varuintN`
+A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to _N_ bits (i.e., the values [0, 2^_N_-1]),
+represented by _at most_ ceil(_N_/7) bytes that may contain padding `0x80` bytes.
 
-### varint32
-A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int32 values.
+Note: Currently, the only sizes used are `varuint1`, `varuint7`, and `varuint32`,
+where the former two are used for compatibility with potential future extensions.
 
-### varuint1
-A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values 0 or 1. `varuint1` values may contain leading zeros. (This type is mainly used for compatibility with potential future extensions.)
+### `varintN`
+A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to _N_ bits (i.e., the values [-2^(_N_-1), +2^(_N_-1)-1]),
+represented by _at most_ ceil(_N_/7) bytes that may contain padding `0x80` or `0xFF` bytes.
 
-### varuint7
-A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to the values [0, 127]. `varuint7` values may contain leading zeros. (This type is mainly used for compatibility with potential future extensions.)
+Note: Currently, the only sizes used are `varint32` and `varint64`.
 
-### varuint32
-A [LEB128](https://en.wikipedia.org/wiki/LEB128) variable-length integer, limited to uint32 values. `varuint32` values may contain leading zeros.
-
-### varint64
-A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to int64 values.
-
-### value_type
+### `value_type`
 A single-byte unsigned integer indicating a [value type](AstSemantics.md#types). These types are encoded as:
 * `1` indicating type `i32` 
 * `2` indicating type `i64` 
 * `3` indicating type `f32` 
 * `4` indicating type `f64`
 
-### external_kind
+### `inline_signature_type`
+A single-byte unsigned integer indicating a signature. These types are encoded as:
+* `0` indicating a signature with 0 results.
+* `1` indicating a signature with 1 result of type `i32`.
+* `2` indicating a signature with 1 result of type `i64`.
+* `3` indicating a signature with 1 result of type `f32`.
+* `4` indicating a signature with 1 result of type `f64`.
+
+### `external_kind`
 A single-byte unsigned integer indicating the kind of definition being imported or defined:
 * `0` indicating a `Function` [import](Modules.md#imports) or [definition](Modules.md#function-and-code-sections)
 * `1` indicating a `Table` [import](Modules.md#imports) or [definition](Modules.md#table-section)
 * `2` indicating a `Memory` [import](Modules.md#imports) or [definition](Modules.md#linear-memory-section)
 * `3` indicating a `Global` [import](Modules.md#imports) or [definition](Modules.md#global-section)
 
-### resizable_limits
+### `resizable_limits`
 A packed tuple that describes the limits of a
 [table](AstSemantics.md#table) or [memory](AstSemantics.md#resizing):
 
@@ -79,7 +84,7 @@ A packed tuple that describes the limits of a
 The "flags" field may later be extended to include a flag for sharing (between
 threads).
 
-### init_expr
+### `init_expr`
 The encoding of an [initializer expression](Modules.md#initializer-expression)
 is the normal encoding of the expression followed by the `end` opcode as a
 delimiter.
@@ -87,22 +92,6 @@ delimiter.
 Note that `get_global` in an initializer expression can only refer to immutable
 imported globals and all uses of `init_expr` can only appear after the Imports
 section.
-
-# Definitions
-
-### Post-order encoding
-Refers to an approach for encoding syntax trees, where each node begins with an identifying binary
-sequence, then followed recursively by any child nodes. 
-
-* Examples
-  * Given a simple AST node: `i32.add(left: AstNode, right: AstNode)`
-    * First recursively write the left and right child nodes.
-    * Then write the opcode for `i32.add` (uint8)
-
-  * Given a call AST node: `call(args: AstNode[], callee_index: varuint32)`
-    * First recursively write each argument node.
-    * Then write the (variable-length) integer `callee_index` (varuint32)
-    * Finally write the opcode of `Call` (uint8)
 
 # Module structure
 
@@ -115,7 +104,7 @@ The module starts with a preamble of two fields:
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
-| version | `uint32` | Version number, currently 10. The version for MVP will be reset to 1. |
+| version | `uint32` | Version number, currently 12. The version for MVP will be reset to 1. |
 
 The module preamble is followed by a sequence of sections.
 Each section is identified by a 1-byte *section code* that encodes either a known section or a user-defined section.
@@ -147,8 +136,8 @@ The content of each section is encoded in its `payload_data`.
 | [Global](#global-section) | `6` | Global declarations |
 | [Export](#export-section) | `7` | Exports | 
 | [Start](#start-section) | `8` | Start function declaration |
-| [Code](#code-section) | `9` | Function bodies (code) |
-| [Element](#element-section) | `10` | Elements section |
+| [Element](#element-section) | `9` | Elements section |
+| [Code](#code-section) | `10` | Function bodies (code) |
 | [Data](#data-section) | `11` | Data segments |
 
 The end of the last present section must coincide with the last byte of the
@@ -234,14 +223,27 @@ module (their definitions appear in the [code section](#code-section)).
 The encoding of a [Table section](Modules.md#table-section):
 
 | Field | Type | Description |
+| ----- |  ----- | ----- |
+| count | `varuint32` | indicating the number of tables defined by the module |
+| entries | `table_type*` | repeated `table_type` entries as described below |
+
+| Field | Type | Description |
 | ----- | ---- | ----------- |
 | element_type | `varuint7` | `0x20`, indicating [`anyfunc`](AstSemantics.md#table) |
 | | `resizable_limits` | see [above](#resizable_limits) |
 
+In the MVP, the number of tables must be no more than 1.
+
 ### Memory section
 
-The encoding of a [Memory section](Modules.md#linear-memory-section) is simply
-a `resizable_limits`:
+ID: `memory`
+
+The encoding of a [Memory section](Modules.md#linear-memory-section):
+
+| Field | Type | Description |
+| ----- |  ----- | ----- |
+| count | `varuint32` | indicating the number of memories defined by the module |
+| entries | `memory_type*` | repeated `memory_type` entries as described below |
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
@@ -250,13 +252,15 @@ a `resizable_limits`:
 Note that the initial/maximum fields are specified in units of 
 [WebAssembly pages](AstSemantics.md#linear-memory).
 
+In the MVP, the number of memories must be no more than 1.
+
 ### Global section
 
 The encoding of the [Global section](Modules.md#global-section):
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| count | `variable_entry` | count of global [variable entries](#variable-entry) as described below |
+| count | `varuint32` | count of global variable entries |
 | globals | `global_variable*` | global variables, as described below |
 
 #### Global Entry
@@ -301,18 +305,6 @@ The start section declares the [start function](Modules.md#module-start-function
 | ----- | ---- | ----------- |
 | index | `varuint32` | start function index |
 
-### Code section
-
-The code section contains a body for every function in the module.
-The count of function declared in the [function section](#function-section)
-and function bodies defined in this section must be the same and the `i`th
-declaration corresponds to the `i`th function body.
-
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| count | `varuint32` | count of function bodies to follow |
-| bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
-
 ### Element section
 
 The encoding of the [Elements section](Modules.md#elements-section):
@@ -330,6 +322,20 @@ a `elem_segment` is:
 | offset | `init_expr` | an `i32` initializer expression that computes the offset at which to place the elements |
 | num_elem | `varuint32` | number of elements to follow |
 | elems | `varuint32*` | sequence of [function indices](Modules.md#function-index-space) |
+
+### Code section
+
+ID: `code`
+
+The code section contains a body for every function in the module.
+The count of function declared in the [function section](#function-section)
+and function bodies defined in this section must be the same and the `i`th
+declaration corresponds to the `i`th function body.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| count | `varuint32` | count of function bodies to follow |
+| bodies | `function_body*` | sequence of [Function Bodies](#function-bodies) |
 
 ### Data section
 
@@ -392,18 +398,15 @@ count may be greater or less than the actual number of locals.
 
 # Function Bodies
 
-Function bodies consist of a sequence of local variable declarations followed by a 
-dense post-order encoding of an [Abstract Syntax Tree](AstSemantics.md).
-Each node in the abstract syntax tree corresponds to an operator, such as `i32.add` or `if` or `block`.
-Operators are encoding by an opcode byte followed by immediate bytes (if any), followed by children 
-nodes (if any).
+Function bodies consist of a sequence of local variable declarations followed by 
+[bytecode instructions](AstSemantics.md). Each function body must end with the `end` opcode.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | body_size | `varuint32` | size of function body to follow, in bytes |
 | local_count | `varuint32` | number of local entries |
 | locals | `local_entry*` | local variables |
-| ast | `byte*` | post-order encoded AST |
+| code | `byte*` | bytecode of the function |
 | end | `byte` | `0x0f`, indicating the end of the body |
 
 #### Local Entry
@@ -422,31 +425,29 @@ It is legal to have several entries with the same type.
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
 | `unreachable` | `0x00` | | trap immediately |
-| `block` | `0x01` |  | begin a sequence of expressions, the last of which yields a value |
-| `loop` | `0x02` |  | begin a block which can also form control flow loops |
-| `if` | `0x03` | | begin if expression |
+| `block` | `0x01` | sig : `inline_signature_type` | begin a sequence of expressions, yielding 0 or 1 values |
+| `loop` | `0x02` |  sig : `inline_signature_type` | begin a block which can also form control flow loops |
+| `if` | `0x03` | sig : `inline_signature_type` | begin if expression |
 | `else` | `0x04` | | begin else expression of if |
 | `select` | `0x05` | | select one of two values based on condition |
-| `br` | `0x06` | argument_count : `varuint1`, relative_depth : `varuint32` | break that targets an outer nested block |
-| `br_if` | `0x07` | argument_count : `varuint1`, relative_depth : `varuint32` | conditional break that targets an outer nested block |
+| `br` | `0x06` | relative_depth : `varuint32` | break that targets an outer nested block |
+| `br_if` | `0x07` | relative_depth : `varuint32` | conditional break that targets an outer nested block |
 | `br_table` | `0x08` | see below | branch table control flow construct |
-| `return` | `0x09` | argument_count : `varuint1` | return zero or one value from this function |
+| `return` | `0x09` | return zero or one value from this function |
 | `drop` | `0x0b` | | ignore value |
 | `nop` | `0x0a` | | no operation |
 | `end` | `0x0f` | | end a block, loop, or if |
 
-Note that there is no explicit `if_else` opcode, as the else clause is encoded with the `else` bytecode.
-
-The counts following the break and return operators specify how many preceding operands are taken as transfer arguments; in the MVP, all these values must be either 0 or 1.
+The _sig_ fields of `block` and `if` operators specify function signatures
+which describe their use of the operand stack.
 
 The `br_table` operator has an immediate operand which is encoded as follows:
 
 | Field | Type | Description |
 | ---- | ---- | ---- |
-| arity | `varuint1` | number of arguments |
-| target_count | `varuint32` | number of targets in the target_table |
-| target_table | `uint32*` | target entries that indicate an outer block or loop to which to break |
-| default_target | `uint32` | an outer block or loop to which to break in the default case |
+| target_count | `varuint32` | number of entries in the target_table |
+| target_table | `varuint32*` | target entries that indicate an outer block or loop to which to break |
+| default_target | `varuint32` | an outer block or loop to which to break in the default case |
 
 The `br_table` operator implements an indirect branch. It accepts an optional value argument
 (like other branches) and an additional `i32` expression as input, and 
@@ -466,10 +467,10 @@ out of range, `br_table` branches to the default target.
 | `tee_local` | `0x19` | local_index : `varuint32` | write a local variable or parameter and return the same value |
 | `get_global` | `0xbb` | global_index : `varuint32` | read a global variable |
 | `set_global` | `0xbc` | global_index : `varuint32` | write a global variable |
-| `call` | `0x16` | argument_count : `varuint1`, function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
-| `call_indirect` | `0x17` | argument_count : `varuint1`, type_index : `varuint32` | call a function indirect with an expected signature |
+| `call` | `0x16` | function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
+| `call_indirect` | `0x17` | type_index : `varuint32` | call a function indirect with an expected signature |
 
-The counts following the different call opcodes specify the number of preceding operands taken as arguments.
+The `call_indirect` operator takes a list of function arguments and as the last operand the index into the table.
 
 ## Memory-related operators ([described here](AstSemantics.md#linear-memory-accesses))
 
