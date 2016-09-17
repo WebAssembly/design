@@ -433,7 +433,7 @@ It is legal to have several entries with the same type.
 | `br` | `0x06` | relative_depth : `varuint32` | break that targets an outer nested block |
 | `br_if` | `0x07` | relative_depth : `varuint32` | conditional break that targets an outer nested block |
 | `br_table` | `0x08` | see below | branch table control flow construct |
-| `return` | `0x09` | return zero or one value from this function |
+| `return` | `0x09` | | return zero or one value from this function |
 | `drop` | `0x0b` | | ignore value |
 | `nop` | `0x0a` | | no operation |
 | `end` | `0x0f` | | end a block, loop, or if |
