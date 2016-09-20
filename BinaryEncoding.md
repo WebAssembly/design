@@ -116,7 +116,7 @@ invalidate a module.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| id | `varint7` | section code |
+| id | `varuint7` | section code |
 | payload_len  | `varuint32` | size of this section in bytes |
 | name_len | `varuint32` ? | length of the section name in bytes, present if `id == 0` |
 | name | `bytes` ? | section name string, present if `id == 0` |
