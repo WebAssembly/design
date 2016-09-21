@@ -349,7 +349,7 @@ The `br` and `br_if` constructs express low-level branching.
 Branches may only reference labels defined by an outer *enclosing construct*,
 which can be a `block` (with a label at the `end`), `loop` (with a label at the
 beginning), `if` (with a label at the `end` or `else`), `else` (with a label at
-the `end), or the function body (with a label at the `end`). This means that,
+the `end`), or the function body (with a label at the `end`). This means that,
 for example, references to a `block`'s label can only occur within the
 `block`'s body.
 
