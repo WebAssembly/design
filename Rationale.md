@@ -18,7 +18,7 @@ and update the [design](AstSemantics.md) before the MVP is finalized.
 Why not an AST, or a register- or SSA-based bytecode?
 
 * We started with an AST and generalized to a (restricted) stack machine. ASTs allow a 
-  dense encoding and (with postorder) an efficient decoding, compilation, and interpretation.
+  dense encoding and efficient decoding, compilation, and interpretation.
   The stack machine is a generalization of ASTs allowed in previous versions while allowing
   efficiency gains in interpretation and baseline compilation, as well as a straightforward 
   design for multi-return functions.
