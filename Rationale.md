@@ -13,10 +13,17 @@ codebases, we'll revisit the alternatives listed below, reevaluate the tradeoffs
 and update the [design](AstSemantics.md) before the MVP is finalized.
 
 
-## Why AST?
+## Why a stack machine?
 
-Why not a register- or SSA-based bytecode?
-* Trees allow a smaller binary encoding: [JSZap][], [Slim Binaries][].
+Why not an AST, or a register- or SSA-based bytecode?
+
+* We started with an AST and generalized to a (restricted) stack machine. ASTs allow a 
+  dense encoding and (with postorder) an efficient decoding, compilation, and interpretation.
+  The stack machine is a generalization of ASTs allowed in previous versions while allowing
+  efficiency gains in interpretation and baseline compilation, as well as a straightforward 
+  design for multi-return functions.
+* The stack machine allows smaller binary encoding than registers or SSA, and structured control
+  flow preserves the size advantages of an AST: [JSZap][], [Slim Binaries][].
 * [Polyfill prototype][] shows simple and efficient translation to asm.js.
 
   [JSZap]: https://research.microsoft.com/en-us/projects/jszap/
@@ -26,15 +33,10 @@ Why not a register- or SSA-based bytecode?
 
 ## Why not a fully-general stack machine?
 
-Stack machines have all the code size advantages as expression trees represented
-in post-order. However, we wish to avoid requiring an explicit expression stack at
-runtime, because many implementations will want to use registers rather than an
-actual stack for evaluation. Consequently, while it's possible to think about
-wasm expression evaluation in terms of a conceptual stack machine, the stack
-machine would be constrained such that one can always statically know the types,
-definitions, and uses of all operands on the stack, so that an implementation can
-connect definitions with their uses through whatever mechanism they see fit.
-
+The WebAssembly stack machine is restricted to structured control flow and structured
+use of the stack. This greatly simplifies one-pass verification, avoiding a fixpoint computation
+like that of the Java Virtual Machine, as well as compilation and manipulating of
+WebAssembly code by other tools.
 
 ## Basic Types Only
 
@@ -44,7 +46,7 @@ WebAssembly only represents [a few types](AstSemantics.md#Types).
   language compiler to express its own types in terms of the basic machine
   types. This allows WebAssembly to present itself as a virtual ISA, and lets
   compilers target it as they would any other ISA.
-* These types are efficiently executed by all modern CPU architectures.
+* These types are directly representable on all modern CPU architectures.
 * Smaller types (such as `i8` and `i16`) are usually no more efficient and in
   languages like C/C++ are only semantically meaningful for memory accesses
   since arithmetic get widened to `i32` or `i64`. Avoiding them at least for MVP
@@ -470,20 +472,20 @@ Yes:
     [this demo](https://github.com/lukewagner/AngryBotsPacked), comparing
     *just* parsing in SpiderMonkey (no validation, IR generation) to *just*
     decoding in the polyfill (no asm.js code generation).
-* A binary format enables optimizations that reduce the memory usage of decoded
-  ASTs without increasing size or reducing decode speed.
+* A binary format allows many optimizations for code size and decoding speed that would
+  not be possible on a source form.
 
 
 ## Why a layered binary encoding?
-* We can do better than generic compression because we are aware of the AST
+* We can do better than generic compression because we are aware of the code
   structure and other details:
   * For example, macro compression that
     [deduplicates AST trees](https://github.com/WebAssembly/design/issues/58#issuecomment-101863032)
-    can focus on AST nodes + their children, thus having `O(nodes)` entities
+    can focus on ASTs + their children, thus having `O(nodes)` entities
     to worry about, compared to generic compression which in principle would
     need to look at `O(bytes*bytes)` entities.  Such macros would allow the
     logical equivalent of `#define ADD1(x) (x+1)`, i.e., to be
-    parametrized. Simpler macros (`#define ADDX1 (x+1)`) can implement useful
+    parameterized. Simpler macros (`#define ADDX1 (x+1)`) can implement useful
     features like constant pools.
   * Another example is reordering of functions and some internal nodes, which
     we know does not change semantics, but
