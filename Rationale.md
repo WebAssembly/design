@@ -36,7 +36,7 @@ Why not an AST, or a register- or SSA-based bytecode?
 The WebAssembly stack machine is restricted to structured control flow and structured
 use of the stack. This greatly simplifies one-pass verification, avoiding a fixpoint computation
 like that of other stack machines such as the Java Virtual Machine.
-This also simplifies compilation and manipulating of WebAssembly code by other tools.
+This also simplifies compilation and manipulation of WebAssembly code by other tools.
 
 ## Basic Types Only
 
