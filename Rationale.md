@@ -17,7 +17,7 @@ and update the [design](AstSemantics.md) before the MVP is finalized.
 
 Why not an AST, or a register- or SSA-based bytecode?
 
-* We started with an AST and generalized to a (restricted) stack machine. ASTs allow a 
+* We started with an AST and generalized to a [structured stack machine][AstSemantics.md]. ASTs allow a 
   dense encoding and efficient decoding, compilation, and interpretation.
   The stack machine is a generalization of ASTs allowed in previous versions while allowing
   efficiency gains in interpretation and baseline compilation, as well as a straightforward 
@@ -35,8 +35,8 @@ Why not an AST, or a register- or SSA-based bytecode?
 
 The WebAssembly stack machine is restricted to structured control flow and structured
 use of the stack. This greatly simplifies one-pass verification, avoiding a fixpoint computation
-like that of the Java Virtual Machine, as well as compilation and manipulating of
-WebAssembly code by other tools.
+like that of other stack machines such as the Java Virtual Machine.
+This also simplifies compilation and manipulating of WebAssembly code by other tools.
 
 ## Basic Types Only
 
