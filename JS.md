@@ -13,6 +13,22 @@ basically equivalent to
 `new WebAssembly.Instance(new WebAssembly.Module(bytes), imports)`
 as defined below and will be removed at some point in the future.*
 
+## Traps
+
+Whenever WebAssembly semantics specify a [trap](AstSemantics.md#traps),
+a `WebAssembly.RuntimeError` object is thrown. WebAssembly code (currently)
+has no way to catch this exception and thus the exception will necessarily
+propagate to the enclosing non-WebAssembly caller (either the browser or
+JavaScript) where it is handled like a normal JavaScript exception.
+
+If WebAssembly calls JavaScript via import and the JavaScript throws an
+exception, the exception is propagated through the WebAssembly activation to the
+enclosing caller.
+
+Because JavaScript exceptions can be handled, and JavaScript can continue to
+call WebAssembly exports after a trap has been handled, traps do not, in
+general, prevent future execution.
+
 ## The `WebAssembly` object
 
 The `WebAssembly` object is the initial value of the `WebAssembly` property of
@@ -31,7 +47,7 @@ The following intrinsic objects are added:
 * `WebAssembly.CompileError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
    which indicates an error during WebAssembly decoding or validation
 * `WebAssembly.RuntimeError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
-   which indicates an error while running WebAssembly code
+   which is thrown whenever WebAssembly specifies a [trap](#traps).
 
 ### Function Properties of the `WebAssembly` object
 
@@ -228,7 +244,7 @@ has been modified so that each export simply has a `name`, `type` and `index`:
     otherwise creating a new object via:
     * Let `values` be a list of JS values that is mapped from the table's
       elements as follows:
-      * sentinel values (which throw if called) are given the value `null`
+      * sentinel values (which [trap](#traps) if called) are given the value `null`
       * non-sentinel values are given an [Exported Function Exotic Objects](#exported-function-exotic-objects),
         reusing an existing object if one exists for the given function,
         otherwise creating a new one.
