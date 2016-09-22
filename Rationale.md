@@ -325,12 +325,11 @@ and local manner. This prevents the entire program from being invalid, as would
 be the case with C++ undefined behavior.
 
 As WebAssembly gets implemented and tested with multiple languages on multiple
-architectures there may be a need to revisit some of the decisions:
+architectures we may revisit some of the design decisions:
 
-* When all relevant hardware implement features the same way then there's no
-  need to add nondeterminism to WebAssembly when realistically there's only one
-  mapping from WebAssembly expression to ISA-specific operators. One such
-  example is floating-point: at a high-level most basic instructions follow
+* When all relevant hardware implements an operation the same way, there's no
+  need for nondeterminism in WebAssembly semantics. One such
+  example is floating-point: at a high-level most operators follow
   IEEE-754 semantics, it is therefore not necessary to specify WebAssembly's
   floating-point operators differently from IEEE-754.
 * When different languages have different expectations then it's unfortunate if
