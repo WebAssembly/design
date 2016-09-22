@@ -282,17 +282,16 @@ segregating the table per signature to require only a bounds check could be cons
 in the future. Also, if tables are small enough, an engine can internally use per-signature
 tables filled with failure handlers to avoid one check.
 
-## Expressions with Control Flow
+## Control Flow Instructions with Values
 
-Expression trees offer significant size reduction by avoiding the need for
-`set_local`/`get_local` pairs in the common case of an expression with only one
-immediate use. Control flow "statements" are in fact expressions with result
-values, thus allowing even more opportunities to build bigger
-expression trees and further reduce `set_local`/`get_local` usage (which
-constitute 30-40% of total bytes in the
+Control flow instructions such as `br`, `br_if`, `br_table`, `if` and `if-else` can 
+transfer stack values in WebAssembly. These primitives are useful building blocks for 
+WebAssembly producers, e.g. in compiling expression languages. It offers significant 
+size reduction by avoiding the need for `set_local`/`get_local` pairs in the common case 
+of an expression with only one immediate use. Control flow instructions can then model
+expressions with result values, thus allowing even more opportunities to further reduce
+`set_local`/`get_local` usage (which constitute 30-40% of total bytes in the
 [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1)).
-Additionally, these primitives are useful building blocks for
-WebAssembly-generators (including the JavaScript polyfill prototype).
 
 
 ## Limited Local Nondeterminism
