@@ -66,7 +66,7 @@ asynchronous, background, streaming compilation.
 A `WebAssembly.Module` object represents the stateless result of compiling a
 WebAssembly binary-format module and contains one internal slot:
  * [[Module]] : an [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L208)
-   which is the spec definition of a validated module AST
+   which is the spec definition of a validated module
 
 ### `WebAssembly.Module` Constructor
 
@@ -82,8 +82,8 @@ If the given `bytes` argument is not a
 a `TypeError` exception is thrown.
 
 Otherwise, this function performs synchronous compilation of the `BufferSource`:
-* The byte range delimited by the `BufferSource` is first logically decoded into
-  an AST according to [BinaryEncoding.md](BinaryEncoding.md) and then validated
+* The byte range delimited by the `BufferSource` is first logically decoded 
+  according to [BinaryEncoding.md](BinaryEncoding.md) and then validated
   according to the rules in [spec/check.ml](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/check.ml#L325).
 * The spec `string` values inside `Ast.module` are decoded as UTF8 as described in 
   [Web.md](Web.md#names).
