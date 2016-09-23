@@ -182,7 +182,7 @@ See [#107](https://github.com/WebAssembly/spec/pull/107).
 ## Control Flow
 
 Structured control flow provides simple and size-efficient binary encoding and
-compilation. Any control flow—even irreducible—can be transformed into structured
+compilation. Any control flow--even irreducible--can be transformed into structured
 control flow with the
 [Relooper](https://github.com/kripken/emscripten/raw/master/docs/paper.pdf)
 [algorithm](http://dl.acm.org/citation.cfm?id=2048224&CFID=670868333&CFTOKEN=46181900),
@@ -295,6 +295,8 @@ of an expression with only one immediate use. Control flow instructions can then
 expressions with result values, thus allowing even more opportunities to further reduce
 `set_local`/`get_local` usage (which constitute 30-40% of total bytes in the
 [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1)).
+`br`-with-value and `if` constructs that return values can model also model `phis` which
+appear in SSA representations of programs.
 
 
 ## Limited Local Nondeterminism
