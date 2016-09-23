@@ -16,10 +16,10 @@ documents:
   [instructions](AstSemantics.md) for a structured stack machine.
 * The WebAssembly binary format, which is designed to be natively decoded by 
   WebAssembly implementations, is specified as a 
-  [binary encoding](BinaryEncoding.md) of the module's instructions.
+  [binary encoding](BinaryEncoding.md) of a module's structure and code.
 * The WebAssembly text format, which is designed to be read and written when
   using tools (e.g., assemblers, debuggers, profilers), is specified as a
-  [textual projection](TextFormat.md) of a module's instructions.
+  [textual projection](TextFormat.md) of a module's structure and code.
 * WebAssembly is designed to be implemented both [by web browsers](Web.md)
   and [completely different execution environments](NonWeb.md).
 * To ease the transition to WebAssembly while native support is still
