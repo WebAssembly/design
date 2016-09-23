@@ -19,11 +19,12 @@ Why not an AST, or a register- or SSA-based bytecode?
 
 * We started with an AST and generalized to a [structured stack machine](AstSemantics.md). ASTs allow a 
   dense encoding and efficient decoding, compilation, and interpretation.
-  The stack machine is a generalization of ASTs allowed in previous versions while allowing
+  The structured stack machine of WebAssembly is a generalization of ASTs allowed in previous versions while allowing
   efficiency gains in interpretation and baseline compilation, as well as a straightforward 
   design for multi-return functions.
-* The stack machine allows smaller binary encoding than registers or SSA, and structured control
-  flow preserves the size advantages of an AST: [JSZap][], [Slim Binaries][].
+* The stack machine allows smaller binary encoding than registers or SSA [JSZap][], [Slim Binaries][],
+  and structured control flow allows simpler and more efficient verification, including decoding directly
+  to a compiler's internal SSA form.
 * [Polyfill prototype][] shows simple and efficient translation to asm.js.
 
   [JSZap]: https://research.microsoft.com/en-us/projects/jszap/
@@ -35,8 +36,10 @@ Why not an AST, or a register- or SSA-based bytecode?
 
 The WebAssembly stack machine is restricted to structured control flow and structured
 use of the stack. This greatly simplifies one-pass verification, avoiding a fixpoint computation
-like that of other stack machines such as the Java Virtual Machine.
+like that of other stack machines such as the Java Virtual Machine (prior to [stack maps](https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html)).
 This also simplifies compilation and manipulation of WebAssembly code by other tools.
+Further generalization of the WebAssembly stack machine is planned post-MVP, such as the
+addition of multiple return values from control flow constructs and function calls.
 
 ## Basic Types Only
 
