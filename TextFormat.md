@@ -60,7 +60,7 @@ official format may look entirely different:
 
 * [Prototype specification][] consumes an s-expression syntax.
 * [WAVM backend][] consumes compatible s-expressions.
-* [sexpr-wasm prototype][] consumes compatible s-expressions, and works closely with the [V8 prototype][].
+* [wabt][] consumes compatible s-expressions.
 * [LLVM backend][] (the `CHECK:` parts of these tests) emits compatible s-expressions.
 * [ilwasm][] emits compatible s-expressions.
 * [binaryen][] can consume compatible s-expressions.
@@ -70,7 +70,7 @@ official format may look entirely different:
   [WAVM backend]: https://github.com/AndrewScheidecker/WAVM/tree/master/Test
   [V8 prototype]: https://github.com/WebAssembly/v8-native-prototype
   [ilwasm]: https://github.com/WebAssembly/ilwasm
-  [sexpr-wasm prototype]: https://github.com/WebAssembly/sexpr-wasm-prototype
+  [wabt]: https://github.com/WebAssembly/wabt
   [binaryen]: https://github.com/WebAssembly/binaryen
 
 # Debug symbol integration
