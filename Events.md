@@ -7,7 +7,7 @@
 - June      13th 2016-[NYLUG Presents: WebAssembly: A New Compiler Target For The Web](https://www.youtube.com/watch?v=RByPdCN1RQ4) by Luke Wagner
 - July       7th 2016-[VMSS16: A Little on V8 and WebAssembly](https://www.youtube.com/watch?v=BRNxM8szTPA) by Ben Titzer
 - September 14th 2016-[WebAssembly: birth of a virtual ISA](https://www.youtube.com/watch?v=vmzz17JGPHI) by Ben Smith
-- September 21th 2016-[C++ on the Web: Let's have some serious fun](https://cppcon2016.sched.org/event/7nL0/c-on-the-web-lets-have-some-serious-fun) by Dan Gohman
+- September 21st 2016-[C++ on the Web: Let's have some serious fun](https://cppcon2016.sched.org/event/7nL0/c-on-the-web-lets-have-some-serious-fun) by Dan Gohman
 
 ## Upcoming
 
