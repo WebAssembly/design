@@ -315,7 +315,7 @@ operators the possibility of having side effects.
 Debugging techniques are also important, but they don't necessarily need to be
 in the spec itself. Implementations are welcome (and encouraged) to support
 non-standard execution modes, enabled only from developer tools, such as modes
-with alternate rounding, or evaluation of floating point expressions at greater
+with alternate rounding, or evaluation of floating point operators at greater
 precision, to support [techniques for detecting numerical instability]
 (https://www.cs.berkeley.edu/~wkahan/Mindless.pdf), or modes using alternate
 NaN bitpattern rules, to carry diagnostic information and help developers track
@@ -370,8 +370,8 @@ general-purpose use on several of today's popular hardware architectures.
 ## Better feature testing support
 
 The [MVP feature testing situation](FeatureTest.md) could be improved by
-allowing unknown/unsupported AST operators to decode and validate. The runtime
-semantics of these unknown operators could either be to trap or call a
+allowing unknown/unsupported instructions to decode and validate. The runtime
+semantics of these unknown instructions could either be to trap or call a
 same-signature module-defined polyfill function. This feature could provide a
 lighter-weight alternative to load-time polyfilling (approach 2 in
 [FeatureTest.md](FeatureTest.md)), especially if the [specific layer](BinaryEncoding.md)
@@ -442,7 +442,7 @@ see [JavaScript's `WebAssembly.Table` API](JS.md#webassemblytable-objects)).
 It would be useful to be able to do everything from within WebAssembly so, e.g.,
 it was possible to write a WebAssembly dynamic loader in WebAssembly. As a
 prerequisite, WebAssembly would need first-class support for 
-[GC references](GC.md) in expressions and locals. Given that, the following
+[GC references](GC.md) on the stack and in locals. Given that, the following
 could be added:
 * `get_table`/`set_table`: get or set the table element at a given dynamic
   index; the got/set value would have a GC reference type

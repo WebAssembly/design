@@ -1,13 +1,18 @@
 # Abstract Syntax Tree Semantics
 
-WebAssembly code is represented as an Abstract Syntax Tree (AST) where each node
-represents an expression. Each function body consists of a list of expressions.
-All expressions and operators are typed, with no implicit conversions, subtyping, or overloading rules.
+This document describes WebAssembly semantics. The description here is written
+in terms of an Abstract Syntax Tree (AST), however it is also possible to
+understand WebAssembly semantics in terms of a stack machine. (In practice,
+implementations need not build an actual AST or maintain an actual stack; they
+need only behave [as if](https://en.wikipedia.org/wiki/As-if_rule) they did so.)
 
 This document explains the high-level design of the AST: its types, constructs, and
 semantics. For full details consult [the formal Specification](https://github.com/WebAssembly/spec),
 for file-level encoding details consult [Binary Encoding](BinaryEncoding.md),
 and for the human-readable text representation consult [Text Format](TextFormat.md).
+
+Each function body consists of a list of expressions. All expressions and
+operators are typed, with no implicit conversions or overloading rules.
 
 Verification of WebAssembly code requires only a single pass with constant-time
 type checking and well-formedness checking.
@@ -104,10 +109,9 @@ default linear memories but [new memory operators](FutureFeatures.md#multiple-ta
 may be added after the MVP which can also access non-default memories.
 
 Linear memories (default or otherwise) can either be [imported](Modules.md#imports)
-or [defined inside the module](Modules.md#linear-memory-section), with defaultness
-indicated by a flag on the import or definition. After import or definition,
-there is no difference when accessing a linear memory whether it was imported or
-defined internally.
+or [defined inside the module](Modules.md#linear-memory-section). After import
+or definition, there is no difference when accessing a linear memory whether it
+was imported or defined internally.
 
 In the MVP, linear memory cannot be shared between threads of execution.
 The addition of [threads](PostMVP.md#threads) will allow this.
@@ -267,10 +271,9 @@ host environment.
 Every WebAssembly [instance](Modules.md) has one specially-designated *default*
 table which is indexed by [`call_indirect`](#calls) and other future
 table operators. Tables can either be [imported](Modules.md#imports) or 
-[defined inside the module](Modules.md#table-section), with defaultness
-indicated by a flag on the import or definition. After import or definition,
-there is no difference when calling into a table whether it was imported or
-defined internally.
+[defined inside the module](Modules.md#table-section). After import or
+definition, there is no difference when calling into a table whether it was
+imported or defined internally.
 
 In the MVP, the primary purpose of tables is to implement indirect function
 calls in C/C++ using an integer index as the pointer-to-function and the table
@@ -345,9 +348,12 @@ a value and may appear as children of other expressions.
 ### Branches and nesting
 
 The `br` and `br_if` constructs express low-level branching.
-Branches may only reference labels defined by an outer *enclosing construct*.
-This means that, for example, references to a `block`'s label can only occur 
-within the `block`'s body.
+Branches may only reference labels defined by an outer *enclosing construct*,
+which can be a `block` (with a label at the `end`), `loop` (with a label at the
+beginning), `if` (with a label at the `end` or `else`), `else` (with a label at
+the `end`), or the function body (with a label at the `end`). This means that,
+for example, references to a `block`'s label can only occur within the
+`block`'s body.
 
 In practice, outer `block`s can be used to place labels for any given branching
 pattern, except for one restriction: one can't branch into the middle of a loop
@@ -367,7 +373,7 @@ The `nop`, `br`, `br_if`, `br_table`, and `return` constructs do not yield value
 Other control constructs may yield values if their subexpressions yield values:
 
 * `block`: yields either the value of the last expression in the block or the result of an inner branch that targeted the label of the block
-* `loop`: yields either the value of the last expression in the loop or the result of an inner branch that targeted the end label of the loop
+* `loop`: yields the value of the last expression in the loop
 * `if`: yields either the value of the last *then* expression or the last *else* expression or the result of an inner branch that targeted the label of one of these.
 
 In all constructs containing block-like sequences of expressions, all expressions but the last must not yield a value.

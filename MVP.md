@@ -12,13 +12,13 @@ The major design components of the MVP have been broken up into separate
 documents:
 * The distributable, loadable and executable unit of code in WebAssembly
   is called a [module](Modules.md).
-* The behavior of WebAssembly code in a module is specified in terms of an
-  [AST](AstSemantics.md).
+* The behavior of WebAssembly code in a module is specified in terms of 
+  [instructions](AstSemantics.md) for a structured stack machine.
 * The WebAssembly binary format, which is designed to be natively decoded by 
   WebAssembly implementations, is specified as a 
-  [binary serialization](BinaryEncoding.md) of a module's AST.
+  [binary encoding](BinaryEncoding.md) of a module's structure and code.
 * The WebAssembly text format, which is designed to be read and written when
   using tools (e.g., assemblers, debuggers, profilers), is specified as a
-  [textual projection](TextFormat.md) of a module's AST.
+  [textual projection](TextFormat.md) of a module's structure and code.
 * WebAssembly is designed to be implemented both [by web browsers](Web.md)
   and [completely different execution environments](NonWeb.md).
