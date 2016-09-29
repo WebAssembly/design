@@ -17,8 +17,7 @@
       other than C/C++.
 3. Design to execute within and integrate well with the *existing*
    [Web platform](Web.md):
-    * maintain the versionless, [feature-tested](FeatureTest.md) and
-      [backwards-compatible](BinaryEncoding.md#backwards-compatibility)
+    * maintain the versionless, [feature-tested](FeatureTest.md) and backwards-compatible
       evolution story of the Web;
     * execute in the same semantic universe as JavaScript;
     * allow synchronous calls to and from JavaScript;
