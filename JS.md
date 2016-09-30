@@ -15,7 +15,7 @@ as defined below and will be removed at some point in the future.*
 
 ## Traps
 
-Whenever WebAssembly semantics specify a [trap](AstSemantics.md#traps),
+Whenever WebAssembly semantics specify a [trap](Semantics.md#traps),
 a `WebAssembly.RuntimeError` object is thrown. WebAssembly code (currently)
 has no way to catch this exception and thus the exception will necessarily
 propagate to the enclosing non-WebAssembly caller (either the browser or
@@ -342,7 +342,7 @@ call one with the `new` operator.
 
 ## `WebAssembly.Memory` Objects
 
-A `WebAssembly.Memory` object contains a single [linear memory](AstSemantics.md#linear-memory)
+A `WebAssembly.Memory` object contains a single [linear memory](Semantics.md#linear-memory)
 which can be simultaneously referenced by multiple `Instance` objects. Each
 `Memory` object has two internal slots:
  * [[Memory]] : a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli)
@@ -405,7 +405,7 @@ is thrown.
 Let `d` be [`ToNonWrappingUint32`](#tononwrappinguint32)(`delta`).
 
 Let `ret` be the result of performing a
-[`grow_memory`](AstSemantics.md#resizing) operation given delta `d`.
+[`grow_memory`](Semantics.md#resizing) operation given delta `d`.
 
 If `ret` is `-1`, a `WebAssembly.RuntimeError` is thrown.
 
@@ -429,7 +429,7 @@ is thrown. Otherwise return `M.[[BufferObject]]`.
 
 ## `WebAssembly.Table` Objects
 
-A `WebAssembly.Table` object contains a single [table](AstSemantics.md#table)
+A `WebAssembly.Table` object contains a single [table](Semantics.md#table)
 which can be simultaneously referenced by multiple `Instance` objects. Each
 `Table` object has two internal slots:
  * [[Table]] : a [`Table.table`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli)

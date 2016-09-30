@@ -75,7 +75,7 @@ WebAssembly has the following *value types*:
   * `f32`: 32-bit floating point
   * `f64`: 64-bit floating point
 
-Each parameter and local variable has exactly one [value type](AstSemantics.md#types). Function signatures
+Each parameter and local variable has exactly one [value type](Semantics.md#types). Function signatures
 consist of a sequence of zero or more parameter types and a sequence of zero or more return
 types. (Note: in the MVP, a function can have at most one return type).
 
@@ -92,7 +92,7 @@ page support may be added in an opt-in manner in the
 [future](FutureFeatures.md#large-page-support)). The initial state of a linear
 memory is defined by the module's [linear memory](Modules.md#linear-memory-section) and
 [data](Modules.md#data-section) sections. The memory size can be dynamically
-increased by the [`grow_memory`](AstSemantics.md#resizing) operator.
+increased by the [`grow_memory`](Semantics.md#resizing) operator.
 
 A linear memory can be considered to be an untyped array of bytes, and it is
 unspecified how embedders map this array into their process' own [virtual
@@ -236,7 +236,7 @@ The current size of the linear memory can be queried by the following operator:
 
   * `current_memory` : return the current memory size in units of pages.
 
-As stated [above](AstSemantics.md#linear-memory), linear memory is contiguous,
+As stated [above](Semantics.md#linear-memory), linear memory is contiguous,
 meaning there are no "holes" in the linear address space. After the
 MVP, there are [future features](FutureFeatures.md#finer-grained-control-over-memory)
 proposed to allow setting protection and creating mappings within the

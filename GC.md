@@ -87,7 +87,7 @@ signatures. In particular:
   would map to exported [opaque reference types](GC.md#opaque-reference-types);
 * methods of WebIDL interfaces would map to exported functions where the
   receiver was translated into an explicit argument and WebIDL value
-  types were mapped to appropriate [value types](AstSemantics.md#types)
+  types were mapped to appropriate [value types](Semantics.md#types)
   (e.g., [bindTexture](https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14)
   would translate to `void (WebGLRenderingContextBase, int32, WebGLTexture?)`).
 

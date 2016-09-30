@@ -10,14 +10,14 @@ ergonomics, portability, performance, security, and Getting Things Done.
 WebAssembly was designed incrementally, with multiple implementations being
 pursued concurrently. As the MVP stabilizes and we get experience from real-world
 codebases, we'll revisit the alternatives listed below, reevaluate the tradeoffs
-and update the [design](AstSemantics.md) before the MVP is finalized.
+and update the [design](Semantics.md) before the MVP is finalized.
 
 
 ## Why a stack machine?
 
 Why not an AST, or a register- or SSA-based bytecode?
 
-* We started with an AST and generalized to a [structured stack machine](AstSemantics.md). ASTs allow a 
+* We started with an AST and generalized to a [structured stack machine](Semantics.md). ASTs allow a 
   dense encoding and efficient decoding, compilation, and interpretation.
   The structured stack machine of WebAssembly is a generalization of ASTs allowed in previous versions while allowing
   efficiency gains in interpretation and baseline compilation, as well as a straightforward 
@@ -43,7 +43,7 @@ addition of multiple return values from control flow constructs and function cal
 
 ## Basic Types Only
 
-WebAssembly only represents [a few types](AstSemantics.md#Types).
+WebAssembly only represents [a few types](Semantics.md#Types).
 
 * More complex types can be formed from these basic types. It's up to the source
   language compiler to express its own types in terms of the basic machine
@@ -69,7 +69,7 @@ WebAssembly only represents [a few types](AstSemantics.md#Types).
 ## Load/Store Addressing
 
 Load/store instructions include an immediate offset used for
-[addressing](AstSemantics.md#Addressing). This is intended to simplify folding
+[addressing](Semantics.md#Addressing). This is intended to simplify folding
 of offsets into complex address modes in hardware, and to simplify bounds
 checking optimizations. It offloads some of the optimization work to the
 compiler that targets WebAssembly, executing on the developer's machine, instead
@@ -79,7 +79,7 @@ of performing that work in the WebAssembly compiler on the user's machine.
 ## Alignment Hints
 
 Load/store instructions contain
-[alignment hints](AstSemantics.md#Alignment). This makes it easier to generate
+[alignment hints](Semantics.md#Alignment). This makes it easier to generate
 efficient code on certain hardware architectures.
 
 Either tooling or an explicit opt-in "debug mode" in the spec could allow
@@ -91,7 +91,7 @@ why it isn't the specified default.
 ## Out of Bounds
 
 The ideal semantics is for
-[out-of-bounds accesses](AstSemantics.md#Out-of-Bounds) to trap, but the
+[out-of-bounds accesses](Semantics.md#Out-of-Bounds) to trap, but the
 implications are not yet fully clear.
 
 There are several possible variations on this design being discussed and

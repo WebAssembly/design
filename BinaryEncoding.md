@@ -50,7 +50,7 @@ represented by _at most_ ceil(_N_/7) bytes that may contain padding `0x80` or `0
 Note: Currently, the only sizes used are `varint32` and `varint64`.
 
 ### `value_type`
-A single-byte unsigned integer indicating a [value type](AstSemantics.md#types). These types are encoded as:
+A single-byte unsigned integer indicating a [value type](Semantics.md#types). These types are encoded as:
 * `1` indicating type `i32` 
 * `2` indicating type `i64` 
 * `3` indicating type `f32` 
@@ -73,7 +73,7 @@ A single-byte unsigned integer indicating the kind of definition being imported 
 
 ### `resizable_limits`
 A packed tuple that describes the limits of a
-[table](AstSemantics.md#table) or [memory](AstSemantics.md#resizing):
+[table](Semantics.md#table) or [memory](Semantics.md#resizing):
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -192,7 +192,7 @@ or, if the `kind` is `Table`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| element_type | `varuint7` | `0x20`, indicating [`anyfunc`](AstSemantics.md#table) |
+| element_type | `varuint7` | `0x20`, indicating [`anyfunc`](Semantics.md#table) |
 | | `resizable_limits` | see [above](#resizable_limits) |
 
 or, if the `kind` is `Memory`:
@@ -229,7 +229,7 @@ The encoding of a [Table section](Modules.md#table-section):
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| element_type | `varuint7` | `0x20`, indicating [`anyfunc`](AstSemantics.md#table) |
+| element_type | `varuint7` | `0x20`, indicating [`anyfunc`](Semantics.md#table) |
 | | `resizable_limits` | see [above](#resizable_limits) |
 
 In the MVP, the number of tables must be no more than 1.
@@ -250,7 +250,7 @@ The encoding of a [Memory section](Modules.md#linear-memory-section):
 | | `resizable_limits` | see [above](#resizable_limits) |
 
 Note that the initial/maximum fields are specified in units of 
-[WebAssembly pages](AstSemantics.md#linear-memory).
+[WebAssembly pages](Semantics.md#linear-memory).
 
 In the MVP, the number of memories must be no more than 1.
 
@@ -399,7 +399,7 @@ count may be greater or less than the actual number of locals.
 # Function Bodies
 
 Function bodies consist of a sequence of local variable declarations followed by 
-[bytecode instructions](AstSemantics.md). Each function body must end with the `end` opcode.
+[bytecode instructions](Semantics.md). Each function body must end with the `end` opcode.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
@@ -420,7 +420,7 @@ It is legal to have several entries with the same type.
 | type | `value_type` | type of the variables |
 
 
-## Control flow operators ([described here](AstSemantics.md#control-flow-structures))
+## Control flow operators ([described here](Semantics.md#control-flow-structures))
 
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
@@ -454,7 +454,7 @@ The `br_table` operator implements an indirect branch. It accepts an optional va
 branches to the block or loop at the given offset within the `target_table`. If the input value is 
 out of range, `br_table` branches to the default target.
 
-## Basic operators ([described here](AstSemantics.md#constants))
+## Basic operators ([described here](Semantics.md#constants))
 
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
@@ -472,7 +472,7 @@ out of range, `br_table` branches to the default target.
 
 The `call_indirect` operator takes a list of function arguments and as the last operand the index into the table.
 
-## Memory-related operators ([described here](AstSemantics.md#linear-memory-accesses))
+## Memory-related operators ([described here](Semantics.md#linear-memory-accesses))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
@@ -515,7 +515,7 @@ natural alignment. The bits after the
 `log(memory-access-size)` least-significant bits must be set to 0. These bits are reserved for future use
 (e.g., for shared memory ordering requirements).
 
-## Simple operators ([described here](AstSemantics.md#32-bit-integer-operators))
+## Simple operators ([described here](Semantics.md#32-bit-integer-operators))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |

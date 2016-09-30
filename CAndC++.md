@@ -88,7 +88,7 @@ optimizers still assume that undefined behavior won't occur, so such bugs
 can still lead to surprising behavior.
 
 For example, while unaligned memory access is
-[fully defined](AstSemantics.md#alignment) in WebAssembly, C and C++ compilers
+[fully defined](Semantics.md#alignment) in WebAssembly, C and C++ compilers
 make no guarantee that a (non-packed) unaligned memory access at the source
 level is harmlessly translated into an unaligned memory access in WebAssembly.
 And in practice, popular C and C++ compilers do optimize on the assumption that
@@ -116,7 +116,7 @@ rather than on the underlying platform. For those details that are dependent
 on the platform, on WebAssembly they follow naturally from having 8-bit bytes,
 32-bit and 64-bit two's complement integers, and
 [32-bit and 64-bit IEEE-754-2008-style floating point support]
-(AstSemantics.md#floating-point-operators).
+(Semantics.md#floating-point-operators).
 
 ## Portability of compiled code
 

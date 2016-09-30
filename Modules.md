@@ -31,13 +31,13 @@ various operators and section fields in the module:
 A module can declare a sequence of **imports** which are provided, at
 instantiation time, by the host environment. There are several kinds of imports:
 * **function imports**, which can be called inside the module by the
-  [`call`](AstSemantics.md#calls) operator;
+  [`call`](Semantics.md#calls) operator;
 * **global imports**, which can be accessed inside the module by the
-  [global operators](AstSemantics.md#global-variables);
+  [global operators](Semantics.md#global-variables);
 * **linear memory imports**, which can be accessed inside the module by the
-  [memory operators](AstSemantics.md#linear-memory); and
+  [memory operators](Semantics.md#linear-memory); and
 * **table imports**, which can be accessed inside the module by 
-  [call_indirect](AstSemantics.md#calls) and other
+  [call_indirect](Semantics.md#calls) and other
   table operators in the 
   [future](FutureFeatures.md#more-table-operators-and-types).
 
@@ -73,7 +73,7 @@ maximum length *less-or-equal* than the maximum length declared in the import.
 This ensures that separate compilation can assume: memory accesses below the
 declared initial length are always in-bounds, accesses above the declared
 maximum length are always out-of-bounds and if initial equals maximum, the
-length is fixed. In the MVP, every memory is a [default memory](AstSemantics.md#linear-memory)
+length is fixed. In the MVP, every memory is a [default memory](Semantics.md#linear-memory)
 and thus there may be at most one linear memory import or linear memory
 section.
 
@@ -82,7 +82,7 @@ A *table import* includes the same set of fields defined in the
 length* and optional *maximum length*. As with the linear memory section, the
 host environment must ensure only WebAssembly tables are imported with
 exactly-matching element type, greater-or-equal initial length, and
-less-or-equal maximum length. In the MVP, every table is a [default table](AstSemantics.md#table)
+less-or-equal maximum length. In the MVP, every table is a [default table](Semantics.md#table)
 and thus there may be at most one table import or table section.
 
 Since the WebAssembly spec does not define how import names are interpreted:
@@ -157,7 +157,7 @@ interchangeable with ES6 modules (ignoring
 [GC/Web API](FutureFeatures.md#gc/dom-integration) signature restrictions of the
 WebAssembly MVP) and thus it should be natural to compose a single application
 from both kinds of code. This goal motivates the
-[semantic design](AstSemantics.md#linear-memory) of giving each WebAssembly
+[semantic design](Semantics.md#linear-memory) of giving each WebAssembly
 module its own disjoint linear memory. Otherwise, if all modules shared a single
 linear memory (all modules with the same realm? origin? window?&mdash;even the
 scope of "all" is a nuanced question), a single app using multiple
@@ -199,24 +199,24 @@ A module can:
 ## Global section
 
 The *global section* provides an internal definition of zero or more
-[global variables](AstSemantics.md#global-variables).
+[global variables](Semantics.md#global-variables).
 
 Each global variable internal definition declares its *type*
-(a [value type](AstSemantics.md#types)), *mutability* (boolean flag) and
+(a [value type](Semantics.md#types)), *mutability* (boolean flag) and
 *initializer* (an [initializer expression](#initializer-expression)).
 
 ## Linear memory section
 
 The *linear memory section* provides an internal definition of one
-[linear memory](AstSemantics.md#linear-memory). In the MVP, every memory is a
+[linear memory](Semantics.md#linear-memory). In the MVP, every memory is a
 default memory and thus there may be at most one linear memory import or linear
 memory section.
 
-Each linear memory section declares an *initial* [memory size](AstSemantics.md#linear-memory)
-(which may be subsequently increased by [`grow_memory`](AstSemantics.md#resizing)) and an
+Each linear memory section declares an *initial* [memory size](Semantics.md#linear-memory)
+(which may be subsequently increased by [`grow_memory`](Semantics.md#resizing)) and an
 optional *maximum memory size*.
 
-[`grow_memory`](AstSemantics.md#resizing) is guaranteed to fail if attempting to
+[`grow_memory`](Semantics.md#resizing) is guaranteed to fail if attempting to
 grow past the declared maximum. When declared, implementations *should*
 (non-normative) attempt to reserve virtual memory up to the maximum size. While
 failure to allocate the *initial* memory size is a runtime error, failure to
@@ -237,7 +237,7 @@ value (defining the length of the given segment). The `offset` is an
 ## Table section
 
 The *table section* contains zero or more definitions of distinct 
-[tables](AstSemantics.md#table). In the MVP, every table is a 
+[tables](Semantics.md#table). In the MVP, every table is a 
 default table and thus there may be at most one table import or table section.
 
 Each table definition declares an *element type*, *initial length*, and
@@ -294,7 +294,7 @@ function definitions, assigning monotonically-increasing indices based on the
 order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 
 The function index space is used by:
-* [calls](AstSemantics.md#calls), to identify the callee of a direct call
+* [calls](Semantics.md#calls), to identify the callee of a direct call
 
 ## Global Index Space
 
@@ -303,7 +303,7 @@ global definitions, assigning monotonically-increasing indices based on the
 order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 
 The global index space is used by:
-* [global variable access operators](AstSemantics.md#global-variables), to
+* [global variable access operators](Semantics.md#global-variables), to
   identify the global variable to read/write
 * [data segments](#data-section), to define the offset of a data segment
   (in linear memory) as the value of a global variable
@@ -347,7 +347,7 @@ expressions.
 In the MVP, to keep things simple while still supporting the basic needs
 of [dynamic linking](DynamicLinking.md), initializer expressions are restricted
 to the following nullary operators:
- * the four [constant operators](AstSemantics.md#constants); and
+ * the four [constant operators](Semantics.md#constants); and
  * `get_global`, where the global index must refer to an immutable import.
 
 In the future, operators like `i32.add` could be added to allow more expressive
