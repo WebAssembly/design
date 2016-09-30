@@ -344,8 +344,8 @@ construct.
 
 ### Branches and nesting
 
-The `br`, `br_if`, and `br_table` instructions express low-level branching and hereafter refered to simply as branches.
-Branches may only reference labels defined by an outer enclosing construct.
+The `br`, `br_if`, and `br_table` instructions express low-level branching and are hereafter refered to simply as branches.
+Branches may only reference labels defined by a construct in which they are enclosed.
 For example, references to a `block`'s label can only occur within the `block`'s body.
 
 In practice, outer `block`s can be used to place labels for any given branching
@@ -368,7 +368,7 @@ Executing the `end` of the implicit block for a function body is equivalent to a
 Executing the `if` instruction pops an `i32` condition off the stack and either falls through to the next instruction
 or sets the program counter to after the `else` or `end` of the `if`.
 
-Executing the `else` instruction of an `if` sets the program counter to the corresponding end of the `if`.
+Executing the `else` instruction of an `if` sets the program counter to after the corresponding `end` of the `if`.
 
 Branches that exit a `block` or `if` may yield value(s) for that construct.
 Branches pop result value(s) off the stack which must be the same type as the declared
