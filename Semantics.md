@@ -326,7 +326,7 @@ references.
 WebAssembly offers basic structured control flow constructs such as *blocks*, *loops*, and *ifs*.
 All constructs are formed out of the following control instructions:
 
- * `nop`: an empty operator that does not yield a value 
+ * `nop`: no operation, no effect
  * `block`: the beginning of a block construct, a sequence of instructions with a label at the end
  * `loop`: a block with a label at the beginning which may be used to form loops
  * `if`: the beginning of an if construct with an implicit *then* block
