@@ -2,9 +2,9 @@
 
 This document explains the high-level design of WebAssembly code: its types, constructs, and
 semantics.
-The description here is written in terms of a *structured stack machine*; a machine where most computations use a stack
+WebAssembly code can be considered a *structured stack machine*; a machine where most computations use a stack
 of values, but control flow is expressed in structured constructs such as blocks, ifs, and loops.
-In practice, implementations need not maintain an actual value stack; they
+In practice, implementations need not maintain an actual value stack, nor actual data structures for control; they
 need only behave [as if](https://en.wikipedia.org/wiki/As-if_rule) they did so.
 For full details consult [the formal Specification](https://github.com/WebAssembly/spec),
 for file-level encoding details consult [Binary Encoding](BinaryEncoding.md),
@@ -13,11 +13,11 @@ and for the human-readable text representation consult [Text Format](TextFormat.
 Each function body consists of a list of instructions which forms an implicit *block*.
 Execution of a instructions proceeds by way of a traditional *program counter* that advances
 through the instructions.
-Instructions fall into two categories: *control* instructions and *simple* instructions.
-Control instructions pop their argument value(s) (if any) off the stack, may change the
-program counter, and push result value(s) (if any) onto the stack.
-Simple instructions pop their argument values (if any) from the stack, apply an operator to the values,
-and then push the result value(s) (if any) onto the stack, followed by an implicit advancement of
+Instructions fall into two categories: *control* instructions that form control constructs and *simple* instructions.
+Control instructions pop their argument value(s) off the stack, may change the
+program counter, and push result value(s) onto the stack.
+Simple instructions pop their argument value(s) from the stack, apply an operator to the values,
+and then push the result value(s) onto the stack, followed by an implicit advancement of
 the program counter.
 
 Verification of WebAssembly code requires only a single pass with constant-time
@@ -25,7 +25,7 @@ type checking and well-formedness checking.
 
 WebAssembly offers a set of language-independent operators that closely
 match operators in many programming languages and are efficiently implementable
-on all modern computers.
+on all modern computers. Each operator has a corresponding simple instruction.
 
 The [rationale](Rationale.md) document details why WebAssembly is designed as
 detailed in this document.
@@ -321,47 +321,57 @@ global variables will be necessary to allow sharing reference types between
 [threads](PostMVP.md#threads) since shared linear memory cannot load or store
 references.
 
-## Control flow instructions
+## Control constructs and instructions
 
-WebAssembly offers basic structured control flow with the following instructions.
-Control instructions may yield value(s) which are pushed onto the stack.
+WebAssembly offers basic structured control flow constructs such as *blocks*, *loops*, and *ifs*.
+All constructs are formed out of the following control instructions:
 
  * `nop`: an empty operator that does not yield a value 
- * `block`: a control construct consisting of a sequence of instructions with a label at the end
- * `loop`: a block with an additional label at the beginning which may be used to form loops
- * `if`: if instruction with an implicit *then* block and an optional implicit *else* block
+ * `block`: the beginning of a block construct, a sequence of instructions with a label at the end
+ * `loop`: a block with a label at the beginning which may be used to form loops
+ * `if`: the beginning of an if construct with an implicit *then* block
+ * `else`: marks the else block of an if
  * `br`: branch to a given label in an enclosing construct
  * `br_if`: conditionally branch to a given label in an enclosing construct
  * `br_table`: a jump table which jumps to a label in an enclosing construct
  * `return`: return zero or more values from this function
+ * `end`: an instruction that marks the end of a block, loop, if, or function
+
+Blocks are composed of matched pairs of `block` ... `end` instructions, loops with matched pairs of 
+`loop` ... `end` instructions, and ifs with either `if` ... `end` or `if` ... `else` ... `end` sequences.
+For each of these constructs the instructions in the ellipsis are said to be *enclosed* in the
+construct.
 
 ### Branches and nesting
 
-The `br` and `br_if` instructions express low-level branching.
-Branches may only reference labels defined by an outer *enclosing construct*,
-which can be a `block` (with a label at the `end`), `loop` (with a label at the
-beginning), `if` (with a label at the `end` or `else`), `else` (with a label at
-the `end`), or the function body (with a label at the `end`). This means that,
-for example, references to a `block`'s label can only occur within the
-`block`'s body.
+The `br`, `br_if`, and `br_table` instructions express low-level branching and hereafter refered to simply as branches.
+Branches may only reference labels defined by an outer enclosing construct.
+For example, references to a `block`'s label can only occur within the `block`'s body.
 
 In practice, outer `block`s can be used to place labels for any given branching
-pattern, except for one restriction: it is impossible to branch into the middle of a loop
+pattern, except that the nesting restriction makes it impossible to branch into the middle of a loop
 from outside the loop. This limitation ensures by construction that all control flow graphs
 are well-structured as in high-level languages like Java, JavaScript, Rust and Go.
-Notice that that a `br` to a `block`'s label is  equivalent to a labeled `break` in
-high-level languages; `br` simply breaks out of a `block`.
+Notice that that a branch to a `block`'s label is  equivalent to a labeled `break` in
+high-level languages; branches simply break out of a `block`.
 
-### Yielding values from control instructions
+### Execution semantics of control instructions
 
-Executing the `end` of a `block` or `loop` (including implicit blocks such as in `if` or for a function body) has no effect on the stack.
+Executing a `return` pops return value(s) off the stack and returns from the current function.
+
+Executing a `block` or `loop` instruction has no effect on the value stack.
+
+Executing the `end` of a `block` or `loop` (including implicit blocks such as in `if` or for a function body) has no effect on the value stack.
 
 Executing the `end` of the implicit block for a function body is equivalent to a `return`.
 
-Executing the `else` of an if sets the program counter to the corresponding end of the `if`.
+Executing the `if` instruction pops an `i32` condition off the stack and either falls through to the next instruction
+or sets the program counter to after the `else` or `end` of the `if`.
 
-Branches that exit a `block` or `if` yield value(s) for that construct.
-`br`, `br_if`, and `br_table` pop result value(s) off the stack which must be the same type as the declared
+Executing the `else` instruction of an `if` sets the program counter to the corresponding end of the `if`.
+
+Branches that exit a `block` or `if` may yield value(s) for that construct.
+Branches pop result value(s) off the stack which must be the same type as the declared
 type of the construct which they target. If a conditional or unconditional branch is taken, the values pushed
 onto the stack between the beginning of the construct and the branch are discarded, the result value(s) are
 pushed back onto the stack, and the program counter is updated to the end of the construct. 
