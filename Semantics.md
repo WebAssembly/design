@@ -1,18 +1,24 @@
-# Abstract Syntax Tree Semantics
+# Semantics
 
-This document describes WebAssembly semantics. The description here is written
-in terms of an Abstract Syntax Tree (AST), however it is also possible to
-understand WebAssembly semantics in terms of a stack machine. (In practice,
-implementations need not build an actual AST or maintain an actual stack; they
-need only behave [as if](https://en.wikipedia.org/wiki/As-if_rule) they did so.)
-
-This document explains the high-level design of the AST: its types, constructs, and
-semantics. For full details consult [the formal Specification](https://github.com/WebAssembly/spec),
+This document explains the high-level design of WebAssembly code: its types, constructs, and
+semantics.
+The description here is written in terms of a *structured stack machine*; a machine where most computations use a stack
+of values, but control flow is expressed in structured constructs such as blocks, ifs, and loops.
+In practice, implementations need not maintain an actual value stack; they
+need only behave [as if](https://en.wikipedia.org/wiki/As-if_rule) they did so.
+For full details consult [the formal Specification](https://github.com/WebAssembly/spec),
 for file-level encoding details consult [Binary Encoding](BinaryEncoding.md),
 and for the human-readable text representation consult [Text Format](TextFormat.md).
 
-Each function body consists of a list of expressions. All expressions and
-operators are typed, with no implicit conversions or overloading rules.
+Each function body consists of a list of instructions which forms an implicit *block*.
+Execution of a instructions proceeds by way of a traditional *program counter* that advances
+through the instructions.
+Instructions fall into two categories: *control* instructions and *simple* instructions.
+Control instructions pop their argument value(s) (if any) off the stack, may change the
+program counter, and push result value(s) (if any) onto the stack.
+Simple instructions pop their argument values (if any) from the stack, apply an operator to the values,
+and then push the result value(s) (if any) onto the stack, followed by an implicit advancement of
+the program counter.
 
 Verification of WebAssembly code requires only a single pass with constant-time
 type checking and well-formedness checking.
@@ -23,21 +29,6 @@ on all modern computers.
 
 The [rationale](Rationale.md) document details why WebAssembly is designed as
 detailed in this document.
-
-## Order of evaluation
-
-The evaluation order of child nodes is deterministic.
-
-All nodes other than control flow constructs need to evaluate their child nodes
-in the order they appear in the serialized AST.
-
-For example, the s-expression presentation of the `i32.add` node
-`(i32.add (set_local $x (i32.const 1)) (set_local $x (i32.const 2)))`
-would first evaluate the child node  `(set_local $x (i32.const 1))` and
-afterwards the child node `(set_local $x (i32.const 2))`.
-
-The value of the local variable $x will be `2` after the `i32.add` node is fully
-evaluated.
 
 ## Traps
 
@@ -330,16 +321,15 @@ global variables will be necessary to allow sharing reference types between
 [threads](PostMVP.md#threads) since shared linear memory cannot load or store
 references.
 
-## Control flow structures
+## Control flow instructions
 
-WebAssembly offers basic structured control flow with the following constructs.
-Since all AST nodes are expressions in WebAssembly, control constructs may yield
-a value and may appear as children of other expressions.
+WebAssembly offers basic structured control flow with the following instructions.
+Control instructions may yield value(s) which are pushed onto the stack.
 
  * `nop`: an empty operator that does not yield a value 
- * `block`: a fixed-length sequence of expressions with a label at the end
+ * `block`: a control construct consisting of a sequence of instructions with a label at the end
  * `loop`: a block with an additional label at the beginning which may be used to form loops
- * `if`: if expression with a list of *then* expressions and a list of *else* expressions
+ * `if`: if instruction with an implicit *then* block and an optional implicit *else* block
  * `br`: branch to a given label in an enclosing construct
  * `br_if`: conditionally branch to a given label in an enclosing construct
  * `br_table`: a jump table which jumps to a label in an enclosing construct
@@ -347,7 +337,7 @@ a value and may appear as children of other expressions.
 
 ### Branches and nesting
 
-The `br` and `br_if` constructs express low-level branching.
+The `br` and `br_if` instructions express low-level branching.
 Branches may only reference labels defined by an outer *enclosing construct*,
 which can be a `block` (with a label at the `end`), `loop` (with a label at the
 beginning), `if` (with a label at the `end` or `else`), `else` (with a label at
@@ -356,28 +346,32 @@ for example, references to a `block`'s label can only occur within the
 `block`'s body.
 
 In practice, outer `block`s can be used to place labels for any given branching
-pattern, except for one restriction: one can't branch into the middle of a loop
-from outside it. This restriction ensures all control flow graphs are well-structured
-in the exact sense as in high-level languages like Java, JavaScript, Rust and Go. To
-further see the parallel, note that a `br` to a `block`'s label is functionally
-equivalent to a labeled `break` in high-level languages in that a `br` simply
-breaks out of a `block`.
+pattern, except for one restriction: it is impossible to branch into the middle of a loop
+from outside the loop. This limitation ensures by construction that all control flow graphs
+are well-structured as in high-level languages like Java, JavaScript, Rust and Go.
+Notice that that a `br` to a `block`'s label is  equivalent to a labeled `break` in
+high-level languages; `br` simply breaks out of a `block`.
 
-Branches that exit a `block`, `loop`, or `br_table` may take a subexpression
-that yields a value for the exited construct. If present, it is the first operand
-before any others.
+### Yielding values from control instructions
 
-### Yielding values from control constructs
+Executing the `end` of a `block` or `loop` (including implicit blocks such as in `if` or for a function body) has no effect on the stack.
 
-The `nop`, `br`, `br_if`, `br_table`, and `return` constructs do not yield values.
-Other control constructs may yield values if their subexpressions yield values:
+Executing the `end` of the implicit block for a function body is equivalent to a `return`.
 
-* `block`: yields either the value of the last expression in the block or the result of an inner branch that targeted the label of the block
-* `loop`: yields the value of the last expression in the loop
-* `if`: yields either the value of the last *then* expression or the last *else* expression or the result of an inner branch that targeted the label of one of these.
+Executing the `else` of an if sets the program counter to the corresponding end of the `if`.
 
-In all constructs containing block-like sequences of expressions, all expressions but the last must not yield a value.
-The `drop` operator can be used to explicitly discard unwanted expression results.
+Branches that exit a `block` or `if` yield value(s) for that construct.
+`br`, `br_if`, and `br_table` pop result value(s) off the stack which must be the same type as the declared
+type of the construct which they target. If a conditional or unconditional branch is taken, the values pushed
+onto the stack between the beginning of the construct and the branch are discarded, the result value(s) are
+pushed back onto the stack, and the program counter is updated to the end of the construct. 
+
+Branches that target a `loop` do not yield a value; they pop any values pushed onto the stack since the start of the loop and set the program counter to the start of the loop.
+
+The `drop` operator can be used to explicitly pop and discard values from the stack.
+
+The implicit popping associated with explicit branches makes compiling expression languages straightforward, even non-local
+control-flow transfer, requiring fewer drops.
 
 ### `br_table`
 
@@ -656,10 +650,7 @@ outside the range which rounds to an integer in range) traps.
 
 ## Unreachable
 
-  * `unreachable`: An expression which can take on any type, and which, if
-    executed, always traps. It is intended to be used for example after
-    calls to functions which are known by the producer not to return (otherwise
-    the producer would have to create another expression with an unused value
-    to satisfy the type check). This trap is intended to be impossible for user
-    code to catch or handle, even in the future when it may be possible to
+  * `unreachable`: An instruction which always traps.
+    It is intended to be used for example after calls to functions which are known by the producer not to return.
+    This trap is intended to be impossible for user code to catch or handle, even in the future when it may be possible to
     handle some other kinds of traps or exceptions.
