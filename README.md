@@ -10,7 +10,7 @@ WebAssembly or wasm is a new, portable, size- and load-time-efficient format sui
 
 WebAssembly is currently being designed as an open standard by a [W3C Community Group](https://www.w3.org/community/webassembly/) that includes representatives from all major browsers. *Expect the contents of this repository to be in flux: everything is still under discussion.*
 
-- **WebAssembly is efficient and fast**: The wasm [AST](Semantics.md) is designed to be encoded in a size- and load-time-efficient [binary format](BinaryEncoding.md). WebAssembly aims to execute at native speed by taking advantage of [common hardware capabilities](Portability.md#assumptions-for-efficient-execution) available on a wide range of platforms.
+- **WebAssembly is efficient and fast**: Wasm [bytecode](Semantics.md) is designed to be encoded in a size- and load-time-efficient [binary format](BinaryEncoding.md). WebAssembly aims to execute at native speed by taking advantage of [common hardware capabilities](Portability.md#assumptions-for-efficient-execution) available on a wide range of platforms.
 
 - **WebAssembly is safe**: WebAssembly describes a [memory-safe](Security.md#memory-safety), sandboxed [execution environment](Semantics.md#linear-memory) that may even be implemented inside existing JavaScript virtual machines.  When [embedded in the web](Web.md), WebAssembly will enforce the same-origin and permissions security policies of the browser.
 
