@@ -34,8 +34,9 @@ ES-262, implementations *should* include WebAssembly stack frames in
 the generated callstacks. [User-defined sections](BinaryEncoding.md#high-level-structure)
 may arbitrarily affect the displayed stack frames. However, by default, when
 no relevant sections are present:
-* The line number reported for a WebAssembly frame *should* be the offset of the 
-  the trap/call instruction within the module's originally-compiled binary.
+* The line number reported for a WebAssembly frame *should* be a best-effort
+  reconstruction of the offset of the frame's current trapping/calling
+  instruction within the module's originally-compiled binary.
 * The column number reported for WebAssembly frames, if not omitted entirely,
   *should* be 1.
 * When a [Name section](BinaryEncoding.md#name-section) is present, the names
