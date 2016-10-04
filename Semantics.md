@@ -363,7 +363,7 @@ Executing a `block` or `loop` instruction has no effect on the value stack.
 
 Executing the `end` of a `block` or `loop` (including implicit blocks such as in `if` or for a function body) has no effect on the value stack.
 
-Executing the `end` of the implicit block for a function body is equivalent to a `return`.
+Executing the `end` of the implicit block for a function body pops the return value(s) (if any) off the stack and returns from the function.
 
 Executing the `if` instruction pops an `i32` condition off the stack and either falls through to the next instruction
 or sets the program counter to after the `else` or `end` of the `if`.
