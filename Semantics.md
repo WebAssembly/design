@@ -11,7 +11,7 @@ for file-level encoding details consult [Binary Encoding](BinaryEncoding.md),
 and for the human-readable text representation consult [Text Format](TextFormat.md).
 
 Each function body consists of a list of instructions which forms an implicit *block*.
-Execution of a instructions proceeds by way of a traditional *program counter* that advances
+Execution of instructions proceeds by way of a traditional *program counter* that advances
 through the instructions.
 Instructions fall into two categories: *control* instructions that form control constructs and *simple* instructions.
 Control instructions pop their argument value(s) off the stack, may change the
