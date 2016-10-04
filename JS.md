@@ -38,9 +38,11 @@ no relevant sections are present:
   the trap/call instruction within the module's originally-compiled binary.
 * The column number reported for WebAssembly frames, if not omitted entirely,
   *should* be 1.
-* The function name *should* be generated from the template string literal 
-  `wasm-function[${i}]` where `i` is the index of the function in the module's
-  [Code section](BinaryEncoding.md#code-section).
+* When a [Name section](BinaryEncoding.md#name-section) is present, the names
+  given to functions *should* be used in the callstack. Otherwise, for the `i`th
+  function in a module's [Code section](BinaryEncoding.md#code-section),
+  the name should be generated from the template string literal
+  `wasm-function[${i}]`.
 * The filename *should* be that of the JS caller of the originating `Module`
   constructor call.
 
