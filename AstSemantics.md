@@ -185,10 +185,11 @@ will add support for wasm64 and thus
 ### Alignment
 
 Each linear memory access operator also has an immediate positive integer power
-of 2 alignment attribute. An alignment value which is the same as the memory
-attribute size is considered to be a *natural* alignment. The alignment applies
-to the effective address and not merely the address operand, i.e. the immediate
-offset is taken into account when considering alignment.
+of 2 alignment attribute which must be no greater than the memory access' size.
+An alignment value which is the same as the memory access' size is considered
+to be a *natural* alignment. The alignment applies to the effective address and
+not merely the address operand, i.e. the immediate offset is taken into account
+when considering alignment.
 
 The alignment has same type (determined by wasm32/wasm64, as described above) as
 the address and offset operands.
