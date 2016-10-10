@@ -20,6 +20,7 @@ Simple instructions pop their argument value(s) from the stack, apply an operato
 and then push the result value(s) onto the stack, followed by an implicit advancement of
 the program counter.
 
+All instructions and operators in WebAssembly are explicitly typed, with no overloading rules.
 Verification of WebAssembly code requires only a single pass with constant-time
 type checking and well-formedness checking.
 
@@ -352,9 +353,10 @@ For example, references to a `block`'s label can only occur within the `block`'s
 In practice, outer `block`s can be used to place labels for any given branching
 pattern, except that the nesting restriction makes it impossible to branch into the middle of a loop
 from outside the loop. This limitation ensures by construction that all control flow graphs
-are well-structured as in high-level languages like Java, JavaScript, Rust and Go.
+are well-structured as in high-level languages like Java, JavaScript and Go.
 Notice that that a branch to a `block`'s label is  equivalent to a labeled `break` in
-high-level languages; branches simply break out of a `block`.
+high-level languages; branches simply break out of a `block`, and branches to a `loop`
+correspond to a "continue" statement.
 
 ### Execution semantics of control instructions
 
@@ -379,10 +381,13 @@ pushed back onto the stack, and the program counter is updated to the end of the
 
 Branches that target a `loop` do not yield a value; they pop any values pushed onto the stack since the start of the loop and set the program counter to the start of the loop.
 
-The `drop` operator can be used to explicitly pop and discard values from the stack.
+The `drop` operator can be used to explicitly pop and a value from the stack.
 
 The implicit popping associated with explicit branches makes compiling expression languages straightforward, even non-local
 control-flow transfer, requiring fewer drops.
+
+Note that in the MVP, all control constructs and control instructions, including `return` are
+restricted to at most one value.
 
 ### `br_table`
 
