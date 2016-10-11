@@ -183,10 +183,11 @@ Let `imports` be an initially-empty [`import list`](https://github.com/WebAssemb
 For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L135)
 `i` in `module.imports` (assuming the ML spec `import` has been extended to have
 function, global, memory and table imports):
-* Let `v` be the resultant value of performing
-  [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L139)).
-* If `Type(v)` is not Object, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
-* Let `v` be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`v`, `i.export_name`)
+* Let `mv` be the resultant value of performing
+  [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L170)).
+* If `Type(mv)` is not Object, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+* Let `v` be the value of performing
+  [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`mv`, [`i.item_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L171))
 * If `i` is a function import:
   * If [`IsCallable(v)`](https://tc39.github.io/ecma262/#sec-iscallable) is `false`,
     throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
@@ -205,6 +206,7 @@ function, global, memory and table imports):
       via [`ToWebAssemblyValue`](#towebassemblyvalue).
 * If `i` is a global import:
   * If `i` is not an immutable global, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+  * If `Type(v)` is not Number, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `imports`.
 * If `i` is a memory import:
   * If `v` is not a [`WebAssembly.Memory` object](#webassemblymemory-objects),
