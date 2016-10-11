@@ -30,7 +30,7 @@ at load time, even when [dynamic linking](DynamicLinking.md) is used. This
 allows implicit enforcement of [control-flow integrity][] (CFI) through
 structured control-flow. Since compiled code is immutable and not observable at
 runtime, WebAssembly programs are protected from control flow hijacking attacks.
-  * [Function calls](AstSemantics.md#calls) must specify the index of a target
+  * [Function calls](Semantics.md#calls) must specify the index of a target
   that corresponds to a valid entry in the
   [function index space](Modules.md#function-index-space) or
   [table index space](Modules.md#table-index-space).
@@ -39,19 +39,19 @@ runtime, WebAssembly programs are protected from control flow hijacking attacks.
   function must match the type signature specified at the call site.
   * A shadow stack is used to maintain a trusted call stack that is invulnerable
   to buffer overflows in the module heap, ensuring safe function returns.
-  * [Branches](AstSemantics.md#branches-and-nesting) must point to valid
+  * [Branches](Semantics.md#branches-and-nesting) must point to valid
   destinations within the enclosing function.
 
 Variables in C/C++ can be lowered to two different primitives in WebAssembly,
-depending on their scope. [Local variables](AstSemantics.md#local-variables)
-with fixed scope and [global variables](AstSemantics.md#global-variables) are
+depending on their scope. [Local variables](Semantics.md#local-variables)
+with fixed scope and [global variables](Semantics.md#global-variables) are
 represented as fixed-type values stored by index. The former are initialized
 to zero by default and are stored in the protected shadow stack, whereas
 the latter are located in the [global index space](Modules.md#global-index-space)
 and can be imported from external modules. Local variables with
 [unclear static scope](Rationale.md#locals) (e.g. are used by the address-of
 operator, or are of type `struct` and returned by value) are stored in a separate
-user-addressable stack in [linear memory](AstSemantics.md#linear-memory) at
+user-addressable stack in [linear memory](Semantics.md#linear-memory) at
 compile time. This is an isolated memory region with fixed maximum size that is
 zero initialized by default. References to this memory are computed with
 infinite precision to avoid wrapping and simplify bounds checking. In the future,
@@ -59,7 +59,7 @@ support for [multiple linear memory sections](Modules.md#linear-memory-section) 
 [finer-grained memory operations](FutureFeatures.md#finer-grained-control-over-memory)
 (e.g. shared memory, page protection, large pages, etc.) will be implemented.
 
-[Traps](AstSemantics.md#traps) are used to immediately terminate execution and
+[Traps](Semantics.md#traps) are used to immediately terminate execution and
 signal abnormal behavior to the execution environment. In a browser, this is
 represented as a JavaScript exception. Support for
 [module-defined trap handlers](FutureFeatures.md#trappingor-non-trapping-strategies)

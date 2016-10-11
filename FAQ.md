@@ -310,7 +310,7 @@ syscall in POSIX, WebAssembly unpacks this functionality into multiple
 operators:
 
 * the MVP starts with the ability to grow linear memory via a
-  [`grow_memory`](AstSemantics.md#resizing) operator;
+  [`grow_memory`](Semantics.md#resizing) operator;
 * proposed
   [future features](FutureFeatures.md#finer-grained-control-over-memory) would
   allow the application to change the protection and mappings for pages in the

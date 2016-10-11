@@ -13,7 +13,7 @@ documents:
 * The distributable, loadable and executable unit of code in WebAssembly
   is called a [module](Modules.md).
 * The behavior of WebAssembly code in a module is specified in terms of 
-  [instructions](AstSemantics.md) for a structured stack machine.
+  [instructions](Semantics.md) for a structured stack machine.
 * The WebAssembly binary format, which is designed to be natively decoded by 
   WebAssembly implementations, is specified as a 
   [binary encoding](BinaryEncoding.md) of a module's structure and code.
