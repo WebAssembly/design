@@ -180,7 +180,7 @@ Let `imports` be an initially-empty [`import list`](https://github.com/WebAssemb
 * a [`Table.table`](#webassemblytable-objects)
 * a [`Values.value`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/values.ml#L9)
 
-Let `jafunctions` and `wrappers` be empty lists.
+Let `jsfunctions` and `wrappers` be empty lists.
 
 For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L135)
 `i` in `module.imports` (assuming the ML spec `import` has been extended to have
@@ -202,7 +202,7 @@ function, global, memory and table imports):
       * Let `j` be the index of `v` in `jsfunctions`.
       * Let `wrapper` be `wrappers[j]`.
     * Otherwise:
-      * Let `wrapper` be an anonymous function
+      * Let `wrapper` be an anonymous [Exported Function Exotic Object](#exported-function-exotic-objects)
         which calls `v` by coercing WebAssembly arguments to JavaScript arguments
         via [`ToJSValue`](#tojsvalue) and returns the result by coercing
         via [`ToWebAssemblyValue`](#towebassemblyvalue).
@@ -434,12 +434,7 @@ A `WebAssembly.Table` object contains a single [table](Semantics.md#table)
 which can be simultaneously referenced by multiple `Instance` objects. Each
 `Table` object has two internal slots:
  * [[Table]] : a [`Table.table`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli)
- * [[Values]] : an array whose elements are either `null` or callable objects
-
-(Note: the ML spec currently represents tables as a single `int list` of
-function indices; we assume here it will be extended in the future with
-a more general `Table` similar to 
-[`Memory`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli).)
+ * [[Values]] : an array whose elements are either `null` or [Exported Function Exotic Object](#exported-function-exotic-objects)
 
 ### `WebAssembly.Table` Constructor
 
