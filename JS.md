@@ -505,7 +505,8 @@ set(index, value)
 Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-If `value` is not `null` and [`IsCallable(value)`](https://tc39.github.io/ecma262/#sec-iscallable) is `false`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+If `value` is not an [Exported Function Exotic Object](#exported-function-exotic-objects)
+or `null`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 Let `i` be the result of [`ToNonWrappingUint32`](#tononwrappinguint32)(`index`).
 
