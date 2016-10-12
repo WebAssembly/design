@@ -262,11 +262,6 @@ Set `moduleRecord.[[Namespace]]` to `moduleNamespace`.
 Let `instanceObject` be a new `WebAssembly.Instance` object setting
 `[[Instance]]` to `instance` and `exports` to `moduleNamespace`.
 
-If any of the elements of an [Elements section](Modules.md#elements-section)
-refers to an imported function which is not an
-[Exported Function Exotic Object](#exported-function-exotic-objects), throw a
-[`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
-
 If, after evaluating the `offset` [initializer expression](Modules.md#initializer-expression)
 of every [Data](Modules.md#data-section) and [Element](Modules.md#elements-section)
 Segment, any of the segments do not fit in their respective Memory or Table, throw a 
@@ -433,7 +428,7 @@ A `WebAssembly.Table` object contains a single [table](Semantics.md#table)
 which can be simultaneously referenced by multiple `Instance` objects. Each
 `Table` object has two internal slots:
  * [[Table]] : a [`Table.table`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli)
- * [[Values]] : an array whose elements are either `null` or Function Objects
+ * [[Values]] : an array whose elements are either `null` or callable objects
 
 (Note: the ML spec currently represents tables as a single `int list` of
 function indices; we assume here it will be extended in the future with
@@ -465,8 +460,9 @@ If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
 then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"maximum"`)).
 Otherwise, let `maximum` be None.
 
-Let `table` be the result of calling `Table.create` given arguments `initial`
-and `maximum`.
+Let `table` be the result of calling 
+[`Table.create`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli#L16)
+given arguments `AnyFuncType`, `initial` and `maximum`.
 
 Let `values` be a new empty array of `initial` elements, all with value
 `null`.
@@ -486,13 +482,9 @@ Return `T.[[Values]].length`.
 
 ### `WebAssembly.Table.prototype.grow`
 
-This method calls `Table.grow`, having performed
+This method calls [`Table.grow`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli#L20), having performed
 [`ToNonWrappingUint32`](#tononwrappinguint32) on the first argument.
 On failure, a `WebAssembly.RuntimeError` is thrown.
-
-(Note: the ML spec currently doesn't support resizing tables; we assume here it
-will be extended in the future to have a `grow` operation similar to 
-[`Memory.grow`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli#L21).)
 
 ### `WebAssembly.Table.prototype.get`
 
@@ -517,17 +509,12 @@ set(index, value)
 Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-If `value` is not an [Exported Function Exotic Object](#exported-function-exotic-objects)
-or `null`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+If `value` is not `null` and [`IsCallable(value)`](https://tc39.github.io/ecma262/#sec-iscallable) is `false`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 Let `i` be the result of [`ToNonWrappingUint32`](#tononwrappinguint32)(`index`).
 
-If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
-* Set the `i`th element of `T.[[Table]]` to the `v.[[FunctionIndex]]`th function
-  in the module's [function index space](Modules.md#function-index-space).
-
-Otherwise `v` is `null`:
-* Set the `i`th element of `T.[[Table]]` to an appropriately-defined function
+If `value` is `null`:
+* Set `value` to an appropriately-defined function
   that throws a `WebAssembly.RuntimeError` if called.
 
 Set `T.[[Values]][i]` to `value`.
