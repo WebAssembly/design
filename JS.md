@@ -195,14 +195,10 @@ function, global, memory and table imports):
       [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
       is thrown.
     * Otherwise, append `v` to `imports`.
-  * Otherwise:
-    * If `i` is referenced by any element of any [Elements section](Modules.md#elements-section),
-      a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
-      is thrown.
-    * Otherwise, append an anonymous function to `imports` 
-      which calls `v` by coercing WebAssembly arguments to JavaScript arguments
-      via [`ToJSValue`](#tojsvalue) and returns the result by coercing
-      via [`ToWebAssemblyValue`](#towebassemblyvalue).
+  * Otherwise, append an anonymous function to `imports` 
+    which calls `v` by coercing WebAssembly arguments to JavaScript arguments
+    via [`ToJSValue`](#tojsvalue) and returns the result by coercing
+    via [`ToWebAssemblyValue`](#towebassemblyvalue).
 * If `i` is a global import:
   * If `i` is not an immutable global, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `imports`.
