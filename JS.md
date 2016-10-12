@@ -180,6 +180,8 @@ Let `imports` be an initially-empty [`import list`](https://github.com/WebAssemb
 * a [`Table.table`](#webassemblytable-objects)
 * a [`Values.value`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/values.ml#L9)
 
+Let `jafunctions` and `wrappers` be empty lists.
+
 For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L135)
 `i` in `module.imports` (assuming the ML spec `import` has been extended to have
 function, global, memory and table imports):
@@ -195,10 +197,18 @@ function, global, memory and table imports):
       [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
       is thrown.
     * Otherwise, append `v` to `imports`.
-  * Otherwise, append an anonymous function to `imports` 
-    which calls `v` by coercing WebAssembly arguments to JavaScript arguments
-    via [`ToJSValue`](#tojsvalue) and returns the result by coercing
-    via [`ToWebAssemblyValue`](#towebassemblyvalue).
+  * Otherwise:
+    * If `v` is contained in `jsfunctions`:
+      * Let `j` be the index of `v` in `jsfunctions`.
+      * Let `wrapper` be `wrappers[j]`.
+    * Otherwise:
+      * Let `wrapper` be an anonymous function
+        which calls `v` by coercing WebAssembly arguments to JavaScript arguments
+        via [`ToJSValue`](#tojsvalue) and returns the result by coercing
+        via [`ToWebAssemblyValue`](#towebassemblyvalue).
+      * Append `v` to `jsfunctions`.
+      * Append `wrapper` to `wrappers` 
+    * Append `wrapper` to `imports`.
 * If `i` is a global import:
   * If `i` is not an immutable global, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `imports`.
