@@ -82,9 +82,8 @@ with the resulting `WebAssembly.Module` instance. On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
 `WebAssembly.CompileError`.
 
-The asynchronous compilation is logically performed on a copy of the state of
-the given `BufferSource` captured during the call to `compile`; subsequent mutations
-of the `BufferSource` after `compile` return do not affect ongoing compilations.
+The `bytes` argument becomes unusable (*neutered*) in the context it was sent from
+and becomes available only to the implementation of `compile`.
 
 In the [future](FutureFeatures.md#streaming-compilation), this function can be
 extended to accept a [stream](https://streams.spec.whatwg.org), thereby enabling
