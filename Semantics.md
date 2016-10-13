@@ -378,6 +378,7 @@ Branches pop result value(s) off the stack which must be the same type as the de
 type of the construct which they target. If a conditional or unconditional branch is taken, the values pushed
 onto the stack between the beginning of the construct and the branch are discarded, the result value(s) are
 pushed back onto the stack, and the program counter is updated to the end of the construct. 
+It is a validation error for an `if` to yield a value when it does not have an associated `else`.
 
 Branches that target a `loop` do not yield a value; they pop any values pushed onto the stack since the start of the loop and set the program counter to the start of the loop.
 
