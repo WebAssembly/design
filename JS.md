@@ -409,7 +409,7 @@ Let `d` be [`ToNonWrappingUint32`](#tononwrappinguint32)(`delta`).
 Let `ret` be the result of performing a
 [`grow_memory`](Semantics.md#resizing) operation given delta `d`.
 
-If `ret` is `-1`, a `WebAssembly.RuntimeError` is thrown.
+If `ret` is `-1`, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
 
 Perform [`DetachArrayBuffer`](http://tc39.github.io/ecma262/#sec-detacharraybuffer)(`M.[[BufferObject]]`).
 
@@ -490,7 +490,7 @@ Return `T.[[Values]].length`.
 
 This method calls `Table.grow`, having performed
 [`ToNonWrappingUint32`](#tononwrappinguint32) on the first argument.
-On failure, a `WebAssembly.RuntimeError` is thrown.
+On failure, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
 
 (Note: the ML spec currently doesn't support resizing tables; we assume here it
 will be extended in the future to have a `grow` operation similar to 
@@ -506,6 +506,8 @@ Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a [`TypeError`
 is thrown.
 
 Let `i` be the result of [`ToNonWrappingUint32`](#tononwrappinguint32)(`index`).
+
+If `i` is greater or equal than the length of `T.[[Values]]`, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
 
 Return `T.[[Values]][i]`.
 
@@ -523,6 +525,8 @@ If `value` is not an [Exported Function Exotic Object](#exported-function-exotic
 or `null`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 Let `i` be the result of [`ToNonWrappingUint32`](#tononwrappinguint32)(`index`).
+
+If `i` is greater or equal than the length of `T.[[Values]]`, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
 
 If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
 * Set the `i`th element of `T.[[Table]]` to the `v.[[FunctionIndex]]`th function
