@@ -222,7 +222,7 @@ Let `exports` be a list of (string, JS value) pairs that is mapped from
 each [external](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L24) value `e` in `instance.exports` as follows:
 * If `e` is a [closure](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L12) `c`:
   * If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) `func` in `funcs` whose `func.[[Closure]]` equals `c`, then return `func`.
-  * (Note: At most one wrapper is created for any closure, so `func` is uniquely determined.)
+  * (Note: At most one wrapper is created for any closure, so `func` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import that is already an [Exported Function Exotic Object](#exported-function-exotic-objects), the original function object will be found. For imports that are regular JS functions, a new wrapper will be returned.)
   * Otherwise:
     * Let `func` be an [Exported Function Exotic Object](#exported-function-exotic-objects) created from `c`.
     * Append `func` to `funcs`.
@@ -242,7 +242,7 @@ each [external](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/in
   * If there is an element `table` in `tables` whose `table.[[Table]]` is `t`, then return `table`.
   * (Note: At most one `WebAssembly.Table` object is created for any table, so the above `table` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import, the original object will be found.)
   * Otherwise:
-    * Let `values` be a list of JS values that is mapped from the `t`'s elements as follows:
+    * Let `values` be a list of JS values that is mapped from `t`'s elements as follows:
       * For an element that is [uninitialized](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli#L8):
         * Return `null`.
       * For an element that is a [`closure`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L7) `c`:
