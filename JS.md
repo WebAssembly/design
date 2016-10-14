@@ -173,89 +173,90 @@ is thrown. If the list of
 is not empty and `Type(importObject)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-Let `imports` be an initially-empty [`import list`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.mli#L3)
-(assuming the ML spec `Eval.import` type has been extended to be a union of:
-* a function [`value list -> value option`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.mli#L3)
-* a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli#L1)
-* a [`Table.table`](#webassemblytable-objects)
-* a [`Values.value`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/values.ml#L9)
+Let `funcs`, `memories` and `tables` be initially-empty lists of callable JavaScript objects, `WebAssembly.Memory` objects and `WebAssembly.Table` objects, respectively.
 
-Let `jsfunctions` and `wrappers` be empty lists.
+Let `imports` be an initially-empty list of [`external`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L11) values.
 
-For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L135)
-`i` in `module.imports` (assuming the ML spec `import` has been extended to have
-function, global, memory and table imports):
-* Let `v` be the resultant value of performing
-  [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L139)).
-* If `Type(v)` is not Object, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
-* Let `v` be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`v`, `i.export_name`)
+For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L168)
+`i` in `module.imports`:
+* Let `o` be the resultant value of performing
+  [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L170)).
+* If `Type(o)` is not Object, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+* Let `v` be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`o`, [`i.item_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L171))
 * If `i` is a function import:
   * If [`IsCallable(v)`](https://tc39.github.io/ecma262/#sec-iscallable) is `false`,
     throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
-    * If the signature of `v` does not match the signature of `i`, a 
-      [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
-      is thrown.
-    * Otherwise, append `v` to `imports`.
+    * If the signature of `v` does not match the signature of `i`, throw a 
+      [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+    * Let `closure` be `v.[[Closure]]`.
   * Otherwise:
-    * If `v` is contained in `jsfunctions`:
-      * Let `j` be the index of `v` in `jsfunctions`.
-      * Let `wrapper` be `wrappers[j]`.
-    * Otherwise:
-      * Let `wrapper` be an anonymous [Exported Function Exotic Object](#exported-function-exotic-objects)
-        which calls `v` by coercing WebAssembly arguments to JavaScript arguments
-        via [`ToJSValue`](#tojsvalue) and returns the result by coercing
-        via [`ToWebAssemblyValue`](#towebassemblyvalue).
-      * Append `v` to `jsfunctions`.
-      * Append `wrapper` to `wrappers` 
-    * Append `wrapper` to `imports`.
+    * Let `closure` be a new [host function](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L9)
+      of the given signature
+      which calls `v` by coercing WebAssembly arguments to JavaScript arguments
+      via [`ToJSValue`](#tojsvalue) and returns the result, if any, by coercing
+      via [`ToWebAssemblyValue`](#towebassemblyvalue).
+  * Append `v` to `funcs`.
+  * Append `closure` to `imports`.
 * If `i` is a global import:
   * If `i` is not an immutable global, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `imports`.
 * If `i` is a memory import:
   * If `v` is not a [`WebAssembly.Memory` object](#webassemblymemory-objects),
     throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
-  * Otherwise, append `v.[[Memory]]` to `imports`.
+  * Append `v` to `memories`.
+  * Append `v.[[Memory]]` to `imports`.
 * Otherwise (`i` is a table import):
   * If `v` is not a [`WebAssembly.Table` object](#webassemblytable-objects),
     throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
-  * Otherwise, append `v.[[Table]]` to `imports`.
+  * Append `v` to `tables`.
+  * Append `v.[[Table]]` to `imports`.
 
 Let `instance` be the result of creating a new
-[`Eval.instance`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L15)
-given `module` and `imports`. Note: this step does not mutate imported memories
-or tables.
+[`Eval.init`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L416)
+given `module` and `imports`.
 
 Let `exports` be a list of (string, JS value) pairs that is mapped from 
-`module.exports` as follows (assuming the ML spec 
-[`export`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/kernel.ml#L128)
-has been modified so that each export simply has a `name`, `type` and `index`:
-* If `index` refers to an imported `type` definition, then simply re-export the
-  imported JS value.
-* Otherwise (an internal definition):
-  * If the `type` is function, then export an 
-    [Exported Function Exotic Object](#exported-function-exotic-objects),
-    reusing an existing object if one exists for the given function definition,
-    otherwise creating a new object given `instance` and `index`.
-  * If the `type` is global:
-    * [Assert](https://tc39.github.io/ecma262/#assert): the global is immutable
-      by MVP validation constraint.
-    * Let `v` be the global variable's initialized value.
-    * Export [`ToJSValue`](#tojsvalue)`(v)`.
-  * If the `type` is memory, then export a `WebAssembly.Memory` object, reusing
-    an existing object if one exists for the given memory definition, otherwise
-    creating a new object via [`CreateMemoryObject`](#creatememoryobject).
-  * Otherwise the `type` must be a table so export a `WebAssembly.Table` object,
-    reusing an existing object if one exists for the given table definition,
-    otherwise creating a new object via:
-    * Let `values` be a list of JS values that is mapped from the table's
-      elements as follows:
-      * sentinel values (which [trap](#traps) if called) are given the value `null`
-      * non-sentinel values are given an [Exported Function Exotic Objects](#exported-function-exotic-objects),
-        reusing an existing object if one exists for the given function,
-        otherwise creating a new one.
-    * Create a new `WebAssembly.Table` instance with [[Table]]
-      set to `table` and [[Values]] set to `values`.
+each [external](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L24) value `e` in `instance.exports` as follows:
+* If `e` is a [closure](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L12) `c`:
+  * If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) `func` in `funcs` whose `func.[[Closure]]` equals `c`, then return `func`.
+  * (Note: At most one wrapper is created for any closure, so `func` is uniquely determined.)
+  * Otherwise:
+    * Let `func` be an [Exported Function Exotic Object](#exported-function-exotic-objects) created from `c`.
+    * Append `func` to `funcs`.
+    * Return `func`.
+* If `e` is a [global](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L15) `v`:
+  * [Assert](https://tc39.github.io/ecma262/#assert): the global is immutable
+    by MVP validation constraint.
+  * Return [`ToJSValue`](#tojsvalue)`(v)`.
+* If `e` is a [memory](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L14) `m`:
+  * If there is an element `memory` in `memories` whose `memory.[[Memory]]` is `m`, then return `memory`.
+  * (Note: At most one `WebAssembly.Memory` object is created for any memory, so the above `memory` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import, the original object will be found.)
+  * Otherwise:
+    * Let `memory` be a new `WebAssembly.Memory` object created via [`CreateMemoryObject`](#creatememoryobject) from `m`.
+    * Append `memory` to `memories`.
+    * Return `memory`.
+* Otherwise `e` must be a [table](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L13) `t`:
+  * If there is an element `table` in `tables` whose `table.[[Table]]` is `t`, then return `table`.
+  * (Note: At most one `WebAssembly.Table` object is created for any table, so the above `table` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import, the original object will be found.)
+  * Otherwise:
+    * Let `values` be a list of JS values that is mapped from the `t`'s elements as follows:
+      * For an element that is [uninitialized](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli#L8):
+        * Return `null`.
+      * For an element that is a [`closure`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L7) `c`:
+        * If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) `func` in `funcs` whose `func.[[Closure]]` equals `c`, then return `func`.
+        * (Note: At most one wrapper is created for a any closure, so `func` is uniquely determined.)
+        * Otherwise:
+          * Let `func` be an [Exported Function Exotic Object](#exported-function-exotic-objects) created from `c`.
+          * Append `func` to `funcs`.
+          * Return `func`.
+    * Let `table` be a new `WebAssembly.Table` object with [[Table]] set to `t` and [[Values]] set to `values`.
+    * Append `table` to `tables`.
+    * Return `table`.
+
+Note: For the purpose of the above algorithm, two [closure](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L7) values are considered equal if and only if:
+* Either they are both WebAssembly functions for the same instance and referring to the same function definition.
+* Or they are identical host functions (i.e., each host function value created from a JavaScript function is considered fresh).
 
 Let `moduleRecord` be a new [WebAssembly Module Record](#webassembly-module-record)
 (given `exports`).
@@ -314,9 +315,8 @@ of *Exported Function*
 [Exotic Object](http://tc39.github.io/ecma262/#sec-built-in-exotic-object-internal-methods-and-slots).
 Like [Bound Function](http://tc39.github.io/ecma262/#sec-bound-function-exotic-objects) Exotic Object,
 Exported Functions do not have the normal function internal slots but instead have:
- * [[Instance]] : the [`Eval.instance`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L15)
-   containing the exported function
- * [[FunctionIndex]] : an index into the module's [function index space](Modules.md#function-index-space)
+ * [[Closure]] : the [closure](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L7)
+   representing the function
 
 as well as the internal slots required of all builtin functions:
  * [[Prototype]] : [%FunctionPrototype%](http://tc39.github.io/ecma262/#sec-well-known-intrinsic-objects)
@@ -330,11 +330,14 @@ Exported Functions also have the following data properties:
 
 WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined as:
  * Let `args` be an empty list of coerced values.
- * For each value `v` in `argValues`, in the order they appear in `argValues`:
-   * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `args`.
- * Let `ret` be the result of calling [`Eval.invoke`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L327)
-   passing [[Instance]], [[FunctionIndex]], and `args`.
- * Return [`ToJSValue`](#tojsvalue)`(ret)`.
+ * Let `inarity` be the number of arguments and `outarity` be the number of results in the [`function type`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L106) of the function's [[Closure]].
+ * For all values `v` in `argValues`, in the order of their appearance:
+   * If the length of`args` is less than `inarity`, append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `args`.
+ * While the length of `args` is less then inarity, append [`ToWebAssemblyValue`](#towebassemblyvalue)`(undefined)` to `args`.
+ * Let `ret` be the result of calling [`Eval.invoke`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L443)
+   passing [[Closure]], and `args`.
+ * If `outarity` is 0, return `undefined`.
+ * Otherwise, return [`ToJSValue`](#tojsvalue)`(v)`, where `v` is the singular element of `ret`.
 
 `[[Call]](this, argValues)` executes in the [[Realm]] of the callee Exported Function. This corresponds to [the requirements of builtin function objects in JavaScript](https://tc39.github.io/ecma262/#sec-built-in-function-objects).
 
