@@ -213,6 +213,8 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spe
   * Append `v.[[Table]]` to `imports`.
 
 Let `instance` be the result of creating a new
+[`instance`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L17)
+by calling
 [`Eval.init`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L416)
 given `module` and `imports`.
 
