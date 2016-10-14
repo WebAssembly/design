@@ -200,6 +200,7 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spe
   * Append `closure` to `imports`.
 * If `i` is a global import:
   * If `i` is not an immutable global, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+  * If `Type(v)` is not Number, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   * Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `imports`.
 * If `i` is a memory import:
   * If `v` is not a [`WebAssembly.Memory` object](#webassemblymemory-objects),
@@ -410,7 +411,7 @@ Let `d` be [`ToNonWrappingUint32`](#tononwrappinguint32)(`delta`).
 Let `ret` be the result of performing a
 [`grow_memory`](Semantics.md#resizing) operation given delta `d`.
 
-If `ret` is `-1`, a `WebAssembly.RuntimeError` is thrown.
+If `ret` is `-1`, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
 
 Perform [`DetachArrayBuffer`](http://tc39.github.io/ecma262/#sec-detacharraybuffer)(`M.[[BufferObject]]`).
 
@@ -487,7 +488,7 @@ Return `T.[[Values]].length`.
 
 This method calls [`Table.grow`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli#L20), having performed
 [`ToNonWrappingUint32`](#tononwrappinguint32) on the first argument.
-On failure, a `WebAssembly.RuntimeError` is thrown.
+On failure, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
 
 ### `WebAssembly.Table.prototype.get`
 
@@ -499,6 +500,8 @@ Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a [`TypeError`
 is thrown.
 
 Let `i` be the result of [`ToNonWrappingUint32`](#tononwrappinguint32)(`index`).
+
+If `i` is greater or equal than the length of `T.[[Values]]`, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
 
 Return `T.[[Values]][i]`.
 
@@ -516,6 +519,8 @@ If `value` is not an [Exported Function Exotic Object](#exported-function-exotic
 or `null`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 Let `i` be the result of [`ToNonWrappingUint32`](#tononwrappinguint32)(`index`).
+
+If `i` is greater or equal than the length of `T.[[Values]]`, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
 
 If `value` is `null`, let `elem` be `Uninitialized`;
 otherwise, let `elem` be `value.[[Closure]]`.
