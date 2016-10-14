@@ -222,7 +222,7 @@ Let `exports` be a list of (string, JS value) pairs that is mapped from
 each [external](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L24) value `e` in `instance.exports` as follows:
 * If `e` is a [closure](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L12) `c`:
   * If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) `func` in `funcs` whose `func.[[Closure]]` equals `c`, then return `func`.
-  * (Note: At most one wrapper is created for any closure, so `func` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import that is already an [Exported Function Exotic Object](#exported-function-exotic-objects), the original function object will be found. For imports that are regular JS functions, a new wrapper will be returned.)
+  * (Note: At most one wrapper is created for any closure, so `func` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import that is already an [Exported Function Exotic Object](#exported-function-exotic-objects), then the original function object will be found. For imports that are regular JS functions, a new wrapper will be created.)
   * Otherwise:
     * Let `func` be an [Exported Function Exotic Object](#exported-function-exotic-objects) created from `c`.
     * Append `func` to `funcs`.
@@ -247,7 +247,7 @@ each [external](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/in
         * Return `null`.
       * For an element that is a [`closure`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L7) `c`:
         * If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) `func` in `funcs` whose `func.[[Closure]]` equals `c`, then return `func`.
-        * (Note: At most one wrapper is created for a any closure, so `func` is uniquely determined.)
+        * (Note: At most one wrapper is created for a any closure, so `func` is uniquely determined. Moreover, if the item was an import that is already an [Exported Function Exotic Object](#exported-function-exotic-objects), then the original function object will be found. For imports that are regular JS functions, a new wrapper will be created.)
         * Otherwise:
           * Let `func` be an [Exported Function Exotic Object](#exported-function-exotic-objects) created from `c`.
           * Append `func` to `funcs`.
@@ -332,13 +332,13 @@ Exported Functions also have the following data properties:
 
 WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined as:
  * Let `args` be an empty list of coerced values.
- * Let `inarity` be the number of arguments and `outarity` be the number of results in the [`function type`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L106) of the function's [[Closure]].
+ * Let `inArity` be the number of arguments and `outArity` be the number of results in the [`function type`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L106) of the function's [[Closure]].
  * For all values `v` in `argValues`, in the order of their appearance:
-   * If the length of`args` is less than `inarity`, append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `args`.
- * While the length of `args` is less then inarity, append [`ToWebAssemblyValue`](#towebassemblyvalue)`(undefined)` to `args`.
+   * If the length of`args` is less than `inArity`, append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `args`.
+ * While the length of `args` is less than `inArity`, append [`ToWebAssemblyValue`](#towebassemblyvalue)`(undefined)` to `args`.
  * Let `ret` be the result of calling [`Eval.invoke`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L443)
    passing [[Closure]], and `args`.
- * If `outarity` is 0, return `undefined`.
+ * If `outArity` is 0, return `undefined`.
  * Otherwise, return [`ToJSValue`](#tojsvalue)`(v)`, where `v` is the singular element of `ret`.
 
 `[[Call]](this, argValues)` executes in the [[Realm]] of the callee Exported Function. This corresponds to [the requirements of builtin function objects in JavaScript](https://tc39.github.io/ecma262/#sec-built-in-function-objects).
@@ -374,12 +374,9 @@ then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http
 Otherwise, let `maximum` be `None`.
 
 Let `memory` be the result of calling 
-[`Memory.create`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli#L18)
+[`Memory.create`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.ml#L68)
 given arguments `initial` and `maximum`. Note that `initial` and `maximum` are
 specified in units of WebAssembly pages (64KiB).
-
-(Note: the ML spec currently doesn't implement the maximum memory limit; we
-assume here it will be extended in the future.)
 
 Return the result of [`CreateMemoryObject`](#creatememoryobject)(`memory`).
 
@@ -520,13 +517,14 @@ or `null`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-erro
 
 Let `i` be the result of [`ToNonWrappingUint32`](#tononwrappinguint32)(`index`).
 
-If `value` is `null`:
-* Set `value` to an appropriately-defined function
-  that throws a `WebAssembly.RuntimeError` if called.
+If `value` is `null`, let `elem` be `Uninitialized`;
+otherwise, let `elem` be `value.[[Closure]]`.
+
+Set `T.[[Table]][i]` to `elem`.
 
 Set `T.[[Values]][i]` to `value`.
 
-Return Undefined.
+Return `undefined`.
 
 ## ToJSValue
 
