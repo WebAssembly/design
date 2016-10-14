@@ -505,7 +505,7 @@ is thrown.
 
 Let `i` be the result of [`ToNonWrappingUint32`](#tononwrappinguint32)(`index`).
 
-If `i` is smaller or equal than the length of `T.[[Values]]`, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
+If `i` is greater or equal than the length of `T.[[Values]]`, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
 
 Return `T.[[Values]][i]`.
 
@@ -524,7 +524,7 @@ or `null`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-erro
 
 Let `i` be the result of [`ToNonWrappingUint32`](#tononwrappinguint32)(`index`).
 
-If `i` is smaller or equal than the length of `T.[[Values]]`, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
+If `i` is greater or equal than the length of `T.[[Values]]`, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
 
 If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
 * Set the `i`th element of `T.[[Table]]` to the `v.[[FunctionIndex]]`th function
