@@ -61,8 +61,8 @@ If the given `bytes` argument is not a
 [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
 then a `TypeError` is thrown.
 
-Otherwise, this function performs *validation* as defined by the WebAssembly
-spec and returns `true` if validation succeeded, `false` if validation failed.
+Otherwise, this function performs *validation* as defined by the [WebAssembly
+specification](https://github.com/WebAssembly/spec/blob/master/ml-proto/) and returns `true` if validation succeeded, `false` if validation failed.
 
 #### `WebAssembly.compile`
 
@@ -78,7 +78,7 @@ with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used
 Otherwise, this function starts an asychronous task to compile a `WebAssembly.Module`
 as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor).
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
-with the resulting `WebAssembly.Module` instance. On failure, the `Promise` is 
+with the resulting `WebAssembly.Module` object. On failure, the `Promise` is 
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
 `WebAssembly.CompileError`.
 
@@ -94,8 +94,8 @@ asynchronous, background, streaming compilation.
 
 A `WebAssembly.Module` object represents the stateless result of compiling a
 WebAssembly binary-format module and contains one internal slot:
- * [[Module]] : an [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L208)
-   which is the spec definition of a validated module
+ * [[Module]] : an [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L176)
+   which is the spec definition of a module
 
 ### `WebAssembly.Module` Constructor
 
@@ -114,10 +114,10 @@ exception is thrown.
 Otherwise, this function performs synchronous compilation of the `BufferSource`:
 * The byte range delimited by the `BufferSource` is first logically decoded 
   according to [BinaryEncoding.md](BinaryEncoding.md) and then validated
-  according to the rules in [spec/check.ml](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/check.ml#L325).
+  according to the rules in [spec/check.ml](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/check.ml#L415).
 * The spec `string` values inside `Ast.module` are decoded as UTF8 as described in 
   [Web.md](Web.md#names).
-* On success, a new `WebAssembly.Module` instance is returned with [[Module]] set to
+* On success, a new `WebAssembly.Module` object is returned with [[Module]] set to
   the validated `Ast.module`.
 * On failure, a new `WebAssembly.CompileError` is thrown.
 
@@ -143,7 +143,7 @@ A `WebAssembly.Instance` object represents the instantiation of a
 `WebAssembly.Module` into a
 [realm](http://tc39.github.io/ecma262/#sec-code-realms) and has one
 internal slot:
-* [[Instance]] : an [`Eval.instance`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L15)
+* [[Instance]] : an [`Instance.instance`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L17)
   which is the WebAssembly spec definition of an instance
 
 as well as one plain data property (configurable, writable, enumerable)
@@ -163,13 +163,13 @@ constructor cannot be called as a function without `new`).
 If `moduleObject` is not a `WebAssembly.Module` instance, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-Let `module` be the [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L211)
+Let `module` be the [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L176)
 `moduleObject.[[Module]]`.
 
 If the `importObject` parameter is not `undefined` and `Type(importObject)` is
 not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown. If the list of 
-[`module.imports`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L215)
+[`module.imports`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L186)
 is not empty and `Type(importObject)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
@@ -244,7 +244,7 @@ each [external](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/in
   * (Note: At most one `WebAssembly.Table` object is created for any table, so the above `table` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import, the original object will be found.)
   * Otherwise:
     * Let `values` be a list of JS values that is mapped from `t`'s elements as follows:
-      * For an element that is [uninitialized](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli#L8):
+      * For an element that is [`uninitialized`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli#L8):
         * Return `null`.
       * For an element that is a [`closure`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L7) `c`:
         * If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) `func` in `funcs` whose `func.[[Closure]]` equals `c`, then return `func`.
@@ -383,7 +383,7 @@ Return the result of [`CreateMemoryObject`](#creatememoryobject)(`memory`).
 
 ### CreateMemoryObject
 
-Given a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli)
+Given a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli#L1)
 `m`, to create a `WebAssembly.Memory`:
 
 Let `buffer` be a new `ArrayBuffer` whose
@@ -436,7 +436,7 @@ is thrown. Otherwise return `M.[[BufferObject]]`.
 A `WebAssembly.Table` object contains a single [table](Semantics.md#table)
 which can be simultaneously referenced by multiple `Instance` objects. Each
 `Table` object has two internal slots:
- * [[Table]] : a [`Table.table`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli)
+ * [[Table]] : a [`Table.table`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli#L1)
  * [[Values]] : an array whose elements are either `null` or [Exported Function Exotic Object](#exported-function-exotic-objects)
 
 ### `WebAssembly.Table` Constructor
@@ -465,7 +465,7 @@ then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http
 Otherwise, let `maximum` be None.
 
 Let `table` be the result of calling 
-[`Table.create`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli#L16)
+[`Table.create`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.ml#L68)
 given arguments `AnyFuncType`, `initial` and `maximum`.
 
 Let `values` be a new empty array of `initial` elements, all with value
@@ -486,7 +486,7 @@ Return `T.[[Values]].length`.
 
 ### `WebAssembly.Table.prototype.grow`
 
-This method calls [`Table.grow`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli#L20), having performed
+This method calls [`Table.grow`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.ml#L79), having performed
 [`ToNonWrappingUint32`](#tononwrappinguint32) on the first argument.
 On failure, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
 
@@ -533,7 +533,7 @@ Return `undefined`.
 
 ## ToJSValue
 
-To coerce a [WebAssembly value](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/values.ml#L9)
+To coerce a WebAssembly [`value`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/values.ml#L9)
 to a JavaScript value:
 
 * given a WebAssembly `i32` is interpreted as a signed integer, converted (losslessly) to an
@@ -550,7 +550,7 @@ If the WebAssembly value is optional, then given `None`, return JavaScript value
 
 ## ToWebAssemblyValue
 
-To coerce a JavaScript value to a given [WebAssembly value type](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/types.ml#L3),
+To coerce a JavaScript value to a given WebAssembly [`value type`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/types.ml#L3),
 
 * coerce to `i32` via [`ToInt32(v)`](http://tc39.github.io/ecma262/#sec-toint32)
 * for `i64`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
