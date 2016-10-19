@@ -1,23 +1,21 @@
 # Dynamic linking
 
-WebAssembly enables load-time and run-time (`dlopen`) dynamic linking in the
-MVP by having multiple [instantiated modules](Modules.md)
+WebAssembly allows load-time and run-time (`dlopen`) dynamic linking in the
+MVP by having multiple [instantiated modules](Modules.md) that can
 share functions, [linear memories](Semantics.md#linear-memory),
 [tables](Semantics.md#table) and [constants](Semantics.md#constants)
-using module [imports](Modules.md#imports) and [exports](Modules.md#exports). In
-particular, since all (non-local) state that a module can access can be imported
-and exported and thus shared between separate modules' instances, toolchains
-have the building blocks to implement dynamic loaders.
+using module [imports](Modules.md#imports) and [exports](Modules.md#exports).
+These mechanisms form the the building blocks for toolchains to implement dynamic loaders.
 
-Since the manner in which modules are loaded and instantiated is defined by the
-host environment (e.g., the [JavaScript API](JS.md)), dynamic linking requires
-use of host-specific functionality to link two modules. At a minimum, the host
-environment must provide a way to dynamically instantiate modules while
+WebAssembly leaves the manner in which modules are loaded and instantiated up to the
+host environment (e.g., the [JavaScript API](JS.md)).
+Therefore dynamic linking requires use of host-specific functionality to link two modules.
+At a minimum, the host environment must provide a way to dynamically instantiate modules while
 connecting exports to imports.
 
-The simplest load-time dynamic linking scheme between modules A and B can be 
-achieved by having module A export functions, tables and memories that are
-imported by B. A C++ toolchain can expose this functionality by using the
+The simplest load-time dynamic linking scheme between modules `A` and `B` can be 
+achieved by having module `A` export functions, tables and memories that are
+imported by `B`. A C++ toolchain can expose this functionality by using the
 same function attributes currently used to export/import symbols from
 native DSOs/DLLs:
 ```
@@ -52,9 +50,9 @@ A more realistic module using libc would have more imports including:
 
 One extra detail is what to use as the [module name](Modules.md#imports) for
 imports (since WebAssembly has a two-level namespace). One option is to have a
-single default module name for all C/C++ imports/exports (which then allows the
+single default module name for all C/C++ imports/exports, which then allows the
 toolchain to put implementation-internal names in a separate namespace, avoiding
-the need for `__`-prefix conventions).
+the need for `__`-prefix conventions.
 
 To implement run-time dynamic linking (e.g., `dlopen` and `dlsym`):
 * `dlopen` would compile and instantiate a new module, storing the compiled
@@ -70,8 +68,8 @@ Note that the representation of a C function-pointer in WebAssembly is an index
 into a function table, so the above scheme lines up perfectly with the
 function-pointer return value of `dlsym`.
 
-More complicated dynamic linking functionality (e.g., interposition, weak
-symbols, etc) can be simulated efficiently by assigning a function table
+More complicated dynamic linking functionality such as interposition, weak
+symbols, etc., can be simulated efficiently by assigning a function table
 index to each weak/mutable symbol, calling the symbol via `call_indirect` on that
 index, and mutating the underlying element as needed.
 
