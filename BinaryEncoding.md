@@ -12,16 +12,15 @@ The encoding is split into three layers:
   The encoding is dense and trivial to interact with, making it suitable for
   scenarios like JIT, instrumentation tools, and debugging.
 * **Layer 1** provides structural compression on top of layer 0, exploiting
-  specific knowledge about the nature of the syntax tree and its nodes.
+  specific knowledge about the nature of the sections and bytecode.
   The structural compression introduces more efficient encoding of values, 
-  rearranges values within the module, and prunes structurally identical
-  tree nodes.
+  rearranges values within the module, and prunes identical structures.
 * **Layer 2** Layer 2 applies generic compression algorithms, like [gzip](http://www.gzip.org/) and [Brotli](https://datatracker.ietf.org/doc/draft-alakuijala-brotli/), that are already available in browsers and other tooling.
 
 Most importantly, the layering approach allows development and standardization to
 occur incrementally. For example, Layer 1 and Layer 2 encoding techniques can be
-experimented with by application-level decompressing to the layer below. As 
-compression techniques  stabilize, they can be standardized and moved into native 
+prototyped by application-level decompression to the layer below. As 
+compression techniques mature and stabilize, they can be standardized and moved into native 
 implementations.
 
 See
@@ -79,25 +78,17 @@ A packed tuple that describes the limits of a
 | ----- |  ----- | ----- |
 | flags | `varuint32` | bit `0x1` is set if the maximum field is present |
 | initial | `varuint32` | initial length (in units of table elements or wasm pages) |
-| maximum | `varuint32`? | only present if specified by `flags` |
+| maximum | `varuint32`? | maximum length, present if specified by `flags` |
 
-The "flags" field may later be extended to include a flag for sharing (between
-threads).
+The "flags" field may later be extended with additional information fields.
 
 ### `init_expr`
-The encoding of an [initializer expression](Modules.md#initializer-expression)
-is the normal encoding of the expression followed by the `end` opcode as a
-delimiter.
+A sequence of bytecode instructions that encode an [initializer expression](Modules.md#initializer-expression),
+terminated by the `end` opcode.
 
-Note that `get_global` in an initializer expression can only refer to immutable
-imported globals and all uses of `init_expr` can only appear after the Imports
-section.
+Note that all uses of `init_expr` can only appear after the Imports section.
 
 # Module structure
-
-The following documents the current prototype format. This format is based on and supersedes the v8-native prototype format, originally in a [public design doc](https://docs.google.com/document/d/1-G11CnMA0My20KI9D7dBR6ZCPOBCRD0oCH6SHCPFGx0/edit?usp=sharing).
-
-## High-level structure
 
 The module starts with a preamble of two fields:
 
@@ -108,7 +99,7 @@ The module starts with a preamble of two fields:
 
 The module preamble is followed by a sequence of sections.
 Each section is identified by a 1-byte *section code* that encodes either a known section or a user-defined section.
-The section length and payload data then follow.
+The section length and payload data immediately follow the section code.
 Known sections have non-zero ids, while unknown sections have a `0` id followed by an identifying string as
 part of the payload.
 Unknown sections are ignored by the WebAssembly implementation, and thus validation errors within them do not
@@ -176,9 +167,9 @@ The import section declares all imports that will be used in the module.
 #### Import entry
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| module_len | `varuint32` | module string length |
+| module_len | `varuint32` | module string length in bytes |
 | module_str | `bytes` | module string of `module_len` bytes |
-| field_len | `varuint32` | field name length |
+| field_len | `varuint32` | field name length in bytes |
 | field_str | `bytes` | field name string of `field_len` bytes |
 | kind | `external_kind` | the kind of definition being imported |
 
@@ -210,8 +201,8 @@ or, if the `kind` is `Global`:
 
 ### Function section
 
-The function section _declares_ the signatures of all functions in the
-module (their definitions appear in the [code section](#code-section)).
+The function section declares the number and signature of all functions defined in the
+module. (Function body definitions appear in the [code section](#code-section)).
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
@@ -220,7 +211,8 @@ module (their definitions appear in the [code section](#code-section)).
 
 ### Table section
 
-The encoding of a [Table section](Modules.md#table-section):
+The [table section](Modules.md#table-section) declares tables, which are currently used for indirect function calls
+within a module.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -236,9 +228,8 @@ In the MVP, the number of tables must be no more than 1.
 
 ### Memory section
 
-ID: `memory`
-
-The encoding of a [Memory section](Modules.md#linear-memory-section):
+The [memory section](Modules.md#linear-memory-section) declares the number and
+characteristics of all memories used in the module.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -247,16 +238,14 @@ The encoding of a [Memory section](Modules.md#linear-memory-section):
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| | `resizable_limits` | see [above](#resizable_limits) |
-
-Note that the initial/maximum fields are specified in units of 
-[WebAssembly pages](Semantics.md#linear-memory).
+| | `resizable_limits` | the [initial and possibly maximum](#resizable_limits) size of memory in [pages](Semantics.md#linear-memory) |
 
 In the MVP, the number of memories must be no more than 1.
 
 ### Global section
 
-The encoding of the [Global section](Modules.md#global-section):
+The [global section](Modules.md#global-section) declares global variables within
+the module.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
@@ -265,20 +254,19 @@ The encoding of the [Global section](Modules.md#global-section):
 
 #### Global Entry
 
-Each `global_variable` declares a single global variable of a given type, mutability
+Each `global_variable` declares a single global variable of a given type, mutability,
 and with the given initializer.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| type | `value_type` | type of the variables |
+| type | `value_type` | type of the global variable |
 | mutability | `varuint1` | `0` if immutable, `1` if mutable |
-| init | `init_expr` | the initial value of the global |
-
-Note that, in the MVP, only immutable global variables can be exported.
+| init | `init_expr` | the initial value of the global variable |
 
 ### Export section
 
-The encoding of the [Export section](Modules.md#exports):
+The [export section](Modules.md#exports) declares exports of functions, tables, memories, and globals
+from the module.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
@@ -288,7 +276,7 @@ The encoding of the [Export section](Modules.md#exports):
 #### Export entry
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| field_len | `varuint32` | field name string length |
+| field_len | `varuint32` | field name string length in bytes |
 | field_str | `bytes` | field name string of `field_len` bytes |
 | kind | `external_kind` | the kind of definition being exported |
 | index | `varuint32` | the index into the corresponding [index space](Modules.md) |
@@ -296,10 +284,12 @@ The encoding of the [Export section](Modules.md#exports):
 For example, if the "kind" is `Function`, then "index" is a 
 [function index](Modules.md#function-index-space). Note that, in the MVP, the
 only valid index value for a memory or table export is 0.
+Note that, in the MVP, exported global variables must be immutable.
 
 ### Start section
 
-The start section declares the [start function](Modules.md#module-start-function).
+The start section declares the index of the [start function](Modules.md#module-start-function),
+which is executed when a module is instantiated.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
@@ -307,7 +297,8 @@ The start section declares the [start function](Modules.md#module-start-function
 
 ### Element section
 
-The encoding of the [Elements section](Modules.md#elements-section):
+The [elements section](Modules.md#elements-section) declares initializer elements
+for tables.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
@@ -319,13 +310,11 @@ a `elem_segment` is:
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | index | `varuint32` | the [table index](Modules.md#table-index-space) (0 in the MVP) |
-| offset | `init_expr` | an `i32` initializer expression that computes the offset at which to place the elements |
+| offset | `init_expr` | an `i32` initializer expression that represents the offset at which to place the elements |
 | num_elem | `varuint32` | number of elements to follow |
 | elems | `varuint32*` | sequence of [function indices](Modules.md#function-index-space) |
 
 ### Code section
-
-ID: `code`
 
 The code section contains a body for every function in the module.
 The count of function declared in the [function section](#function-section)
@@ -339,8 +328,8 @@ declaration corresponds to the `i`th function body.
 
 ### Data section
 
-The data section declares the initialized data that is loaded
-into the linear memory.
+The data section declares the initialized data that is loaded into the linear memory
+when a module is instantiated.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
@@ -355,6 +344,31 @@ a `data_segment` is:
 | offset | `init_expr` | an `i32` initializer expression that computes the offset at which to place the data |
 | size | `varuint32` | size of `data` (in bytes) |
 | data | `bytes` | sequence of `size` bytes |
+
+# Code section
+
+The code section defines the bodies of each function declared in the module.
+Function bodies consist of a sequence of local variable declarations followed by 
+[bytecode instructions](Semantics.md). Each function body must end with the `end` opcode.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| body_size | `varuint32` | size of function body to follow, in bytes |
+| local_count | `varuint32` | number of local entries |
+| locals | `local_entry*` | local variables |
+| code | `byte*` | bytecode of the function |
+| end | `byte` | `0x0f`, indicating the end of the body |
+
+#### Local Entry
+
+Each local entry declares a number of local variables of a given type.
+It is legal to have several entries with the same type.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| count | `varuint32` | number of local variables of the following type |
+| type | `value_type` | type of the variables |
+
 
 ### Name section
 
@@ -380,8 +394,8 @@ functions.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| fun_name_len | `varuint32` | string length, in bytes |
-| fun_name_str | `bytes` | valid utf8 encoding |
+| fun_name_len | `varuint32` | function name length in bytes |
+| fun_name_str | `bytes` | utf8-encoded string of length `fun_name_len` bytes |
 | local_count | `varuint32` | count of local names to follow |
 | local_names | `local_name*` | sequence of local names |
 
@@ -392,32 +406,8 @@ count may be greater or less than the actual number of locals.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| local_name_len | `varuint32` | string length, in bytes |
-| local_name_str | `bytes` | valid utf8 encoding |
-
-
-# Function Bodies
-
-Function bodies consist of a sequence of local variable declarations followed by 
-[bytecode instructions](Semantics.md). Each function body must end with the `end` opcode.
-
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| body_size | `varuint32` | size of function body to follow, in bytes |
-| local_count | `varuint32` | number of local entries |
-| locals | `local_entry*` | local variables |
-| code | `byte*` | bytecode of the function |
-| end | `byte` | `0x0f`, indicating the end of the body |
-
-#### Local Entry
-
-Each local entry declares a number of local variables of a given type.
-It is legal to have several entries with the same type.
-
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| count | `varuint32` | number of local variables of the following type |
-| type | `value_type` | type of the variables |
+| local_name_len | `varuint32` | string length in bytes |
+| local_name_str | `bytes` | utf8-encoded string of length `local_name_len` bytes |
 
 
 ## Control flow operators ([described here](Semantics.md#control-flow-structures))
@@ -449,10 +439,10 @@ The `br_table` operator has an immediate operand which is encoded as follows:
 | target_table | `varuint32*` | target entries that indicate an outer block or loop to which to break |
 | default_target | `varuint32` | an outer block or loop to which to break in the default case |
 
-The `br_table` operator implements an indirect branch. It accepts an optional value argument
-(like other branches) and an additional `i32` expression as input, and 
-branches to the block or loop at the given offset within the `target_table`. If the input value is 
-out of range, `br_table` branches to the default target.
+The `br_table` operator implements an indirect branch.
+It accepts an `i32` value as input and branches to the block or loop at the given offset within the `target_table`.
+Like other branches, it may transfer additional values according the block's signature.
+If the input value is greater or equal than `target_count`, it branches to the default target.
 
 ## Basic operators ([described here](Semantics.md#constants))
 
@@ -476,29 +466,29 @@ The `call_indirect` operator takes a list of function arguments and as the last 
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.load8_s` | `0x20` | `memory_immediate` | load from memory |
-| `i32.load8_u` | `0x21` | `memory_immediate` | load from memory  |
-| `i32.load16_s` | `0x22` | `memory_immediate` | load from memory |
-| `i32.load16_u` | `0x23` | `memory_immediate` | load from memory |
-| `i64.load8_s` | `0x24` | `memory_immediate` | load from memory |
-| `i64.load8_u` | `0x25` | `memory_immediate` | load from memory |
-| `i64.load16_s` | `0x26` | `memory_immediate` | load from memory |
-| `i64.load16_u` | `0x27` | `memory_immediate` | load from memory |
-| `i64.load32_s` | `0x28` | `memory_immediate` | load from memory |
-| `i64.load32_u` | `0x29` | `memory_immediate` | load from memory |
-| `i32.load` | `0x2a` | `memory_immediate` | load from memory |
-| `i64.load` | `0x2b` | `memory_immediate` | load from memory |
-| `f32.load` | `0x2c` | `memory_immediate` | load from memory |
-| `f64.load` | `0x2d` | `memory_immediate` | load from memory |
-| `i32.store8` | `0x2e` | `memory_immediate` | store to memory |
-| `i32.store16` | `0x2f` | `memory_immediate` | store to memory |
-| `i64.store8` | `0x30` | `memory_immediate` | store to memory |
-| `i64.store16` | `0x31` | `memory_immediate` | store to memory |
-| `i64.store32` | `0x32` | `memory_immediate` | store to memory |
-| `i32.store` | `0x33` | `memory_immediate` | store to memory |
-| `i64.store` | `0x34` | `memory_immediate` | store to memory |
-| `f32.store` | `0x35` | `memory_immediate` | store to memory |
-| `f64.store` | `0x36` | `memory_immediate` | store to memory |
+| `i32.load8_s` | `0x20` | `memory_immediate` | load 8 bits from memory and sign-extend to i32 |
+| `i32.load8_u` | `0x21` | `memory_immediate` | load 8 bits from memory and zero-extend to i32 |
+| `i32.load16_s` | `0x22` | `memory_immediate` | load 16 bits from memory and sign-extend to i32 |
+| `i32.load16_u` | `0x23` | `memory_immediate` | load 16 bits from memory and zero-extend to i32 |
+| `i64.load8_s` | `0x24` | `memory_immediate` | load 8 bits from memory and sign-extend to i64 |
+| `i64.load8_u` | `0x25` | `memory_immediate` | load 8 bits from memory and zero-extend to i64 |
+| `i64.load16_s` | `0x26` | `memory_immediate` | load 16 bits from memory and sign-extend to i64 |
+| `i64.load16_u` | `0x27` | `memory_immediate` | load 16 bits from memory and zero-extend to i64 |
+| `i64.load32_s` | `0x28` | `memory_immediate` | load 32 bits from memory and sign-extend to i64 |
+| `i64.load32_u` | `0x29` | `memory_immediate` | load 32 bits from memory and zero-extend to i64 |
+| `i32.load` | `0x2a` | `memory_immediate` | load 32 bits from memory as `i32` |
+| `i64.load` | `0x2b` | `memory_immediate` | load 64 bits from memory as `i64` |
+| `f32.load` | `0x2c` | `memory_immediate` | load 32 bits from memory as `f32` |
+| `f64.load` | `0x2d` | `memory_immediate` | load 64 bits from memory as `f64` |
+| `i32.store8` | `0x2e` | `memory_immediate` | store 8 least-significant bits of an `i32` to memory |
+| `i32.store16` | `0x2f` | `memory_immediate` | store 16 least-significant bits of an `i32` to memory |
+| `i64.store8` | `0x30` | `memory_immediate` | store 8 least-significant bits of an `i64` to memory |
+| `i64.store16` | `0x31` | `memory_immediate` | store 16 least-significant bits of an `i64` to memory |
+| `i64.store32` | `0x32` | `memory_immediate` | store 32 least-significant bits of an `i64` to memory |
+| `i32.store` | `0x33` | `memory_immediate` | store an `i32` to memory (4 bytes) |
+| `i64.store` | `0x34` | `memory_immediate` | store an `i64` to memory (8 bytes) |
+| `f32.store` | `0x35` | `memory_immediate` | store an `f32` to memory (4 bytes) |
+| `f64.store` | `0x36` | `memory_immediate` | store an `f64` to memory (8 bytes) |
 | `current_memory` | `0x3b` |  | query the size of memory |
 | `grow_memory` | `0x39` |  | grow the size of memory |
 
@@ -510,10 +500,9 @@ The `memory_immediate` type is encoded as follows:
 | offset | `varuint32` | the value of the offset |
 
 As implied by the `log2(alignment)` encoding, the alignment must be a power of 2.
-As an additional validation criteria, the alignment must be less or equal to 
-natural alignment. The bits after the
-`log(memory-access-size)` least-significant bits must be set to 0. These bits are reserved for future use
-(e.g., for shared memory ordering requirements).
+The alignment must be less or equal to the size of the load or store in bytes.
+he bits after the `log(memory-access-size)` least-significant bits must be set to 0.
+These bits are reserved for future use (e.g., for shared memory ordering requirements).
 
 ## Simple operators ([described here](Semantics.md#32-bit-integer-operators))
 
