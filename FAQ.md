@@ -14,7 +14,7 @@ JavaScript.
 
 There are two main benefits WebAssembly provides:
 
-1. The kind of binary format being considered for WebAssembly can be natively
+1. The binary format of WebAssembly can be natively
    decoded much faster than JavaScript can be parsed ([experiments][] show more
    than 20× faster).  On mobile, large compiled codes can easily take 20–40
    seconds *just to parse*, so native decoding (especially when combined with
@@ -33,16 +33,16 @@ There are two main benefits WebAssembly provides:
   [compilability]: https://blog.mozilla.org/luke/2014/01/14/asm-js-aot-compilation-and-startup-performance/
   [specific asm.js optimizations]: https://blog.mozilla.org/luke/2015/02/18/microsoft-announces-asm-js-optimizations/#asmjs-opts
 
-Of course, every new standard introduces new costs (maintenance, attack surface,
-code size) that must be offset by the benefits. WebAssembly minimizes costs by
+Of course, every new standard introduces new costs in the form of maintenance, attack surface,
+engineering complexity that must be offset by the benefits. WebAssembly minimizes costs by
 having a design that allows (though not requires) a browser to implement
-WebAssembly inside its *existing* JavaScript engine (thereby reusing the
+WebAssembly inside its *existing* JavaScript engine, thereby reusing the
 JavaScript engine's existing compiler backend, ES6 module loading frontend,
-security sandboxing mechanisms and other supporting VM components). Thus, in
+security sandboxing mechanisms and other supporting VM components. Thus, in
 cost, WebAssembly should be comparable to a big new JavaScript feature, not a
 fundamental extension to the browser model.
 
-Comparing the two, even for engines which already optimize asm.js, the benefits
+Even for engines which already optimize asm.js, the benefits of WebAssembly
 outweigh the costs.
 
 
@@ -63,9 +63,9 @@ And as the WebAssembly design has changed there have been
 [experiments](https://github.com/WebAssembly/binaryen/blob/master/src/wasm2asm.h)
 with polyfilling.
 
-Overall, optimism has been increasing for quick adoption of WebAssembly in
-browsers, which is great, but it has decreased the motivation to work on a
-polyfill.
+With the current climate of close collaboration between browser vendors on
+WebAssembly, optimism has been increasing for quick adoption of WebAssembly,
+which has decreased the need for a polyfill to support older browsers.
 
 It is also the case that polyfilling WebAssembly to asm.js is less urgent
 because of the existence of alternatives, for example, a reverse polyfill -
@@ -80,8 +80,7 @@ option, for non-performant code, is to use a compiled WebAssembly interpreter
 such as
 [binaryen.js](https://github.com/WebAssembly/binaryen/blob/master/test/binaryen.js/test.js).
 
-However, a WebAssembly polyfill is still an interesting idea and should in
-principle be possible.
+However, a WebAssembly polyfill is still an interesting idea and should be possible in principle.
 
 
 ## Is WebAssembly only for C/C++ programmers?
@@ -102,7 +101,6 @@ to WebAssembly (assuming it's written in portable C/C++) and this has already be
 [3](https://syntensity.blogspot.com/2010/12/python-demo.html)).  However, "compile the VM" strategies 
 increase the size of distributed code, lose browser devtools integration, can have cross-language
 cycle-collection problems and miss optimizations that require integration with the browser.
-
 
 ## Which compilers can I use to build WebAssembly programs?
 
@@ -142,15 +140,15 @@ the WebAssembly text format should be much more natural to read and write than
 asm.js. Outside the browser, command-line and online tools that convert between
 text and binary will also be made readily available.  Lastly, a scalable form of
 source maps is also being considered as part of the WebAssembly
-[tooling story](Tooling.md).
+[tooling design](Tooling.md).
 
 
-## What's the story for Emscripten users?
+## Is there an upgrade path for Emscripten users?
 
 Existing Emscripten users will get the option to build their projects to
 WebAssembly, by flipping a flag. Initially, Emscripten's asm.js output would be
 converted to WebAssembly, but eventually Emscripten would use WebAssembly
-throughout the pipeline. This painless transition is enabled by the
+throughout its pipeline. This painless transition is enabled by the
 [high-level goal](HighLevelGoals.md) that WebAssembly integrate well with the
 Web platform (including allowing synchronous calls into and out of JavaScript)
 which makes WebAssembly compatible with Emscripten's current asm.js compilation
@@ -171,7 +169,7 @@ together in a number of configurations:
 * HTML/CSS/JavaScript UI around a main WebAssembly-controlled center canvas,
   allowing developers to leverage the power of web frameworks to build
   accessible, web-native-feeling experiences.
-* Mostly HTML/CSS/JavaScript app with a few high-performance WebAssembly modules
+* Mostly HTML/CSS/JavaScript apps with a few high-performance WebAssembly modules
   (e.g., graphing, simulation, image/sound/video processing, visualization,
   animation, compression, etc., examples which we can already see in asm.js
   today) allowing developers to reuse popular WebAssembly libraries just like
@@ -184,13 +182,13 @@ together in a number of configurations:
 
 ## Why not just use LLVM bitcode as a binary format?
 
-The [LLVM](http://llvm.org/) compiler infrastructure has a lot to recommend it:
-it has an existing intermediate representation (LLVM IR) and binary encoding
+The [LLVM](http://llvm.org/) compiler infrastructure has a lot nice properties:
+it has an mature intermediate representation (LLVM IR) and binary encoding
 format (bitcode). It has code generation backends targeting many architectures
 is actively developed and maintained by a large community. In fact
 [PNaCl](http://gonacl.com) already uses LLVM as a basis for its binary
 format. However the goals and requirements that LLVM was designed to meet are
-subtly mismatched with those of WebAssembly.
+subtly different than those of WebAssembly.
 
 WebAssembly has several requirements and goals for its Instruction Set
 Architecture (ISA) and binary encoding:
@@ -202,32 +200,32 @@ Architecture (ISA) and binary encoding:
   for transmission over the Internet.
 * Fast decoding: The binary format should be fast to decompress and decode for
   fast startup of programs.
-* Fast compiling: The ISA should be fast to compile (and suitable for either
-  AOT- or JIT-compilation) for fast startup of programs.
+* Fast compiling: The ISA should be fast to compile and suitable for either
+  AOT- or JIT-compilation for fast startup of programs.
 * Minimal [nondeterminism](Nondeterminism.md): The behavior of programs should
-  be as predictable and deterministic as possible (and should be the same on
-  every architecture, a stronger form of the portability requirement stated
+  be as predictable and deterministic as possible and should be the same on
+  every architecture (a stronger form of the portability requirement stated
   above).
 
-LLVM IR is meant to make compiler optimizations easy to implement, and to
-represent the constructs and semantics required by C, C++, and other languages
-on a large variety of operating systems and architectures. This means that by
-default the IR is not portable (the same program has different representations
-for different architectures) or stable (it changes over time as optimization and
-language requirements change). It has representations for a huge variety of
+LLVM IR wasm designed to make compiler optimizations easy to implement and to
+represent the constructs and semantics of C, C++, and other languages
+on a large variety of operating systems and architectures. This means that, by
+default, the IR is not portable (the same program has different representations
+for different architectures) or stable (LLVM evolves over time as optimization and
+language requirements change). LLVM IR has representations for a huge variety of
 information that is useful for implementing mid-level compiler optimizations but
 is not useful for code generation (but which represents a large surface area for
-codegen implementers to deal with).  It also has undefined behavior (largely
-similar to that of C and C++) which makes some classes of optimization feasible
-or more powerful, but which can lead to unpredictable behavior at runtime.
-LLVM's binary format (bitcode) was designed for temporary on-disk serialization
-of the IR for link-time optimization, and not for stability or compressibility
-(although it does have some features for both of those).
+codegen implementers to deal with).  It also has undefined behavior, which makes 
+some classes of optimization feasible or more powerful, but which can lead to 
+unpredictable behavior at runtime.
+LLVM's bitcode binary format was designed for temporary on-disk serialization
+for link-time optimization, and not for stability or compressibility,
+although it does have some features for both of those.
 
 None of these problems are insurmountable. For example PNaCl defines a small
 portable
 [subset](https://developer.chrome.com/native-client/reference/pnacl-bitcode-abi)
-of the IR with reduced undefined behavior, and a stable version of the bitcode
+of the IR with reduced undefined behavior and a stable version of the bitcode
 encoding. It also employs several techniques to improve startup
 performance. However, each customization, workaround, and special solution means
 less benefit from the common infrastructure. We believe that by taking our
@@ -293,10 +291,9 @@ it, but fast-math flags are not believed to be important enough:
    functions on WebAssembly can simply select a math library implementation
    which does so.
  * Most of the individual floating point operators that WebAssembly does have
-   already map to individual fast instructions in hardware. Telling `add`,
-   `sub`, or `mul` they don't have to worry about NaN for example doesn't make
-   them any faster, because NaN is handled quickly and transparently in hardware
-   on all modern platforms.
+   already map to individual fast instructions in hardware. For example `add`,
+   `sub`, or `mul` handle NaN is quickly and transparently in hardware
+   on all modern platforms, so less deterministic variants would not be faster.
  * WebAssembly has no floating point traps, status register, dynamic rounding
    modes, or signalling NaNs, so optimizations that depend on the absence of
    these features are all safe.
@@ -314,7 +311,8 @@ operators:
 * proposed
   [future features](FutureFeatures.md#finer-grained-control-over-memory) would
   allow the application to change the protection and mappings for pages in the
-  contiguous range `0` to `memory_size`.
+  contiguous range `0` to `memory_size`, for example to catch low-memory null
+  pointer dereferences, etc.
 
 A significant feature of `mmap` that is missing from the above list is the
 ability to allocate disjoint virtual address ranges. The reasoning for this
@@ -382,8 +380,8 @@ Even Knuth found it worthwhile to give us his opinion on this issue at point,
 
 ## Will I be able to access proprietary platform APIs (e.g. Android / iOS)?
 
-Yes but it will depend on the _WebAssembly embedder_. Inside a browser you'll 
-get access to the same HTML5 and other browser-specific APIs which are also 
+Yes but it will depend on the _WebAssembly embedder_, also known as the host environment.
+Inside a browser you'll  get access to the same HTML5 and other browser-specific APIs which are also 
 accessible through regular JavaScript. However, if a wasm VM is provided as an 
 [“app execution platform”](NonWeb.md) by a specific vendor, it might provide 
 access to [proprietary platform-specific APIs](Portability.md#api) of e.g. 
