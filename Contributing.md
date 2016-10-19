@@ -2,7 +2,7 @@
 
 WebAssembly is initially designed and implemented by browser vendors who are
 interested in meeting a variety of [use cases](UseCases.md). As design and
-implementation progresses they'll need input and contributions from developers
+implementation progresses, they'll need input and contributions from developers
 interested in using WebAssembly.
 
 Interested in participating? We suggest you start by:
@@ -18,7 +18,7 @@ With that background understood and communication set up, feel free to
 framework that protects the work in this repository. Make sure you're affiliated
 with your company or organization in the Community Group, if any.
 
-As WebAssembly moves forward we expect to form an official standards body, which
+As WebAssembly moves forward, we expect to form an official standards body which
 will have its own contribution process to the specification.
 
 Happy assembly!
