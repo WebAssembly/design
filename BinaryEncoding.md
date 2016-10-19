@@ -49,19 +49,19 @@ where the former two are used for compatibility with potential future extensions
 A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to _N_ bits (i.e., the values [-2^(_N_-1), +2^(_N_-1)-1]),
 represented by _at most_ ceil(_N_/7) bytes that may contain padding `0x80` or `0xFF` bytes.
 
-Note: Currently, the only sizes used are `varint32` and `varint64`.
+Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
 
 ## Language Types
 
 ### `value_type`
-A single-byte unsigned integer indicating a [value type](Semantics.md#types). These types are encoded as:
+A `varint7` indicating a [value type](Semantics.md#types). These types are encoded as:
 * `-0x01` indicating type `i32`
 * `-0x02` indicating type `i64`
 * `-0x03` indicating type `f32`
 * `-0x04` indicating type `f64`
 
 ### `block_type`
-A single-byte unsigned integer indicating a signature. These types are encoded as:
+A `varint7` indicating a signature. These types are encoded as:
 * `0x00` indicating a signature with 0 results.
 * a [`value_type`](#value_type) indicating a signature with a single result
 
