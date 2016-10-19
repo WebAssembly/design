@@ -15,9 +15,9 @@ WebAssembly operates under the W3C's
 > practice. It also provides a benchmark for self evaluation and acts as a
 > vehicle for better identity of the organization.
 
-We hope that our community group act according to these guidelines, and that
+We hope that our community group act according to these guidelines and that
 participants hold each other to these high standards. If you have any questions
-or are worried that the code isn't being followed, please contact the Community
+or are worried that the code of conduct isn't being followed, please contact the Community
 Group's chairs at `team-webassembly-chairs@w3.org` (note: this list is also
 visible to W3C staff). For very serious concerns, the W3C has [procedures][]
 allowing you to access its ombuds directly and confidentially.
