@@ -468,9 +468,9 @@ out of range, `br_table` branches to the default target.
 | `get_global` | `0xbb` | global_index : `varuint32` | read a global variable |
 | `set_global` | `0xbc` | global_index : `varuint32` | write a global variable |
 | `call` | `0x16` | function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
-| `call_indirect` | `0x17` | type_index : `varuint32` | call a function indirect with an expected signature |
+| `call_indirect` | `0x17` | type_index : `varuint32`, flags : `varuint1` | call a function indirect with an expected signature |
 
-The `call_indirect` operator takes a list of function arguments and as the last operand the index into the table.
+The `call_indirect` operator takes a list of function arguments and as the last operand the index into the table. Its `flags` immediate is reserved for future use and must be `0` in the MVP.
 
 ## Memory-related operators ([described here](Semantics.md#linear-memory-accesses))
 
@@ -499,8 +499,8 @@ The `call_indirect` operator takes a list of function arguments and as the last 
 | `i64.store` | `0x34` | `memory_immediate` | store to memory |
 | `f32.store` | `0x35` | `memory_immediate` | store to memory |
 | `f64.store` | `0x36` | `memory_immediate` | store to memory |
-| `current_memory` | `0x3b` | `varuint1` | query the size of memory |
-| `grow_memory` | `0x39` | `varuint1` | grow the size of memory |
+| `current_memory` | `0x3b` | flags : `varuint1` | query the size of memory |
+| `grow_memory` | `0x39` | flags : `varuint1` | grow the size of memory |
 
 The `memory_immediate` type is encoded as follows:
 
@@ -515,7 +515,7 @@ natural alignment. The bits after the
 `log(memory-access-size)` least-significant bits must be set to 0. These bits are reserved for future use
 (e.g., for shared memory ordering requirements).
 
-The immediate to the `current_memory` and `grow_memory` operators must be 0 in the MVP. In the future, it may be extended to allow indexing multiple memories.
+The `flags` immediate to the `current_memory` and `grow_memory` operators is reserved for future use and must be 0 in the MVP.
 
 ## Simple operators ([described here](Semantics.md#32-bit-integer-operators))
 
