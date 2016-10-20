@@ -55,21 +55,21 @@ Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
 
 ### `value_type`
 A `varint7` indicating a [value type](Semantics.md#types). These types are encoded as:
-* `-0x01` indicating type `i32`
-* `-0x02` indicating type `i64`
-* `-0x03` indicating type `f32`
-* `-0x04` indicating type `f64`
+* `-0x01` (i.e., the byte `0x7f`) indicating type `i32`
+* `-0x02` (i.e., the byte `0x7e`) indicating type `i64`
+* `-0x03` (i.e., the byte `0x7d`) indicating type `f32`
+* `-0x04` (i.e., the byte `0x7c`) indicating type `f64`
 
 ### `block_type`
 A `varint7` indicating a signature. These types are encoded as:
-* `0x00` indicating a signature with 0 results.
+* `-0x40` (i.e., the byte `0x40`) indicating a signature with 0 results.
 * a [`value_type`](#value_type) indicating a signature with a single result
 
 ### `elem_type`
 
 A `varint7` indicating the types of elements in a [table](AstSemantics.md#table).
 In the MVP, only one type is available:
-* `-0x20` indicating [`anyfunc`](AstSemantics.md#table)
+* `-0x10`  (i.e., the byte `0x70`) indicating [`anyfunc`](AstSemantics.md#table)
 
 Note: In the future, other element types may be allowed.
 
@@ -78,7 +78,7 @@ The description of a function signature.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| form | `varint32` | `-0x40`, indicating a function type |
+| form | `varint32` | `-0x20` (i.e., the byte `0x60`) indicating a function type |
 | param_count | `varuint32` | the number of parameters to the function |
 | param_types | `value_type*` | the parameter types of the function |
 | return_count | `varuint1` | the number of results from the function |
