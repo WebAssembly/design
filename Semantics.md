@@ -430,7 +430,7 @@ statically as part of validation, `call_indirect` checks for signature match
 signature and and trapping if there is a mismatch. Since the callee may be in a
 different module which necessarily has a separate [types section](BinaryEncoding.md#type-section),
 and thus index space of types, the signature match must compare the underlying 
-[`func_type`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/types.ml#L5).
+[`func_type`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/types.ml#L5).
 As noted [above](#table), table elements may also be host-environment-defined
 values in which case the meaning of a call (and how the signature is checked)
 is defined by the host-environment, much like calling an import.
