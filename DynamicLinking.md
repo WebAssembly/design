@@ -2,8 +2,8 @@
 
 WebAssembly enables load-time and run-time (`dlopen`) dynamic linking in the
 MVP by having multiple [instantiated modules](Modules.md)
-share functions, [linear memories](AstSemantics.md#linear-memory),
-[tables](AstSemantics.md#table) and [constants](AstSemantics.md#constants)
+share functions, [linear memories](Semantics.md#linear-memory),
+[tables](Semantics.md#table) and [constants](Semantics.md#constants)
 using module [imports](Modules.md#imports) and [exports](Modules.md#exports). In
 particular, since all (non-local) state that a module can access can be imported
 and exported and thus shared between separate modules' instances, toolchains

@@ -33,7 +33,7 @@ Provide access to safe OS-provided functionality including:
   performing these operators in sequence.
 
 The `addr` and `length` parameters above would be required to be multiples of
-[`page_size`](AstSemantics.md#resizing).
+[`page_size`](Semantics.md#resizing).
 
 The `mprotect` operator would require hardware memory protection to execute
 efficiently and thus may be added as an "optional" feature (requiring a
@@ -51,7 +51,7 @@ can allocate noncontiguous virtual address ranges. See the
 
 Some platforms offer support for memory pages as large as 16GiB, which 
 can improve  the efficiency of memory management in some situations. WebAssembly
-may offer programs the option to specify a larger page size than the [default] (AstSemantics.md#resizing).
+may offer programs the option to specify a larger page size than the [default] (Semantics.md#resizing).
 
 ## More expressive control flow
 
@@ -139,7 +139,7 @@ Useful properties of signature-restricted PTCs:
 
 General-purpose Proper Tail Calls would have no signature restrictions, and
 therefore be more broadly usable than
-[Signature-restricted Proper Tail Calls](AstSemantics.md#signature-restricted-proper-tail-calls),
+[Signature-restricted Proper Tail Calls](Semantics.md#signature-restricted-proper-tail-calls),
 though there would be some different performance characteristics.
 
 ## Asynchronous Signals
@@ -301,7 +301,7 @@ quadruple precision.
 
 WebAssembly floating point conforms IEEE 754-2008 in most respects, but there
 are a few areas that are
-[not yet covered](AstSemantics.md#floating-point-operators).
+[not yet covered](Semantics.md#floating-point-operators).
 
 To support exceptions and alternate rounding modes, one option is to define an
 alternate form for each of `add`, `sub`, `mul`, `div`, `sqrt`, and `fma`. These
@@ -315,7 +315,7 @@ operators the possibility of having side effects.
 Debugging techniques are also important, but they don't necessarily need to be
 in the spec itself. Implementations are welcome (and encouraged) to support
 non-standard execution modes, enabled only from developer tools, such as modes
-with alternate rounding, or evaluation of floating point expressions at greater
+with alternate rounding, or evaluation of floating point operators at greater
 precision, to support [techniques for detecting numerical instability]
 (https://www.cs.berkeley.edu/~wkahan/Mindless.pdf), or modes using alternate
 NaN bitpattern rules, to carry diagnostic information and help developers track
@@ -370,8 +370,8 @@ general-purpose use on several of today's popular hardware architectures.
 ## Better feature testing support
 
 The [MVP feature testing situation](FeatureTest.md) could be improved by
-allowing unknown/unsupported AST operators to decode and validate. The runtime
-semantics of these unknown operators could either be to trap or call a
+allowing unknown/unsupported instructions to decode and validate. The runtime
+semantics of these unknown instructions could either be to trap or call a
 same-signature module-defined polyfill function. This feature could provide a
 lighter-weight alternative to load-time polyfilling (approach 2 in
 [FeatureTest.md](FeatureTest.md)), especially if the [specific layer](BinaryEncoding.md)
@@ -382,7 +382,7 @@ pass was otherwise necessary.
 
 In the MVP, there are no global variables; C/C++ global variables are stored in
 linear memory and thus accessed through normal
-[linear memory operators](AstSemantics.md#linear-memory-operators).
+[linear memory operators](Semantics.md#linear-memory-operators).
 [Dynamic linking](DynamicLinking.md) will add some form of immutable global
 variable analogous to "symbols" in native binaries. In some cases, though,
 it may be useful to have a fully mutable global variable which lives outside
@@ -437,12 +437,12 @@ since opaque, could be implemented as a raw function pointer).
 ## More Table Operators and Types
 
 In the MVP, WebAssembly has limited functionality for operating on 
-[tables](AstSemantics.md#table) and the host-environment can do much more (e.g.,
+[tables](Semantics.md#table) and the host-environment can do much more (e.g.,
 see [JavaScript's `WebAssembly.Table` API](JS.md#webassemblytable-objects)).
 It would be useful to be able to do everything from within WebAssembly so, e.g.,
 it was possible to write a WebAssembly dynamic loader in WebAssembly. As a
 prerequisite, WebAssembly would need first-class support for 
-[GC references](GC.md) in expressions and locals. Given that, the following
+[GC references](GC.md) on the stack and in locals. Given that, the following
 could be added:
 * `get_table`/`set_table`: get or set the table element at a given dynamic
   index; the got/set value would have a GC reference type

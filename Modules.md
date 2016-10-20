@@ -31,13 +31,13 @@ various operators and section fields in the module:
 A module can declare a sequence of **imports** which are provided, at
 instantiation time, by the host environment. There are several kinds of imports:
 * **function imports**, which can be called inside the module by the
-  [`call`](AstSemantics.md#calls) operator;
+  [`call`](Semantics.md#calls) operator;
 * **global imports**, which can be accessed inside the module by the
-  [global operators](AstSemantics.md#global-variables);
+  [global operators](Semantics.md#global-variables);
 * **linear memory imports**, which can be accessed inside the module by the
-  [memory operators](AstSemantics.md#linear-memory); and
+  [memory operators](Semantics.md#linear-memory); and
 * **table imports**, which can be accessed inside the module by 
-  [call_indirect](AstSemantics.md#calls) and other
+  [call_indirect](Semantics.md#calls) and other
   table operators in the 
   [future](FutureFeatures.md#more-table-operators-and-types).
 
@@ -65,7 +65,7 @@ of the global variable. These fields have the same meaning as in the
 *immutable*.
 
 A *linear memory import* includes the same set of fields defined in the
-[Linear Memory section](#linear-memory-section): *default flag*, *initial
+[Linear Memory section](#linear-memory-section):  *initial
 length* and optional *maximum length*. The host environment must only allow
 imports of WebAssembly linear memories that have initial length
 *greater-or-equal* than the initial length declared in the import and that have
@@ -73,20 +73,17 @@ maximum length *less-or-equal* than the maximum length declared in the import.
 This ensures that separate compilation can assume: memory accesses below the
 declared initial length are always in-bounds, accesses above the declared
 maximum length are always out-of-bounds and if initial equals maximum, the
-length is fixed. If the default flag is set, the imported memory is used as
-the [default memory](AstSemantics.md#linear-memory) and at most one linear
-memory definition (import or internal) may have the default flag set. In the
-MVP, it is a validation error not to set the default flag.
+length is fixed. In the MVP, every memory is a [default memory](Semantics.md#linear-memory)
+and thus there may be at most one linear memory import or linear memory
+section.
 
 A *table import* includes the same set of fields defined in the 
-[Table section](#table-section): *default flag*, *element type*, *initial
+[Table section](#table-section): *element type*, *initial
 length* and optional *maximum length*. As with the linear memory section, the
 host environment must ensure only WebAssembly tables are imported with
 exactly-matching element type, greater-or-equal initial length, and
-less-or-equal maximum length. If the default flag is set, the imported table
-is used as the [default table](AstSemantics.md#table) and at most one table
-definition (import or internal) may have the default flag set. In the MVP, it is
-a validation error not to set the default flag.
+less-or-equal maximum length. In the MVP, every table is a [default table](Semantics.md#table)
+and thus there may be at most one table import or table section.
 
 Since the WebAssembly spec does not define how import names are interpreted:
 * the [Web environment](Web.md#names) defines names to be UTF8-encoded strings;
@@ -160,7 +157,7 @@ interchangeable with ES6 modules (ignoring
 [GC/Web API](FutureFeatures.md#gc/dom-integration) signature restrictions of the
 WebAssembly MVP) and thus it should be natural to compose a single application
 from both kinds of code. This goal motivates the
-[semantic design](AstSemantics.md#linear-memory) of giving each WebAssembly
+[semantic design](Semantics.md#linear-memory) of giving each WebAssembly
 module its own disjoint linear memory. Otherwise, if all modules shared a single
 linear memory (all modules with the same realm? origin? window?&mdash;even the
 scope of "all" is a nuanced question), a single app using multiple
@@ -202,30 +199,24 @@ A module can:
 ## Global section
 
 The *global section* provides an internal definition of zero or more
-[global variables](AstSemantics.md#global-variables).
+[global variables](Semantics.md#global-variables).
 
 Each global variable internal definition declares its *type*
-(a [value type](AstSemantics.md#types)), *mutability* (boolean flag) and
+(a [value type](Semantics.md#types)), *mutability* (boolean flag) and
 *initializer* (an [initializer expression](#initializer-expression)).
 
 ## Linear memory section
 
-The *linear memory section* provides an internal definition of zero or more
-[linear memories](AstSemantics.md#linear-memory). In the MVP, the total number
-of linear memory definitions is limited to 1, but this may be relaxed in the
-[future](FutureFeatures.md#multiple-tables-and-memories).
+The *linear memory section* provides an internal definition of one
+[linear memory](Semantics.md#linear-memory). In the MVP, every memory is a
+default memory and thus there may be at most one linear memory import or linear
+memory section.
 
-A linear memory definition may declare itself to be the 
-[default](AstSemantics.md#linear-memory) linear memory of the module. At most
-one linear memory definition may declare itself to be the default. In the MVP,
-if there is a linear memory definition, it *must* declare itself the default
-(there is no way to access non-default linear memories anyhow).
-
-Each linear memory section declares an *initial* [memory size](AstSemantics.md#linear-memory)
-(which may be subsequently increased by [`grow_memory`](AstSemantics.md#resizing)) and an
+Each linear memory section declares an *initial* [memory size](Semantics.md#linear-memory)
+(which may be subsequently increased by [`grow_memory`](Semantics.md#resizing)) and an
 optional *maximum memory size*.
 
-[`grow_memory`](AstSemantics.md#resizing) is guaranteed to fail if attempting to
+[`grow_memory`](Semantics.md#resizing) is guaranteed to fail if attempting to
 grow past the declared maximum. When declared, implementations *should*
 (non-normative) attempt to reserve virtual memory up to the maximum size. While
 failure to allocate the *initial* memory size is a runtime error, failure to
@@ -246,17 +237,10 @@ value (defining the length of the given segment). The `offset` is an
 ## Table section
 
 The *table section* contains zero or more definitions of distinct 
-[tables](AstSemantics.md#table). In the MVP, the total number
-of table definitions is limited to 1, but this may be relaxed in the
-[future](FutureFeatures.md#multiple-tables-and-memories).
+[tables](Semantics.md#table). In the MVP, every table is a 
+default table and thus there may be at most one table import or table section.
 
-A table definition may declare itself to be the
-[default](AstSemantics.md#table) table of the module. At most
-one table definition may declare itself to be the default. In the MVP,
-if there is a table definition, it *must* declare itself the default
-(there is no way to access non-default tables anyhow).
-
-Each table definition also includes an *element type*, *initial length*, and
+Each table definition declares an *element type*, *initial length*, and
 optional *maximum length*.
 
 In the MVP, the only valid element type is `"anyfunc"`, but in the
@@ -288,9 +272,7 @@ specify the initial contents of fixed `(offset, length)` ranges of a given
 table, specified by its [table index](#table-index-space). The `length` is an
 integer constant value (defining the length of the given segment). The `offset`
 is an [initializer expression](#initializer-expression). Elements are specified
-with a `(type, index)` pair where `type` is the element type of an
-[index space](Modules.md) that is compatible with the table's element type and
-`index` is an integer immediate into `type`s index space.
+by their index into the corresponding [index space](Modules.md).
 
 ## Function and Code sections
 
@@ -312,7 +294,7 @@ function definitions, assigning monotonically-increasing indices based on the
 order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 
 The function index space is used by:
-* [calls](AstSemantics.md#calls), to identify the callee of a direct call
+* [calls](Semantics.md#calls), to identify the callee of a direct call
 
 ## Global Index Space
 
@@ -321,7 +303,7 @@ global definitions, assigning monotonically-increasing indices based on the
 order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 
 The global index space is used by:
-* [global variable access operators](AstSemantics.md#global-variables), to
+* [global variable access operators](Semantics.md#global-variables), to
   identify the global variable to read/write
 * [data segments](#data-section), to define the offset of a data segment
   (in linear memory) as the value of a global variable
@@ -365,7 +347,7 @@ expressions.
 In the MVP, to keep things simple while still supporting the basic needs
 of [dynamic linking](DynamicLinking.md), initializer expressions are restricted
 to the following nullary operators:
- * the four [constant operators](AstSemantics.md#constants); and
+ * the four [constant operators](Semantics.md#constants); and
  * `get_global`, where the global index must refer to an immutable import.
 
 In the future, operators like `i32.add` could be added to allow more expressive

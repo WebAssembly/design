@@ -10,13 +10,21 @@ ergonomics, portability, performance, security, and Getting Things Done.
 WebAssembly was designed incrementally, with multiple implementations being
 pursued concurrently. As the MVP stabilizes and we get experience from real-world
 codebases, we'll revisit the alternatives listed below, reevaluate the tradeoffs
-and update the [design](AstSemantics.md) before the MVP is finalized.
+and update the [design](Semantics.md) before the MVP is finalized.
 
 
-## Why AST?
+## Why a stack machine?
 
-Why not a register- or SSA-based bytecode?
-* Trees allow a smaller binary encoding: [JSZap][], [Slim Binaries][].
+Why not an AST, or a register- or SSA-based bytecode?
+
+* We started with an AST and generalized to a [structured stack machine](Semantics.md). ASTs allow a 
+  dense encoding and efficient decoding, compilation, and interpretation.
+  The structured stack machine of WebAssembly is a generalization of ASTs allowed in previous versions while allowing
+  efficiency gains in interpretation and baseline compilation, as well as a straightforward 
+  design for multi-return functions.
+* The stack machine allows smaller binary encoding than registers or SSA [JSZap][], [Slim Binaries][],
+  and structured control flow allows simpler and more efficient verification, including decoding directly
+  to a compiler's internal SSA form.
 * [Polyfill prototype][] shows simple and efficient translation to asm.js.
 
   [JSZap]: https://research.microsoft.com/en-us/projects/jszap/
@@ -26,25 +34,22 @@ Why not a register- or SSA-based bytecode?
 
 ## Why not a fully-general stack machine?
 
-Stack machines have all the code size advantages as expression trees represented
-in post-order. However, we wish to avoid requiring an explicit expression stack at
-runtime, because many implementations will want to use registers rather than an
-actual stack for evaluation. Consequently, while it's possible to think about
-wasm expression evaluation in terms of a conceptual stack machine, the stack
-machine would be constrained such that one can always statically know the types,
-definitions, and uses of all operands on the stack, so that an implementation can
-connect definitions with their uses through whatever mechanism they see fit.
-
+The WebAssembly stack machine is restricted to structured control flow and structured
+use of the stack. This greatly simplifies one-pass verification, avoiding a fixpoint computation
+like that of other stack machines such as the Java Virtual Machine (prior to [stack maps](https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html)).
+This also simplifies compilation and manipulation of WebAssembly code by other tools.
+Further generalization of the WebAssembly stack machine is planned post-MVP, such as the
+addition of multiple return values from control flow constructs and function calls.
 
 ## Basic Types Only
 
-WebAssembly only represents [a few types](AstSemantics.md#Types).
+WebAssembly only represents [a few types](Semantics.md#Types).
 
 * More complex types can be formed from these basic types. It's up to the source
   language compiler to express its own types in terms of the basic machine
   types. This allows WebAssembly to present itself as a virtual ISA, and lets
   compilers target it as they would any other ISA.
-* These types are efficiently executed by all modern CPU architectures.
+* These types are directly representable on all modern CPU architectures.
 * Smaller types (such as `i8` and `i16`) are usually no more efficient and in
   languages like C/C++ are only semantically meaningful for memory accesses
   since arithmetic get widened to `i32` or `i64`. Avoiding them at least for MVP
@@ -64,7 +69,7 @@ WebAssembly only represents [a few types](AstSemantics.md#Types).
 ## Load/Store Addressing
 
 Load/store instructions include an immediate offset used for
-[addressing](AstSemantics.md#Addressing). This is intended to simplify folding
+[addressing](Semantics.md#Addressing). This is intended to simplify folding
 of offsets into complex address modes in hardware, and to simplify bounds
 checking optimizations. It offloads some of the optimization work to the
 compiler that targets WebAssembly, executing on the developer's machine, instead
@@ -74,7 +79,7 @@ of performing that work in the WebAssembly compiler on the user's machine.
 ## Alignment Hints
 
 Load/store instructions contain
-[alignment hints](AstSemantics.md#Alignment). This makes it easier to generate
+[alignment hints](Semantics.md#Alignment). This makes it easier to generate
 efficient code on certain hardware architectures.
 
 Either tooling or an explicit opt-in "debug mode" in the spec could allow
@@ -86,7 +91,7 @@ why it isn't the specified default.
 ## Out of Bounds
 
 The ideal semantics is for
-[out-of-bounds accesses](AstSemantics.md#Out-of-Bounds) to trap, but the
+[out-of-bounds accesses](Semantics.md#Out-of-Bounds) to trap, but the
 implications are not yet fully clear.
 
 There are several possible variations on this design being discussed and
@@ -177,7 +182,7 @@ See [#107](https://github.com/WebAssembly/spec/pull/107).
 ## Control Flow
 
 Structured control flow provides simple and size-efficient binary encoding and
-compilation. Any control flow—even irreducible—can be transformed into structured
+compilation. Any control flow--even irreducible--can be transformed into structured
 control flow with the
 [Relooper](https://github.com/kripken/emscripten/raw/master/docs/paper.pdf)
 [algorithm](http://dl.acm.org/citation.cfm?id=2048224&CFID=670868333&CFTOKEN=46181900),
@@ -280,17 +285,18 @@ segregating the table per signature to require only a bounds check could be cons
 in the future. Also, if tables are small enough, an engine can internally use per-signature
 tables filled with failure handlers to avoid one check.
 
-## Expressions with Control Flow
+## Control Flow Instructions with Values
 
-Expression trees offer significant size reduction by avoiding the need for
-`set_local`/`get_local` pairs in the common case of an expression with only one
-immediate use. Control flow "statements" are in fact expressions with result
-values, thus allowing even more opportunities to build bigger
-expression trees and further reduce `set_local`/`get_local` usage (which
-constitute 30-40% of total bytes in the
+Control flow instructions such as `br`, `br_if`, `br_table`, `if` and `if-else` can 
+transfer stack values in WebAssembly. These primitives are useful building blocks for 
+WebAssembly producers, e.g. in compiling expression languages. It offers significant 
+size reduction by avoiding the need for `set_local`/`get_local` pairs in the common case 
+of an expression with only one immediate use. Control flow instructions can then model
+expressions with result values, thus allowing even more opportunities to further reduce
+`set_local`/`get_local` usage (which constitute 30-40% of total bytes in the
 [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1)).
-Additionally, these primitives are useful building blocks for
-WebAssembly-generators (including the JavaScript polyfill prototype).
+`br`-with-value and `if` constructs that return values can model also model `phis` which
+appear in SSA representations of programs.
 
 
 ## Limited Local Nondeterminism
@@ -324,12 +330,11 @@ and local manner. This prevents the entire program from being invalid, as would
 be the case with C++ undefined behavior.
 
 As WebAssembly gets implemented and tested with multiple languages on multiple
-architectures there may be a need to revisit some of the decisions:
+architectures we may revisit some of the design decisions:
 
-* When all relevant hardware implement features the same way then there's no
-  need to add nondeterminism to WebAssembly when realistically there's only one
-  mapping from WebAssembly expression to ISA-specific operators. One such
-  example is floating-point: at a high-level most basic instructions follow
+* When all relevant hardware implements an operation the same way, there's no
+  need for nondeterminism in WebAssembly semantics. One such
+  example is floating-point: at a high-level most operators follow
   IEEE-754 semantics, it is therefore not necessary to specify WebAssembly's
   floating-point operators differently from IEEE-754.
 * When different languages have different expectations then it's unfortunate if
@@ -470,20 +475,20 @@ Yes:
     [this demo](https://github.com/lukewagner/AngryBotsPacked), comparing
     *just* parsing in SpiderMonkey (no validation, IR generation) to *just*
     decoding in the polyfill (no asm.js code generation).
-* A binary format enables optimizations that reduce the memory usage of decoded
-  ASTs without increasing size or reducing decode speed.
+* A binary format allows many optimizations for code size and decoding speed that would
+  not be possible on a source form.
 
 
 ## Why a layered binary encoding?
-* We can do better than generic compression because we are aware of the AST
+* We can do better than generic compression because we are aware of the code
   structure and other details:
   * For example, macro compression that
     [deduplicates AST trees](https://github.com/WebAssembly/design/issues/58#issuecomment-101863032)
-    can focus on AST nodes + their children, thus having `O(nodes)` entities
+    can focus on ASTs + their children, thus having `O(nodes)` entities
     to worry about, compared to generic compression which in principle would
     need to look at `O(bytes*bytes)` entities.  Such macros would allow the
     logical equivalent of `#define ADD1(x) (x+1)`, i.e., to be
-    parametrized. Simpler macros (`#define ADDX1 (x+1)`) can implement useful
+    parameterized. Simpler macros (`#define ADDX1 (x+1)`) can implement useful
     features like constant pools.
   * Another example is reordering of functions and some internal nodes, which
     we know does not change semantics, but

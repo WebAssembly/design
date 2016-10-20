@@ -17,7 +17,7 @@ The text format will be standardized, but only for tooling purposes:
   implement WebAssembly semantics.
 
 Given that the code representation is actually an
-[Abstract Syntax Tree](AstSemantics.md), the syntax would contain nested
+[Abstract Syntax Tree](Semantics.md), the syntax would contain nested
 statements and expressions (instead of the linear list of instructions most
 assembly languages have).
 
@@ -50,7 +50,7 @@ readability will therefore factor into standardizing a text format.
 There are, however, prototype syntaxes which are used to bring up WebAssembly: it's easier
 to develop using a text format than it is with a binary format, even if the ultimate
 WebAssembly format will be binary. Most of these prototypes use [s-expressions][] because they
-can easily represent expression trees and [ASTs](AstSemantics.md) (as opposed to CFGs)
+can easily represent expression trees and [ASTs](Semantics.md) (as opposed to CFGs)
 and don't have much of a syntax to speak of (avoiding syntax bikeshed discussions).
 
   [s-expressions]: https://en.wikipedia.org/wiki/S-expression
@@ -60,7 +60,7 @@ official format may look entirely different:
 
 * [Prototype specification][] consumes an s-expression syntax.
 * [WAVM backend][] consumes compatible s-expressions.
-* [sexpr-wasm prototype][] consumes compatible s-expressions, and works closely with the [V8 prototype][].
+* [wabt][] consumes compatible s-expressions.
 * [LLVM backend][] (the `CHECK:` parts of these tests) emits compatible s-expressions.
 * [ilwasm][] emits compatible s-expressions.
 * [binaryen][] can consume compatible s-expressions.
@@ -70,7 +70,7 @@ official format may look entirely different:
   [WAVM backend]: https://github.com/AndrewScheidecker/WAVM/tree/master/Test
   [V8 prototype]: https://github.com/WebAssembly/v8-native-prototype
   [ilwasm]: https://github.com/WebAssembly/ilwasm
-  [sexpr-wasm prototype]: https://github.com/WebAssembly/sexpr-wasm-prototype
+  [wabt]: https://github.com/WebAssembly/wabt
   [binaryen]: https://github.com/WebAssembly/binaryen
 
 # Debug symbol integration
