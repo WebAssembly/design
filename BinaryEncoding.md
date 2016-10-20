@@ -63,7 +63,7 @@ All types are distinguished by a negative `varint7` values that is the first byt
 | `-0x04` (i.e., the byte `0x7c`) | `f64` |
 | `-0x10` (i.e., the byte `0x70`) | `anyfunc` |
 | `-0x20` (i.e., the byte `0x60`) | `func` |
-| `-0x40` (i.e., the byte `0x40`) | pseudo type for representing an ampty `block_type` |
+| `-0x40` (i.e., the byte `0x40`) | pseudo type for representing an empty `block_type` |
 
 Some of these will be followed by additional fields, see below.
 
