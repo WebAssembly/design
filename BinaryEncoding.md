@@ -53,40 +53,57 @@ Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
 
 ## Language Types
 
-Note: All types are represented by negative `varint7` values. This is so that they can coexist in a single space with (positive) indices into the type section, which may be relevant in future extensions of the type system.
+All types are distinguished by a negative `varint7` values that is the first byte of their encoding (representing a type constructor):
+
+| Opcode | Type constructor |
+|--------|------------------|
+| `-0x01` (i.e., the byte `0x7f`) | `i32` |
+| `-0x02` (i.e., the byte `0x7e`) | `i32` |
+| `-0x03` (i.e., the byte `0x7d`) | `f32` |
+| `-0x04` (i.e., the byte `0x7c`) | `f64` |
+| `-0x10` (i.e., the byte `0x70`) | `anyfunc` |
+| `-0x20` (i.e., the byte `0x60`) | `func` |
+| `-0x40` (i.e., the byte `0x40`) | pseudo type for representing an ampty `block_type` |
+
+Some of these will be followed by additional fields, see below.
+
+Note: Gaps are reserved for future extensions. The use of a signed scheme is so that types can coexist in a single space with (positive) indices into the type section, which may be relevant for future extensions of the type system.
 
 ### `value_type`
-A `varint7` indicating a [value type](Semantics.md#types). These types are encoded as:
-* `-0x01` (i.e., the byte `0x7f`) indicating type `i32`
-* `-0x02` (i.e., the byte `0x7e`) indicating type `i64`
-* `-0x03` (i.e., the byte `0x7d`) indicating type `f32`
-* `-0x04` (i.e., the byte `0x7c`) indicating type `f64`
+A `varint7` indicating a [value type](Semantics.md#types). One of:
+* `i32`
+* `i64`
+* `f32`
+* `f64`
+as encoded above.
 
 ### `block_type`
-A `varint7` indicating a signature. These types are encoded as:
-* `-0x40` (i.e., the byte `0x40`) indicating a signature with 0 results.
-* a [`value_type`](#value_type) indicating a signature with a single result
+A `varint7` indicating a block signature. These types are encoded as:
+* either a [`value_type`](#value_type) indicating a signature with a single result
+* or `-0x40` (i.e., the byte `0x40`) indicating a signature with 0 results.
 
 ### `elem_type`
 
 A `varint7` indicating the types of elements in a [table](AstSemantics.md#table).
 In the MVP, only one type is available:
-* `-0x10`  (i.e., the byte `0x70`) indicating [`anyfunc`](AstSemantics.md#table)
+* [`anyfunc`](AstSemantics.md#table)
 
 Note: In the future, other element types may be allowed.
 
 ### `func_type`
-The description of a function signature.
+The description of a function signature. Its type constructor is followed by an additional description:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| form | `varint32` | `-0x20` (i.e., the byte `0x60`) indicating a function type |
+| form | `varint7` | the value for the `func` type constructor as defined above |
 | param_count | `varuint32` | the number of parameters to the function |
 | param_types | `value_type*` | the parameter types of the function |
 | return_count | `varuint1` | the number of results from the function |
 | return_type | `value_type?` | the result type of the function (if return_count is 1) |
 
 Note: In the future, `return_count` and `return_type` might be generalised to allow multiple values.
+
+## Other Types
 
 ### `global_type`
 The description of a global variable.
@@ -110,8 +127,6 @@ The description of a memory.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | limits | `resizable_limits` | see [below](#resizable_limits) |
-
-## Other Types
 
 ### `external_kind`
 A single-byte unsigned integer indicating the kind of definition being imported or defined:
