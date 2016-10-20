@@ -425,18 +425,16 @@ It is legal to have several entries with the same type.
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
 | `unreachable` | `0x00` | | trap immediately |
-| `block` | `0x01` | sig : `inline_signature_type` | begin a sequence of expressions, yielding 0 or 1 values |
-| `loop` | `0x02` |  sig : `inline_signature_type` | begin a block which can also form control flow loops |
-| `if` | `0x03` | sig : `inline_signature_type` | begin if expression |
-| `else` | `0x04` | | begin else expression of if |
-| `select` | `0x05` | | select one of two values based on condition |
-| `br` | `0x06` | relative_depth : `varuint32` | break that targets an outer nested block |
-| `br_if` | `0x07` | relative_depth : `varuint32` | conditional break that targets an outer nested block |
-| `br_table` | `0x08` | see below | branch table control flow construct |
-| `return` | `0x09` | | return zero or one value from this function |
-| `drop` | `0x0b` | | ignore value |
-| `nop` | `0x0a` | | no operation |
-| `end` | `0x0f` | | end a block, loop, or if |
+| `nop` | `0x01` | | no operation |
+| `block` | `0x02` | sig : `inline_signature_type` | begin a sequence of expressions, yielding 0 or 1 values |
+| `loop` | `0x03` |  sig : `inline_signature_type` | begin a block which can also form control flow loops |
+| `if` | `0x04` | sig : `inline_signature_type` | begin if expression |
+| `else` | `0x05` | | begin else expression of if |
+| `end` | `0x0b` | | end a block, loop, or if |
+| `br` | `0x0c` | relative_depth : `varuint32` | break that targets an outer nested block |
+| `br_if` | `0x0d` | relative_depth : `varuint32` | conditional break that targets an outer nested block |
+| `br_table` | `0x0e` | see below | branch table control flow construct |
+| `return` | `0x0f` | | return zero or one value from this function |
 
 The _sig_ fields of `block` and `if` operators specify function signatures
 which describe their use of the operand stack.
@@ -454,53 +452,62 @@ The `br_table` operator implements an indirect branch. It accepts an optional va
 branches to the block or loop at the given offset within the `target_table`. If the input value is 
 out of range, `br_table` branches to the default target.
 
-## Basic operators ([described here](Semantics.md#constants))
+Note: Gaps in the opcode space, here and elsewhere, are reserved for future extensions.
+
+## Call operators ([described here](Semantics.md#calls))
 
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.const` | `0x10` | value : `varint32` | a constant value interpreted as `i32` |
-| `i64.const` | `0x11` | value : `varint64` | a constant value interpreted as `i64` |
-| `f64.const` | `0x12` | value : `uint64` | a constant value interpreted as `f64` |
-| `f32.const` | `0x13` | value : `uint32` | a constant value interpreted as `f32` |
-| `get_local` | `0x14` | local_index : `varuint32` | read a local variable or parameter |
-| `set_local` | `0x15` | local_index : `varuint32` | write a local variable or parameter |
-| `tee_local` | `0x19` | local_index : `varuint32` | write a local variable or parameter and return the same value |
-| `get_global` | `0xbb` | global_index : `varuint32` | read a global variable |
-| `set_global` | `0xbc` | global_index : `varuint32` | write a global variable |
-| `call` | `0x16` | function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
-| `call_indirect` | `0x17` | type_index : `varuint32` | call a function indirect with an expected signature |
+| `call` | `0x10` | function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
+| `call_indirect` | `0x11` | type_index : `varuint32` | call a function indirect with an expected signature |
 
 The `call_indirect` operator takes a list of function arguments and as the last operand the index into the table.
+
+## Parametric operators ([described here](Semantics.md#type-parametric-operators))
+
+| Name | Opcode | Immediates | Description |
+| `drop` | `0x1a` | | ignore value |
+| `select` | `0x1b` | | select one of two values based on condition |
+
+## Variable access ([described here](Semantics.md#local-variables))
+
+| Name | Opcode | Immediates | Description |
+| ---- | ---- | ---- | ---- |
+| `get_local` | `0x20` | local_index : `varuint32` | read a local variable or parameter |
+| `set_local` | `0x21` | local_index : `varuint32` | write a local variable or parameter |
+| `tee_local` | `0x22` | local_index : `varuint32` | write a local variable or parameter and return the same value |
+| `get_global` | `0x23` | global_index : `varuint32` | read a global variable |
+| `set_global` | `0x24` | global_index : `varuint32` | write a global variable |
 
 ## Memory-related operators ([described here](Semantics.md#linear-memory-accesses))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.load8_s` | `0x20` | `memory_immediate` | load from memory |
-| `i32.load8_u` | `0x21` | `memory_immediate` | load from memory  |
-| `i32.load16_s` | `0x22` | `memory_immediate` | load from memory |
-| `i32.load16_u` | `0x23` | `memory_immediate` | load from memory |
-| `i64.load8_s` | `0x24` | `memory_immediate` | load from memory |
-| `i64.load8_u` | `0x25` | `memory_immediate` | load from memory |
-| `i64.load16_s` | `0x26` | `memory_immediate` | load from memory |
-| `i64.load16_u` | `0x27` | `memory_immediate` | load from memory |
-| `i64.load32_s` | `0x28` | `memory_immediate` | load from memory |
-| `i64.load32_u` | `0x29` | `memory_immediate` | load from memory |
-| `i32.load` | `0x2a` | `memory_immediate` | load from memory |
-| `i64.load` | `0x2b` | `memory_immediate` | load from memory |
-| `f32.load` | `0x2c` | `memory_immediate` | load from memory |
-| `f64.load` | `0x2d` | `memory_immediate` | load from memory |
-| `i32.store8` | `0x2e` | `memory_immediate` | store to memory |
-| `i32.store16` | `0x2f` | `memory_immediate` | store to memory |
-| `i64.store8` | `0x30` | `memory_immediate` | store to memory |
-| `i64.store16` | `0x31` | `memory_immediate` | store to memory |
-| `i64.store32` | `0x32` | `memory_immediate` | store to memory |
-| `i32.store` | `0x33` | `memory_immediate` | store to memory |
-| `i64.store` | `0x34` | `memory_immediate` | store to memory |
-| `f32.store` | `0x35` | `memory_immediate` | store to memory |
-| `f64.store` | `0x36` | `memory_immediate` | store to memory |
-| `current_memory` | `0x3b` |  | query the size of memory |
-| `grow_memory` | `0x39` |  | grow the size of memory |
+| `i32.load` | `0x28` | `memory_immediate` | load from memory |
+| `i64.load` | `0x29` | `memory_immediate` | load from memory |
+| `f32.load` | `0x2a` | `memory_immediate` | load from memory |
+| `f64.load` | `0x2b` | `memory_immediate` | load from memory |
+| `i32.load8_s` | `0x2c` | `memory_immediate` | load from memory |
+| `i32.load8_u` | `0x2d` | `memory_immediate` | load from memory  |
+| `i32.load16_s` | `0x2e` | `memory_immediate` | load from memory |
+| `i32.load16_u` | `0x2f` | `memory_immediate` | load from memory |
+| `i64.load8_s` | `0x30` | `memory_immediate` | load from memory |
+| `i64.load8_u` | `0x31` | `memory_immediate` | load from memory |
+| `i64.load16_s` | `0x32` | `memory_immediate` | load from memory |
+| `i64.load16_u` | `0x33` | `memory_immediate` | load from memory |
+| `i64.load32_s` | `0x34` | `memory_immediate` | load from memory |
+| `i64.load32_u` | `0x35` | `memory_immediate` | load from memory |
+| `i32.store` | `0x36` | `memory_immediate` | store to memory |
+| `i64.store` | `0x37` | `memory_immediate` | store to memory |
+| `f32.store` | `0x38` | `memory_immediate` | store to memory |
+| `f64.store` | `0x39` | `memory_immediate` | store to memory |
+| `i32.store8` | `0x3a` | `memory_immediate` | store to memory |
+| `i32.store16` | `0x3b` | `memory_immediate` | store to memory |
+| `i64.store8` | `0x3c` | `memory_immediate` | store to memory |
+| `i64.store16` | `0x3d` | `memory_immediate` | store to memory |
+| `i64.store32` | `0x3e` | `memory_immediate` | store to memory |
+| `current_memory` | `0x3f` |  | query the size of memory |
+| `grow_memory` | `0x40` |  | grow the size of memory |
 
 The `memory_immediate` type is encoded as follows:
 
@@ -515,132 +522,154 @@ natural alignment. The bits after the
 `log(memory-access-size)` least-significant bits must be set to 0. These bits are reserved for future use
 (e.g., for shared memory ordering requirements).
 
-## Simple operators ([described here](Semantics.md#32-bit-integer-operators))
+## Basic operators ([described here](Semantics.md#constants))
+
+| Name | Opcode | Immediates | Description |
+| ---- | ---- | ---- | ---- |
+| `i32.const` | `0x41` | value : `varint32` | a constant value interpreted as `i32` |
+| `i64.const` | `0x42` | value : `varint64` | a constant value interpreted as `i64` |
+| `f32.const` | `0x43` | value : `uint32` | a constant value interpreted as `f32` |
+| `f64.const` | `0x44` | value : `uint64` | a constant value interpreted as `f64` |
+
+## Comparison operators ([described here](Semantics.md#32-bit-integer-operators))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.add` | `0x40` | | |
-| `i32.sub` | `0x41` | | |
-| `i32.mul` | `0x42` | | |
-| `i32.div_s` | `0x43` | | |
-| `i32.div_u` | `0x44` | | |
-| `i32.rem_s` | `0x45` | | |
-| `i32.rem_u` | `0x46` | | |
-| `i32.and` | `0x47` | | |
-| `i32.or` | `0x48` | | |
-| `i32.xor` | `0x49` | | |
-| `i32.shl` | `0x4a` | | |
-| `i32.shr_u` | `0x4b` | | |
-| `i32.shr_s` | `0x4c` | | |
-| `i32.rotr` | `0xb6` | | |
-| `i32.rotl` | `0xb7` | | |
-| `i32.eq` | `0x4d` | | |
-| `i32.ne` | `0x4e` | | |
-| `i32.lt_s` | `0x4f` | | |
-| `i32.le_s` | `0x50` | | |
-| `i32.lt_u` | `0x51` | | |
-| `i32.le_u` | `0x52` | | |
-| `i32.gt_s` | `0x53` | | |
-| `i32.ge_s` | `0x54` | | |
-| `i32.gt_u` | `0x55` | | |
-| `i32.ge_u` | `0x56` | | |
-| `i32.clz` | `0x57` | | |
-| `i32.ctz` | `0x58` | | |
-| `i32.popcnt` | `0x59` | | |
-| `i32.eqz`  | `0x5a` | | |
-| `i64.add` | `0x5b` | | |
-| `i64.sub` | `0x5c` | | |
-| `i64.mul` | `0x5d` | | |
-| `i64.div_s` | `0x5e` | | |
-| `i64.div_u` | `0x5f` | | |
-| `i64.rem_s` | `0x60` | | |
-| `i64.rem_u` | `0x61` | | |
-| `i64.and` | `0x62` | | |
-| `i64.or` | `0x63` | | |
-| `i64.xor` | `0x64` | | |
-| `i64.shl` | `0x65` | | |
-| `i64.shr_u` | `0x66` | | |
-| `i64.shr_s` | `0x67` | | |
-| `i64.rotr` | `0xb8` | | |
-| `i64.rotl` | `0xb9` | | |
-| `i64.eq` | `0x68` | | |
-| `i64.ne` | `0x69` | | |
-| `i64.lt_s` | `0x6a` | | |
-| `i64.le_s` | `0x6b` | | |
-| `i64.lt_u` | `0x6c` | | |
-| `i64.le_u` | `0x6d` | | |
-| `i64.gt_s` | `0x6e` | | |
-| `i64.ge_s` | `0x6f` | | |
-| `i64.gt_u` | `0x70` | | |
-| `i64.ge_u` | `0x71` | | |
-| `i64.clz` | `0x72` | | |
-| `i64.ctz` | `0x73` | | |
-| `i64.popcnt` | `0x74` | | |
-| `i64.eqz`  | `0xba` | | |
-| `f32.add` | `0x75` | | |
-| `f32.sub` | `0x76` | | |
-| `f32.mul` | `0x77` | | |
-| `f32.div` | `0x78` | | |
-| `f32.min` | `0x79` | | |
-| `f32.max` | `0x7a` | | |
-| `f32.abs` | `0x7b` | | |
-| `f32.neg` | `0x7c` | | |
-| `f32.copysign` | `0x7d` | | |
-| `f32.ceil` | `0x7e` | | |
-| `f32.floor` | `0x7f` | | |
-| `f32.trunc` | `0x80` | | |
-| `f32.nearest` | `0x81` | | |
-| `f32.sqrt` | `0x82` | | |
-| `f32.eq` | `0x83` | | |
-| `f32.ne` | `0x84` | | |
-| `f32.lt` | `0x85` | | |
-| `f32.le` | `0x86` | | |
-| `f32.gt` | `0x87` | | |
-| `f32.ge` | `0x88` | | |
-| `f64.add` | `0x89` | | |
-| `f64.sub` | `0x8a` | | |
-| `f64.mul` | `0x8b` | | |
-| `f64.div` | `0x8c` | | |
-| `f64.min` | `0x8d` | | |
-| `f64.max` | `0x8e` | | |
-| `f64.abs` | `0x8f` | | |
-| `f64.neg` | `0x90` | | |
-| `f64.copysign` | `0x91` | | |
-| `f64.ceil` | `0x92` | | |
-| `f64.floor` | `0x93` | | |
-| `f64.trunc` | `0x94` | | |
-| `f64.nearest` | `0x95` | | |
-| `f64.sqrt` | `0x96` | | |
-| `f64.eq` | `0x97` | | |
-| `f64.ne` | `0x98` | | |
-| `f64.lt` | `0x99` | | |
-| `f64.le` | `0x9a` | | |
-| `f64.gt` | `0x9b` | | |
-| `f64.ge` | `0x9c` | | |
-| `i32.trunc_s/f32` | `0x9d` | | |
-| `i32.trunc_s/f64` | `0x9e` | | |
-| `i32.trunc_u/f32` | `0x9f` | | |
-| `i32.trunc_u/f64` | `0xa0` | | |
-| `i32.wrap/i64` | `0xa1` | | |
-| `i64.trunc_s/f32` | `0xa2` | | |
-| `i64.trunc_s/f64` | `0xa3` | | |
-| `i64.trunc_u/f32` | `0xa4` | | |
-| `i64.trunc_u/f64` | `0xa5` | | |
-| `i64.extend_s/i32` | `0xa6` | | |
-| `i64.extend_u/i32` | `0xa7` | | |
-| `f32.convert_s/i32` | `0xa8` | | |
-| `f32.convert_u/i32` | `0xa9` | | |
-| `f32.convert_s/i64` | `0xaa` | | |
-| `f32.convert_u/i64` | `0xab` | | |
-| `f32.demote/f64` | `0xac` | | |
-| `f32.reinterpret/i32` | `0xad` | | |
-| `f64.convert_s/i32` | `0xae` | | |
-| `f64.convert_u/i32` | `0xaf` | | |
-| `f64.convert_s/i64` | `0xb0` | | |
-| `f64.convert_u/i64` | `0xb1` | | |
-| `f64.promote/f32` | `0xb2` | | |
-| `f64.reinterpret/i64` | `0xb3` | | |
-| `i32.reinterpret/f32` | `0xb4` | | |
-| `i64.reinterpret/f64` | `0xb5` | | |
+| `i32.eqz`  | `0x45` | | |
+| `i32.eq` | `0x46` | | |
+| `i32.ne` | `0x47` | | |
+| `i32.lt_s` | `0x48` | | |
+| `i32.lt_u` | `0x49` | | |
+| `i32.gt_s` | `0x4a` | | |
+| `i32.gt_u` | `0x4b` | | |
+| `i32.le_s` | `0x4c` | | |
+| `i32.le_u` | `0x4d` | | |
+| `i32.ge_s` | `0x4e` | | |
+| `i32.ge_u` | `0x4f` | | |
+| `i64.eqz`  | `0x50` | | |
+| `i64.eq` | `0x51` | | |
+| `i64.ne` | `0x52` | | |
+| `i64.lt_s` | `0x53` | | |
+| `i64.lt_u` | `0x54` | | |
+| `i64.gt_s` | `0x55` | | |
+| `i64.gt_u` | `0x56` | | |
+| `i64.le_s` | `0x57` | | |
+| `i64.le_u` | `0x58` | | |
+| `i64.ge_s` | `0x59` | | |
+| `i64.ge_u` | `0x5a` | | |
+| `f32.eq` | `0x5b` | | |
+| `f32.ne` | `0x5c` | | |
+| `f32.lt` | `0x5d` | | |
+| `f32.gt` | `0x5e` | | |
+| `f32.le` | `0x5f` | | |
+| `f32.ge` | `0x60` | | |
+| `f64.eq` | `0x61` | | |
+| `f64.ne` | `0x62` | | |
+| `f64.lt` | `0x63` | | |
+| `f64.gt` | `0x64` | | |
+| `f64.le` | `0x65` | | |
+| `f64.ge` | `0x66` | | |
 
+## Numeric operators ([described here](Semantics.md#32-bit-integer-operators))
 
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
+| `i32.clz` | `0x67` | | |
+| `i32.ctz` | `0x68` | | |
+| `i32.popcnt` | `0x69` | | |
+| `i32.add` | `0x6a` | | |
+| `i32.sub` | `0x6b` | | |
+| `i32.mul` | `0x6c` | | |
+| `i32.div_s` | `0x6d` | | |
+| `i32.div_u` | `0x6e` | | |
+| `i32.rem_s` | `0x6f` | | |
+| `i32.rem_u` | `0x70` | | |
+| `i32.and` | `0x71` | | |
+| `i32.or` | `0x72` | | |
+| `i32.xor` | `0x73` | | |
+| `i32.shl` | `0x74` | | |
+| `i32.shr_u` | `0x75` | | |
+| `i32.shr_s` | `0x76` | | |
+| `i32.rotl` | `0x77` | | |
+| `i32.rotr` | `0x78` | | |
+| `i64.clz` | `0x79` | | |
+| `i64.ctz` | `0x7a` | | |
+| `i64.popcnt` | `0x7b` | | |
+| `i64.add` | `0x7c` | | |
+| `i64.sub` | `0x7d` | | |
+| `i64.mul` | `0x7e` | | |
+| `i64.div_s` | `0x7f` | | |
+| `i64.div_u` | `0x80` | | |
+| `i64.rem_s` | `0x81` | | |
+| `i64.rem_u` | `0x82` | | |
+| `i64.and` | `0x83` | | |
+| `i64.or` | `0x84` | | |
+| `i64.xor` | `0x85` | | |
+| `i64.shl` | `0x86` | | |
+| `i64.shr_u` | `0x87` | | |
+| `i64.shr_s` | `0x88` | | |
+| `i64.rotl` | `0x89` | | |
+| `i64.rotr` | `0x8a` | | |
+| `f32.abs` | `0x8b` | | |
+| `f32.neg` | `0x8c` | | |
+| `f32.copysign` | `0x8d` | | |
+| `f32.ceil` | `0x8e` | | |
+| `f32.floor` | `0x8f` | | |
+| `f32.trunc` | `0x90` | | |
+| `f32.nearest` | `0x91` | | |
+| `f32.sqrt` | `0x92` | | |
+| `f32.add` | `0x93` | | |
+| `f32.sub` | `0x94` | | |
+| `f32.mul` | `0x95` | | |
+| `f32.div` | `0x96` | | |
+| `f32.min` | `0x97` | | |
+| `f32.max` | `0x98` | | |
+| `f64.abs` | `0x99` | | |
+| `f64.neg` | `0x9a` | | |
+| `f64.copysign` | `0x9b` | | |
+| `f64.ceil` | `0x9c` | | |
+| `f64.floor` | `0x9d` | | |
+| `f64.trunc` | `0x9e` | | |
+| `f64.nearest` | `0x9f` | | |
+| `f64.sqrt` | `0xa0` | | |
+| `f64.add` | `0xa1` | | |
+| `f64.sub` | `0xa2` | | |
+| `f64.mul` | `0xa3` | | |
+| `f64.div` | `0xa4` | | |
+| `f64.min` | `0xa5` | | |
+| `f64.max` | `0xa6` | | |
+
+## Conversions ([described here](Semantics.md#datatype-conversions))
+
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
+| `i32.wrap/i64` | `0xa7` | | |
+| `i32.trunc_s/f32` | `0xa8` | | |
+| `i32.trunc_u/f32` | `0xa9` | | |
+| `i32.trunc_s/f64` | `0xaa` | | |
+| `i32.trunc_u/f64` | `0xab` | | |
+| `i64.extend_s/i32` | `0xac` | | |
+| `i64.extend_u/i32` | `0xad` | | |
+| `i64.trunc_s/f32` | `0xae` | | |
+| `i64.trunc_u/f32` | `0xaf` | | |
+| `i64.trunc_s/f64` | `0xb0` | | |
+| `i64.trunc_u/f64` | `0xb1` | | |
+| `f32.convert_s/i32` | `0xb2` | | |
+| `f32.convert_u/i32` | `0xb3` | | |
+| `f32.convert_s/i64` | `0xb4` | | |
+| `f32.convert_u/i64` | `0xb5` | | |
+| `f32.demote/f64` | `0xb6` | | |
+| `f64.convert_s/i32` | `0xb7` | | |
+| `f64.convert_u/i32` | `0xb8` | | |
+| `f64.convert_s/i64` | `0xb9` | | |
+| `f64.convert_u/i64` | `0xba` | | |
+| `f64.promote/f32` | `0xbb` | | |
+
+## Reinterpretations ([described here](Semantics.md#datatype-conversions))
+
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
+| `i32.reinterpret/f32` | `0xbc` | | |
+| `i64.reinterpret/f64` | `0xbd` | | |
+| `f32.reinterpret/i32` | `0xbe` | | |
+| `f64.reinterpret/i64` | `0xbf` | | |
