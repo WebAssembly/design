@@ -589,8 +589,8 @@ natural alignment. The bits after the
 | `i32.or` | `0x72` | | |
 | `i32.xor` | `0x73` | | |
 | `i32.shl` | `0x74` | | |
-| `i32.shr_u` | `0x75` | | |
-| `i32.shr_s` | `0x76` | | |
+| `i32.shr_s` | `0x75` | | |
+| `i32.shr_u` | `0x76` | | |
 | `i32.rotl` | `0x77` | | |
 | `i32.rotr` | `0x78` | | |
 | `i64.clz` | `0x79` | | |
@@ -607,8 +607,8 @@ natural alignment. The bits after the
 | `i64.or` | `0x84` | | |
 | `i64.xor` | `0x85` | | |
 | `i64.shl` | `0x86` | | |
-| `i64.shr_u` | `0x87` | | |
-| `i64.shr_s` | `0x88` | | |
+| `i64.shr_s` | `0x87` | | |
+| `i64.shr_u` | `0x88` | | |
 | `i64.rotl` | `0x89` | | |
 | `i64.rotr` | `0x8a` | | |
 | `f32.abs` | `0x8b` | | |
