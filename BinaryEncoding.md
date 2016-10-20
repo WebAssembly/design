@@ -53,6 +53,8 @@ Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
 
 ## Language Types
 
+Note: All types are represented by negative `varint7` values. This is so that they can coexist in a single space with (positive) indices into the type section, which may be relevant in future extensions of the type system.
+
 ### `value_type`
 A `varint7` indicating a [value type](Semantics.md#types). These types are encoded as:
 * `-0x01` (i.e., the byte `0x7f`) indicating type `i32`
