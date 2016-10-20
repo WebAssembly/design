@@ -466,6 +466,7 @@ The `call_indirect` operator takes a list of function arguments and as the last 
 ## Parametric operators ([described here](Semantics.md#type-parametric-operators))
 
 | Name | Opcode | Immediates | Description |
+| ---- | ---- | ---- | ---- |
 | `drop` | `0x1a` | | ignore value |
 | `select` | `0x1b` | | select one of two values based on condition |
 
