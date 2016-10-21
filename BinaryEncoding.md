@@ -523,7 +523,7 @@ natural alignment. The bits after the
 `log(memory-access-size)` least-significant bits must be set to 0. These bits are reserved for future use
 (e.g., for shared memory ordering requirements).
 
-## Basic operators ([described here](Semantics.md#constants))
+## Constants ([described here](Semantics.md#constants))
 
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
