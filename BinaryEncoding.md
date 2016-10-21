@@ -111,7 +111,7 @@ The description of a global variable.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | content_type | `value_type` | type of the value |
-| mutability | `varuint1` | `0` if immutable, `1` if mutable; must be `0` in the MVP |
+| mutability | `varuint1` | `0` if immutable, `1` if mutable |
 
 ### `table_type`
 The description of a table.
