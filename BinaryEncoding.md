@@ -31,6 +31,8 @@ for a proposal for layer 1 structural compression.
 
 # Data types
 
+## Numbers
+
 ### `uintN`
 An unsigned integer of _N_ bits,
 represented in _N_/8 bytes in [little endian](https://en.wikipedia.org/wiki/Endianness#Little-endian) order.
@@ -47,22 +49,84 @@ where the former two are used for compatibility with potential future extensions
 A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to _N_ bits (i.e., the values [-2^(_N_-1), +2^(_N_-1)-1]),
 represented by _at most_ ceil(_N_/7) bytes that may contain padding `0x80` or `0xFF` bytes.
 
-Note: Currently, the only sizes used are `varint32` and `varint64`.
+Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
+
+## Language Types
+
+All types are distinguished by a negative `varint7` values that is the first byte of their encoding (representing a type constructor):
+
+| Opcode | Type constructor |
+|--------|------------------|
+| `-0x01` (i.e., the byte `0x7f`) | `i32` |
+| `-0x02` (i.e., the byte `0x7e`) | `i32` |
+| `-0x03` (i.e., the byte `0x7d`) | `f32` |
+| `-0x04` (i.e., the byte `0x7c`) | `f64` |
+| `-0x10` (i.e., the byte `0x70`) | `anyfunc` |
+| `-0x20` (i.e., the byte `0x60`) | `func` |
+| `-0x40` (i.e., the byte `0x40`) | pseudo type for representing an empty `block_type` |
+
+Some of these will be followed by additional fields, see below.
+
+Note: Gaps are reserved for future extensions. The use of a signed scheme is so that types can coexist in a single space with (positive) indices into the type section, which may be relevant for future extensions of the type system.
 
 ### `value_type`
-A single-byte unsigned integer indicating a [value type](Semantics.md#types). These types are encoded as:
-* `1` indicating type `i32` 
-* `2` indicating type `i64` 
-* `3` indicating type `f32` 
-* `4` indicating type `f64`
+A `varint7` indicating a [value type](Semantics.md#types). One of:
+* `i32`
+* `i64`
+* `f32`
+* `f64`
+as encoded above.
 
-### `inline_signature_type`
-A single-byte unsigned integer indicating a signature. These types are encoded as:
-* `0` indicating a signature with 0 results.
-* `1` indicating a signature with 1 result of type `i32`.
-* `2` indicating a signature with 1 result of type `i64`.
-* `3` indicating a signature with 1 result of type `f32`.
-* `4` indicating a signature with 1 result of type `f64`.
+### `block_type`
+A `varint7` indicating a block signature. These types are encoded as:
+* either a [`value_type`](#value_type) indicating a signature with a single result
+* or `-0x40` (i.e., the byte `0x40`) indicating a signature with 0 results.
+
+### `elem_type`
+
+A `varint7` indicating the types of elements in a [table](AstSemantics.md#table).
+In the MVP, only one type is available:
+* [`anyfunc`](AstSemantics.md#table)
+
+Note: In the future, other element types may be allowed.
+
+### `func_type`
+The description of a function signature. Its type constructor is followed by an additional description:
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| form | `varint7` | the value for the `func` type constructor as defined above |
+| param_count | `varuint32` | the number of parameters to the function |
+| param_types | `value_type*` | the parameter types of the function |
+| return_count | `varuint1` | the number of results from the function |
+| return_type | `value_type?` | the result type of the function (if return_count is 1) |
+
+Note: In the future, `return_count` and `return_type` might be generalised to allow multiple values.
+
+## Other Types
+
+### `global_type`
+The description of a global variable.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| content_type | `value_type` | type of the value |
+| mutability | `varuint1` | `0` if immutable, `1` if mutable; must be `0` in the MVP |
+
+### `table_type`
+The description of a table.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| element_type | `elem_type` | the type of elements |
+| limits | `resizable_limits` | see [below](#resizable_limits) |
+
+### `memory_type`
+The description of a memory.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| limits | `resizable_limits` | see [below](#resizable_limits) |
 
 ### `external_kind`
 A single-byte unsigned integer indicating the kind of definition being imported or defined:
@@ -81,8 +145,7 @@ A packed tuple that describes the limits of a
 | initial | `varuint32` | initial length (in units of table elements or wasm pages) |
 | maximum | `varuint32`? | only present if specified by `flags` |
 
-The "flags" field may later be extended to include a flag for sharing (between
-threads).
+Note: In the future, the "flags" field may be extended, e.g., to include a flag for sharing between threads.
 
 ### `init_expr`
 The encoding of an [initializer expression](Modules.md#initializer-expression)
@@ -151,18 +214,9 @@ The type section declares all function signatures that will be used in the modul
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | count | `varuint32` | count of type entries to follow |
-| entries | `type_entry*` | repeated type entries as described below |
+| entries | `func_type*` | repeated type entries as described below |
 
-#### Type entry
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| form | `varuint7` | `0x40`, indicating a function type |
-| param_count | `varuint32` | the number of parameters to the function |
-| param_types | `value_type*` | the parameter types of the function |
-| return_count | `varuint1` | the number of results from the function |
-| return_type | `value_type?` | the result type of the function (if return_count is 1) |
-
-(Note: In the future, this section may contain other forms of type entries as well, which can be distinguished by the `form` field.)
+Note: In the future, this section may contain other forms of type entries as well, which can be distinguished by the `form` field of the type encoding.
 
 ### Import section
 
@@ -186,27 +240,27 @@ Followed by, if the `kind` is `Function`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| sig_index | `varuint32` | signature index of the import |
+| type | `varuint32` | type index of the function signature |
 
 or, if the `kind` is `Table`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| element_type | `varuint7` | `0x20`, indicating [`anyfunc`](Semantics.md#table) |
-| | `resizable_limits` | see [above](#resizable_limits) |
+| type | `table_type` | type of the imported table |
 
 or, if the `kind` is `Memory`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| | `resizable_limits` | see [above](#resizable_limits) |
+| type | `memory_type` | type of the imported memory |
 
 or, if the `kind` is `Global`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| type | `value_type` | type of the imported global |
-| mutability | `varuint1` | `0` if immutable, `1` if mutable; must be `0` in the MVP |
+| type | `global_type` | type of the imported global |
+
+Note that, in the MVP, only immutable global variables can be imported.
 
 ### Function section
 
@@ -227,11 +281,6 @@ The encoding of a [Table section](Modules.md#table-section):
 | count | `varuint32` | indicating the number of tables defined by the module |
 | entries | `table_type*` | repeated `table_type` entries as described below |
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| element_type | `varuint7` | `0x20`, indicating [`anyfunc`](Semantics.md#table) |
-| | `resizable_limits` | see [above](#resizable_limits) |
-
 In the MVP, the number of tables must be no more than 1.
 
 ### Memory section
@@ -244,10 +293,6 @@ The encoding of a [Memory section](Modules.md#linear-memory-section):
 | ----- |  ----- | ----- |
 | count | `varuint32` | indicating the number of memories defined by the module |
 | entries | `memory_type*` | repeated `memory_type` entries as described below |
-
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| | `resizable_limits` | see [above](#resizable_limits) |
 
 Note that the initial/maximum fields are specified in units of 
 [WebAssembly pages](Semantics.md#linear-memory).
@@ -270,8 +315,7 @@ and with the given initializer.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| type | `value_type` | type of the variables |
-| mutability | `varuint1` | `0` if immutable, `1` if mutable |
+| type | `global_type` | type of the variables |
 | init | `init_expr` | the initial value of the global |
 
 Note that, in the MVP, only immutable global variables can be exported.
