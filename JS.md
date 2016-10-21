@@ -62,7 +62,7 @@ If the given `bytes` argument is not a
 then a `TypeError` is thrown.
 
 Otherwise, this function performs *validation* as defined by the [WebAssembly
-specification](https://github.com/WebAssembly/spec/blob/master/ml-proto/) and returns `true` if validation succeeded, `false` if validation failed.
+specification](https://github.com/WebAssembly/spec/blob/master/interpreter/) and returns `true` if validation succeeded, `false` if validation failed.
 
 #### `WebAssembly.compile`
 
@@ -94,7 +94,7 @@ asynchronous, background, streaming compilation.
 
 A `WebAssembly.Module` object represents the stateless result of compiling a
 WebAssembly binary-format module and contains one internal slot:
- * [[Module]] : an [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L176)
+ * [[Module]] : an [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L176)
    which is the spec definition of a module
 
 ### `WebAssembly.Module` Constructor
@@ -114,7 +114,7 @@ exception is thrown.
 Otherwise, this function performs synchronous compilation of the `BufferSource`:
 * The byte range delimited by the `BufferSource` is first logically decoded 
   according to [BinaryEncoding.md](BinaryEncoding.md) and then validated
-  according to the rules in [spec/check.ml](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/check.ml#L415).
+  according to the rules in [spec/valid.ml](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/valid.ml#L415).
 * The spec `string` values inside `Ast.module` are decoded as UTF8 as described in 
   [Web.md](Web.md#names).
 * On success, a new `WebAssembly.Module` object is returned with [[Module]] set to
@@ -143,7 +143,7 @@ A `WebAssembly.Instance` object represents the instantiation of a
 `WebAssembly.Module` into a
 [realm](http://tc39.github.io/ecma262/#sec-code-realms) and has one
 internal slot:
-* [[Instance]] : an [`Instance.instance`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L17)
+* [[Instance]] : an [`Instance.instance`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L17)
   which is the WebAssembly spec definition of an instance
 
 as well as one plain data property (configurable, writable, enumerable)
@@ -163,26 +163,26 @@ constructor cannot be called as a function without `new`).
 If `moduleObject` is not a `WebAssembly.Module` instance, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-Let `module` be the [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L176)
+Let `module` be the [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L176)
 `moduleObject.[[Module]]`.
 
 If the `importObject` parameter is not `undefined` and `Type(importObject)` is
 not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown. If the list of 
-[`module.imports`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L186)
+[`module.imports`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L186)
 is not empty and `Type(importObject)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
 Let `funcs`, `memories` and `tables` be initially-empty lists of callable JavaScript objects, `WebAssembly.Memory` objects and `WebAssembly.Table` objects, respectively.
 
-Let `imports` be an initially-empty list of [`external`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L11) values.
+Let `imports` be an initially-empty list of [`external`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L11) values.
 
-For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L168)
+For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L168)
 `i` in `module.imports`:
 * Let `o` be the resultant value of performing
-  [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L170)).
+  [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L170)).
 * If `Type(o)` is not Object, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
-* Let `v` be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`o`, [`i.item_name`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/ast.ml#L171))
+* Let `v` be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`o`, [`i.item_name`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L171))
 * If `i` is a function import:
   * If [`IsCallable(v)`](https://tc39.github.io/ecma262/#sec-iscallable) is `false`,
     throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
@@ -191,7 +191,7 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spe
       [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
     * Let `closure` be `v.[[Closure]]`.
   * Otherwise:
-    * Let `closure` be a new [host function](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L9)
+    * Let `closure` be a new [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9)
       of the given signature
       which calls `v` by coercing WebAssembly arguments to JavaScript arguments
       via [`ToJSValue`](#tojsvalue) and returns the result, if any, by coercing
@@ -214,39 +214,39 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spe
   * Append `v.[[Table]]` to `imports`.
 
 Let `instance` be the result of creating a new
-[`instance`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L17)
+[`instance`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L17)
 by calling
-[`Eval.init`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L416)
+[`Eval.init`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/eval.ml#L416)
 given `module` and `imports`.
 
 Let `exports` be a list of (string, JS value) pairs that is mapped from 
-each [external](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L24) value `e` in `instance.exports` as follows:
-* If `e` is a [closure](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L12) `c`:
+each [external](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L24) value `e` in `instance.exports` as follows:
+* If `e` is a [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L12) `c`:
   * If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) `func` in `funcs` whose `func.[[Closure]]` equals `c`, then return `func`.
   * (Note: At most one wrapper is created for any closure, so `func` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import that is already an [Exported Function Exotic Object](#exported-function-exotic-objects), then the original function object will be found. For imports that are regular JS functions, a new wrapper will be created.)
   * Otherwise:
     * Let `func` be an [Exported Function Exotic Object](#exported-function-exotic-objects) created from `c`.
     * Append `func` to `funcs`.
     * Return `func`.
-* If `e` is a [global](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L15) `v`:
+* If `e` is a [global](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L15) `v`:
   * [Assert](https://tc39.github.io/ecma262/#assert): the global is immutable
     by MVP validation constraint.
   * Return [`ToJSValue`](#tojsvalue)`(v)`.
-* If `e` is a [memory](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L14) `m`:
+* If `e` is a [memory](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L14) `m`:
   * If there is an element `memory` in `memories` whose `memory.[[Memory]]` is `m`, then return `memory`.
   * (Note: At most one `WebAssembly.Memory` object is created for any memory, so the above `memory` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import, the original object will be found.)
   * Otherwise:
     * Let `memory` be a new `WebAssembly.Memory` object created via [`CreateMemoryObject`](#creatememoryobject) from `m`.
     * Append `memory` to `memories`.
     * Return `memory`.
-* Otherwise `e` must be a [table](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L13) `t`:
+* Otherwise `e` must be a [table](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L13) `t`:
   * If there is an element `table` in `tables` whose `table.[[Table]]` is `t`, then return `table`.
   * (Note: At most one `WebAssembly.Table` object is created for any table, so the above `table` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import, the original object will be found.)
   * Otherwise:
     * Let `values` be a list of JS values that is mapped from `t`'s elements as follows:
-      * For an element that is [`uninitialized`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli#L8):
+      * For an element that is [`uninitialized`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/table.mli#L8):
         * Return `null`.
-      * For an element that is a [`closure`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L7) `c`:
+      * For an element that is a [`closure`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7) `c`:
         * If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) `func` in `funcs` whose `func.[[Closure]]` equals `c`, then return `func`.
         * (Note: At most one wrapper is created for a any closure, so `func` is uniquely determined. Moreover, if the item was an import that is already an [Exported Function Exotic Object](#exported-function-exotic-objects), then the original function object will be found. For imports that are regular JS functions, a new wrapper will be created.)
         * Otherwise:
@@ -257,7 +257,7 @@ each [external](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/in
     * Append `table` to `tables`.
     * Return `table`.
 
-Note: For the purpose of the above algorithm, two [closure](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L7) values are considered equal if and only if:
+Note: For the purpose of the above algorithm, two [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7) values are considered equal if and only if:
 * Either they are both WebAssembly functions for the same instance and referring to the same function definition.
 * Or they are identical host functions (i.e., each host function value created from a JavaScript function is considered fresh).
 
@@ -318,7 +318,7 @@ of *Exported Function*
 [Exotic Object](http://tc39.github.io/ecma262/#sec-built-in-exotic-object-internal-methods-and-slots).
 Like [Bound Function](http://tc39.github.io/ecma262/#sec-bound-function-exotic-objects) Exotic Object,
 Exported Functions do not have the normal function internal slots but instead have:
- * [[Closure]] : the [closure](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/instance.ml#L7)
+ * [[Closure]] : the [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7)
    representing the function
 
 as well as the internal slots required of all builtin functions:
@@ -333,11 +333,11 @@ Exported Functions also have the following data properties:
 
 WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined as:
  * Let `args` be an empty list of coerced values.
- * Let `inArity` be the number of arguments and `outArity` be the number of results in the [`function type`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L106) of the function's [[Closure]].
+ * Let `inArity` be the number of arguments and `outArity` be the number of results in the [`function type`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/eval.ml#L106) of the function's [[Closure]].
  * For all values `v` in `argValues`, in the order of their appearance:
    * If the length of`args` is less than `inArity`, append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `args`.
  * While the length of `args` is less than `inArity`, append [`ToWebAssemblyValue`](#towebassemblyvalue)`(undefined)` to `args`.
- * Let `ret` be the result of calling [`Eval.invoke`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/eval.ml#L443)
+ * Let `ret` be the result of calling [`Eval.invoke`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/eval.ml#L443)
    passing [[Closure]], and `args`.
  * If `outArity` is 0, return `undefined`.
  * Otherwise, return [`ToJSValue`](#tojsvalue)`(v)`, where `v` is the singular element of `ret`.
@@ -352,7 +352,7 @@ call one with the `new` operator.
 A `WebAssembly.Memory` object contains a single [linear memory](Semantics.md#linear-memory)
 which can be simultaneously referenced by multiple `Instance` objects. Each
 `Memory` object has two internal slots:
- * [[Memory]] : a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli)
+ * [[Memory]] : a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/memory.mli)
  * [[BufferObject]] : the current `ArrayBuffer` whose [[ArrayBufferByteLength]]
    matches the current byte length of [[Memory]]
 
@@ -375,7 +375,7 @@ then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http
 Otherwise, let `maximum` be `None`.
 
 Let `memory` be the result of calling 
-[`Memory.create`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.ml#L68)
+[`Memory.create`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/memory.ml#L68)
 given arguments `initial` and `maximum`. Note that `initial` and `maximum` are
 specified in units of WebAssembly pages (64KiB).
 
@@ -383,7 +383,7 @@ Return the result of [`CreateMemoryObject`](#creatememoryobject)(`memory`).
 
 ### CreateMemoryObject
 
-Given a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/memory.mli#L1)
+Given a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/memory.mli#L1)
 `m`, to create a `WebAssembly.Memory`:
 
 Let `buffer` be a new `ArrayBuffer` whose
@@ -436,7 +436,7 @@ is thrown. Otherwise return `M.[[BufferObject]]`.
 A `WebAssembly.Table` object contains a single [table](Semantics.md#table)
 which can be simultaneously referenced by multiple `Instance` objects. Each
 `Table` object has two internal slots:
- * [[Table]] : a [`Table.table`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.mli#L1)
+ * [[Table]] : a [`Table.table`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/table.mli#L1)
  * [[Values]] : an array whose elements are either `null` or [Exported Function Exotic Object](#exported-function-exotic-objects)
 
 ### `WebAssembly.Table` Constructor
@@ -465,7 +465,7 @@ then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http
 Otherwise, let `maximum` be None.
 
 Let `table` be the result of calling 
-[`Table.create`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.ml#L68)
+[`Table.create`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/table.ml#L68)
 given arguments `AnyFuncType`, `initial` and `maximum`.
 
 Let `values` be a new empty array of `initial` elements, all with value
@@ -486,7 +486,7 @@ Return `T.[[Values]].length`.
 
 ### `WebAssembly.Table.prototype.grow`
 
-This method calls [`Table.grow`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/table.ml#L79), having performed
+This method calls [`Table.grow`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/table.ml#L79), having performed
 [`ToNonWrappingUint32`](#tononwrappinguint32) on the first argument.
 On failure, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
 
@@ -533,7 +533,7 @@ Return `undefined`.
 
 ## ToJSValue
 
-To coerce a WebAssembly [`value`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/values.ml#L9)
+To coerce a WebAssembly [`value`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/values.ml#L9)
 to a JavaScript value:
 
 * given a WebAssembly `i32` is interpreted as a signed integer, converted (losslessly) to an
@@ -550,7 +550,7 @@ If the WebAssembly value is optional, then given `None`, return JavaScript value
 
 ## ToWebAssemblyValue
 
-To coerce a JavaScript value to a given WebAssembly [`value type`](https://github.com/WebAssembly/spec/blob/master/ml-proto/spec/types.ml#L3),
+To coerce a JavaScript value to a given WebAssembly [`value type`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/types.ml#L3),
 
 * coerce to `i32` via [`ToInt32(v)`](http://tc39.github.io/ecma262/#sec-toint32)
 * for `i64`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
