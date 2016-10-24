@@ -1,3 +1,5 @@
+---
+---
 # Dynamic linking
 
 WebAssembly enables load-time and run-time (`dlopen`) dynamic linking in the

@@ -1,3 +1,5 @@
+---
+---
 # Minimum Viable Product
 
 As stated in the [high-level goals](HighLevelGoals.md), the first release aims

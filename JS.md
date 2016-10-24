@@ -1,3 +1,5 @@
+---
+---
 # JavaScript API
 
 In the [MVP](MVP.md), the only way to access WebAssembly on the Web is through

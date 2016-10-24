@@ -1,3 +1,5 @@
+---
+---
 # FAQ
 
 ## Why create a new standard when there is already asm.js?
