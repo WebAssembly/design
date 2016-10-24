@@ -503,9 +503,9 @@ Note: Gaps in the opcode space, here and elsewhere, are reserved for future exte
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
 | `call` | `0x10` | function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
-| `call_indirect` | `0x11` | type_index : `varuint32`, flags : `varuint1` | call a function indirect with an expected signature |
+| `call_indirect` | `0x11` | type_index : `varuint32`, reserved : `varuint1` | call a function indirect with an expected signature |
 
-The `call_indirect` operator takes a list of function arguments and as the last operand the index into the table. Its `flags` immediate is reserved for future use and must be `0` in the MVP.
+The `call_indirect` operator takes a list of function arguments and as the last operand the index into the table. Its `reserved` immediate is for future use and must be `0` in the MVP.
 
 ## Parametric operators ([described here](Semantics.md#type-parametric-operators))
 
@@ -551,8 +551,8 @@ The `call_indirect` operator takes a list of function arguments and as the last 
 | `i64.store8` | `0x3c` | `memory_immediate` | store to memory |
 | `i64.store16` | `0x3d` | `memory_immediate` | store to memory |
 | `i64.store32` | `0x3e` | `memory_immediate` | store to memory |
-| `current_memory` | `0x3f` | flags : `varuint1` | query the size of memory |
-| `grow_memory` | `0x40` | flags : `varuint1` | grow the size of memory |
+| `current_memory` | `0x3f` | reserved : `varuint1` | query the size of memory |
+| `grow_memory` | `0x40` | reserved : `varuint1` | grow the size of memory |
 
 The `memory_immediate` type is encoded as follows:
 
@@ -567,7 +567,7 @@ natural alignment. The bits after the
 `log(memory-access-size)` least-significant bits must be set to 0. These bits are reserved for future use
 (e.g., for shared memory ordering requirements).
 
-The `flags` immediate to the `current_memory` and `grow_memory` operators is reserved for future use and must be 0 in the MVP.
+The `reserved` immediate to the `current_memory` and `grow_memory` operators is for future use and must be 0 in the MVP.
 
 ## Constants ([described here](Semantics.md#constants))
 
