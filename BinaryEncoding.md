@@ -1,3 +1,5 @@
+---
+---
 # Binary Encoding
 
 This document describes the [portable](Portability.md) binary encoding of the WebAssembly modules.

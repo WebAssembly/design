@@ -1,3 +1,5 @@
+---
+---
 # Security
 
 The security model of WebAssembly has two important goals: (1) protect *users*

@@ -1,3 +1,5 @@
+---
+---
 # Non-Web Embeddings
 
 While WebAssembly is designed to run [on the Web](Web.md), it is

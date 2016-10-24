@@ -1,3 +1,5 @@
+---
+---
 # Design Rationale
 
 This document describes rationales for WebAssembly's design decisions, acting as
