@@ -13,12 +13,14 @@ like.
 Since some WebAssembly features add operators and all WebAssembly code in a
 module is validated ahead-of-time, the usual JavaScript feature detection
 pattern:
+
 ```
 if (foo)
     foo();
 else
     alternativeToFoo();
 ```
+
 won't work in WebAssembly (if `foo` isn't supported, `foo()` will fail to
 validate).
 
@@ -68,6 +70,7 @@ that one function was an optimized, but feature-dependent, version of another
 function (similar to the
 [`ifunc` attribute](https://gcc.gnu.org/onlinedocs/gcc-4.7.2/gcc/Function-Attributes.html#index-g_t_0040code_007bifunc_007d-attribute-2529),
 but without the callback):
+
 ```
 #include <xmmintrin.h>
 void foo(...) {
@@ -85,6 +88,7 @@ void foo_f64x2(...) __attribute__((optimizes("foo","f64x2"))) {
 ...
 foo(...);                 // calls either foo or foo_f64x2
 ```
+
 In this example, the toolchain could emit both `foo` and `foo_f64x2` as
 function definitions in the "specific layer" binary format. The load-time
 polyfill would then replace `foo` with `foo_f64x2` if

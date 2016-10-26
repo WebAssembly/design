@@ -4,6 +4,7 @@ Tooling for in-browser execution is often of uneven quality. WebAssembly aims at
 making it possible to support truly great tooling by exposing
 [low-level capabilities][] instead of prescribing which tooling should be
 built. This enables:
+
 * Porting of existing and familiar tooling to WebAssembly;
 * Building new tooling that's particularly well suited to WebAssembly.
 
@@ -16,6 +17,7 @@ expectations on tooling means WebAssembly has the features required to build
 rich applications for non-developers.
 
 The tooling we expect to support includes:
+
 * Editors:
   - Editors such as vim and emacs should *just work*.
 * Compilers and language virtual machines:

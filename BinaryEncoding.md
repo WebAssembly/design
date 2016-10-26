@@ -71,14 +71,17 @@ Note: Gaps are reserved for future extensions. The use of a signed scheme is so 
 
 ### `value_type`
 A `varint7` indicating a [value type](Semantics.md#types). One of:
+
 * `i32`
 * `i64`
 * `f32`
 * `f64`
+
 as encoded above.
 
 ### `block_type`
 A `varint7` indicating a block signature. These types are encoded as:
+
 * either a [`value_type`](#value_type) indicating a signature with a single result
 * or `-0x40` (i.e., the byte `0x40`) indicating a signature with 0 results.
 
@@ -86,6 +89,7 @@ A `varint7` indicating a block signature. These types are encoded as:
 
 A `varint7` indicating the types of elements in a [table](AstSemantics.md#table).
 In the MVP, only one type is available:
+
 * [`anyfunc`](AstSemantics.md#table)
 
 Note: In the future, other element types may be allowed.
@@ -130,6 +134,7 @@ The description of a memory.
 
 ### `external_kind`
 A single-byte unsigned integer indicating the kind of definition being imported or defined:
+
 * `0` indicating a `Function` [import](Modules.md#imports) or [definition](Modules.md#function-and-code-sections)
 * `1` indicating a `Table` [import](Modules.md#imports) or [definition](Modules.md#table-section)
 * `2` indicating a `Memory` [import](Modules.md#imports) or [definition](Modules.md#linear-memory-section)
@@ -228,6 +233,7 @@ The import section declares all imports that will be used in the module.
 | entries | `import_entry*` | repeated import entries as described below |
 
 #### Import entry
+
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | module_len | `varuint32` | module string length |
@@ -330,6 +336,7 @@ The encoding of the [Export section](Modules.md#exports):
 | entries | `export_entry*` | repeated export entries as described below |
 
 #### Export entry
+
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | field_len | `varuint32` | field name string length |

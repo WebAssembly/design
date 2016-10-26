@@ -9,6 +9,7 @@ module instances can access the same shared state which is the basis for
 are also designed to [integrate with ES6 modules](#integration-with-es6-modules).
 
 A module contains the following sections:
+
 * [import](#imports)
 * [export](#exports)
 * [start](#module-start-function)
@@ -21,6 +22,7 @@ A module contains the following sections:
 
 A module also defines several *index spaces* which are statically indexed by
 various operators and section fields in the module:
+
 * the [function index space](#function-index-space)
 * the [global index space](#global-index-space)
 * the [linear memory index space](#linear-memory-index-space)
@@ -30,6 +32,7 @@ various operators and section fields in the module:
 
 A module can declare a sequence of **imports** which are provided, at
 instantiation time, by the host environment. There are several kinds of imports:
+
 * **function imports**, which can be called inside the module by the
   [`call`](Semantics.md#calls) operator;
 * **global imports**, which can be accessed inside the module by the
@@ -86,6 +89,7 @@ less-or-equal maximum length. In the MVP, every table is a [default table](Seman
 and thus there may be at most one table import or table section.
 
 Since the WebAssembly spec does not define how import names are interpreted:
+
 * the [Web environment](Web.md#names) defines names to be UTF8-encoded strings;
 * the host environment can interpret the module name as a file path, a URL,
   a key in a fixed set of builtin modules or the host environment may invoke a
@@ -123,6 +127,7 @@ define when this parsing/linking/execution occurs. An additional extension
 to the HTML spec is required to say when a script is parsed as a module instead
 of normal global code. This work is [ongoing](https://github.com/whatwg/loader/blob/master/roadmap.md).
 Currently, the following entry points for modules are being considered:
+
 * `<script type="module">`;
 * an overload to the `Worker` constructor;
 * an overload to the `importScripts` Worker API;
@@ -191,6 +196,7 @@ before calling any other module function. In the second case, the environment is
 expected to call the module function indexed 42. This number is the function index starting from 0 (same as for `export`).
 
 A module can:
+
 * Only have at most a start node
 * If a module contains a start node, the function must be defined in the module
 * The start function will be called after module loading and before any call to the module
@@ -277,6 +283,7 @@ by their index into the corresponding [index space](Modules.md).
 ## Function and Code sections
 
 A single logical function definition is defined in two sections: 
+
  * the *function* section declares the signatures of each internal function
    definition in the module;
  * the *code* section contains the [function body](BinaryEncoding.md#function-bodies)
@@ -294,6 +301,7 @@ function definitions, assigning monotonically-increasing indices based on the
 order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 
 The function index space is used by:
+
 * [calls](Semantics.md#calls), to identify the callee of a direct call
 
 ## Global Index Space
@@ -303,6 +311,7 @@ global definitions, assigning monotonically-increasing indices based on the
 order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 
 The global index space is used by:
+
 * [global variable access operators](Semantics.md#global-variables), to
   identify the global variable to read/write
 * [data segments](#data-section), to define the offset of a data segment
@@ -334,6 +343,7 @@ a placeholder for when there can be
 
 Initializer expressions are evaluated at instantiation time and are currently
 used to:
+
  * define the initial value of [global variables](#global-section)
  * define the offset of a [data segment](#data-section) or 
    [elements segment](#elements-section)
@@ -347,6 +357,7 @@ expressions.
 In the MVP, to keep things simple while still supporting the basic needs
 of [dynamic linking](DynamicLinking.md), initializer expressions are restricted
 to the following nullary operators:
+
  * the four [constant operators](Semantics.md#constants); and
  * `get_global`, where the global index must refer to an immutable import.
 

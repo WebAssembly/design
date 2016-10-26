@@ -1,4 +1,4 @@
-## Past
+## Past Events
 
 | Date | Title | Slides | Video | Presenter(s) |
 |-----:|-------|:------:|:-----:|--------------|

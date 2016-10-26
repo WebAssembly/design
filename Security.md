@@ -9,6 +9,7 @@ constraints of (1).
 
 Each WebAssembly module executes within a sandboxed environment separated from
 the host runtime using fault isolation techniques. This implies:
+
   * Applications execute independently, and can't escape the sandbox without
   going through appropriate APIs.
   * Applications generally execute deterministically
@@ -30,6 +31,7 @@ at load time, even when [dynamic linking](DynamicLinking.md) is used. This
 allows implicit enforcement of [control-flow integrity][] (CFI) through
 structured control-flow. Since compiled code is immutable and not observable at
 runtime, WebAssembly programs are protected from control flow hijacking attacks.
+
   * [Function calls](Semantics.md#calls) must specify the index of a target
   that corresponds to a valid entry in the
   [function index space](Modules.md#function-index-space) or
@@ -64,6 +66,7 @@ signal abnormal behavior to the execution environment. In a browser, this is
 represented as a JavaScript exception. Support for
 [module-defined trap handlers](FutureFeatures.md#trappingor-non-trapping-strategies)
 will be implemented in the future. Operations that can trap include:
+
   * specifying an invalid index in any index space,
   * performing an indirect function call with a mismatched signature,
   * exceeding the maximum size of the protected call stack,

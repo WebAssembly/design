@@ -2,6 +2,7 @@
 
 WebAssembly is a [portable](Portability.md) [sandboxed](Security.md) platform
 with limited, local, nondeterminism.
+
   * *Limited*: nondeterministic execution can only occur in a small number of
     well-defined cases (described below) and, in those cases, the implementation
     may select from a limited set of possible behaviors.

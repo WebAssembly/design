@@ -3,6 +3,7 @@
 After the [MVP](MVP.md), to realize the [high-level goals](HighLevelGoals.md)
 of (1) integrating well with the existing Web platform and (2) supporting
 languages other than C++, WebAssembly needs to be able to:
+
 * reference DOM and other Web API objects directly from WebAssembly code;
 * call Web APIs (passing primitives or DOM/GC/Web API objects) directly from
   WebAssembly without calling through JavaScript; and
@@ -59,6 +60,7 @@ in a Web environment.
 Using [opaque reference types](GC.md#opaque-reference-types),
 JavaScript values could be made accessible to WebAssembly code through a builtin
 `js` module providing:
+
 * an exported `string` opaque reference type and exported functions
   to allocate, query length, and index `string` values;
 * an exported `object` opaque reference type and exported functions
@@ -81,6 +83,7 @@ Using [opaque reference types](GC.md#opaque-reference-types), it would be
 possible to allow direct access to DOM and Web APIs by mapping their
 [WebIDL](http://www.w3.org/TR/WebIDL) interfaces to WebAssembly builtin module 
 signatures. In particular:
+
 * WebIDL interfaces (like 
   [WebGLRenderingContextBase](https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.14)
   or [WebGLTexture](https://www.khronos.org/registry/webgl/specs/latest/1.0/#5.9))
@@ -110,6 +113,7 @@ would effectively be skipped.
 
 Another important issue is mapping WebIDL values types that aren't simple
 [primitive types](http://www.w3.org/TR/WebIDL/#dfn-primitive-type):
+
 * [Dictionary types](http://www.w3.org/TR/WebIDL/#idl-dictionary)
   would [appear](http://www.w3.org/TR/WebIDL/#es-dictionary) to require
   JavaScript objects but are actually defined as values such that they can
@@ -144,6 +148,7 @@ direct GC allocation and field access from WebAssembly code through
 
 There is a lot of the design left to
 consider for this feature, but a few points of tentative agreement are:
+
 * To avoid baking in a single language's object model, define low-level GC
   primitives (viz., structs and arrays) and allow the source language compiler
   to build up features like virtual dispatch and access control.

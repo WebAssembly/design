@@ -20,6 +20,7 @@ achieved by having module A export functions, tables and memories that are
 imported by B. A C++ toolchain can expose this functionality by using the
 same function attributes currently used to export/import symbols from
 native DSOs/DLLs:
+
 ```
 #ifdef _WIN32
 #  define EXPORT __declspec(dllexport)
@@ -34,15 +35,19 @@ typedef void (**PF)();
 IMPORT PF imp();
 EXPORT void exp() { (*imp())(); }
 ```
+
 This code would, at a minimum, generate a WebAssembly module with imports for:
+
 * the function `imp`
 * the heap used to perfom the load, when dereferencing the return value of `imp`
 * the table used to perform the pointer-to-function call
 
 and exports for:
+
 * the function `exp`
 
 A more realistic module using libc would have more imports including:
+
 * an immutable `i32` global import for the offset in linear memory to place
   global [data segments](Modules.md#data-section) and later use as a constant
   base address when loading and storing from globals
@@ -57,6 +62,7 @@ toolchain to put implementation-internal names in a separate namespace, avoiding
 the need for `__`-prefix conventions).
 
 To implement run-time dynamic linking (e.g., `dlopen` and `dlsym`):
+
 * `dlopen` would compile and instantiate a new module, storing the compiled
   instance in a host-environment table, returning the index to the caller.
 * `dlsym` would be given this index, pull the instance out of the table,
