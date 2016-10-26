@@ -10,6 +10,7 @@ even on mobile devices, which leads to roughly the same functionality as
 
 The major design components of the MVP have been broken up into separate
 documents:
+
 * The distributable, loadable and executable unit of code in WebAssembly
   is called a [module](Modules.md).
 * The behavior of WebAssembly code in a module is specified in terms of 

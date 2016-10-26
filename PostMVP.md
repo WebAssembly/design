@@ -47,6 +47,7 @@ operators (no different from `i32.add`) or exports of a builtin SIMD module.
 
 The WebAssembly MVP may support four no-exception
 modes for C++:
+
 * Compiler transforms `throw` to `abort()`.
 * Compiler-enforced `-fno-exceptions` mode (note [caveats][]).
 * Compiler conversion of exceptions to branching at all callsites.

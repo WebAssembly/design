@@ -54,9 +54,11 @@ The following intrinsic objects are added:
 #### `WebAssembly.validate`
 
 The `validate` function has the signature:
+
 ```
 Boolean validate(BufferSource bytes)
 ```
+
 If the given `bytes` argument is not a
 [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
 then a `TypeError` is thrown.
@@ -67,9 +69,11 @@ specification](https://github.com/WebAssembly/spec/blob/master/interpreter/) and
 #### `WebAssembly.compile`
 
 The `compile` function has the signature:
+
 ```
 Promise<WebAssembly.Module> compile(BufferSource bytes)
 ```
+
 If the given `bytes` argument is not a
 [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
 the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
@@ -94,15 +98,18 @@ asynchronous, background, streaming compilation.
 
 A `WebAssembly.Module` object represents the stateless result of compiling a
 WebAssembly binary-format module and contains one internal slot:
+
  * [[Module]] : an [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L176)
    which is the spec definition of a module
 
 ### `WebAssembly.Module` Constructor
 
 The `WebAssembly.Module` constructor has the signature:
+
 ```
 new Module(BufferSource bytes)
 ```
+
 If the NewTarget is `undefined`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 exception is thrown (i.e., this constructor cannot be called as a function without `new`).
 
@@ -112,6 +119,7 @@ a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-t
 exception is thrown.
 
 Otherwise, this function performs synchronous compilation of the `BufferSource`:
+
 * The byte range delimited by the `BufferSource` is first logically decoded 
   according to [BinaryEncoding.md](BinaryEncoding.md) and then validated
   according to the rules in [spec/valid.ml](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/valid.ml#L415).
@@ -143,19 +151,23 @@ A `WebAssembly.Instance` object represents the instantiation of a
 `WebAssembly.Module` into a
 [realm](http://tc39.github.io/ecma262/#sec-code-realms) and has one
 internal slot:
+
 * [[Instance]] : an [`Instance.instance`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L17)
   which is the WebAssembly spec definition of an instance
 
 as well as one plain data property (configurable, writable, enumerable)
 added by the constructor:
+
 * exports : a [Module Namespace Object](http://tc39.github.io/ecma262/#sec-module-namespace-objects)
 
 ### `WebAssembly.Instance` Constructor
 
 The `WebAssembly.Instance` constructor has the signature:
+
 ```
 new Instance(moduleObject [, importObject])
 ```
+
 If the NewTarget is `undefined`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 exception is thrown (i.e., this
 constructor cannot be called as a function without `new`).
@@ -179,6 +191,7 @@ Let `imports` be an initially-empty list of [`external`](https://github.com/WebA
 
 For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L168)
 `i` in `module.imports`:
+
 * Let `o` be the resultant value of performing
   [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L170)).
 * If `Type(o)` is not Object, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
@@ -221,6 +234,7 @@ given `module` and `imports`.
 
 Let `exports` be a list of (string, JS value) pairs that is mapped from 
 each [external](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L24) value `e` in `instance.exports` as follows:
+
 * If `e` is a [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L12) `c`:
   * If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) `func` in `funcs` whose `func.[[Closure]]` equals `c`, then return `func`.
   * (Note: At most one wrapper is created for any closure, so `func` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import that is already an [Exported Function Exotic Object](#exported-function-exotic-objects), then the original function object will be found. For imports that are regular JS functions, a new wrapper will be created.)
@@ -258,6 +272,7 @@ each [external](https://github.com/WebAssembly/spec/blob/master/interpreter/spec
     * Return `table`.
 
 Note: For the purpose of the above algorithm, two [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7) values are considered equal if and only if:
+
 * Either they are both WebAssembly functions for the same instance and referring to the same function definition.
 * Or they are identical host functions (i.e., each host function value created from a JavaScript function is considered fresh).
 
@@ -318,20 +333,24 @@ of *Exported Function*
 [Exotic Object](http://tc39.github.io/ecma262/#sec-built-in-exotic-object-internal-methods-and-slots).
 Like [Bound Function](http://tc39.github.io/ecma262/#sec-bound-function-exotic-objects) Exotic Object,
 Exported Functions do not have the normal function internal slots but instead have:
+
  * [[Closure]] : the [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7)
    representing the function
 
 as well as the internal slots required of all builtin functions:
+
  * [[Prototype]] : [%FunctionPrototype%](http://tc39.github.io/ecma262/#sec-well-known-intrinsic-objects)
  * [[Extensible]] : `true`
  * [[Realm]] : the [current Realm Record](http://tc39.github.io/ecma262/#current-realm)
  * [[ScriptOrModule]] : [`GetActiveScriptOrModule`](http://tc39.github.io/ecma262/#sec-getactivescriptormodule)
 
 Exported Functions also have the following data properties:
+
 * the `length` property is set to the exported function's signature's arity 
 * the `name` is set to `index` as a Number value
 
 WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined as:
+
  * Let `args` be an empty list of coerced values.
  * Let `inArity` be the number of arguments and `outArity` be the number of results in the [`function type`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/eval.ml#L106) of the function's [[Closure]].
  * For all values `v` in `argValues`, in the order of their appearance:
@@ -352,6 +371,7 @@ call one with the `new` operator.
 A `WebAssembly.Memory` object contains a single [linear memory](Semantics.md#linear-memory)
 which can be simultaneously referenced by multiple `Instance` objects. Each
 `Memory` object has two internal slots:
+
  * [[Memory]] : a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/memory.mli)
  * [[BufferObject]] : the current `ArrayBuffer` whose [[ArrayBufferByteLength]]
    matches the current byte length of [[Memory]]
@@ -359,9 +379,11 @@ which can be simultaneously referenced by multiple `Instance` objects. Each
 ### `WebAssembly.Memory` Constructor
 
 The `WebAssembly.Memory` constructor has the signature:
+
 ```
 new Memory(memoryDescriptor)
 ```
+
 If the NewTarget is `undefined`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 exception is thrown (i.e., this constructor cannot be called as a function without `new`).
 
@@ -398,6 +420,7 @@ Return a new `WebAssembly.Memory` instance with [[Memory]] set to `m` and
 ### `WebAssembly.Memory.prototype.grow`
 
 The `grow` method has the signature:
+
 ```
 grow(delta)
 ```
@@ -436,15 +459,18 @@ is thrown. Otherwise return `M.[[BufferObject]]`.
 A `WebAssembly.Table` object contains a single [table](Semantics.md#table)
 which can be simultaneously referenced by multiple `Instance` objects. Each
 `Table` object has two internal slots:
+
  * [[Table]] : a [`Table.table`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/table.mli#L1)
  * [[Values]] : an array whose elements are either `null` or [Exported Function Exotic Object](#exported-function-exotic-objects)
 
 ### `WebAssembly.Table` Constructor
 
 The `WebAssembly.Table` constructor has the signature:
+
 ```
 new Table(tableDescriptor)
 ```
+
 If the NewTarget is `undefined`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 exception is thrown (i.e., this constructor cannot be called as a function without `new`).
 
@@ -493,9 +519,11 @@ On failure, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-ty
 ### `WebAssembly.Table.prototype.get`
 
 This method has the following signature
+
 ```
 get(index)
 ```
+
 Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
@@ -508,6 +536,7 @@ Return `T.[[Values]][i]`.
 ### `WebAssembly.Table.prototype.set`
 
 This method has the following signature
+
 ```
 set(index, value)
 ```
@@ -576,6 +605,7 @@ Return `i`.
 ## Sample API Usage
 
 Given `demo.was` (encoded to `demo.wasm`):
+
 ```lisp
 (module
     (import $i1 "m" "import1")
@@ -586,7 +616,9 @@ Given `demo.was` (encoded to `demo.wasm`):
     (export "f" $f)
 )
 ```
+
 and the following JavaScript, run in a browser:
+
 ```javascript
 fetch('demo.wasm').then(response =>
     response.arrayBuffer()
@@ -603,5 +635,6 @@ fetch('demo.wasm').then(response =>
 ```
 
 ## TODO
+
 * `WebAssembly.Module` `exports`/`imports` properties (reflection)
 * JS API for cyclic imports (perhaps a Promise-returning `WebAssembly.instantiate`?)

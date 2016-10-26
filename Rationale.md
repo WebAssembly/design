@@ -143,6 +143,7 @@ information without significant extra effort.
 
 The [optional maximum size](Modules.md#linear-memory-section) is designed to
 address a number of competing constraints:
+
 1. Allow WebAssembly modules to grab large regions of contiguous memory in a
    32-bit address space early in an application's startup before the virtual
    address space becomes fragmented by execution of the application.
@@ -158,6 +159,7 @@ address a number of competing constraints:
    security hazards, and optimization challenges.
 
 The optional maximum addresses these constraints:
+
 * (1) is addressed by specifying a large maximum memory size. Simply setting a
   large *initial* memory size has problems due to (3) and the fact that a
   failure to allocate initial is a fatal error which makes the choice of "how
@@ -198,7 +200,7 @@ may be added in the future.
 ## Nop
 
 The nop operator does not produce a value or cause side effects.
-It is nevertheless useful for compilers and tools, which sometimes need to replace instructions with a ```nop```. Without a ```nop``` instruction, code generators would use alternative *does-nothing* opcode patterns that consume space in a module and may have a runtime cost. Finding an appropriate opcode that does nothing but has the appropriate type for the node's location is nontrivial. The existence of many different ways to encode ```nop``` - often mixed in the same module - would reduce the efficiency of compression algorithms.
+It is nevertheless useful for compilers and tools, which sometimes need to replace instructions with a `nop`. Without a `nop` instruction, code generators would use alternative *does-nothing* opcode patterns that consume space in a module and may have a runtime cost. Finding an appropriate opcode that does nothing but has the appropriate type for the node's location is nontrivial. The existence of many different ways to encode `nop` - often mixed in the same module - would reduce the efficiency of compression algorithms.
 
 
 ## Locals
@@ -459,6 +461,7 @@ consoles or server side have a similar sandboxing mechanism).
 Given that text is so compressible and it is well known that it is hard to beat
 gzipped source, is there any win from having a binary format over a text format?
 Yes:
+
 * Large reductions in payload size can still significantly decrease the
   compressed file size.
   * Experimental results from a

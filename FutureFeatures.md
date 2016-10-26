@@ -1,4 +1,4 @@
-# Feature to add after the MVP
+# Features to add after the MVP
 
 These are features that make sense in the context of the
 [high-level goals](HighLevelGoals.md) of WebAssembly but are not considered part
@@ -14,6 +14,7 @@ This is covered in the [tooling](Tooling.md) section.
 ## Finer-grained control over memory
 
 Provide access to safe OS-provided functionality including:
+
 * `map_file(addr, length, Blob, file-offset)`: semantically, this operator
    copies the specified range from `Blob` into the range `[addr, addr+length)`
    (where `addr+length <= memory_size`) but implementations are encouraged
@@ -51,7 +52,7 @@ can allocate noncontiguous virtual address ranges. See the
 
 Some platforms offer support for memory pages as large as 16GiB, which 
 can improve  the efficiency of memory management in some situations. WebAssembly
-may offer programs the option to specify a larger page size than the [default] (Semantics.md#resizing).
+may offer programs the option to specify a larger page size than the [default](Semantics.md#resizing).
 
 ## More expressive control flow
 
@@ -59,11 +60,13 @@ Some types of control flow (especially irreducible and indirect) cannot be
 expressed with maximum efficiency in WebAssembly without patterned output by the
 relooper and [jump-threading](https://en.wikipedia.org/wiki/Jump_threading)
 optimizations in the engine. Target uses for more expressive control flow are:
+
 * Language interpreters, which often use computed-`goto`.
 * Functional language support, where guaranteed tail call optimization is
   expected for correctness and performance.
 
 Options under consideration:
+
 * No action, `while` and `switch` combined with jump-threading are enough.
 * Just add `goto` (direct and indirect).
 * Add new control-flow primitives that address common patterns.
@@ -403,6 +406,7 @@ can begin.
 
 There are two future features that would allow streaming compilation
 of WebAssembly in browsers:
+
 * [ES6 Module integration](Modules.md#integration-with-es6-modules) would allow
   the browser's network layer to feed a stream directly into the engine.
 * The asynchronous [`WebAssembly.compile`](JS.md#wasmcompile) function could be 
@@ -444,6 +448,7 @@ it was possible to write a WebAssembly dynamic loader in WebAssembly. As a
 prerequisite, WebAssembly would need first-class support for 
 [GC references](GC.md) on the stack and in locals. Given that, the following
 could be added:
+
 * `get_table`/`set_table`: get or set the table element at a given dynamic
   index; the got/set value would have a GC reference type
 * `grow_table`: grow the current table (up to the optional maximum), similar to
@@ -453,6 +458,7 @@ could be added:
 Additionally, in the MVP, the only allowed element type of tables is a generic
 "anyfunc" type which simply means the element can be called but there is no
 static signature validation check. This could be improved by allowing:
+
 * functions with a particular signature, allowing wasm generators to use
   multiple homogeneously-typed function tables (instead of a single
   heterogeneous function table) which eliminates the implied dynamic signature

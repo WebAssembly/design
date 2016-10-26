@@ -1,6 +1,7 @@
 # Text Format
 
 The purpose of this text format is to support:
+
 * View Source on a WebAssembly module, thus fitting into the Web (where every
   source can be viewed) in a natural way.
 * Presentation in browser development tools when source maps aren't present
@@ -11,6 +12,7 @@ The purpose of this text format is to support:
 The text format is equivalent and isomorphic to the [binary format](BinaryEncoding.md).
 
 The text format will be standardized, but only for tooling purposes:
+
 * Compilers will support this format for `.S` and inline assembly.
 * Debuggers and profilers will present binary code using this textual format.
 * Browsers will not parse the textual format on regular web content in order to
