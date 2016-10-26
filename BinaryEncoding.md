@@ -31,6 +31,8 @@ for a proposal for layer 1 structural compression.
 
 # Data types
 
+## Numbers
+
 ### `uintN`
 An unsigned integer of _N_ bits,
 represented in _N_/8 bytes in [little endian](https://en.wikipedia.org/wiki/Endianness#Little-endian) order.
@@ -47,22 +49,84 @@ where the former two are used for compatibility with potential future extensions
 A [Signed LEB128](https://en.wikipedia.org/wiki/LEB128#Signed_LEB128) variable-length integer, limited to _N_ bits (i.e., the values [-2^(_N_-1), +2^(_N_-1)-1]),
 represented by _at most_ ceil(_N_/7) bytes that may contain padding `0x80` or `0xFF` bytes.
 
-Note: Currently, the only sizes used are `varint32` and `varint64`.
+Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
+
+## Language Types
+
+All types are distinguished by a negative `varint7` values that is the first byte of their encoding (representing a type constructor):
+
+| Opcode | Type constructor |
+|--------|------------------|
+| `-0x01` (i.e., the byte `0x7f`) | `i32` |
+| `-0x02` (i.e., the byte `0x7e`) | `i32` |
+| `-0x03` (i.e., the byte `0x7d`) | `f32` |
+| `-0x04` (i.e., the byte `0x7c`) | `f64` |
+| `-0x10` (i.e., the byte `0x70`) | `anyfunc` |
+| `-0x20` (i.e., the byte `0x60`) | `func` |
+| `-0x40` (i.e., the byte `0x40`) | pseudo type for representing an empty `block_type` |
+
+Some of these will be followed by additional fields, see below.
+
+Note: Gaps are reserved for future extensions. The use of a signed scheme is so that types can coexist in a single space with (positive) indices into the type section, which may be relevant for future extensions of the type system.
 
 ### `value_type`
-A single-byte unsigned integer indicating a [value type](Semantics.md#types). These types are encoded as:
-* `1` indicating type `i32` 
-* `2` indicating type `i64` 
-* `3` indicating type `f32` 
-* `4` indicating type `f64`
+A `varint7` indicating a [value type](Semantics.md#types). One of:
+* `i32`
+* `i64`
+* `f32`
+* `f64`
+as encoded above.
 
-### `inline_signature_type`
-A single-byte unsigned integer indicating a signature. These types are encoded as:
-* `0` indicating a signature with 0 results.
-* `1` indicating a signature with 1 result of type `i32`.
-* `2` indicating a signature with 1 result of type `i64`.
-* `3` indicating a signature with 1 result of type `f32`.
-* `4` indicating a signature with 1 result of type `f64`.
+### `block_type`
+A `varint7` indicating a block signature. These types are encoded as:
+* either a [`value_type`](#value_type) indicating a signature with a single result
+* or `-0x40` (i.e., the byte `0x40`) indicating a signature with 0 results.
+
+### `elem_type`
+
+A `varint7` indicating the types of elements in a [table](AstSemantics.md#table).
+In the MVP, only one type is available:
+* [`anyfunc`](AstSemantics.md#table)
+
+Note: In the future, other element types may be allowed.
+
+### `func_type`
+The description of a function signature. Its type constructor is followed by an additional description:
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| form | `varint7` | the value for the `func` type constructor as defined above |
+| param_count | `varuint32` | the number of parameters to the function |
+| param_types | `value_type*` | the parameter types of the function |
+| return_count | `varuint1` | the number of results from the function |
+| return_type | `value_type?` | the result type of the function (if return_count is 1) |
+
+Note: In the future, `return_count` and `return_type` might be generalised to allow multiple values.
+
+## Other Types
+
+### `global_type`
+The description of a global variable.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| content_type | `value_type` | type of the value |
+| mutability | `varuint1` | `0` if immutable, `1` if mutable |
+
+### `table_type`
+The description of a table.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| element_type | `elem_type` | the type of elements |
+| limits | `resizable_limits` | see [below](#resizable_limits) |
+
+### `memory_type`
+The description of a memory.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| limits | `resizable_limits` | see [below](#resizable_limits) |
 
 ### `external_kind`
 A single-byte unsigned integer indicating the kind of definition being imported or defined:
@@ -81,8 +145,7 @@ A packed tuple that describes the limits of a
 | initial | `varuint32` | initial length (in units of table elements or wasm pages) |
 | maximum | `varuint32`? | only present if specified by `flags` |
 
-The "flags" field may later be extended to include a flag for sharing (between
-threads).
+Note: In the future, the "flags" field may be extended, e.g., to include a flag for sharing between threads.
 
 ### `init_expr`
 The encoding of an [initializer expression](Modules.md#initializer-expression)
@@ -104,7 +167,7 @@ The module starts with a preamble of two fields:
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
-| version | `uint32` | Version number, currently 12. The version for MVP will be reset to 1. |
+| version | `uint32` | Version number, currently 0xd. The version for MVP will be reset to 1. |
 
 The module preamble is followed by a sequence of sections.
 Each section is identified by a 1-byte *section code* that encodes either a known section or a user-defined section.
@@ -151,18 +214,9 @@ The type section declares all function signatures that will be used in the modul
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | count | `varuint32` | count of type entries to follow |
-| entries | `type_entry*` | repeated type entries as described below |
+| entries | `func_type*` | repeated type entries as described below |
 
-#### Type entry
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| form | `varuint7` | `0x40`, indicating a function type |
-| param_count | `varuint32` | the number of parameters to the function |
-| param_types | `value_type*` | the parameter types of the function |
-| return_count | `varuint1` | the number of results from the function |
-| return_type | `value_type?` | the result type of the function (if return_count is 1) |
-
-(Note: In the future, this section may contain other forms of type entries as well, which can be distinguished by the `form` field.)
+Note: In the future, this section may contain other forms of type entries as well, which can be distinguished by the `form` field of the type encoding.
 
 ### Import section
 
@@ -186,27 +240,27 @@ Followed by, if the `kind` is `Function`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| sig_index | `varuint32` | signature index of the import |
+| type | `varuint32` | type index of the function signature |
 
 or, if the `kind` is `Table`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| element_type | `varuint7` | `0x20`, indicating [`anyfunc`](Semantics.md#table) |
-| | `resizable_limits` | see [above](#resizable_limits) |
+| type | `table_type` | type of the imported table |
 
 or, if the `kind` is `Memory`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| | `resizable_limits` | see [above](#resizable_limits) |
+| type | `memory_type` | type of the imported memory |
 
 or, if the `kind` is `Global`:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| type | `value_type` | type of the imported global |
-| mutability | `varuint1` | `0` if immutable, `1` if mutable; must be `0` in the MVP |
+| type | `global_type` | type of the imported global |
+
+Note that, in the MVP, only immutable global variables can be imported.
 
 ### Function section
 
@@ -227,11 +281,6 @@ The encoding of a [Table section](Modules.md#table-section):
 | count | `varuint32` | indicating the number of tables defined by the module |
 | entries | `table_type*` | repeated `table_type` entries as described below |
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| element_type | `varuint7` | `0x20`, indicating [`anyfunc`](Semantics.md#table) |
-| | `resizable_limits` | see [above](#resizable_limits) |
-
 In the MVP, the number of tables must be no more than 1.
 
 ### Memory section
@@ -244,10 +293,6 @@ The encoding of a [Memory section](Modules.md#linear-memory-section):
 | ----- |  ----- | ----- |
 | count | `varuint32` | indicating the number of memories defined by the module |
 | entries | `memory_type*` | repeated `memory_type` entries as described below |
-
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| | `resizable_limits` | see [above](#resizable_limits) |
 
 Note that the initial/maximum fields are specified in units of 
 [WebAssembly pages](Semantics.md#linear-memory).
@@ -270,8 +315,7 @@ and with the given initializer.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| type | `value_type` | type of the variables |
-| mutability | `varuint1` | `0` if immutable, `1` if mutable |
+| type | `global_type` | type of the variables |
 | init | `init_expr` | the initial value of the global |
 
 Note that, in the MVP, only immutable global variables can be exported.
@@ -425,18 +469,16 @@ It is legal to have several entries with the same type.
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
 | `unreachable` | `0x00` | | trap immediately |
-| `block` | `0x01` | sig : `inline_signature_type` | begin a sequence of expressions, yielding 0 or 1 values |
-| `loop` | `0x02` |  sig : `inline_signature_type` | begin a block which can also form control flow loops |
-| `if` | `0x03` | sig : `inline_signature_type` | begin if expression |
-| `else` | `0x04` | | begin else expression of if |
-| `select` | `0x05` | | select one of two values based on condition |
-| `br` | `0x06` | relative_depth : `varuint32` | break that targets an outer nested block |
-| `br_if` | `0x07` | relative_depth : `varuint32` | conditional break that targets an outer nested block |
-| `br_table` | `0x08` | see below | branch table control flow construct |
-| `return` | `0x09` | | return zero or one value from this function |
-| `drop` | `0x0b` | | ignore value |
-| `nop` | `0x0a` | | no operation |
-| `end` | `0x0f` | | end a block, loop, or if |
+| `nop` | `0x01` | | no operation |
+| `block` | `0x02` | sig : `inline_signature_type` | begin a sequence of expressions, yielding 0 or 1 values |
+| `loop` | `0x03` |  sig : `inline_signature_type` | begin a block which can also form control flow loops |
+| `if` | `0x04` | sig : `inline_signature_type` | begin if expression |
+| `else` | `0x05` | | begin else expression of if |
+| `end` | `0x0b` | | end a block, loop, or if |
+| `br` | `0x0c` | relative_depth : `varuint32` | break that targets an outer nested block |
+| `br_if` | `0x0d` | relative_depth : `varuint32` | conditional break that targets an outer nested block |
+| `br_table` | `0x0e` | see below | branch table control flow construct |
+| `return` | `0x0f` | | return zero or one value from this function |
 
 The _sig_ fields of `block` and `if` operators specify function signatures
 which describe their use of the operand stack.
@@ -454,53 +496,63 @@ The `br_table` operator implements an indirect branch. It accepts an optional va
 branches to the block or loop at the given offset within the `target_table`. If the input value is 
 out of range, `br_table` branches to the default target.
 
-## Basic operators ([described here](Semantics.md#constants))
+Note: Gaps in the opcode space, here and elsewhere, are reserved for future extensions.
+
+## Call operators ([described here](Semantics.md#calls))
 
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.const` | `0x10` | value : `varint32` | a constant value interpreted as `i32` |
-| `i64.const` | `0x11` | value : `varint64` | a constant value interpreted as `i64` |
-| `f64.const` | `0x12` | value : `uint64` | a constant value interpreted as `f64` |
-| `f32.const` | `0x13` | value : `uint32` | a constant value interpreted as `f32` |
-| `get_local` | `0x14` | local_index : `varuint32` | read a local variable or parameter |
-| `set_local` | `0x15` | local_index : `varuint32` | write a local variable or parameter |
-| `tee_local` | `0x19` | local_index : `varuint32` | write a local variable or parameter and return the same value |
-| `get_global` | `0xbb` | global_index : `varuint32` | read a global variable |
-| `set_global` | `0xbc` | global_index : `varuint32` | write a global variable |
-| `call` | `0x16` | function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
-| `call_indirect` | `0x17` | type_index : `varuint32` | call a function indirect with an expected signature |
+| `call` | `0x10` | function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
+| `call_indirect` | `0x11` | type_index : `varuint32`, reserved : `varuint1` | call a function indirect with an expected signature |
 
-The `call_indirect` operator takes a list of function arguments and as the last operand the index into the table.
+The `call_indirect` operator takes a list of function arguments and as the last operand the index into the table. Its `reserved` immediate is for future use and must be `0` in the MVP.
+
+## Parametric operators ([described here](Semantics.md#type-parametric-operators))
+
+| Name | Opcode | Immediates | Description |
+| ---- | ---- | ---- | ---- |
+| `drop` | `0x1a` | | ignore value |
+| `select` | `0x1b` | | select one of two values based on condition |
+
+## Variable access ([described here](Semantics.md#local-variables))
+
+| Name | Opcode | Immediates | Description |
+| ---- | ---- | ---- | ---- |
+| `get_local` | `0x20` | local_index : `varuint32` | read a local variable or parameter |
+| `set_local` | `0x21` | local_index : `varuint32` | write a local variable or parameter |
+| `tee_local` | `0x22` | local_index : `varuint32` | write a local variable or parameter and return the same value |
+| `get_global` | `0x23` | global_index : `varuint32` | read a global variable |
+| `set_global` | `0x24` | global_index : `varuint32` | write a global variable |
 
 ## Memory-related operators ([described here](Semantics.md#linear-memory-accesses))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.load8_s` | `0x20` | `memory_immediate` | load from memory |
-| `i32.load8_u` | `0x21` | `memory_immediate` | load from memory  |
-| `i32.load16_s` | `0x22` | `memory_immediate` | load from memory |
-| `i32.load16_u` | `0x23` | `memory_immediate` | load from memory |
-| `i64.load8_s` | `0x24` | `memory_immediate` | load from memory |
-| `i64.load8_u` | `0x25` | `memory_immediate` | load from memory |
-| `i64.load16_s` | `0x26` | `memory_immediate` | load from memory |
-| `i64.load16_u` | `0x27` | `memory_immediate` | load from memory |
-| `i64.load32_s` | `0x28` | `memory_immediate` | load from memory |
-| `i64.load32_u` | `0x29` | `memory_immediate` | load from memory |
-| `i32.load` | `0x2a` | `memory_immediate` | load from memory |
-| `i64.load` | `0x2b` | `memory_immediate` | load from memory |
-| `f32.load` | `0x2c` | `memory_immediate` | load from memory |
-| `f64.load` | `0x2d` | `memory_immediate` | load from memory |
-| `i32.store8` | `0x2e` | `memory_immediate` | store to memory |
-| `i32.store16` | `0x2f` | `memory_immediate` | store to memory |
-| `i64.store8` | `0x30` | `memory_immediate` | store to memory |
-| `i64.store16` | `0x31` | `memory_immediate` | store to memory |
-| `i64.store32` | `0x32` | `memory_immediate` | store to memory |
-| `i32.store` | `0x33` | `memory_immediate` | store to memory |
-| `i64.store` | `0x34` | `memory_immediate` | store to memory |
-| `f32.store` | `0x35` | `memory_immediate` | store to memory |
-| `f64.store` | `0x36` | `memory_immediate` | store to memory |
-| `current_memory` | `0x3b` |  | query the size of memory |
-| `grow_memory` | `0x39` |  | grow the size of memory |
+| `i32.load` | `0x28` | `memory_immediate` | load from memory |
+| `i64.load` | `0x29` | `memory_immediate` | load from memory |
+| `f32.load` | `0x2a` | `memory_immediate` | load from memory |
+| `f64.load` | `0x2b` | `memory_immediate` | load from memory |
+| `i32.load8_s` | `0x2c` | `memory_immediate` | load from memory |
+| `i32.load8_u` | `0x2d` | `memory_immediate` | load from memory  |
+| `i32.load16_s` | `0x2e` | `memory_immediate` | load from memory |
+| `i32.load16_u` | `0x2f` | `memory_immediate` | load from memory |
+| `i64.load8_s` | `0x30` | `memory_immediate` | load from memory |
+| `i64.load8_u` | `0x31` | `memory_immediate` | load from memory |
+| `i64.load16_s` | `0x32` | `memory_immediate` | load from memory |
+| `i64.load16_u` | `0x33` | `memory_immediate` | load from memory |
+| `i64.load32_s` | `0x34` | `memory_immediate` | load from memory |
+| `i64.load32_u` | `0x35` | `memory_immediate` | load from memory |
+| `i32.store` | `0x36` | `memory_immediate` | store to memory |
+| `i64.store` | `0x37` | `memory_immediate` | store to memory |
+| `f32.store` | `0x38` | `memory_immediate` | store to memory |
+| `f64.store` | `0x39` | `memory_immediate` | store to memory |
+| `i32.store8` | `0x3a` | `memory_immediate` | store to memory |
+| `i32.store16` | `0x3b` | `memory_immediate` | store to memory |
+| `i64.store8` | `0x3c` | `memory_immediate` | store to memory |
+| `i64.store16` | `0x3d` | `memory_immediate` | store to memory |
+| `i64.store32` | `0x3e` | `memory_immediate` | store to memory |
+| `current_memory` | `0x3f` | reserved : `varuint1` | query the size of memory |
+| `grow_memory` | `0x40` | reserved : `varuint1` | grow the size of memory |
 
 The `memory_immediate` type is encoded as follows:
 
@@ -515,132 +567,156 @@ natural alignment. The bits after the
 `log(memory-access-size)` least-significant bits must be set to 0. These bits are reserved for future use
 (e.g., for shared memory ordering requirements).
 
-## Simple operators ([described here](Semantics.md#32-bit-integer-operators))
+The `reserved` immediate to the `current_memory` and `grow_memory` operators is for future use and must be 0 in the MVP.
+
+## Constants ([described here](Semantics.md#constants))
+
+| Name | Opcode | Immediates | Description |
+| ---- | ---- | ---- | ---- |
+| `i32.const` | `0x41` | value : `varint32` | a constant value interpreted as `i32` |
+| `i64.const` | `0x42` | value : `varint64` | a constant value interpreted as `i64` |
+| `f32.const` | `0x43` | value : `uint32` | a constant value interpreted as `f32` |
+| `f64.const` | `0x44` | value : `uint64` | a constant value interpreted as `f64` |
+
+## Comparison operators ([described here](Semantics.md#32-bit-integer-operators))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.add` | `0x40` | | |
-| `i32.sub` | `0x41` | | |
-| `i32.mul` | `0x42` | | |
-| `i32.div_s` | `0x43` | | |
-| `i32.div_u` | `0x44` | | |
-| `i32.rem_s` | `0x45` | | |
-| `i32.rem_u` | `0x46` | | |
-| `i32.and` | `0x47` | | |
-| `i32.or` | `0x48` | | |
-| `i32.xor` | `0x49` | | |
-| `i32.shl` | `0x4a` | | |
-| `i32.shr_u` | `0x4b` | | |
-| `i32.shr_s` | `0x4c` | | |
-| `i32.rotr` | `0xb6` | | |
-| `i32.rotl` | `0xb7` | | |
-| `i32.eq` | `0x4d` | | |
-| `i32.ne` | `0x4e` | | |
-| `i32.lt_s` | `0x4f` | | |
-| `i32.le_s` | `0x50` | | |
-| `i32.lt_u` | `0x51` | | |
-| `i32.le_u` | `0x52` | | |
-| `i32.gt_s` | `0x53` | | |
-| `i32.ge_s` | `0x54` | | |
-| `i32.gt_u` | `0x55` | | |
-| `i32.ge_u` | `0x56` | | |
-| `i32.clz` | `0x57` | | |
-| `i32.ctz` | `0x58` | | |
-| `i32.popcnt` | `0x59` | | |
-| `i32.eqz`  | `0x5a` | | |
-| `i64.add` | `0x5b` | | |
-| `i64.sub` | `0x5c` | | |
-| `i64.mul` | `0x5d` | | |
-| `i64.div_s` | `0x5e` | | |
-| `i64.div_u` | `0x5f` | | |
-| `i64.rem_s` | `0x60` | | |
-| `i64.rem_u` | `0x61` | | |
-| `i64.and` | `0x62` | | |
-| `i64.or` | `0x63` | | |
-| `i64.xor` | `0x64` | | |
-| `i64.shl` | `0x65` | | |
-| `i64.shr_u` | `0x66` | | |
-| `i64.shr_s` | `0x67` | | |
-| `i64.rotr` | `0xb8` | | |
-| `i64.rotl` | `0xb9` | | |
-| `i64.eq` | `0x68` | | |
-| `i64.ne` | `0x69` | | |
-| `i64.lt_s` | `0x6a` | | |
-| `i64.le_s` | `0x6b` | | |
-| `i64.lt_u` | `0x6c` | | |
-| `i64.le_u` | `0x6d` | | |
-| `i64.gt_s` | `0x6e` | | |
-| `i64.ge_s` | `0x6f` | | |
-| `i64.gt_u` | `0x70` | | |
-| `i64.ge_u` | `0x71` | | |
-| `i64.clz` | `0x72` | | |
-| `i64.ctz` | `0x73` | | |
-| `i64.popcnt` | `0x74` | | |
-| `i64.eqz`  | `0xba` | | |
-| `f32.add` | `0x75` | | |
-| `f32.sub` | `0x76` | | |
-| `f32.mul` | `0x77` | | |
-| `f32.div` | `0x78` | | |
-| `f32.min` | `0x79` | | |
-| `f32.max` | `0x7a` | | |
-| `f32.abs` | `0x7b` | | |
-| `f32.neg` | `0x7c` | | |
-| `f32.copysign` | `0x7d` | | |
-| `f32.ceil` | `0x7e` | | |
-| `f32.floor` | `0x7f` | | |
-| `f32.trunc` | `0x80` | | |
-| `f32.nearest` | `0x81` | | |
-| `f32.sqrt` | `0x82` | | |
-| `f32.eq` | `0x83` | | |
-| `f32.ne` | `0x84` | | |
-| `f32.lt` | `0x85` | | |
-| `f32.le` | `0x86` | | |
-| `f32.gt` | `0x87` | | |
-| `f32.ge` | `0x88` | | |
-| `f64.add` | `0x89` | | |
-| `f64.sub` | `0x8a` | | |
-| `f64.mul` | `0x8b` | | |
-| `f64.div` | `0x8c` | | |
-| `f64.min` | `0x8d` | | |
-| `f64.max` | `0x8e` | | |
-| `f64.abs` | `0x8f` | | |
-| `f64.neg` | `0x90` | | |
-| `f64.copysign` | `0x91` | | |
-| `f64.ceil` | `0x92` | | |
-| `f64.floor` | `0x93` | | |
-| `f64.trunc` | `0x94` | | |
-| `f64.nearest` | `0x95` | | |
-| `f64.sqrt` | `0x96` | | |
-| `f64.eq` | `0x97` | | |
-| `f64.ne` | `0x98` | | |
-| `f64.lt` | `0x99` | | |
-| `f64.le` | `0x9a` | | |
-| `f64.gt` | `0x9b` | | |
-| `f64.ge` | `0x9c` | | |
-| `i32.trunc_s/f32` | `0x9d` | | |
-| `i32.trunc_s/f64` | `0x9e` | | |
-| `i32.trunc_u/f32` | `0x9f` | | |
-| `i32.trunc_u/f64` | `0xa0` | | |
-| `i32.wrap/i64` | `0xa1` | | |
-| `i64.trunc_s/f32` | `0xa2` | | |
-| `i64.trunc_s/f64` | `0xa3` | | |
-| `i64.trunc_u/f32` | `0xa4` | | |
-| `i64.trunc_u/f64` | `0xa5` | | |
-| `i64.extend_s/i32` | `0xa6` | | |
-| `i64.extend_u/i32` | `0xa7` | | |
-| `f32.convert_s/i32` | `0xa8` | | |
-| `f32.convert_u/i32` | `0xa9` | | |
-| `f32.convert_s/i64` | `0xaa` | | |
-| `f32.convert_u/i64` | `0xab` | | |
-| `f32.demote/f64` | `0xac` | | |
-| `f32.reinterpret/i32` | `0xad` | | |
-| `f64.convert_s/i32` | `0xae` | | |
-| `f64.convert_u/i32` | `0xaf` | | |
-| `f64.convert_s/i64` | `0xb0` | | |
-| `f64.convert_u/i64` | `0xb1` | | |
-| `f64.promote/f32` | `0xb2` | | |
-| `f64.reinterpret/i64` | `0xb3` | | |
-| `i32.reinterpret/f32` | `0xb4` | | |
-| `i64.reinterpret/f64` | `0xb5` | | |
+| `i32.eqz`  | `0x45` | | |
+| `i32.eq` | `0x46` | | |
+| `i32.ne` | `0x47` | | |
+| `i32.lt_s` | `0x48` | | |
+| `i32.lt_u` | `0x49` | | |
+| `i32.gt_s` | `0x4a` | | |
+| `i32.gt_u` | `0x4b` | | |
+| `i32.le_s` | `0x4c` | | |
+| `i32.le_u` | `0x4d` | | |
+| `i32.ge_s` | `0x4e` | | |
+| `i32.ge_u` | `0x4f` | | |
+| `i64.eqz`  | `0x50` | | |
+| `i64.eq` | `0x51` | | |
+| `i64.ne` | `0x52` | | |
+| `i64.lt_s` | `0x53` | | |
+| `i64.lt_u` | `0x54` | | |
+| `i64.gt_s` | `0x55` | | |
+| `i64.gt_u` | `0x56` | | |
+| `i64.le_s` | `0x57` | | |
+| `i64.le_u` | `0x58` | | |
+| `i64.ge_s` | `0x59` | | |
+| `i64.ge_u` | `0x5a` | | |
+| `f32.eq` | `0x5b` | | |
+| `f32.ne` | `0x5c` | | |
+| `f32.lt` | `0x5d` | | |
+| `f32.gt` | `0x5e` | | |
+| `f32.le` | `0x5f` | | |
+| `f32.ge` | `0x60` | | |
+| `f64.eq` | `0x61` | | |
+| `f64.ne` | `0x62` | | |
+| `f64.lt` | `0x63` | | |
+| `f64.gt` | `0x64` | | |
+| `f64.le` | `0x65` | | |
+| `f64.ge` | `0x66` | | |
 
+## Numeric operators ([described here](Semantics.md#32-bit-integer-operators))
 
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
+| `i32.clz` | `0x67` | | |
+| `i32.ctz` | `0x68` | | |
+| `i32.popcnt` | `0x69` | | |
+| `i32.add` | `0x6a` | | |
+| `i32.sub` | `0x6b` | | |
+| `i32.mul` | `0x6c` | | |
+| `i32.div_s` | `0x6d` | | |
+| `i32.div_u` | `0x6e` | | |
+| `i32.rem_s` | `0x6f` | | |
+| `i32.rem_u` | `0x70` | | |
+| `i32.and` | `0x71` | | |
+| `i32.or` | `0x72` | | |
+| `i32.xor` | `0x73` | | |
+| `i32.shl` | `0x74` | | |
+| `i32.shr_s` | `0x75` | | |
+| `i32.shr_u` | `0x76` | | |
+| `i32.rotl` | `0x77` | | |
+| `i32.rotr` | `0x78` | | |
+| `i64.clz` | `0x79` | | |
+| `i64.ctz` | `0x7a` | | |
+| `i64.popcnt` | `0x7b` | | |
+| `i64.add` | `0x7c` | | |
+| `i64.sub` | `0x7d` | | |
+| `i64.mul` | `0x7e` | | |
+| `i64.div_s` | `0x7f` | | |
+| `i64.div_u` | `0x80` | | |
+| `i64.rem_s` | `0x81` | | |
+| `i64.rem_u` | `0x82` | | |
+| `i64.and` | `0x83` | | |
+| `i64.or` | `0x84` | | |
+| `i64.xor` | `0x85` | | |
+| `i64.shl` | `0x86` | | |
+| `i64.shr_s` | `0x87` | | |
+| `i64.shr_u` | `0x88` | | |
+| `i64.rotl` | `0x89` | | |
+| `i64.rotr` | `0x8a` | | |
+| `f32.abs` | `0x8b` | | |
+| `f32.neg` | `0x8c` | | |
+| `f32.ceil` | `0x8d` | | |
+| `f32.floor` | `0x8e` | | |
+| `f32.trunc` | `0x8f` | | |
+| `f32.nearest` | `0x90` | | |
+| `f32.sqrt` | `0x91` | | |
+| `f32.add` | `0x92` | | |
+| `f32.sub` | `0x93` | | |
+| `f32.mul` | `0x94` | | |
+| `f32.div` | `0x95` | | |
+| `f32.min` | `0x96` | | |
+| `f32.max` | `0x97` | | |
+| `f32.copysign` | `0x98` | | |
+| `f64.abs` | `0x99` | | |
+| `f64.neg` | `0x9a` | | |
+| `f64.ceil` | `0x9b` | | |
+| `f64.floor` | `0x9c` | | |
+| `f64.trunc` | `0x9d` | | |
+| `f64.nearest` | `0x9e` | | |
+| `f64.sqrt` | `0x9f` | | |
+| `f64.add` | `0xa0` | | |
+| `f64.sub` | `0xa1` | | |
+| `f64.mul` | `0xa2` | | |
+| `f64.div` | `0xa3` | | |
+| `f64.min` | `0xa4` | | |
+| `f64.max` | `0xa5` | | |
+| `f64.copysign` | `0xa6` | | |
+
+## Conversions ([described here](Semantics.md#datatype-conversions))
+
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
+| `i32.wrap/i64` | `0xa7` | | |
+| `i32.trunc_s/f32` | `0xa8` | | |
+| `i32.trunc_u/f32` | `0xa9` | | |
+| `i32.trunc_s/f64` | `0xaa` | | |
+| `i32.trunc_u/f64` | `0xab` | | |
+| `i64.extend_s/i32` | `0xac` | | |
+| `i64.extend_u/i32` | `0xad` | | |
+| `i64.trunc_s/f32` | `0xae` | | |
+| `i64.trunc_u/f32` | `0xaf` | | |
+| `i64.trunc_s/f64` | `0xb0` | | |
+| `i64.trunc_u/f64` | `0xb1` | | |
+| `f32.convert_s/i32` | `0xb2` | | |
+| `f32.convert_u/i32` | `0xb3` | | |
+| `f32.convert_s/i64` | `0xb4` | | |
+| `f32.convert_u/i64` | `0xb5` | | |
+| `f32.demote/f64` | `0xb6` | | |
+| `f64.convert_s/i32` | `0xb7` | | |
+| `f64.convert_u/i32` | `0xb8` | | |
+| `f64.convert_s/i64` | `0xb9` | | |
+| `f64.convert_u/i64` | `0xba` | | |
+| `f64.promote/f32` | `0xbb` | | |
+
+## Reinterpretations ([described here](Semantics.md#datatype-conversions))
+
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
+| `i32.reinterpret/f32` | `0xbc` | | |
+| `i64.reinterpret/f64` | `0xbd` | | |
+| `f32.reinterpret/i32` | `0xbe` | | |
+| `f64.reinterpret/i64` | `0xbf` | | |
