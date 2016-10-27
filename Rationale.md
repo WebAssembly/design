@@ -194,7 +194,7 @@ flow). Alternative approaches can generate reducible control flow via node
 splitting, which can reduce throughput overhead, at the cost of increasing
 code size (potentially very significantly in pathological cases).
 Also,
-[more expressive control flow constructs](FutureFeatures.md#more-expressive-control-flow)
+[more expressive control flow constructs :unicorn:][future flow control]
 may be added in the future.
 
 ## Nop
@@ -400,7 +400,7 @@ hardware platforms.
 ## Motivating Scenarios for Feature Testing
 
 1. [Post-MVP](PostMVP.md),
-[`i32.min_s`](FutureFeatures.md#additional-integer-operations) is introduced. A
+[`i32.min_s` :unicorn:][future integers] is introduced. A
 WebAssembly developer updates their toolkit so that the compiler may leverage
 `i32.min_s`. The developer's WebAssembly module works correctly both on
 execution environments at MVP, as well as those supporting `i32.min_s`.
@@ -503,3 +503,6 @@ Yes:
   opportunities.
 * [Existing web standards](https://www.w3.org/TR/PNG/) demonstrate many of
   the advantages of a layered encoding strategy.
+
+[future flow control]: FutureFeatures.md#more-expressive-control-flow
+[future integers]: FutureFeatures.md#additional-integer-operations

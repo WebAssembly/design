@@ -24,8 +24,8 @@ There are two main benefits WebAssembly provides:
 2. By avoiding the simultaneous asm.js constraints of [AOT][]-[compilability][]
    and good performance even on engines without
    [specific asm.js optimizations][], a new standard makes it *much easier* to
-   add the [features](FutureFeatures.md) required to reach native levels of
-   performance.
+   add the [features :unicorn:][future features] required to reach native
+   levels of performance.
 
   [experiments]: BinaryEncoding.md#why-a-binary-encoding-instead-of-a-text-only-representation
   [streaming]: https://www.w3.org/TR/streams-api/
@@ -93,9 +93,10 @@ However, by [integrating with JavaScript at the ES6 Module interface](Modules.md
 web developers don't need to write C++ to take advantage of libraries that others have written; 
 reusing a modular C++ library can be as simple as [using a module from JavaScript](http://jsmodules.io).
 
-Beyond the MVP, another [high-level goal](HighLevelGoals.md) 
-is to improve support for languages other than C/C++.  This includes [allowing WebAssembly code to 
-allocate and access garbage-collected (JavaScript, DOM, Web API) objects](FutureFeatures.md#gcdom-integration). 
+Beyond the MVP, another [high-level goal](HighLevelGoals.md)
+is to improve support for languages other than C/C++.  This includes [allowing WebAssembly code to
+allocate and access garbage-collected (JavaScript, DOM, Web API) objects
+:unicorn:][future dom].
 Even before GC support is added to WebAssembly, it is possible to compile a language's VM 
 to WebAssembly (assuming it's written in portable C/C++) and this has already been demonstrated 
 ([1](http://ruby.dj), [2](https://kripken.github.io/lua.vm.js/lua.vm.js.html),
@@ -177,7 +178,7 @@ together in a number of configurations:
   today) allowing developers to reuse popular WebAssembly libraries just like
   JavaScript libraries today.
 * When WebAssembly
-  [gains the ability to access garbage-collected objects](FutureFeatures.md#gcdom-integration),
+  [gains the ability to access garbage-collected objects :unicorn:][future dom],
   those objects will be shared with JavaScript, and not live in a walled-off
   world of their own.
 
@@ -283,7 +284,7 @@ it, but fast-math flags are not believed to be important enough:
    would be feature tests allowing WebAssembly code to determine which SIMD
    types to use on a given platform.
  * When WebAssembly
-   [adds an FMA operator](FutureFeatures.md#additional-floating-point-operators),
+   [adds an FMA operator :unicorn:][future floating point],
    folding multiply and add sequences into FMA operators will be possible.
  * WebAssembly doesn't include its own math functions like `sin`, `cos`, `exp`,
    `pow`, and so on. WebAssembly's strategy for such functions is to allow them
@@ -312,7 +313,7 @@ operators:
 * the MVP starts with the ability to grow linear memory via a
   [`grow_memory`](Semantics.md#resizing) operator;
 * proposed
-  [future features](FutureFeatures.md#finer-grained-control-over-memory) would
+  [future features :unicorn:][future memory control] would
   allow the application to change the protection and mappings for pages in the
   contiguous range `0` to `memory_size`.
 
@@ -388,3 +389,8 @@ accessible through regular JavaScript. However, if a wasm VM is provided as an
 [“app execution platform”](NonWeb.md) by a specific vendor, it might provide 
 access to [proprietary platform-specific APIs](Portability.md#api) of e.g. 
 Android / iOS. 
+
+[future features]: FutureFeatures.md
+[future dom]: FutureFeatures.md#gcdom-integration
+[future floating point]: FutureFeatures.md#additional-floating-point-operators
+[future memory control]: FutureFeatures.md#finer-grained-control-over-memory

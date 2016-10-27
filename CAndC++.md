@@ -20,7 +20,7 @@ has an LP64 data model, meaning that `long` and pointer types will be
 
 [The MVP](MVP.md) will support only wasm32; support for wasm64 will be
 added in the future to support
-[64-bit address spaces](FutureFeatures.md#linear-memory-bigger-than-4-gib).
+[64-bit address spaces :unicorn:][future 64-bit].
 
 `float` and `double` are the IEEE 754-2008 single- and double-precision types,
 which are native in WebAssembly. `long double` is the IEEE 754-2008
@@ -128,3 +128,6 @@ WebAssembly has very limited [nondeterminism](Nondeterminism.md), so it is
 expected that compiled WebAssembly programs will behave very consistently
 across different implementations, and across different versions of the same
 implementation.
+
+[future 64-bit]: FutureFeatures.md#linear-memory-bigger-than-4-gib
+
