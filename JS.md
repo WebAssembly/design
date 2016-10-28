@@ -91,12 +91,13 @@ asynchronous, background, streaming compilation.
 #### `WebAssembly.instantiate`
 
 The `instantiate` function is overloaded based on types of its arguments.
-If neither of the following overloads match, the the returned `Promise` is
+If neither of the following overloads match, then the returned `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
 with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 ```
-Promise<WebAssembly.Instance> instantiate(BufferSource bytes [, importObject])
+Promise<{module:WebAssembly.Module, instance:WebAssembly.Instance}>
+  instantiate(BufferSource bytes [, importObject])
 ```
 
 This description applies if the first argument is a 
