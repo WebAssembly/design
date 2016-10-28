@@ -12,7 +12,7 @@
       aimed at [C/C++](CAndC++.md);
     * a [follow-up to the MVP](PostMVP.md) which adds several more
       essential features; and
-    * [additional features](FutureFeatures.md), specified iteratively and
+    * [additional features :unicorn:][future features], specified iteratively and
       prioritized by feedback and experience, including support for languages
       other than C/C++.
 3. Design to execute within and integrate well with the *existing*
@@ -33,3 +33,5 @@
       clang port ([why LLVM first?](FAQ.md#which-compilers-can-i-use-to-build-webassembly-programs));
     * promote other compilers and tools targeting WebAssembly; and
     * enable other useful [tooling](Tooling.md).
+
+[future features]: FutureFeatures.md

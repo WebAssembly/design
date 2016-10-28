@@ -1,4 +1,6 @@
-# GC / DOM / Web API Integration
+# GC / DOM / Web API Integration [:unicorn:][future general]
+
+## NOTE: This is a [future :unicorn:][future general] feature! ##
 
 After the [MVP](MVP.md), to realize the [high-level goals](HighLevelGoals.md)
 of (1) integrating well with the existing Web platform and (2) supporting
@@ -164,3 +166,4 @@ consider for this feature, but a few points of tentative agreement are:
   [Typed Objects](https://github.com/nikomatsakis/typed-objects-explainer/)
   proposal.
 
+[future general]: PostMVP.md

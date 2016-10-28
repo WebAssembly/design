@@ -18,7 +18,7 @@ currently admits nondeterminism:
  * New features will be added to WebAssembly, which means different implementations
    will have different support for each feature. This can be detected with
    `has_feature`, but is still a source of differences between executions.
- * [When threads are added as a feature](PostMVP.md#threads), even without
+ * [When threads are added as a feature :unicorn:][future threads], even without
    shared memory, nondeterminism will be visible through the global sequence of
    API calls. With shared memory, the result of load operators is
    nondeterministic.
@@ -31,7 +31,7 @@ currently admits nondeterminism:
  * Except when otherwise specified, when an arithmetic operator with a floating
    point result type receives no NaN input values and produces a NaN result
    value, the sign bit of the NaN result value is nondeterministic.
- * [Fixed-width SIMD may want some flexibility](PostMVP.md#fixed-width-simd)
+ * [Fixed-width SIMD may want some flexibility :unicorn:][future simd]
    - In SIMD.js, floating point values may or may not have subnormals flushed to
      zero.
    - In SIMD.js, operators ending in "Approximation" return approximations that
@@ -51,3 +51,6 @@ Users of C, C++, and similar languages should be aware that operators which
 have defined or constrained behavior in WebAssembly itself may nonetheless still
 have undefined behavior
 [at the source code level](CAndC++.md#undefined-behavior).
+
+[future threads]: PostMVP.md#threads
+[future simd]: PostMVP.md#fixed-width-simd

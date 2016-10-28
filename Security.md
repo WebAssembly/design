@@ -107,7 +107,8 @@ in WebAssembly, because control-flow integrity ensures that call targets are
 valid functions declared at load time. Likewise, race conditions, such as
 [time of check to time of use][] (TOCTOU) vulnerabilities, are possible in
 WebAssembly, since no execution or scheduling guarantees are provided beyond
-in-order execution and [post-MVP atomic memory primitives](PostMVP.md#threads).
+in-order execution and [post-MVP atomic memory primitives
+:unicorn:][future threads].
 Similarly, [side channel attacks][] can occur, such as timing attacks against
 modules. In the future, additional protections may be provided by runtimes or
 the toolchain, such as code diversification or memory randomization (similar to
@@ -123,3 +124,5 @@ pointers), or finer-grained control-flow integrity.
   [side channel attacks]: https://en.wikipedia.org/wiki/Side-channel_attack
   [stack smashing protection]: https://en.wikipedia.org/wiki/Buffer_overflow_protection#Random_canaries
   [time of check to time of use]: https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use
+
+[future threads]: PostMVP.md#threads

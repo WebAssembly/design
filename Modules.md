@@ -42,7 +42,7 @@ instantiation time, by the host environment. There are several kinds of imports:
 * **table imports**, which can be accessed inside the module by 
   [call_indirect](Semantics.md#calls) and other
   table operators in the 
-  [future](FutureFeatures.md#more-table-operators-and-types).
+  [future :unicorn:][future types].
 
 In the future, other kinds of imports may be added. Imports are designed to
 allow modules to share code and data while still allowing separate compilation
@@ -159,7 +159,7 @@ once and instantiate multiple times (each with a separate linear memory).
 
 This integration strategy should allow WebAssembly modules to be fairly
 interchangeable with ES6 modules (ignoring
-[GC/Web API](FutureFeatures.md#gc/dom-integration) signature restrictions of the
+[GC/Web API :unicorn:][future dom] signature restrictions of the
 WebAssembly MVP) and thus it should be natural to compose a single application
 from both kinds of code. This goal motivates the
 [semantic design](Semantics.md#linear-memory) of giving each WebAssembly
@@ -250,12 +250,12 @@ Each table definition declares an *element type*, *initial length*, and
 optional *maximum length*.
 
 In the MVP, the only valid element type is `"anyfunc"`, but in the
-[future](FutureFeatures.md#more-table-operators-and-types), more element
-types may be added.
+[future :unicorn:][future types],
+more element types may be added.
 
 In the MVP, tables can only be resized via host-defined APIs (such as
 the JavaScript [`WebAssembly.Table.prototype.grow`](JS.md#webassemblytableprototypegrow)).
-A `grow_table` may be added in the [future](FutureFeatures.md#more-table-operators-and-types).
+A `grow_table` may be added in the [future :unicorn:][future types].
 In either case, table growth is guaranteed to fail if attempting to grow past
 the declared maximum. As with linear memory, when a maximum is declared,
 implementations *should* (non-normative) attempt to reserve virtual memory up to
@@ -326,7 +326,7 @@ order of definition in the module (as defined by the [binary encoding](BinaryEnc
 The linear memory index space is only used by the 
 [data section](#data-section). In the MVP, there is at most one linear memory so
 this index space is just a placeholder for when there can be 
-[multiple memories](FutureFeatures.md#multiple-tables-and-memories).
+[multiple memories :unicorn:][future multiple tables].
 
 ## Table Index Space
 
@@ -337,7 +337,7 @@ order of definition in the module (as defined by the [binary encoding](BinaryEnc
 The table index space is only used by the [elements section](#elements-section).
 In the MVP, there is at most one table so this index space is just
 a placeholder for when there can be 
-[multiple tables](FutureFeatures.md#multiple-tables-and-memories).
+[multiple tables :unicorn:][future multiple tables].
 
 ## Initializer Expression
 
@@ -363,3 +363,7 @@ to the following nullary operators:
 
 In the future, operators like `i32.add` could be added to allow more expressive
 `base + offset` load-time calculations.
+
+[future types]: FutureFeatures.md#more-table-operators-and-types
+[future dom]: FutureFeatures.md#gc/dom-integration
+[future multiple tables]: FutureFeatures.md#multiple-tables-and-memories

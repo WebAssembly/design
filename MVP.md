@@ -3,7 +3,7 @@
 As stated in the [high-level goals](HighLevelGoals.md), the first release aims
 at being a Minimum Viable Product (MVP). This means that there are important
 features we *know* we want and need, but are post-MVP; these are in a separate
-essential [post-MVP](PostMVP.md) features document. The MVP will contain
+essential [post-MVP :unicorn:][future general] features document. The MVP will contain
 features which are available today in modern web browsers and which perform well
 even on mobile devices, which leads to roughly the same functionality as
 [asm.js](http://asmjs.org).
@@ -23,3 +23,5 @@ documents:
   [textual projection](TextFormat.md) of a module's structure and code.
 * WebAssembly is designed to be implemented both [by web browsers](Web.md)
   and [completely different execution environments](NonWeb.md).
+
+[future general]: PostMVP.md

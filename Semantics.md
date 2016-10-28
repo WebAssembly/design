@@ -31,6 +31,8 @@ on all modern computers. Each operator has a corresponding simple instruction.
 The [rationale](Rationale.md) document details why WebAssembly is designed as
 detailed in this document.
 
+[:unicorn:][future general] = Planned [future][future general] feature
+
 ## Traps
 
 Some operators may *trap* under some conditions, as noted below. In the MVP,
@@ -54,7 +56,7 @@ expected that WebAssembly will add some form of stack-introspection
 functionality, in which case such optimizations would be directly observable.
 
 Support for explicit tail calls is planned in
-[the future](FutureFeatures.md#general-purpose-proper-tail-calls),
+[the future :unicorn:][future tail calls],
 which would add an explicit tail-call operator with well-defined effects
 on stack introspection.
 
@@ -97,7 +99,8 @@ variables, or other process memory.
 Every WebAssembly [instance](Modules.md) has one specially-designated *default* 
 linear memory which is the linear memory accessed by all the 
 [memory operators below](#linear-memory-access). In the MVP, there are *only*
-default linear memories but [new memory operators](FutureFeatures.md#multiple-tables-and-memories)
+default linear memories but
+[new memory operators :unicorn:][future multiple tables]
 may be added after the MVP which can also access non-default memories.
 
 Linear memories (default or otherwise) can either be [imported](Modules.md#imports)
@@ -106,7 +109,7 @@ or definition, there is no difference when accessing a linear memory whether it
 was imported or defined internally.
 
 In the MVP, linear memory cannot be shared between threads of execution.
-The addition of [threads](PostMVP.md#threads) will allow this.
+The addition of [threads :unicorn:][future threads] will allow this.
 
 ### Linear Memory Accesses
 
@@ -172,7 +175,7 @@ memory sizes are limited to 4 GiB (of course, actual sizes are further limited
 by [available resources](Nondeterminism.md)). In wasm64, address operands and
 offsets have type `i64`. The MVP only includes wasm32; subsequent versions
 will add support for wasm64 and thus
-[>4 GiB linear memory](FutureFeatures.md#linear-memory-bigger-than-4-gib).
+[>4 GiB linear memory :unicorn:][future 64-bit].
 
 ### Alignment
 
@@ -213,7 +216,7 @@ Out of bounds accesses trap.
 In the MVP, linear memory can be resized by a `grow_memory` operator. The
 operand to this operator is in units of the WebAssembly page size,
 which is defined to be 64KiB (though large page support may be added in 
-the [future](FutureFeatures.md#large-page-support)).
+the [future :unicorn:][future large pages]).
 
  * `grow_memory` : grow linear memory by a given unsigned delta of pages.
     Return the previous memory size in units of pages or -1 on failure.
@@ -231,14 +234,14 @@ The current size of the linear memory can be queried by the following operator:
 
 As stated [above](Semantics.md#linear-memory), linear memory is contiguous,
 meaning there are no "holes" in the linear address space. After the
-MVP, there are [future features](FutureFeatures.md#finer-grained-control-over-memory)
+MVP, there are [future features :unicorn:][future memory control]
 proposed to allow setting protection and creating mappings within the
 contiguous linear memory.
 
 In the MVP, memory can only be grown. After the MVP, a memory shrinking
 operator may be added. However, due to normal fragmentation, applications are
 instead expected release unused physical pages from the working set using the
-[`discard`](FutureFeatures.md#finer-grained-control-over-memory) future feature.
+[`discard` :unicorn:][future memory control] future feature.
 
 The above operators operate on the [default linear memory](#linear-memory).
 
@@ -278,8 +281,7 @@ to hold the array of indirectly-callable functions. Thus, in the MVP:
   this can only be done through the host environment (e.g., the `WebAssembly`
   [JavaScript API](JS.md#webassemblytable-objects)).
 
-These restrictions may be relaxed in the 
-[future](FutureFeatures.md#more-table-operators-and-types). 
+These restrictions may be relaxed in the [future :unicorn:][types].
 
 ## Local variables
 
@@ -321,7 +323,7 @@ instantiation-time immutable values as a useful building block for
 
 After the MVP, when [reference types](GC.md) are added to the set of [value types](#types),
 global variables will be necessary to allow sharing reference types between
-[threads](PostMVP.md#threads) since shared linear memory cannot load or store
+[threads :unicorn:][future threads] since shared linear memory cannot load or store
 references.
 
 ## Control constructs and instructions
@@ -532,7 +534,7 @@ Floating point arithmetic follows the IEEE 754-2008 standard, except that:
    supported.
 
 In the future, these limitations may be lifted, enabling
-[full IEEE 754-2008 support](FutureFeatures.md#full-ieee-754-2008-conformance).
+[full IEEE 754-2008 support :unicorn:][future ieee 745].
 
 Note that not all operators required by IEEE 754-2008 are provided directly.
 However, WebAssembly includes enough functionality to support reasonable library
@@ -671,3 +673,13 @@ outside the range which rounds to an integer in range) traps.
     It is intended to be used for example after calls to functions which are known by the producer not to return.
     This trap is intended to be impossible for user code to catch or handle, even in the future when it may be possible to
     handle some other kinds of traps or exceptions.
+
+[future general]: PostMVP.md
+[future threads]: PostMVP.md#threads
+[future tail calls]: FutureFeatures.md#general-purpose-proper-tail-calls
+[future multiple tables]: FutureFeatures.md#multiple-tables-and-memories
+[future 64-bit]: FutureFeatures.md#linear-memory-bigger-than-4-gib
+[future memory control]: FutureFeatures.md#finer-grained-control-over-memory
+[future types]: FutureFeatures.md#more-table-operators-and-types
+[future large pages]: FutureFeatures.md#large-page-support
+[future ieee 754]: FutureFeatures.md#full-ieee-754-2008-conformance

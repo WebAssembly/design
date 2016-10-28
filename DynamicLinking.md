@@ -69,7 +69,7 @@ To implement run-time dynamic linking (e.g., `dlopen` and `dlsym`):
   search the instances's exports, append the found function to the function
   table (using host-defined functionality in the MVP, but directly from
   WebAssembly code in the
-  [future](FutureFeatures.md#more-table-operators-and-types)) and return the
+  [future :unicorn:][future types]) and return the
   table index of the appended element to the caller.
 
 Note that the representation of a C function-pointer in WebAssembly is an index
@@ -91,3 +91,5 @@ runtimes will be ABI agnostic, so it will be possible to use a non-standard ABI
 for specialized purposes.
 
   [ABI]: https://en.wikipedia.org/wiki/Application_binary_interface
+
+[future types]: FutureFeatures.md#more-table-operators-and-types

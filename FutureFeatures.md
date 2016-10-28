@@ -2,7 +2,8 @@
 
 These are features that make sense in the context of the
 [high-level goals](HighLevelGoals.md) of WebAssembly but are not considered part
-of the [Minimum Viable Product](MVP.md) or the essential [post-MVP](PostMVP.md)
+of the [Minimum Viable Product](MVP.md) or the essential
+[post-MVP :unicorn:](PostMVP.md)
 feature set which are expected to be standardized immediately after the
 MVP. These will be prioritized based on developer feedback, and will be
 available under [feature tests](FeatureTest.md).
@@ -419,6 +420,11 @@ of WebAssembly in browsers:
   would enable Web apps to perform their own (["layer 1"](BinaryEncoding.md))
   custom compression (on top of the spec-defined binary format, under generic
   HTTP `Content-Encoding` compression).
+
+## Multiple Return
+
+The stack based nature of WebAssembly lends itself to the possibility
+of supporting multiple return values from blocks / functions.
 
 ## Multiple Tables and Memories
 

@@ -1,17 +1,11 @@
 # JavaScript API
 
 In the [MVP](MVP.md), the only way to access WebAssembly on the Web is through
-an explicit JS API which is defined below. (In the future, WebAssembly may also
+an explicit JS API which is defined below.
+(In the [future :unicorn:][future general], WebAssembly may also
 be loaded and run directly from an HTML `<script type='module'>` tag—and
 any other Web API that loads ES6 modules via URL—as part of 
 [ES6 Module integration](Modules.md#integration-with-es6-modules).)
-
-*Note: current experimental WebAssembly implementations expose a single
-all-in-one function `Wasm.instantiateModule(bytes, imports)` which is used
-by the current [demo](http://webassembly.github.io/demo). This function is
-basically equivalent to 
-`new WebAssembly.Instance(new WebAssembly.Module(bytes), imports)`
-as defined below and will be removed at some point in the future.*
 
 ## Traps
 
@@ -90,7 +84,7 @@ The asynchronous compilation is logically performed on a copy of the state of
 the given `BufferSource` captured during the call to `compile`; subsequent mutations
 of the `BufferSource` after `compile` return do not affect ongoing compilations.
 
-In the [future](FutureFeatures.md#streaming-compilation), this function can be
+In the [future :unicorn:][future streaming], this function can be
 extended to accept a [stream](https://streams.spec.whatwg.org), thereby enabling
 asynchronous, background, streaming compilation.
 
@@ -481,8 +475,7 @@ Let `element` be the result of calling [`Get`](http://tc39.github.io/ecma262/#se
 If `element` is not the string `"anyfunc"`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 (Note: this check is intended to be relaxed in the
-[future](FutureFeatures.md#more-table-operators-and-types) to allow different
-element types.)
+[future :unicorn:][future types] to allow different element types.)
 
 Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"initial"`)).
 
@@ -638,3 +631,7 @@ fetch('demo.wasm').then(response =>
 
 * `WebAssembly.Module` `exports`/`imports` properties (reflection)
 * JS API for cyclic imports (perhaps a Promise-returning `WebAssembly.instantiate`?)
+
+[future general]: PostMVP.md
+[future streaming]: FutureFeatures.md#streaming-compilation
+[future types]: FutureFeatures.md#more-table-operators-and-types
