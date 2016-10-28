@@ -88,6 +88,48 @@ In the [future :unicorn:][future streaming], this function can be
 extended to accept a [stream](https://streams.spec.whatwg.org), thereby enabling
 asynchronous, background, streaming compilation.
 
+#### `WebAssembly.instantiate`
+
+The `instantiate` function is overloaded based on types of its arguments.
+If neither of the following overloads match, the the returned `Promise` is
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
+with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+
+```
+Promise<WebAssembly.Instance> instantiate(BufferSource bytes [, importObject])
+```
+
+This description applies if the first argument is a 
+[`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource).
+
+This function starts an asynchronous task that first compiles a `WebAssembly.Module`
+from `bytes` as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor)
+and then instantiate the resulting `Module` with `importObject` as described in the
+[`WebAssembly.Instance` constructor](#webassemblyinstance-constructor).
+On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
+with a plain JavaScript object pair `{module, instance}` containing the resulting
+`WebAssembly.Module` and `WebAssembly.Instance`. On failure, the `Promise` is
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
+`WebAssembly.CompileError`.
+
+The asynchronous compilation is logically performed on a copy of the state of
+the given `BufferSource` captured during the call to `instantiate`; subsequent mutations
+of the `BufferSource` after `instantiate` return do not affect ongoing compilations.
+
+```
+Promise<WebAssembly.Instance> instantiate(moduleObject [, importObject])
+```
+
+This description applies if the first argument is a `WebAssembly.Module` instance.
+
+This function starts an asynchronous task that instantiates a `WebAssembly.Instance`
+from `moduleObject` and `importObject` as described in the
+[`WebAssembly.Instance` constructor](#webassemblyinstance-constructor).
+On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
+with the resulting `WebAssembly.Instance` object. On failure, the `Promise` is
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
+`WebAssembly.CompileError`.
+
 ## `WebAssembly.Module` Objects
 
 A `WebAssembly.Module` object represents the stateless result of compiling a
