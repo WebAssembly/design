@@ -24,4 +24,4 @@ documents:
 * WebAssembly is designed to be implemented both [by web browsers](Web.md)
   and [completely different execution environments](NonWeb.md).
 
-[future general]: PostMVP.md
+[future general]: FutureFeatures.md

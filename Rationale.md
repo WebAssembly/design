@@ -154,7 +154,7 @@ address a number of competing constraints:
 3. Avoid *forcing* every developer using WebAssembly to understand their precise
    maximum heap usage.
 4. When threading and shared memory are added to WebAssembly
-   [post-MVP](PostMVP.md#threads), the design should not require memory growth
+   [post-MVP](FutureFeatures.md#threads), the design should not require memory growth
    to `realloc` since this implies significant implementation complexity,
    security hazards, and optimization challenges.
 
@@ -399,7 +399,7 @@ hardware platforms.
 
 ## Motivating Scenarios for Feature Testing
 
-1. [Post-MVP](PostMVP.md),
+1. [Post-MVP :unicorn:][future general],
 [`i32.min_s` :unicorn:][future integers] is introduced. A
 WebAssembly developer updates their toolkit so that the compiler may leverage
 `i32.min_s`. The developer's WebAssembly module works correctly both on
@@ -412,8 +412,10 @@ possible, while at the same time providing them with the best experience
 possible. The developer has to balance the cost of the test matrix resulting
 from the combinations of possible feature configurations.
 
-2. Post-MVP, module authors may now use [Threading](PostMVP.md#threads) APIs in
-the browser. A developer wants to leverage multithreading in their module.
+2. [Post-MVP :unicorn:][future general], module authors may now use
+[Threading](FutureFeatures.md#threads)
+APIs in the browser. A developer wants to leverage multithreading in their
+module.
 
   * In one variant of the scenario, our developer does not want to pay the
 engineering cost of developing and supporting a threaded and non-threaded
@@ -424,12 +426,12 @@ need MVP support.
   * In another variant, our developer explicitly authors both MVP-only and post-
 MVP (with threads) code.
 
-3. [SIMD](PostMVP.md#fixed-width-simd) support is not universally equivalent on
-all targets. While polyfill variants of SIMD APIs are available, a developer
-prefers writing dedicated SIMD and non-SIMD versions of their compression
-algorithm, because the non-SIMD version performs better in environments without
-SIMD support, when compared to the SIMD polyfill. They package their compression
-code for reuse by third parties.
+3. [SIMD](FutureFeatures.md#fixed-width-simd) support is not universally
+equivalent on all targets. While polyfill variants of SIMD APIs are available,
+a developer prefers writing dedicated SIMD and non-SIMD versions of their
+compression algorithm, because the non-SIMD version performs better in
+environments without SIMD support, when compared to the SIMD polyfill. They
+package their compression code for reuse by third parties.
 
 4. An application author is assembling together an application by reusing
 modules such as those developed in the scenarios above. The application author's
@@ -504,5 +506,6 @@ Yes:
 * [Existing web standards](https://www.w3.org/TR/PNG/) demonstrate many of
   the advantages of a layered encoding strategy.
 
+[future general]: FutureFeatures.md
 [future flow control]: FutureFeatures.md#more-expressive-control-flow
 [future integers]: FutureFeatures.md#additional-integer-operations

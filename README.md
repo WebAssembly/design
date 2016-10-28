@@ -32,9 +32,8 @@ The actual WebAssembly specification is being developed in the [spec repository]
 
 We've mapped out features we expect to ship:
 
- 1. In [the Minimum Viable Product (MVP)](MVP.md);
- 2. Closely [after the MVP](PostMVP.md);
- 3. In [future versions](FutureFeatures.md).
+ 1. In initial [Minimum Viable Product (MVP)](MVP.md) release;
+ 2. And soon after in [future versions](FutureFeatures.md).
 
 Join us:
 

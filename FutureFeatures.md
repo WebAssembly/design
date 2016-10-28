@@ -1,18 +1,104 @@
 # Features to add after the MVP
 
 These are features that make sense in the context of the
-[high-level goals](HighLevelGoals.md) of WebAssembly but are not considered part
-of the [Minimum Viable Product](MVP.md) or the essential
-[post-MVP :unicorn:](PostMVP.md)
-feature set which are expected to be standardized immediately after the
-MVP. These will be prioritized based on developer feedback, and will be
+[high-level goals](HighLevelGoals.md) of WebAssembly but won't be part of the
+initial [Minimum Viable Product](MVP.md) release.
+
+We expect several essential features to be standardized immediately after the
+MVP. Others will be prioritized based on developer feedback, and all will be
 available under [feature tests](FeatureTest.md).
 
-## Great tooling support
+:star: = Essential features we want to prioritize adding shortly after
+the [MVP](MVP.md).
+
+## On Deck for Immediate Design
+
+### Great tooling support :star: :star: :star:
 
 This is covered in the [tooling](Tooling.md) section.
 
-## Finer-grained control over memory
+### Threads :star: :star:
+
+Provide low-level buildings blocks for pthreads-style shared memory: shared
+memory between threads, atomics and futexes (or [synchronic][]).
+
+New atomic memory operators, including loads/stores annotated with their atomic
+ordering property, will follow the [C++11 memory model][], similarly to the
+[PNaCl atomic support][] and the [SharedArrayBuffer][] proposal. Regular loads
+and stores will be bound by a happens-before relationship to atomic operators
+in the same thread of execution, which themselves synchronize-with atomics in
+other threads. Following these rules, regular load/store operators can still be
+elided, duplicated, and split up. This guarantees that data-race free code
+executes as if it were sequentially consistent. Even when there are data races,
+WebAssembly will ensure that the [nondeterminism](Nondeterminism.md) remains
+limited and local.
+
+Modules can have thread-local variables that are disjoint from linear memory
+and can thus be represented efficiently by the engine.
+
+  [synchronic]: http://wg21.link/n4195
+  [C++11 memory model]: http://www.hboehm.info/c++mm/
+  [PNaCl atomic support]: https://developer.chrome.com/native-client/reference/pnacl-c-cpp-language-support#memory-model-and-atomics
+  [SharedArrayBuffer]: https://github.com/tc39/ecmascript_sharedmem
+
+### Fixed-width SIMD :star:
+
+Support fixed-width SIMD vectors, initially only for 128-bit wide vectors as
+demonstrated in [PNaCl's SIMD][] and [SIMD.js][].
+
+SIMD adds new local types (e.g., `f32x4`) so it has to be part of the core
+semantics. SIMD operators (e.g., `f32x4.add`) could be either builtin
+operators (no different from `i32.add`) or exports of a builtin SIMD module.
+
+  [PNaCl's SIMD]: https://developer.chrome.com/native-client/reference/pnacl-c-cpp-language-support#portable-simd-vectors
+  [SIMD.js]: https://github.com/tc39/ecmascript_simd
+
+### Zero-cost Exception Handling :star:
+
+The WebAssembly MVP may support four no-exception
+modes for C++:
+
+* Compiler transforms `throw` to `abort()`.
+* Compiler-enforced `-fno-exceptions` mode (note [caveats][]).
+* Compiler conversion of exceptions to branching at all callsites.
+* In a Web environment exception handling can be emulated using JavaScript
+  exception handling, which can provide correct semantics but isn't fast.
+
+These modes are suboptimal for code bases which rely on C++ exception handling,
+but are perfectly acceptable for C code, or for C++ code which avoids
+exceptions. This doesn't prevent developers from using the C++ standard library:
+their code will function correctly (albeit slower at times) as long as it
+doesn't encounter exceptional cases.
+
+Post-MVP, WebAssembly will gain support for developer access to stack unwinding,
+inspection, and limited manipulation. These are critical to supporting zero-cost
+exception handling by exposing [low-level capabilities][].
+
+In turn, stack unwinding, inspection, and limited manipulation will be used to
+implement `setjmp`/`longjmp`. This can enable all of the defined behavior of
+`setjmp`/`longjmp`, namely unwinding the stack without calling C++
+destructors. It does not, however, allow the undefined behavior case of jumping
+forward to a stack that was already unwound which is sometimes used to implement
+coroutines. Coroutine support is being
+[considered separately](FutureFeatures.md#coroutines).
+
+  [caveats]: https://blog.mozilla.org/nnethercote/2011/01/18/the-dangers-of-fno-exceptions
+  [low-level capabilities]: https://extensiblewebmanifesto.org
+
+### Feature Testing :star:
+
+Post-MVP, some form of feature-testing will be required. We don't yet have the
+experience writing polyfills to know whether `has_feature` is the right
+primitive building block so we're not defining it (or something else) until we
+gain this experience. In the interim, it's possible to do a crude feature test
+(as people do in JavaScript) by just `eval`-ing WebAssembly code and catching
+validation errors.
+
+See [Feature test](FeatureTest.md) for a more detailed sketch.
+
+## Proposals we might consider in the future
+
+### Finer-grained control over memory
 
 Provide access to safe OS-provided functionality including:
 
@@ -49,13 +135,13 @@ provided by the `mmap` OS primitive. One significant exception is that `mmap`
 can allocate noncontiguous virtual address ranges. See the
 [FAQ](FAQ.md#what-about-mmap) for rationale.
 
-## Large page support
+### Large page support
 
 Some platforms offer support for memory pages as large as 16GiB, which 
 can improve  the efficiency of memory management in some situations. WebAssembly
 may offer programs the option to specify a larger page size than the [default](Semantics.md#resizing).
 
-## More expressive control flow
+### More expressive control flow
 
 Some types of control flow (especially irreducible and indirect) cannot be
 expressed with maximum efficiency in WebAssembly without patterned output by the
@@ -76,11 +162,11 @@ Options under consideration:
   making it easier to support other languages, especially functional programming
   languages.
 
-## GC/DOM Integration
+### GC/DOM Integration
 
 See [GC.md](GC.md).
 
-## Linear memory bigger than 4 GiB
+### Linear memory bigger than 4 GiB
 
 The WebAssembly MVP will support the wasm32 mode of WebAssembly, with linear
 memory sizes up to 4 GiB using 32-bit linear memory indices. To support larger
@@ -101,7 +187,7 @@ instance. However, operators with 32-bit indices and operators with 64-bit
 indices will be given separate names to leave open the possibility of
 supporting both in the same instance in the future.
 
-## Source maps integration
+### Source maps integration
 
 * Add a new source maps [module section type](MVP.md#module-structure).
 * Either embed the source maps directly or just a URL from which source maps can
@@ -111,14 +197,14 @@ supporting both in the same instance in the future.
 * Gestate ideas and start discussions at the
   [Source Map RFC repository](https://github.com/source-map/source-map-rfc/issues)
 
-## Coroutines
+### Coroutines
 
 Coroutines will [eventually be part of C++][] and is already popular in other
 programming languages that WebAssembly will support.
 
   [eventually be part of C++]: http://wg21.link/n4499
 
-## Signature-restricted Proper Tail Calls
+### Signature-restricted Proper Tail Calls
 
 See the [asm.js RFC][] for a full description of signature-restricted Proper
 Tail Calls (PTC).
@@ -139,18 +225,18 @@ Useful properties of signature-restricted PTCs:
 
   [asm.js RFC]: http://discourse.specifiction.org/t/request-for-comments-add-a-restricted-subset-of-proper-tail-calls-to-asm-js
  
-## General-purpose Proper Tail Calls
+### General-purpose Proper Tail Calls
 
 General-purpose Proper Tail Calls would have no signature restrictions, and
 therefore be more broadly usable than
 [Signature-restricted Proper Tail Calls](Semantics.md#signature-restricted-proper-tail-calls),
 though there would be some different performance characteristics.
 
-## Asynchronous Signals
+### Asynchronous Signals
 
 TODO
 
-## "Long SIMD"
+### "Long SIMD"
 
 The initial SIMD API will be a "short SIMD" API, centered around fixed-width
 128-bit types and explicit SIMD operators. This is quite portable and useful,
@@ -176,7 +262,7 @@ include:
 
   [a proposal in the SIMD.js repository]: https://github.com/tc39/ecmascript_simd/issues/180
 
-## Platform-independent Just-in-Time (JIT) compilation
+### Platform-independent Just-in-Time (JIT) compilation
 
 WebAssembly is a new virtual ISA, and as such applications won't be able to
 simply reuse their existing JIT-compiler backends. Applications will instead
@@ -205,13 +291,13 @@ are use cases for higher-level functionality and optimization too. One avenue
 for addressing these use cases is a
 [JIT and Optimization library](JITLibrary.md).
 
-## Multiprocess support
+### Multiprocess support
 
 * `vfork`.
 * Inter-process communication.
 * Inter-process `mmap`.
 
-## Trapping or non-trapping strategies.
+### Trapping or non-trapping strategies.
 
 Presently, when an instruction traps, the program is immediately terminated.
 This suits C/C++ code, where trapping conditions indicate Undefined Behavior at
@@ -236,7 +322,7 @@ use cases:
     resuming execution at the trapping instruction with the execution state
     altered, if there can be a reasonable way to specify how that should work.
 
-## Additional integer operators
+### Additional integer operators
 
 * The following operators can be built from other operators already present,
   however in doing so they read at least one non-constant input multiple times,
@@ -259,7 +345,7 @@ use cases:
   * `i64.mor`: sign-agnostic [8x8 bit-matrix multiply with or](http://mmix.cs.hm.edu/doc/instructions-en.html#MOR)
   * `i64.mxor`: sign-agnostic [8x8 bit-matrix multiply with xor](http://mmix.cs.hm.edu/doc/instructions-en.html#MXOR)
 
-## Additional floating point operators
+### Additional floating point operators
 
   * `f32.minnum`: minimum; if exactly one operand is NaN, returns the other operand
   * `f32.maxnum`: maximum; if exactly one operand is NaN, returns the other operand
@@ -275,7 +361,7 @@ Note that some operators, like `fma`, may not be available or may not perform
 well on all platforms. These should be guarded by
 [feature tests](FeatureTest.md) so that if available, they behave consistently.
 
-## Floating point approximation operators
+### Floating point approximation operators
 
   * `f32.reciprocal_approximation`: reciprocal approximation
   * `f64.reciprocal_approximation`: reciprocal approximation
@@ -285,7 +371,7 @@ well on all platforms. These should be guarded by
 These operators would not required to be fully precise, but the specifics
 would need clarification.
 
-## 16-bit and 128-bit floating point support
+### 16-bit and 128-bit floating point support
 
 For 16-bit floating point support, it may make sense to split the feature
 into two parts: support for just converting between 16-bit and 32-bit or
@@ -301,7 +387,7 @@ techniques such as double-double arithmetic. If we standardize 128-bit
 floating point in WebAssembly, it will probably be standard IEEE 754-2008
 quadruple precision.
 
-## Full IEEE 754-2008 conformance
+### Full IEEE 754-2008 conformance
 
 WebAssembly floating point conforms IEEE 754-2008 in most respects, but there
 are a few areas that are
@@ -333,7 +419,7 @@ enabled only from developer tools, that would enable traps on selected floating
 point exceptions, however care should be taken, since not all floating point
 exceptions indicate bugs.
 
-## Flushing Subnormal Values to Zero
+### Flushing Subnormal Values to Zero
 
 Many popular CPUs have significant stalls when processing subnormal values,
 and support modes where subnormal values are flushed to zero which avoid
@@ -341,7 +427,7 @@ these stalls. And, ARMv7 NEON has no support for subnormal values and always
 flushes them. A mode where floating point computations have subnormals flushed
 to zero in WebAssembly would address these two issues.
 
-## Integer Overflow Detection
+### Integer Overflow Detection
 
 There are two different use cases here, one where the application wishes to
 handle overflow locally, and one where it doesn't.
@@ -371,7 +457,7 @@ general-purpose use on several of today's popular hardware architectures.
 
   [handle trap specially]: FutureFeatures.md#trapping-or-non-trapping-strategies
 
-## Better feature testing support
+### Better feature testing support
 
 The [MVP feature testing situation](FeatureTest.md) could be improved by
 allowing unknown/unsupported instructions to decode and validate. The runtime
@@ -382,7 +468,7 @@ lighter-weight alternative to load-time polyfilling (approach 2 in
 were to be standardized and performed natively such that no user-space translation 
 pass was otherwise necessary.
 
-## Mutable global variables
+### Mutable global variables
 
 In the MVP, there are no global variables; C/C++ global variables are stored in
 linear memory and thus accessed through normal
@@ -397,7 +483,7 @@ reduce fragmentation issues. Languages like Fortran which limit aliasing would b
 one use case. C/C++ compilers could also determine that some global variables never
 have their address taken.
 
-## Streaming Compilation
+### Streaming Compilation
 
 The WebAssembly binary format is designed to allow streaming decoding,
 validation and compilation. In the MVP, however, the only way to compile
@@ -421,12 +507,12 @@ of WebAssembly in browsers:
   custom compression (on top of the spec-defined binary format, under generic
   HTTP `Content-Encoding` compression).
 
-## Multiple Return
+### Multiple Return
 
 The stack based nature of WebAssembly lends itself to the possibility
 of supporting multiple return values from blocks / functions.
 
-## Multiple Tables and Memories
+### Multiple Tables and Memories
 
 The MVP limits modules to at most one memory and at most one table (the default
 ones) and there are only operators for accessing the default table and memory.
@@ -444,7 +530,7 @@ would return a first-class reference. Beyond tables and memories, this could
 also be used for function definitions to get a reference to a function (which,
 since opaque, could be implemented as a raw function pointer).
 
-## More Table Operators and Types
+### More Table Operators and Types
 
 In the MVP, WebAssembly has limited functionality for operating on 
 [tables](Semantics.md#table) and the host-environment can do much more (e.g.,

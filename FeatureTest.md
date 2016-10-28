@@ -2,7 +2,7 @@ See [rationale](Rationale.md#feature-testing---motivating-scenarios) for motivat
 
 # Feature Test
 
-[PostMVP :unicorn:][future general], applications will be able to query which features are
+[Post-MVP :unicorn:][future general], applications will be able to query which features are
 supported via
 [`has_feature` or a similar API :unicorn:][future feature testing]. This
 accounts for the pragmatic reality that features are shipped in different orders
@@ -59,7 +59,7 @@ To illustrate, consider 4 examples:
   the application to test `(has_feature "mprotect")` to avoid calling the
   `abort()`. The `has_feature` query could be exposed to C++ code via
   the existing `__builtin_cpu_supports`.
-* [SIMD](PostMVP.md#fixed-width-simd) - When SIMD operators have a good-enough
+* [SIMD]][future simd] - When SIMD operators have a good-enough
   polyfill, e.g., `f32x4.fma` via `f32x4.mul`/`add`, Strategy 2 could be used 
   (similar to the `i32.min_s` example above). However, when a SIMD feature has no
   efficient polyfill (e.g., `f64x2`, which introduces both operators *and*
@@ -100,8 +100,9 @@ can evolve over time.
 See also the [better feature testing support :unicorn:][future feature testing]
 future feature.
 
-[future general]: PostMVP.md
-[future feature testing]: PostMVP.md#feature-testing
+[future general]: FutureFeatures.md
+[future feature testing]: FutureFeatures.md#feature-testing
 [future integer]: FutureFeatures.md#additional-integer-operators
-[future thread]: PostMVP.md#threads
+[future threads]: FutureFeatures.md#threads
+[future simd]: FutureFeatures.md#fixed-width-simd
 [future memory control]: FutureFeatures.md#finer-grained-control-over-memory

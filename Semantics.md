@@ -674,8 +674,8 @@ outside the range which rounds to an integer in range) traps.
     This trap is intended to be impossible for user code to catch or handle, even in the future when it may be possible to
     handle some other kinds of traps or exceptions.
 
-[future general]: PostMVP.md
-[future threads]: PostMVP.md#threads
+[future general]: FutureFeatures.md
+[future threads]: FutureFeatures.md#threads
 [future tail calls]: FutureFeatures.md#general-purpose-proper-tail-calls
 [future multiple tables]: FutureFeatures.md#multiple-tables-and-memories
 [future 64-bit]: FutureFeatures.md#linear-memory-bigger-than-4-gib

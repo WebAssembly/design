@@ -65,7 +65,7 @@ distribution networks and to implement [dynamic linking](DynamicLinking.md).
 
 ## SIMD
 
-Once [SIMD is supported](PostMVP.md#fixed-width-simd) WebAssembly would:
+Once [SIMD is supported](FutureFeatures.md#fixed-width-simd) WebAssembly would:
 
 * Be statically typed analogous to [SIMD.js-in-asm.js][];
 * Reuse specification of operation semantics (with TC39);
