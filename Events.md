@@ -17,3 +17,4 @@
 | Date | Title | Slides | Video | Presenter(s) |
 |-----:|-------|:------:|:-----:|--------------|
 | October 31st 2016 | VMIL16: WebAssembly from wire to machine code: a view inside V8's implementation | | | Ben L. Titzer |
+| November 11th 2016 | Chrome Dev Summit Advanced JS performance with V8 and Web Assembly | | | Seth Thompson |
