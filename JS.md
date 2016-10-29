@@ -451,6 +451,10 @@ aliases `m` and whose
 [[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
 is set to the byte length of `m`.
 
+Any attempts to [`detach`](http://tc39.github.io/ecma262/#sec-detacharraybuffer) `buffer` *other* than
+the detachment performed by [`m.grow`](#webassemblymemoryprototypegrow) shall throw a 
+[`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+
 Return a new `WebAssembly.Memory` instance with [[Memory]] set to `m` and
 [[BufferObject]] set to `buffer`.
 
