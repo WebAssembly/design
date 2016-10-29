@@ -24,11 +24,11 @@ WebAssembly is currently being designed as an open standard by a [W3C Community 
 |--------------------------------------------|--------------------------|
 | High Level Goals                           | [design/HighLevelGoals.md](HighLevelGoals.md) |
 | Frequently Asked Questions                 | [design/FAQ.md](FAQ.md)            |
-| Language Spec (in progress)                | [spec/README.md](https://github.com/WebAssembly/spec)           |
+| Language Specification                     | [spec/README.md](https://github.com/WebAssembly/spec)           |
 
 ## Design Process & Contributing
 
-The actual WebAssembly specification is being developed in the [spec repository](https://github.com/WebAssembly/spec/). For now, high-level design discussions should continue to be held in the design repository, via issues and pull requests, so that the spec work can remain focused.
+The WebAssembly specification is being developed in the [spec repository](https://github.com/WebAssembly/spec/). For now, high-level design discussions should continue to be held in the design repository, via issues and pull requests, so that the specification work can remain focused.
 
 We've mapped out features we expect to ship:
 
