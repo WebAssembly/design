@@ -1,8 +1,8 @@
 # WebAssembly Design
 
-> This repository contains documents describing the design and high-level overview of WebAssembly.
+This repository contains documents describing the design and high-level overview of WebAssembly.
 
-> The documents and discussions in this repository are part of the [WebAssembly Community Group](https://www.w3.org/community/webassembly/).
+The documents and discussions in this repository are part of the [WebAssembly Community Group](https://www.w3.org/community/webassembly/).
 
 ## Overview
 
