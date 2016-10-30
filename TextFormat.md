@@ -3,9 +3,9 @@
 WebAssembly does not yet have a standardized text format that encodes function
 bodies in addition to module structure, data segments and other program
 metadata in a way that is eqivalent to the [binary format](BinaryEncoding.md).
-WebAssembly does, however, have a specified [representation](#linear-bytecode)
-of function bodies which should be displayed in browsers and other tools when
-[debugging](#debug-symbol-integration) modules.
+WebAssembly does, however, have a specified
+[textual representation](#linear-bytecode) of function bodies which should be displayed in browsers and other tools when [debugging](#debug-symbol-integration)
+modules.
 
 # Linear bytecode
 
@@ -32,8 +32,7 @@ int factorial(int n) {
     return 1;
   else
     return n * fac(n-1);
-}
-    </pre></td>
+}</pre></td>
     <td><pre>
 20 00
 42 00
@@ -47,8 +46,7 @@ int factorial(int n) {
 7d
 10 00
 7e
-0b
-    </pre></td>
+0b</pre></td>
     <td><pre>
 get_local 0
 i64.const 0
@@ -62,8 +60,7 @@ else
     i64.sub
     call 0
     i64.mul
-end
-    </pre></td>
+end</pre></td>
   </tr>
 </table>
 
