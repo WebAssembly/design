@@ -60,7 +60,7 @@ All types are distinguished by a negative `varint7` values that is the first byt
 | Opcode | Type constructor |
 |--------|------------------|
 | `-0x01` (i.e., the byte `0x7f`) | `i32` |
-| `-0x02` (i.e., the byte `0x7e`) | `i32` |
+| `-0x02` (i.e., the byte `0x7e`) | `i64` |
 | `-0x03` (i.e., the byte `0x7d`) | `f32` |
 | `-0x04` (i.e., the byte `0x7c`) | `f64` |
 | `-0x10` (i.e., the byte `0x70`) | `anyfunc` |
