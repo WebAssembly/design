@@ -9,12 +9,7 @@ modules.
 
 # Linear bytecode
 
-WebAssembly function bodies encode bytecode instructions which have a
-specified textual representation. A linear presentation of these sequences of
-instructions is the only textual encoding of function bodies which can
-accurately represent the computations of the
-[structured stack machine](Semantics.md). Therefore, these linear instructions
-are a minimum necessary part of any text format.
+WebAssembly function bodies encode bytecode instructions which have specified canonical opcode names. A linear presentation of these sequences of instructions allows a direct human-readable order-preserving presentation of the binary format. This format is suitable for opcode by opcode inspection of a WebAssembly program and can readily be related to the [sematics](Semantics.md) of the format. 
 
 Here is an example function illustrated in C++, binary, and text (linear
 assembly bytecode):
@@ -124,8 +119,8 @@ cases:
 
 ## Additional design considerations
 
-There is no requirement to use JavaScript syntax; this format is not intended to be evaluated or translated directly into JavaScript. There may also be substantive reasons to use notation that is different than JavaScript (for example, WebAssembly has a 32-bit integer type, and it should be represented in the text format, since that is the natural thing to do for WebAssembly, regardless of JavaScript not having such a type). On the other hand, when there are no substantive reasons and the options are basically bikeshedding, then it does make sense for the text format to match existing conventions on the Web (for example, curly braces, as in JavaScript and CSS).
+There is no requirement to use JavaScript syntax; this format is not intended to be evaluated or translated directly into JavaScript. There may also be substantive reasons to use notation that is different than JavaScript (for example, WebAssembly has a 64-bit integer type, and it should be represented in the text format, since that is the natural thing to do for WebAssembly, regardless of JavaScript not having such a type). On the other hand, when there are no substantive reasons and the options are basically bikeshedding, then it does make sense for the text format to match existing conventions on the Web (for example, curly braces, as in JavaScript and CSS).
 
-The text format isn't uniquely representable. Multiple textual files can assemble to the same binary file, for example whitespace isn't relevant and memory initialization can be broken out into smaller pieces in the text format.
+The text format may not be uniquely representable. Multiple textual files will likley assemble to the same binary file. For example, whitespace shouldn't be significant and memory initialization can be broken out into smaller pieces in a text format.
 
-The text format is precise in that values that cannot be accurately represented in the binary format are considered invalid text. Floating-point numbers are therefore represented as hexadecimal floating-point as specified by the C99 standard, which IEEE-754-2008 section 5.12.3 also specifies. The textual format may be improved to also support more human-readable representations, but never at the cost of accurate representation.
+The text format should be precise in that values that cannot be accurately represented in the binary format are considered invalid text. Floating-point numbers should therefore be represented as hexadecimal floating-point as specified by C99, C++17, and IEEE-754-2008 section 5.12.3. The textual format may be improved to also support more human-readable representations, but never at the cost of accurate representation.
