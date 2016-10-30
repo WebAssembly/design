@@ -480,9 +480,9 @@ It is legal to have several entries with the same type.
 | ---- | ---- | ---- | ---- |
 | `unreachable` | `0x00` | | trap immediately |
 | `nop` | `0x01` | | no operation |
-| `block` | `0x02` | sig : `inline_signature_type` | begin a sequence of expressions, yielding 0 or 1 values |
-| `loop` | `0x03` |  sig : `inline_signature_type` | begin a block which can also form control flow loops |
-| `if` | `0x04` | sig : `inline_signature_type` | begin if expression |
+| `block` | `0x02` | sig : `block_type` | begin a sequence of expressions, yielding 0 or 1 values |
+| `loop` | `0x03` |  sig : `block_type` | begin a block which can also form control flow loops |
+| `if` | `0x04` | sig : `block_type` | begin if expression |
 | `else` | `0x05` | | begin else expression of if |
 | `end` | `0x0b` | | end a block, loop, or if |
 | `br` | `0x0c` | relative_depth : `varuint32` | break that targets an outer nested block |
