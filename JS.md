@@ -679,6 +679,6 @@ fetch('demo.wasm').then(response =>
 * `WebAssembly.Module` `exports`/`imports` properties (reflection)
 * JS API for cyclic imports (perhaps a Promise-returning `WebAssembly.instantiate`?)
 
-[future general]: PostMVP.md
+[future general]: FutureFeatures.md
 [future streaming]: FutureFeatures.md#streaming-compilation
 [future types]: FutureFeatures.md#more-table-operators-and-types

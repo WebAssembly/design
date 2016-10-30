@@ -166,4 +166,4 @@ consider for this feature, but a few points of tentative agreement are:
   [Typed Objects](https://github.com/nikomatsakis/typed-objects-explainer/)
   proposal.
 
-[future general]: PostMVP.md
+[future general]: FutureFeatures.md

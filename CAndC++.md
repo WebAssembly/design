@@ -41,13 +41,13 @@ compilers need to support high-quality implementations.
 While [the MVP](MVP.md) will be fully functional, additional features enabling
 greater performance will be added soon after, including:
 
- * [Support for multi-threaded execution with shared memory](PostMVP.md#threads).
+ * [Support for multi-threaded execution with shared memory](FutureFeatures.md#threads).
 
- * [Zero-cost C++ exception handling](PostMVP.md#zero-cost-exception-handling).
+ * [Zero-cost C++ exception handling](FutureFeatures.md#zero-cost-exception-handling).
    C++ exceptions can be implemented without this, but this feature will
    enable them to have lower runtime overhead.
 
- * Support for [128-bit SIMD](PostMVP.md#fixed-width-simd). SIMD will be
+ * Support for [128-bit SIMD](FutureFeatures.md#fixed-width-simd). SIMD will be
    exposed to C/C++ though explicit APIs such as [LLVM's vector extensions]
    and [GCC's vector extensions], auto-vectorization, and emulated APIs from
    other platforms such as `<xmmintrin.h>`.

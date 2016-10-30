@@ -10,9 +10,10 @@
     * a [Minimum Viable Product (MVP)](MVP.md) for the standard with
       roughly the same functionality as [asm.js](http://asmjs.org), primarily
       aimed at [C/C++](CAndC++.md);
-    * a [follow-up to the MVP](PostMVP.md) which adds several more
-      essential features; and
-    * [additional features :unicorn:][future features], specified iteratively and
+    * [additional features :unicorn:][future features],
+      initially focused on key features like threads,
+      zero cost exceptions, and SIMD,
+      follow by additional features
       prioritized by feedback and experience, including support for languages
       other than C/C++.
 3. Design to execute within and integrate well with the *existing*

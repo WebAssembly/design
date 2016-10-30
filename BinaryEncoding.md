@@ -6,7 +6,7 @@ The binary encoding is a dense representation of module information that enables
 small files, fast decoding, and reduced memory usage.
 See the [rationale document](Rationale.md#why-a-binary-encoding) for more detail.
 
-[:unicorn:][future general] = Planned [future](PostMVP.md) feature
+[:unicorn:][future general] = Planned [future][future general] feature
 
 The encoding is split into three layers:
 
@@ -736,9 +736,9 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `f32.reinterpret/i32` | `0xbe` | | |
 | `f64.reinterpret/i64` | `0xbf` | | |
 
-[future general]: PostMVP.md
-[future multiple return]: PostMVP.md#multiple-return
-[future threads]: PostMVP.md#threads
+[future general]: FutureFeatures.md
+[future multiple return]: FutureFeatures.md#multiple-return
+[future threads]: FutureFeatures.md#threads
 [future types]: FutureFeatures.md#more-table-operators-and-types
 [future multiple tables]: FutureFeatures.md#multiple-tables-and-memories
 [future compression]: https://github.com/WebAssembly/decompressor-prototype/blob/master/CompressionLayer1.md
