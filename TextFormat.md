@@ -96,7 +96,8 @@ story, a lightweight, optional "debug symbol" global section may be defined
 which associates names with each indexed entity and, when present, these names
 will be used in the text format projected from a binary WebAssembly module.
 
-# Future design :unicorn:
+# Future design
+## :unicorn:
 
 An official text format capable of representing WebAssembly modules needs a
 way of encoding, in addition to function bodies: declarations, function

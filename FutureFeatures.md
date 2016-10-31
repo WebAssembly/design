@@ -13,11 +13,13 @@ the [MVP](MVP.md).
 
 ## On Deck for Immediate Design
 
-### Great tooling support :star: :star: :star:
+### Great tooling support
+#### :star: :star: :star:
 
 This is covered in the [tooling](Tooling.md) section.
 
-### Threads :star: :star:
+### Threads
+#### :star: :star:
 
 Provide low-level buildings blocks for pthreads-style shared memory: shared
 memory between threads, atomics and futexes (or [synchronic][]).
@@ -41,7 +43,8 @@ and can thus be represented efficiently by the engine.
   [PNaCl atomic support]: https://developer.chrome.com/native-client/reference/pnacl-c-cpp-language-support#memory-model-and-atomics
   [SharedArrayBuffer]: https://github.com/tc39/ecmascript_sharedmem
 
-### Fixed-width SIMD :star:
+### Fixed-width SIMD
+#### :star:
 
 Support fixed-width SIMD vectors, initially only for 128-bit wide vectors as
 demonstrated in [PNaCl's SIMD][] and [SIMD.js][].
@@ -53,7 +56,8 @@ operators (no different from `i32.add`) or exports of a builtin SIMD module.
   [PNaCl's SIMD]: https://developer.chrome.com/native-client/reference/pnacl-c-cpp-language-support#portable-simd-vectors
   [SIMD.js]: https://github.com/tc39/ecmascript_simd
 
-### Zero-cost Exception Handling :star:
+### Zero-cost Exception Handling
+#### :star:
 
 The WebAssembly MVP may support four no-exception
 modes for C++:
@@ -85,7 +89,8 @@ coroutines. Coroutine support is being
   [caveats]: https://blog.mozilla.org/nnethercote/2011/01/18/the-dangers-of-fno-exceptions
   [low-level capabilities]: https://extensiblewebmanifesto.org
 
-### Feature Testing :star:
+### Feature Testing
+#### :star:
 
 Post-MVP, some form of feature-testing will be required. We don't yet have the
 experience writing polyfills to know whether `has_feature` is the right
