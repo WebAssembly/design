@@ -99,8 +99,10 @@ will be used in the text format projected from a binary WebAssembly module.
 # Future design
 ## :unicorn:
 
-An official text format capable of representing WebAssembly modules needs a
-way of encoding, in addition to function bodies: declarations, function
+An official text format for WebAssembly needs to
+be able to represent any well-structured module unambiguously.
+In addition to function bodies and their instruction sequences, it also needs a
+way of encoding declarations, function
 signatures, data segments, tables, and other
 [sections](BinaryEncoding.md#high-level-structure) of the binary format.
 
