@@ -411,10 +411,9 @@ Debugging techniques are also important, but they don't necessarily need to be
 in the spec itself. Implementations are welcome (and encouraged) to support
 non-standard execution modes, enabled only from developer tools, such as modes
 with alternate rounding, or evaluation of floating point operators at greater
-precision, to support [techniques for detecting numerical instability]
-(https://www.cs.berkeley.edu/~wkahan/Mindless.pdf), or modes using alternate
-NaN bitpattern rules, to carry diagnostic information and help developers track
-down the sources of NaNs.
+precision, to support [techniques for detecting numerical instability](https://www.cs.berkeley.edu/~wkahan/Mindless.pdf),
+or modes using alternate NaN bitpattern rules, to carry diagnostic information
+and help developers track down the sources of NaNs.
 
 To help developers find the sources of floating point exceptions,
 implementations may wish to provide a mode where NaN values are produced with
