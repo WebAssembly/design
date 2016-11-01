@@ -82,10 +82,9 @@ expected to be defined in accompaniment.
 
 WebAssembly doesn't change the C or C++ languages. Things which cause
 undefined behavior in C or C++ are still bugs when compiling for WebAssembly
-[even when the corresponding behavior in WebAssembly itself is defined]
-(Nondeterminism.md#note-for-users-of-c-c-and-similar-languages). C and C++
-optimizers still assume that undefined behavior won't occur, so such bugs
-can still lead to surprising behavior.
+[even when the corresponding behavior in WebAssembly itself is defined](Nondeterminism.md#note-for-users-of-c-c-and-similar-languages).
+C and C++ optimizers still assume that undefined behavior won't occur,
+so such bugs can still lead to surprising behavior.
 
 For example, while unaligned memory access is
 [fully defined](Semantics.md#alignment) in WebAssembly, C and C++ compilers
@@ -115,8 +114,7 @@ Most implementation-defined behavior in C and C++ is dependent on the compiler
 rather than on the underlying platform. For those details that are dependent
 on the platform, on WebAssembly they follow naturally from having 8-bit bytes,
 32-bit and 64-bit two's complement integers, and
-[32-bit and 64-bit IEEE-754-2008-style floating point support]
-(Semantics.md#floating-point-operators).
+[32-bit and 64-bit IEEE-754-2008-style floating point support](Semantics.md#floating-point-operators).
 
 ## Portability of compiled code
 
