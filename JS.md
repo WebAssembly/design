@@ -166,6 +166,45 @@ Otherwise, this function performs synchronous compilation of the `BufferSource`:
   the validated `Ast.module`.
 * On failure, a new `WebAssembly.CompileError` is thrown.
 
+### `WebAssembly.Module.exports`
+
+The `exports` function has the signature:
+
+```
+Array exports(moduleObject)
+```
+
+If `moduleObject` is not a `WebAssembly.Module` instance, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
+
+This function returns an `Array` produced by mapping each
+[`Ast.export`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L152)
+`e` of [moduleObject.[[Module]].exports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L187)
+to the Object `{ name: String(e.name), kind: e.ekind }` where `e.name` is [decoded as UTF8](Web.md#names)
+and `e.ekind` is mapped to one of the String values `"function"`, `"table"`, `"memory"`, `"global"`.
+
+Note: other fields like `signature` may be added in the future.
+
+### `WebAssembly.Module.imports`
+
+The `imports` function has the signature:
+
+```
+Array imports(moduleObject)
+```
+
+If `moduleObject` is not a `WebAssembly.Module` instance, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
+
+This function returns an `Array` produced by mapping each
+[`Ast.import`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L167)
+`i` of [moduleObject.[[Module]].imports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L203)
+to the Object `{ module: String(i.module_name), name: String(i.item_name), kind: i.ikind }` where
+`i.module_name` and `i.item_name` are  [decoded as UTF8](Web.md#names) and
+`i.ikind` is mapped to one of the String values `"function"`, `"table"`, `"memory"`, `"global"`.
+
+Note: other fields like `signature` may be added in the future.
+
 ### Structured Clone of a `WebAssembly.Module`
 
 A `WebAssembly.Module` is a
@@ -676,8 +715,7 @@ fetch('demo.wasm').then(response =>
 
 ## TODO
 
-* `WebAssembly.Module` `exports`/`imports` properties (reflection)
-* JS API for cyclic imports (perhaps a Promise-returning `WebAssembly.instantiate`?)
+* JS API for cyclic imports
 
 [future general]: FutureFeatures.md
 [future streaming]: FutureFeatures.md#streaming-compilation
