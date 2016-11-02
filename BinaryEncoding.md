@@ -357,7 +357,7 @@ The start section declares the [start function](Modules.md#module-start-function
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| index | `varuint32` | start function index |
+| index | `varuint32` | start [function index](Modules.md#function-index-space) |
 
 ### Element section
 
