@@ -168,10 +168,18 @@ Otherwise, this function performs synchronous compilation of the `BufferSource`:
 
 ### `WebAssembly.Module.exports`
 
-The initial value of the `exports` property of a `Module` `m` is an `Array` of
-Object values produced by mapping each 
+The `exports` function has the signature:
+
+```
+Array exports(moduleObject)
+```
+
+If `moduleObject` is not a `WebAssembly.Module` instance, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
+
+This function returns an `Array` produced by mapping each
 [`Ast.export`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L152)
-`e` of [m.[[Module]].exports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L187)
+`e` of [moduleObject.[[Module]].exports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L187)
 to the Object `{ name: String(e.name), kind: e.ekind }` where `e.name` is [decoded as UTF8](Web.md#names)
 and `e.ekind` is mapped to one of the String values `"function"`, `"table"`, `"memory"`, `"global"`.
 
@@ -179,10 +187,18 @@ Note: other fields like `signature` may be added in the future.
 
 ### `WebAssembly.Module.imports`
 
-The initial value of the `imports` property of a `Module` `m` is an `Array` of
-Object values produced by mapping each
+The `imports` function has the signature:
+
+```
+Array imports(moduleObject)
+```
+
+If `moduleObject` is not a `WebAssembly.Module` instance, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
+
+This function returns an `Array` produced by mapping each
 [`Ast.import`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L167)
-`i` of [m.[[Module]].imports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L203)
+`i` of [moduleObject.[[Module]].imports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L203)
 to the Object `{ module: String(i.module_name), name: String(i.item_name), kind: i.ikind }` where
 `i.module_name` and `i.item_name` are  [decoded as UTF8](Web.md#names) and
 `i.ikind` is mapped to one of the String values `"function"`, `"table"`, `"memory"`, `"global"`.
