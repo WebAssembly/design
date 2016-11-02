@@ -427,8 +427,9 @@ and locals in the [text format](TextFormat.md).
 | entries | `function_names*` | sequence of names |
 
 The sequence of `function_names` assigns names to the corresponding
-function index. The count may be greater or less than the actual number of
-functions.
+[function index](#function-index-space). (Note: this assigns names to both
+imported and module-defined functions.) The count may be greater or less than
+the actual number of functions.
 
 #### Function names
 
