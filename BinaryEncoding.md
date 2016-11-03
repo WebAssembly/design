@@ -357,7 +357,7 @@ The start section declares the [start function](Modules.md#module-start-function
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| index | `varuint32` | start function index |
+| index | `varuint32` | start [function index](Modules.md#function-index-space) |
 
 ### Element section
 
@@ -427,8 +427,9 @@ and locals in the [text format](TextFormat.md).
 | entries | `function_names*` | sequence of names |
 
 The sequence of `function_names` assigns names to the corresponding
-function index. The count may be greater or less than the actual number of
-functions.
+[function index](Modules.md#function-index-space). (Note: this assigns names to both
+imported and module-defined functions.) The count may be greater or less than
+the actual number of functions.
 
 #### Function names
 
