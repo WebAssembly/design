@@ -32,7 +32,7 @@ The WebAssembly specification is being developed in the [spec repository](https:
 
 We've mapped out features we expect to ship:
 
- 1. In initial [Minimum Viable Product (MVP)](MVP.md) release;
+ 1. An initial [Minimum Viable Product (MVP)](MVP.md) release;
  2. And soon after in [future versions](FutureFeatures.md).
 
 Join us:
