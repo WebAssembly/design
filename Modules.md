@@ -300,7 +300,7 @@ The *function index space* indexes all imported and internally-defined
 function definitions, assigning monotonically-increasing indices based on the
 order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 Thus, the index space starts at zero with the function imports (if any) followed
-by the functions defined within the module
+by the functions defined within the module.
 
 The function index space is used by:
 
@@ -312,7 +312,7 @@ The *global index space* indexes all imported and internally-defined
 global definitions, assigning monotonically-increasing indices based on the
 order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 Thus, the index space starts at zero with the global imports (if any) followed
-by the globals defined within the module
+by the globals defined within the module.
 
 The global index space is used by:
 
@@ -327,7 +327,7 @@ The *linear memory index space* indexes all imported and internally-defined
 linear memory definitions, assigning monotonically-increasing indices based on the
 order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 Thus, the index space starts at zero with the memory imports (if any) followed
-by the memories defined within the module
+by the memories defined within the module.
 
 The linear memory index space is only used by the 
 [data section](#data-section). In the MVP, there is at most one linear memory so
@@ -340,7 +340,7 @@ The *table index space* indexes all imported and internally-defined
 table definitions, assigning monotonically-increasing indices based on the
 order of definition in the module (as defined by the [binary encoding](BinaryEncoding.md)).
 Thus, the index space starts at zero with the table imports (if any) followed
-by the tables defined within the module
+by the tables defined within the module.
 
 The table index space is only used by the [elements section](#elements-section).
 In the MVP, there is at most one table so this index space is just
