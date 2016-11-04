@@ -192,7 +192,8 @@ invalidate a module.
 | name | `bytes` ? | section name string, present if `id == 0` |
 | payload_data  | `bytes` | content of this section, of length `payload_len - sizeof(name) - sizeof(name_len)` |
 
-Each section is optional and may appear at most once.
+Each known section is optional and may appear at most once.
+Unknown sections all have the same `id`, and can be named non-uniquely (all bytes composing their names can be identical).
 Known sections from this list may not appear out of order.
 The content of each section is encoded in its `payload_data`.
 
@@ -417,6 +418,7 @@ User-defined section string: `"name"`
 The names section does not change execution semantics, and thus is not allocated a section code.
 It is encoded as an unknown section (id `0`) followed by the identification string `"name"`.
 Like all unknown sections, a validation error in this section does not cause validation of the module to fail.
+The name section may appear only once, and only after the [Data section](#Data-section).
 The expectation is that, when a binary WebAssembly module is viewed in a browser or other development
 environment, the names in this section will be used as the names of functions
 and locals in the [text format](TextFormat.md).
