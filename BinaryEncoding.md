@@ -192,8 +192,8 @@ invalidate a module.
 | name | `bytes` ? | section name string, present if `id == 0` |
 | payload_data  | `bytes` | content of this section, of length `payload_len - sizeof(name) - sizeof(name_len)` |
 
-Each section is optional and may appear at most once.
-Unknown sections must be uniquely named (all bytes composing their names must be identical).
+Each known section is optional and may appear at most once.
+Unknown sections all have the same `id`, and can be named non-uniquely (all bytes composing their names can be identical).
 Known sections from this list may not appear out of order.
 The content of each section is encoded in its `payload_data`.
 
