@@ -289,8 +289,8 @@ Each function has a fixed, pre-declared number of *local variables* which occupy
 index space local to the function. Parameters are addressed as local variables. Local
 variables do not have addresses and are not aliased by linear memory. Local
 variables have [value types](#types) and are initialized to the appropriate zero value for their
-type at the beginning of the function, except parameters which are initialized to the values
-of the arguments passed to the function.
+type (`0` for integers, `+0.` for floating-point) at the beginning of the function,
+except parameters which are initialized to the values of the arguments passed to the function.
 
   * `get_local`: read the current value of a local variable
   * `set_local`: set the current value of a local variable
