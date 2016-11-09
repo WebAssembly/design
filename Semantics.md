@@ -281,7 +281,7 @@ to hold the array of indirectly-callable functions. Thus, in the MVP:
   this can only be done through the host environment (e.g., the `WebAssembly`
   [JavaScript API](JS.md#webassemblytable-objects)).
 
-These restrictions may be relaxed in the [future :unicorn:][types].
+These restrictions may be relaxed in the [future :unicorn:][future types].
 
 ## Local variables
 
@@ -534,7 +534,7 @@ Floating point arithmetic follows the IEEE 754-2008 standard, except that:
    supported.
 
 In the future, these limitations may be lifted, enabling
-[full IEEE 754-2008 support :unicorn:][future ieee 745].
+[full IEEE 754-2008 support :unicorn:][future ieee 754].
 
 Note that not all operators required by IEEE 754-2008 are provided directly.
 However, WebAssembly includes enough functionality to support reasonable library
