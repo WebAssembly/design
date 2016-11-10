@@ -9,7 +9,7 @@ modules.
 
 # Linear bytecode
 
-WebAssembly function bodies encode bytecode instructions which have specified canonical opcode names. A linear presentation of these sequences of instructions allows a direct human-readable order-preserving presentation of the binary format. This format is suitable for opcode by opcode inspection of a WebAssembly program and can readily be related to the [sematics](Semantics.md) of the format. 
+WebAssembly function bodies encode bytecode instructions which have specified canonical opcode names. A linear presentation of these sequences of instructions allows a direct human-readable order-preserving presentation of the binary format. This format is suitable for opcode by opcode inspection of a WebAssembly program and can readily be related to the [semantics](Semantics.md) of the format. 
 
 Here is an example function illustrated in C++, binary, and text (linear
 assembly bytecode):

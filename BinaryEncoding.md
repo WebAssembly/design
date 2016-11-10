@@ -464,7 +464,7 @@ Function bodies consist of a sequence of local variable declarations followed by
 | local_count | `varuint32` | number of local entries |
 | locals | `local_entry*` | local variables |
 | code | `byte*` | bytecode of the function |
-| end | `byte` | `0x0f`, indicating the end of the body |
+| end | `byte` | `0x0b`, indicating the end of the body |
 
 #### Local Entry
 
