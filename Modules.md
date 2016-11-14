@@ -304,7 +304,10 @@ by the functions defined within the module.
 
 The function index space is used by:
 
-* [calls](Semantics.md#calls), to identify the callee of a direct call
+* [Calls](Semantics.md#calls), to identify the callee of a direct call.
+* [Elements](Modules.md#elements-section).
+* [Exports](BinaryEncoding.md#export-section), to determine which functions are exposed to the embedder.
+* [Start function](Modules.md#module-start-function), to identify which function is called when the instance is fully initialized.
 
 ## Global Index Space
 
