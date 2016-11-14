@@ -304,7 +304,8 @@ by the functions defined within the module.
 
 The function index space is used by:
 
-* [calls](Semantics.md#calls), to identify the callee of a direct call
+* [Calls](Semantics.md#calls), to identify the callee of a direct call.
+* [Exports](BinaryEncoding.md#export-section), to determine which functions are exposed to the embedder.
 
 ## Global Index Space
 
