@@ -384,7 +384,7 @@ pushed back onto the stack, and the program counter is updated to the end of the
 
 Branches that target a `loop` do not yield a value; they pop any values pushed onto the stack since the start of the loop and set the program counter to the start of the loop.
 
-The `drop` operator can be used to explicitly pop and a value from the stack.
+The `drop` operator can be used to explicitly pop a value from the stack.
 
 The implicit popping associated with explicit branches makes compiling expression languages straightforward, even non-local
 control-flow transfer, requiring fewer drops.
