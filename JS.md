@@ -210,7 +210,7 @@ Note: other fields like `signature` may be added in the future.
 The `userSections` function has the signature:
 
 ```
-Array userSections(modueObject, sectionName)
+Array userSections(moduleObject, sectionName)
 ```
 
 If `moduleObject` is not a `WebAssembly.Module`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
