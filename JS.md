@@ -221,8 +221,8 @@ Let `sectionNameString` be the result of [`ToString`](https://tc39.github.io/ecm
 This function returns an `Array` produced by mapping each
 [user-defined section](BinaryEncoding.md#high-level-structure) (i.e., section with
 `id` 0) whose `name` field ([decoded as UTF-8](Web.md#names)) is equal to
-`sectionNameString` to an `ArrayBuffer` containing the section's `payload_data`.
-(Note: `payload_data` does not include `name` or `name_len`.)
+`sectionNameString` to an `ArrayBuffer` containing a copy of the section's
+`payload_data`. (Note: `payload_data` does not include `name` or `name_len`.)
 
 ### Structured Clone of a `WebAssembly.Module`
 
