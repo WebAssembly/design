@@ -174,7 +174,7 @@ The `exports` function has the signature:
 Array exports(moduleObject)
 ```
 
-If `moduleObject` is not a `WebAssembly.Module` instance, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+If `moduleObject` is not a `WebAssembly.Module`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
 This function returns an `Array` produced by mapping each
@@ -193,7 +193,7 @@ The `imports` function has the signature:
 Array imports(moduleObject)
 ```
 
-If `moduleObject` is not a `WebAssembly.Module` instance, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+If `moduleObject` is not a `WebAssembly.Module`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
 This function returns an `Array` produced by mapping each
@@ -213,7 +213,7 @@ The `sections` function has the signature:
 Array sections(modueObject, sectionName)
 ```
 
-If `moduleObject` is not a `WebAssembly.Module` instance, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+If `moduleObject` is not a `WebAssembly.Module`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
 If `Type(sectionName)` is not String, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
@@ -268,7 +268,7 @@ If the NewTarget is `undefined`, a [`TypeError`](https://tc39.github.io/ecma262/
 exception is thrown (i.e., this
 constructor cannot be called as a function without `new`).
 
-If `moduleObject` is not a `WebAssembly.Module` instance, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+If `moduleObject` is not a `WebAssembly.Module`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
 Let `module` be the [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L176)
