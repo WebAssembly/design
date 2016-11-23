@@ -205,12 +205,12 @@ to the Object `{ module: String(i.module_name), name: String(i.item_name), kind:
 
 Note: other fields like `signature` may be added in the future.
 
-### `WebAssembly.Module.sections`
+### `WebAssembly.Module.userSections`
 
-The `sections` function has the signature:
+The `userSections` function has the signature:
 
 ```
-Array sections(modueObject, sectionName)
+Array userSections(modueObject, sectionName)
 ```
 
 If `moduleObject` is not a `WebAssembly.Module`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
