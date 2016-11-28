@@ -205,12 +205,12 @@ to the Object `{ module: String(i.module_name), name: String(i.item_name), kind:
 
 Note: other fields like `signature` may be added in the future.
 
-### `WebAssembly.Module.userSections`
+### `WebAssembly.Module.customSections`
 
-The `userSections` function has the signature:
+The `customSections` function has the signature:
 
 ```
-Array userSections(moduleObject, sectionName)
+Array customSections(moduleObject, sectionName)
 ```
 
 If `moduleObject` is not a `WebAssembly.Module`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
@@ -219,7 +219,7 @@ is thrown.
 Let `sectionNameString` be the result of [`ToString`](https://tc39.github.io/ecma262/#sec-tostring)(`sectionName`).
 
 This function returns an `Array` produced by mapping each
-[user-defined section](BinaryEncoding.md#high-level-structure) (i.e., section with
+[custom section](BinaryEncoding.md#high-level-structure) (i.e., section with
 `id` 0) whose `name` field ([decoded as UTF-8](Web.md#names)) is equal to
 `sectionNameString` to an `ArrayBuffer` containing a copy of the section's
 `payload_data`. (Note: `payload_data` does not include `name` or `name_len`.)
