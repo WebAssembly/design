@@ -231,11 +231,6 @@ internal slot:
 * [[Instance]] : an [`Instance.instance`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L17)
   which is the WebAssembly spec definition of an instance
 
-as well as one plain data property (configurable, writable, enumerable)
-added by the constructor:
-
-* exports : a [Module Namespace Object](http://tc39.github.io/ecma262/#sec-module-namespace-objects)
-
 ### `WebAssembly.Instance` Constructor
 
 The `WebAssembly.Instance` constructor has the signature:
@@ -352,16 +347,17 @@ Note: For the purpose of the above algorithm, two [closure](https://github.com/W
 * Either they are both WebAssembly functions for the same instance and referring to the same function definition.
 * Or they are identical host functions (i.e., each host function value created from a JavaScript function is considered fresh).
 
-Let `moduleRecord` be a new [WebAssembly Module Record](#webassembly-module-record)
-(given `exports`).
-
-Let `exportStrings` be the projected list of only the first (string) components
-of `exports`. Let `moduleNamespace` be the result of calling 
-[`ModuleNamespaceCreate(moduleRecord, exportStrings)`](http://tc39.github.io/ecma262/#sec-modulenamespacecreate).
-Set `moduleRecord.[[Namespace]]` to `moduleNamespace`.
+Let `exportsObject` be a new [frozen](https://tc39.github.io/ecma262/#sec-object.freeze)
+plain JS object with [[Prototype]] set to Null and with properties defined
+by mapping each export in `exports` to an enumerable, non-writable,
+non-configurable data property. Note: the validity and uniqueness checks
+performed during [module compilation](#webassemblymodule-constructor) ensure
+that each property name is valid and no properties are defined twice.
 
 Let `instanceObject` be a new `WebAssembly.Instance` object setting
-`[[Instance]]` to `instance` and `exports` to `moduleNamespace`.
+the internal `[[Instance]]` slot to `instance`.
+
+Perform [`CreateDataProperty`](https://tc39.github.io/ecma262/#sec-createdataproperty)(`instance`, `"exports"`, `exportsObject`).
 
 If, after evaluating the `offset` [initializer expression](Modules.md#initializer-expression)
 of every [Data](Modules.md#data-section) and [Element](Modules.md#elements-section)
@@ -379,28 +375,6 @@ If a [`start`](Modules.md#module-start-function) is present, it is evaluated
 given `instance`. Any errors thrown by `start` are propagated to the caller.
 
 Return `instanceObject`.
-
-### WebAssembly Module Record
-
-[Abstract Module Record](http://tc39.github.io/ecma262/#sec-abstract-module-records)
-is a spec-internal concept used to define ES6 modules. This abstract class currently
-has one concrete subclass, [Source Text Module Record](http://tc39.github.io/ecma262/#sec-source-text-module-records)
-which corresponds to a normal ES6 module. These interfaces are used to define the
-[process of loading a module on the Web](https://html.spec.whatwg.org/multipage/webappapis.html#integration-with-the-javascript-module-system).
-
-When WebAssembly gets [ES6 Module integration](Modules.md#integration-with-es6-modules),
-a new *WebAssembly Module Record* subclass would be added which would specify
-the right thing to do for WebAssembly modules as part of the overall loading process.
-
-Until then, the specification of [Module Namespace Exotic Objects](http://tc39.github.io/ecma262/#sec-module-namespace-exotic-objects),
-(used for the `WebAssembly.Instance` `exports` property) still needs to refer to *some*
-vestigial Module Record as part of the specification of the
-[\[\[Get\]\]](http://tc39.github.io/ecma262/#sec-module-namespace-exotic-objects-get-p-receiver)
-method.
-
-More work is needed to flesh out the precise spec interaction here, but the basic
-idea is to create a [Module Environment Record](http://tc39.github.io/ecma262/#sec-module-environment-records)
-from `exports` as the [[Environment]] of a new WebAssembly Module Record.
 
 ## Exported Function Exotic Objects
 
