@@ -177,11 +177,11 @@ The module starts with a preamble of two fields:
 | version | `uint32` | Version number, currently 0xd. The version for MVP will be reset to 1. |
 
 The module preamble is followed by a sequence of sections.
-Each section is identified by a 1-byte *section code* that encodes either a known section or a user-defined section.
+Each section is identified by a 1-byte *section code* that encodes either a known section or a custom section.
 The section length and payload data then follow.
-Known sections have non-zero ids, while unknown sections have a `0` id followed by an identifying string as
+Known sections have non-zero ids, while custom sections have a `0` id followed by an identifying string as
 part of the payload.
-Unknown sections are ignored by the WebAssembly implementation, and thus validation errors within them do not
+Custom sections are ignored by the WebAssembly implementation, and thus validation errors within them do not
 invalidate a module.
 
 | Field | Type | Description |
@@ -193,7 +193,7 @@ invalidate a module.
 | payload_data  | `bytes` | content of this section, of length `payload_len - sizeof(name) - sizeof(name_len)` |
 
 Each known section is optional and may appear at most once.
-Unknown sections all have the same `id`, and can be named non-uniquely (all bytes composing their names can be identical).
+Custom sections all have the same `id`, and can be named non-uniquely (all bytes composing their names can be identical).
 Known sections from this list may not appear out of order.
 The content of each section is encoded in its `payload_data`.
 
@@ -413,11 +413,11 @@ a `data_segment` is:
 
 ### Name section
 
-User-defined section string: `"name"`
+Custom section `name` field: `"name"`
 
-The names section does not change execution semantics, and thus is not allocated a section code.
-It is encoded as an unknown section (id `0`) followed by the identification string `"name"`.
-Like all unknown sections, a validation error in this section does not cause validation of the module to fail.
+The names section is a [custom section](#high-level-structure). 
+It is therefore encoded with id `0` followed by the name string `"name"`.
+Like all custom sections, a validation error in this section does not cause validation of the module to fail.
 The name section may appear only once, and only after the [Data section](#Data-section).
 The expectation is that, when a binary WebAssembly module is viewed in a browser or other development
 environment, the names in this section will be used as the names of functions
