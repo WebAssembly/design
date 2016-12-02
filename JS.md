@@ -397,14 +397,14 @@ Return `instanceObject`.
 
 ## Exported Function Exotic Objects
 
-Functions exported by WebAssembly modules are reflected in JS via a new kind
-of *Exported Function* 
-[Exotic Object](http://tc39.github.io/ecma262/#sec-built-in-exotic-object-internal-methods-and-slots).
+A function with [function index](Modules.md#function-index-space) `index`
+from an `Instance` `inst` is reflected to JS via a new kind of *Exported
+Function* [Exotic Object](http://tc39.github.io/ecma262/#sec-built-in-exotic-object-internal-methods-and-slots).
 Like [Bound Function](http://tc39.github.io/ecma262/#sec-bound-function-exotic-objects) Exotic Object,
 Exported Functions do not have the normal function internal slots but instead have:
 
  * [[Closure]] : the [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7)
-   representing the function
+   (`index`, `inst`)
 
 as well as the internal slots required of all builtin functions:
 
@@ -416,7 +416,7 @@ as well as the internal slots required of all builtin functions:
 Exported Functions also have the following data properties:
 
 * the `length` property is set to the exported function's signature's arity 
-* the `name` is set to `index` as a Number value
+* the `name` is set to [`ToString`](https://tc39.github.io/ecma262/#sec-tostring)(`index`)
 
 WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined as:
 
