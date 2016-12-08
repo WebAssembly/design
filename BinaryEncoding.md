@@ -53,6 +53,15 @@ represented by _at most_ ceil(_N_/7) bytes that may contain padding `0x80` or `0
 
 Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
 
+### Non-canonical LEB128
+
+Both `varuintN` and `varintN` can be encoded with non-canonical LEB128 values where:
+
+* non-significant zero `0x80` bytes are present in an over-large encoding; and / or
+* non-significant LEB128 bits are ignored.
+
+In both cases, the _N_ bit limitation applies.
+
 ## Language Types
 
 All types are distinguished by a negative `varint7` values that is the first byte of their encoding (representing a type constructor):
