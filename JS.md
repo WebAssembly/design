@@ -463,6 +463,7 @@ Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc
 
 If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
 then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"maximum"`)).
+If `maximum` is smaller than `initial`, then throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
 Otherwise, let `maximum` be `None`.
 
 Let `memory` be the result of calling 
@@ -560,6 +561,7 @@ Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc
 
 If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
 then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"maximum"`)).
+If `maximum` is smaller than `initial`, then throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
 Otherwise, let `maximum` be None.
 
 Let `table` be the result of calling 
