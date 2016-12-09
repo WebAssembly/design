@@ -302,7 +302,8 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
   1. Append `v` to `funcs`.
   1. Append `closure` to `imports`.
 1. If `i` is a global import:
-  1. If `i` is not an immutable global, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+  1. [Assert](https://tc39.github.io/ecma262/#assert): the global is immutable
+     by MVP validation constraint.
   1. If `Type(v)` is not Number, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
   1. Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `imports`.
 1. If `i` is a memory import:
