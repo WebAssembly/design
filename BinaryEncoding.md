@@ -55,12 +55,12 @@ Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
 
 ### Non-canonical LEB128
 
-Both `varuintN` and `varintN` can be encoded with non-canonical LEB128 values where:
+Both `varuintN` and `varintN` can be encoded with *non-canonical* LEB128 values where:
 
 * non-relevant zero `0x80` bytes are present in an over-large encoding; and / or
 * non-relevant LEB128 bits (bits past the size) are ignored.
 
-In both cases, the _N_ bit limitation applies.
+The total number of bytes used to encode the `varuintN` / `varintN` cannot exceed the largest *canonical* encoding for that `varuintN` / `varintN`.
 
 ## Language Types
 
