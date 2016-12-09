@@ -148,11 +148,11 @@ A packed tuple that describes the limits of a
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| flags | `varuint32` | bit `0x1` is set if the maximum field is present |
+| flags | `varuint1` | set if the maximum field is present |
 | initial | `varuint32` | initial length (in units of table elements or wasm pages) |
 | maximum | `varuint32`? | only present if specified by `flags` |
 
-Note: In the [future :unicorn:][future threads], the "flags" field may be extended, e.g., to include a flag for sharing between threads.
+Note: In the [future :unicorn:][future threads], the "flags" field may be changed to `varuint32`, e.g., to include a flag for sharing between threads.
 
 ### `init_expr`
 The encoding of an [initializer expression](Modules.md#initializer-expression)
