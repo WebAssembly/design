@@ -166,6 +166,7 @@ Otherwise, this function performs synchronous compilation of the `BufferSource`:
    the validated `Ast.module`.
 1. On failure, a new `WebAssembly.CompileError` is thrown.
 
+
 ### `WebAssembly.Module.exports`
 
 The `exports` function has the signature:
@@ -379,16 +380,19 @@ the internal `[[Instance]]` slot to `instance`.
 
 Perform [`CreateDataProperty`](https://tc39.github.io/ecma262/#sec-createdataproperty)(`instance`, `"exports"`, `exportsObject`).
 
-If, after evaluating the `offset` [initializer expression](Modules.md#initializer-expression)
-of every [Data](Modules.md#data-section) and [Element](Modules.md#elements-section)
-Segment, any of the segments do not fit in their respective Memory or Table, throw a 
-[`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
+Apply all Data segments, followed by all Element segments, to their respective Memory or Table in the order in which they appear in the Module.
 
-Apply all Data and Element segments to their respective Memory or Table in the
-order in which they appear in the module. Segments may overlap and, if they do,
-the final value is the last value written in order. Note: there should be no
-errors possible that would cause this operation to fail partway through. After
-this operation completes, elements of `instance` are visible and callable
+Note: validation rules prevent a Module from having a Data section without having a Memory section or import, as well as prevent a Module from having an Element section without having a Table.
+
+* The `offset` [initializer expression](Modules.md#initializer-expression) of every [Data](Modules.md#data-section) segment and [Element](Modules.md#elements-section) segment is evaluated, and if any of the segments do not fit in their respective Memory or Table, throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
+
+  - Segments which are partially out-of-bounds cause the entire evaluation of that segment to fail.
+  - Zero-sized segments do not cause failure, even if their offset is out-of-bounds.
+  - Any segment evaluation performed prior to such an error is visible.
+
+* Segments may overlap and, if they do, the final value is the last value written in order.
+
+After this operation completes, elements of `instance` are visible and callable
 through [imported Tables](Modules.md#imports), even if `start` fails.
 
 If a [`start`](Modules.md#module-start-function) is present, it is evaluated
