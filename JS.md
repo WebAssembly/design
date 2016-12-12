@@ -384,7 +384,7 @@ Apply all Data segments, followed by all Element segments, to their respective M
 
 Note: validation rules prevent a Module from having a Data section without having a Memory section or import, as well as prevent a Module from having an Element section without having a Table.
 
-* The `offset` [initializer expression](Modules.md#initializer-expression) of every [Data](Modules.md#data-section) and [Element](Modules.md#elements-section) segment is evaluated, any of the segments do not fit in their respective Memory or Table, throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
+* The `offset` [initializer expression](Modules.md#initializer-expression) of every [Data](Modules.md#data-section) segment and [Element](Modules.md#elements-section) segment is evaluated, and if any of the segments do not fit in their respective Memory or Table, throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
 
   - Segments which are partially out-of-bounds cause the entire evaluation of that segment to fail.
   - Zero-sized segments do not cause failure, even if their offset is out-of-bounds.
