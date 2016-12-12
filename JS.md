@@ -9,14 +9,11 @@ any other Web API that loads ES6 modules via URL—as part of
 
 ## Traps
 
-Whenever WebAssembly semantics specify a deterministic [trap](Semantics.md#traps),
-a `WebAssembly.RuntimeError` object is thrown. Whenever the call stack usage
-of WebAssembly exceeds the available call stack space, the same exception is
-thrown as when the call stack usage of JavaScript exceeds the available call
-stack space. WebAssembly code (currently) has no way to catch these exceptions and
-thus the exceptions will necessarily propagate to the enclosing non-WebAssembly
-caller (either the browser or JavaScript) where they are handled like a normal
-JavaScript exceptions.
+Whenever WebAssembly semantics specify a [trap](Semantics.md#traps),
+a `WebAssembly.RuntimeError` object is thrown. WebAssembly code (currently)
+has no way to catch this exception and thus the exception will necessarily
+propagate to the enclosing non-WebAssembly caller (either the browser or
+JavaScript) where it is handled like a normal JavaScript exception.
 
 If WebAssembly calls JavaScript via import and the JavaScript throws an
 exception, the exception is propagated through the WebAssembly activation to the
@@ -25,6 +22,12 @@ enclosing caller.
 Because JavaScript exceptions can be handled, and JavaScript can continue to
 call WebAssembly exports after a trap has been handled, traps do not, in
 general, prevent future execution.
+
+## Stack Overflow
+
+Whenever a [stack overflow](Semantics.md#stack-overflow) is happening in
+WebAssembly code, the same exception is thrown as for a stack overflow in
+JavaScript.
 
 ## The `WebAssembly` object
 
