@@ -175,8 +175,8 @@ to allow *explicitly* sharing state between module instances.
 ## Module start function
 
 If the module has a start node defined, the function it refers should be called
-by the loader after the instance is initialized, including its Data and Element
-sections, and before the exported functions are called.
+by the loader after the instance is initialized, including its Memory and Table
+though Data and Element sections, and before the exported functions are callable.
 
 * The start function must not take any arguments or return anything
 * The function is identified by [function index](#function-index-space), can be
