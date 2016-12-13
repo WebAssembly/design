@@ -41,7 +41,7 @@ The following intrinsic objects are added:
 * `WebAssembly.CompileError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
    which indicates an error during WebAssembly decoding or validation
 * `WebAssembly.LinkError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
-   which indicates an error during WebAssembly instantiating a mdoule
+   which indicates an error during WebAssembly instantiating a module (other than traps from the start function)
 * `WebAssembly.RuntimeError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
    which is thrown whenever WebAssembly specifies a [trap](#traps).
 
