@@ -113,7 +113,7 @@ On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulf
 with a plain JavaScript object pair `{module, instance}` containing the resulting
 `WebAssembly.Module` and `WebAssembly.Instance`. On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
-`WebAssembly.CompileError`, `WebAssemlby.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
+`WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
 
 The asynchronous compilation is logically performed on a copy of the state of
 the given `BufferSource` captured during the call to `instantiate`; subsequent mutations
@@ -131,7 +131,7 @@ from `moduleObject` and `importObject` as described in the
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `WebAssembly.Instance` object. On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
-`WebAssembly.CompileError`, `WebAssemlby.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
+`WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
 
 ## `WebAssembly.Module` Objects
 
