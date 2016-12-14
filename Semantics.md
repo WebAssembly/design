@@ -42,9 +42,13 @@ environment such as a browser, a trap results in throwing a JavaScript exception
 If developer tools are active, attaching a debugger before the
 termination would be sensible.
 
+## Stack Overflow
+
 Call stack space is limited by unspecified and dynamically varying constraints
 and is a source of [nondeterminism](Nondeterminism.md). If program call stack usage
-exceeds the available call stack space at any time, a trap occurs.
+exceeds the available call stack space at any time, the execution in the
+WebAssembly instance is terminated and abnormal termination is reported to the
+outside environment.
 
 Implementations must have an internal maximum call stack size, and every call
 must take up some resources toward exhausting that size (of course, dynamic

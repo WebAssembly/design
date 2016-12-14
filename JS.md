@@ -23,6 +23,12 @@ Because JavaScript exceptions can be handled, and JavaScript can continue to
 call WebAssembly exports after a trap has been handled, traps do not, in
 general, prevent future execution.
 
+## Stack Overflow
+
+Whenever a [stack overflow](Semantics.md#stack-overflow) is happening in
+WebAssembly code, the same exception is thrown as for a stack overflow in
+JavaScript.
+
 ## The `WebAssembly` object
 
 The `WebAssembly` object is the initial value of the `WebAssembly` property of
