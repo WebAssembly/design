@@ -318,6 +318,10 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
      throw a `WebAssembly.LinkError`.
   1. Append `v` to `tables`.
   1. Append `v.[[Table]]` to `imports`.
+  1. For each index `i` of `v.[[Table]]`:
+    1. Let `e` be the `i`the element of `v.[[Table]]`.
+    1. If `e` is a [`closure`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7) `c`:
+      1. Append the `i`th element of `v.[[Values]]` to `funcs`.
 
 Let `instance` be the result of creating a new
 [`instance`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L17)
@@ -337,10 +341,33 @@ Among other things, this function performs the following observable steps:
   the final value is the last value written in order. Note: there should be no
   errors possible that would cause this operation to fail partway through. After
   this operation completes, elements of `instance` are visible and callable
-  through [imported Tables](Modules.md#imports), even if `start` fails.
+  through [imported tables](Modules.md#imports), even if `start` fails.
 
 * If a [`start`](Modules.md#module-start-function) is present, it is evaluated.
   Any errors thrown by `start` are propagated to the caller.
+
+The following steps are performed _before_ the `start` function executes:
+
+1. For each table 't' in [`instance.tables`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L17):
+  1. If there is no element in `tables` whose `table.[[Table]]` is `t`:
+    1. Let `table` be a new `WebAssembly.Table` object with [[Table]] set to `t` and [[Values]] set to a new list of the same length all whose entries are `null`.
+    1. Append `table` to `tables`.
+  1. Otherwise:
+    1. Let `table` be the element in `tables` whose `table.[[Table]]` is `t`
+  1. (Note: At most one `WebAssembly.Table` object is created for any table, so the above `table` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import, the original object will be found.)
+  1. For each index `i` of `t`:
+    1. Let `c` be the `i`th element of `t`
+    1. If `c` is a [`closure`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7) `c`:
+      1. If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) `in `funcs` whose `[[Closure]]` equals `c`:
+        1. Let `func` be that function object.
+      1. (Note: At most one wrapper is created for any closure, so `func` is uniquely determined. Moreover, if the item was an import that is already an [Exported Function Exotic Object](#exported-function-exotic-objects), then the original function object will be found. For imports that are regular JS functions, a new wrapper will be created.)
+      1. Otherwise:
+        1. Let `func` be an [Exported Function Exotic Object](#exported-function-exotic-objects) created from `c`.
+        1. Append `func` to `funcs`.
+        1. Return `func`.
+      1. Set the `i`th element of `table.[[Values]]` to `func`.
+
+(Note: The table and element function objects created by the above steps are only observable for tables that are either imported or exported.)
 
 Let `exports` be a list of (string, JS value) pairs that is mapped from 
 each [external](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L24) value `e` in `instance.exports` as follows:
@@ -364,22 +391,8 @@ each [external](https://github.com/WebAssembly/spec/blob/master/interpreter/spec
     1. Append `memory` to `memories`.
     1. Return `memory`.
 1. Otherwise `e` must be a [table](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L13) `t`:
-  1. If there is an element `table` in `tables` whose `table.[[Table]]` is `t`, then return `table`.
-  1. (Note: At most one `WebAssembly.Table` object is created for any table, so the above `table` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import, the original object will be found.)
-  1. Otherwise:
-    1. Let `values` be a list of JS values that is mapped from `t`'s elements as follows:
-      1. For an element that is [`uninitialized`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/table.mli#L8):
-        1. Return `null`.
-      1. For an element that is a [`closure`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7) `c`:
-        1. If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) `func` in `funcs` whose `func.[[Closure]]` equals `c`, then return `func`.
-        1. (Note: At most one wrapper is created for a any closure, so `func` is uniquely determined. Moreover, if the item was an import that is already an [Exported Function Exotic Object](#exported-function-exotic-objects), then the original function object will be found. For imports that are regular JS functions, a new wrapper will be created.)
-        1. Otherwise:
-          1. Let `func` be an [Exported Function Exotic Object](#exported-function-exotic-objects) created from `c`.
-          1. Append `func` to `funcs`.
-          1. Return `func`.
-    1. Let `table` be a new `WebAssembly.Table` object with [[Table]] set to `t` and [[Values]] set to `values`.
-    1. Append `table` to `tables`.
-    1. Return `table`.
+  1. Assert: There is an element `table` in `tables` whose `table.[[Table]]` is `t`.
+  1. Return that `table`.
 
 Note: For the purpose of the above algorithm, two [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7) values are considered equal if and only if:
 
