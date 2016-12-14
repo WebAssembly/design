@@ -40,6 +40,8 @@ The following intrinsic objects are added:
 * `WebAssembly.Table` : the [`WebAssembly.Table` constructor](#webassemblytable-constructor)
 * `WebAssembly.CompileError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
    which indicates an error during WebAssembly decoding or validation
+* `WebAssembly.LinkError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
+   which indicates an error during WebAssembly instantiating a module (other than traps from the start function)
 * `WebAssembly.RuntimeError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
    which is thrown whenever WebAssembly specifies a [trap](#traps).
 
@@ -111,7 +113,7 @@ On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulf
 with a plain JavaScript object pair `{module, instance}` containing the resulting
 `WebAssembly.Module` and `WebAssembly.Instance`. On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
-`WebAssembly.CompileError`.
+`WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
 
 The asynchronous compilation is logically performed on a copy of the state of
 the given `BufferSource` captured during the call to `instantiate`; subsequent mutations
@@ -129,7 +131,7 @@ from `moduleObject` and `importObject` as described in the
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `WebAssembly.Instance` object. On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
-`WebAssembly.CompileError`.
+`WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
 
 ## `WebAssembly.Module` Objects
 
@@ -288,10 +290,10 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
 1. Let `v` be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`o`, [`i.item_name`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L171))
 1. If `i` is a function import:
   1. If [`IsCallable(v)`](https://tc39.github.io/ecma262/#sec-iscallable) is `false`,
-     throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+     throw a `WebAssembly.LinkError`.
   1. If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
     1. If the signature of `v` does not match the signature of `i`, throw a 
-       [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+       `WebAssembly.LinkError`.
     1. Let `closure` be `v.[[Closure]]`.
   1. Otherwise:
     1. Let `closure` be a new [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9)
@@ -304,16 +306,16 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
 1. If `i` is a global import:
   1. [Assert](https://tc39.github.io/ecma262/#assert): the global is immutable
      by MVP validation constraint.
-  1. If `Type(v)` is not Number, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+  1. If `Type(v)` is not Number, throw a `WebAssembly.LinkError`.
   1. Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `imports`.
 1. If `i` is a memory import:
   1. If `v` is not a [`WebAssembly.Memory` object](#webassemblymemory-objects),
-      throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+      throw a `WebAssembly.LinkError`.
   1. Append `v` to `memories`.
   1. Append `v.[[Memory]]` to `imports`.
 1. Otherwise (`i` is a table import):
   1. If `v` is not a [`WebAssembly.Table` object](#webassemblytable-objects),
-     throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+     throw a `WebAssembly.LinkError`.
   1. Append `v` to `tables`.
   1. Append `v.[[Table]]` to `imports`.
 
@@ -322,6 +324,23 @@ Let `instance` be the result of creating a new
 by calling
 [`Eval.init`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/eval.ml#L416)
 given `module` and `imports`.
+If this terminates with a `Link` error, throw a `WebAssembly.LinkError`; if it causes a trap, throw a `WebAssembly.RuntimeError`; all other exceptions are propagated to the caller.
+Among other things, this function performs the following observable steps:
+
+* If, after evaluating the `offset` [initializer expression](Modules.md#initializer-expression)
+  of every [Data](Modules.md#data-section) and [Element](Modules.md#elements-section)
+  Segment, any of the segments do not fit in their respective Memory or Table, throw a 
+  `WebAssembly.LinkError`.
+
+* Apply all Data and Element segments to their respective Memory or Table in the
+  order in which they appear in the module. Segments may overlap and, if they do,
+  the final value is the last value written in order. Note: there should be no
+  errors possible that would cause this operation to fail partway through. After
+  this operation completes, elements of `instance` are visible and callable
+  through [imported Tables](Modules.md#imports), even if `start` fails.
+
+* If a [`start`](Modules.md#module-start-function) is present, it is evaluated.
+  Any errors thrown by `start` are propagated to the caller.
 
 Let `exports` be a list of (string, JS value) pairs that is mapped from 
 each [external](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L24) value `e` in `instance.exports` as follows:
@@ -378,21 +397,6 @@ Let `instanceObject` be a new `WebAssembly.Instance` object setting
 the internal `[[Instance]]` slot to `instance`.
 
 Perform [`CreateDataProperty`](https://tc39.github.io/ecma262/#sec-createdataproperty)(`instance`, `"exports"`, `exportsObject`).
-
-If, after evaluating the `offset` [initializer expression](Modules.md#initializer-expression)
-of every [Data](Modules.md#data-section) and [Element](Modules.md#elements-section)
-Segment, any of the segments do not fit in their respective Memory or Table, throw a 
-[`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
-
-Apply all Data and Element segments to their respective Memory or Table in the
-order in which they appear in the module. Segments may overlap and, if they do,
-the final value is the last value written in order. Note: there should be no
-errors possible that would cause this operation to fail partway through. After
-this operation completes, elements of `instance` are visible and callable
-through [imported Tables](Modules.md#imports), even if `start` fails.
-
-If a [`start`](Modules.md#module-start-function) is present, it is evaluated
-given `instance`. Any errors thrown by `start` are propagated to the caller.
 
 Return `instanceObject`.
 
