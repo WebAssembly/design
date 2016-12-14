@@ -78,7 +78,7 @@ declared initial length are always in-bounds, accesses above the declared
 maximum length are always out-of-bounds and if initial equals maximum, the
 length is fixed. In the MVP, every memory is a [default memory](Semantics.md#linear-memory)
 and thus there may be at most one linear memory import or linear memory
-section.
+definition.
 
 A *table import* includes the same set of fields defined in the 
 [Table section](#table-section): *element type*, *initial
@@ -86,7 +86,7 @@ length* and optional *maximum length*. As with the linear memory section, the
 host environment must ensure only WebAssembly tables are imported with
 exactly-matching element type, greater-or-equal initial length, and
 less-or-equal maximum length. In the MVP, every table is a [default table](Semantics.md#table)
-and thus there may be at most one table import or table section.
+and thus there may be at most one table import or table definition.
 
 Since the WebAssembly spec does not define how import names are interpreted:
 
@@ -215,8 +215,8 @@ Each global variable internal definition declares its *type*
 
 The *linear memory section* provides an internal definition of one
 [linear memory](Semantics.md#linear-memory). In the MVP, every memory is a
-default memory and thus there may be at most one linear memory import or linear
-memory section.
+default memory and there may be at most one linear memory import or linear
+memory definition.
 
 Each linear memory section declares an *initial* [memory size](Semantics.md#linear-memory)
 (which may be subsequently increased by [`grow_memory`](Semantics.md#resizing)) and an
@@ -244,7 +244,7 @@ value (defining the length of the given segment). The `offset` is an
 
 The *table section* contains zero or more definitions of distinct 
 [tables](Semantics.md#table). In the MVP, every table is a 
-default table and thus there may be at most one table import or table section.
+default table and there may be at most one table import or table definition.
 
 Each table definition declares an *element type*, *initial length*, and
 optional *maximum length*.
