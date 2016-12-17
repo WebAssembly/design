@@ -358,13 +358,12 @@ The following steps are performed _before_ the `start` function executes:
   1. For each index `i` of `t`:
     1. Let `c` be the `i`th element of `t`
     1. If `c` is a [`closure`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7) `c`:
-      1. If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) `in `funcs` whose `[[Closure]]` equals `c`:
+      1. If there is an [Exported Function Exotic Object](#exported-function-exotic-objects) in `funcs` whose `[[Closure]]` equals `c`:
         1. Let `func` be that function object.
       1. (Note: At most one wrapper is created for any closure, so `func` is uniquely determined. Moreover, if the item was an import that is already an [Exported Function Exotic Object](#exported-function-exotic-objects), then the original function object will be found. For imports that are regular JS functions, a new wrapper will be created.)
       1. Otherwise:
         1. Let `func` be an [Exported Function Exotic Object](#exported-function-exotic-objects) created from `c`.
         1. Append `func` to `funcs`.
-        1. Return `func`.
       1. Set the `i`th element of `table.[[Values]]` to `func`.
 
 (Note: The table and element function objects created by the above steps are only observable for tables that are either imported or exported.)
