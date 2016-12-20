@@ -693,30 +693,28 @@ Given `demo.was` (encoded to `demo.wasm`):
 
 ```lisp
 (module
-    (import $i1 "m" "import1")
-    (import $i2 "import2" "")
-    (func $main (call_import $i1))
+    (import $i1 "js" "import1")
+    (import $i2 "js" "import2")
+    (func $main (call $i1))
     (start $main)
-    (func $f (call_import $i2))
-    (export "f" $f)
+    (func (export "f") (call $i2))
 )
 ```
 
 and the following JavaScript, run in a browser:
 
 ```javascript
+var importObj = {js: {
+    import1: () => console.log("hello,"),
+    import2: () => console.log("world!")
+}};
 fetch('demo.wasm').then(response =>
     response.arrayBuffer()
 ).then(buffer =>
-    WebAssembly.compile(buffer)
-).then(module => {
-    var importObj = {
-        m: {import1: () => console.log("hello, ")},
-        import2: () => console.log("world!\n")
-    };
-    var instance = new WebAssembly.Instance(module, importObj); // "hello, "
-    instance.exports.f(); // "world!"
-});
+    WebAssembly.instantiate(buffer, importObj)
+).then(({module, instance}) =>
+    instance.exports.f()
+);
 ```
 
 ## TODO
