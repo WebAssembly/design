@@ -307,9 +307,9 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
       1. If the signature contains an `i64` (as argument or result), the host
          function immediately throws a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
          when called.
-      1. Otherwise, the host function calls `v` by coercing WebAssembly
-         arguments to JavaScript arguments
-         via [`ToJSValue`](#tojsvalue) and returns the result, if any, by coercing
+      1. Otherwise, the host function calls `v` with an `undefined` receiver
+         and WebAssembly arguments coerced to JavaScript arguments
+         via [`ToJSValue`](#tojsvalue). The result is returned by coercing
          via [`ToWebAssemblyValue`](#towebassemblyvalue).
   1. Append `v` to `funcs`.
   1. Append `closure` to `imports`.
