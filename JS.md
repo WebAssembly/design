@@ -303,16 +303,20 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
     1. Let `closure` be `v.[[Closure]]`.
   1. Otherwise:
     1. Let `closure` be a new [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9)
-       of the given signature
-       which calls `v` by coercing WebAssembly arguments to JavaScript arguments
-       via [`ToJSValue`](#tojsvalue) and returns the result, if any, by coercing
-       via [`ToWebAssemblyValue`](#towebassemblyvalue).
+       of the given signature:
+      1. If the signature contains an `i64` (as argument or result), the host
+         function immediately throws a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+         when called.
+      1. Otherwise, the host function calls `v` by coercing WebAssembly
+         arguments to JavaScript arguments
+         via [`ToJSValue`](#tojsvalue) and returns the result, if any, by coercing
+         via [`ToWebAssemblyValue`](#towebassemblyvalue).
   1. Append `v` to `funcs`.
   1. Append `closure` to `imports`.
 1. If `i` is a global import:
   1. [Assert](https://tc39.github.io/ecma262/#assert): the global is immutable
      by MVP validation constraint.
-  1. If `Type(v)` is not Number, throw a `WebAssembly.LinkError`.
+  1. If `v` is an `i64` or `Type(v)` is not Number, throw a `WebAssembly.LinkError`.
   1. Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `imports`.
 1. If `i` is a memory import:
   1. If `v` is not a [`WebAssembly.Memory` object](#webassemblymemory-objects),
@@ -361,6 +365,7 @@ each [external](https://github.com/WebAssembly/spec/blob/master/interpreter/spec
 1. If `e` is a [global](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L15) `v`:
   1. [Assert](https://tc39.github.io/ecma262/#assert): the global is immutable
      by MVP validation constraint.
+  1. If `v` is an `i64`, throw a `WebAssembly.LinkError`.
   1. Return [`ToJSValue`](#tojsvalue)`(v)`.
 1. If `e` is a [memory](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L14) `m`:
   1. If there is an element `memory` in `memories` whose `memory.[[Memory]]` is `m`, then return `memory`.
@@ -431,8 +436,13 @@ Exported Functions also have the following data properties:
 
 WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined as:
 
+1. Let `sig` be the [`function type`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/eval.ml#L106)
+   of the function's [[Closure]].
+1. If `sig` contains an `i64` (as argument or result), a
+   [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+   is thrown.
 1. Let `args` be an empty list of coerced values.
-1. Let `inArity` be the number of arguments and `outArity` be the number of results in the [`function type`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/eval.ml#L106) of the function's [[Closure]].
+1. Let `inArity` be the number of arguments and `outArity` be the number of results in `sig`.
 1. For all values `v` in `argValues`, in the order of their appearance:
   1. If the length of`args` is less than `inArity`, append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `args`.
 1. While the length of `args` is less than `inArity`, append [`ToWebAssemblyValue`](#towebassemblyvalue)`(undefined)` to `args`.
@@ -650,9 +660,10 @@ Return `undefined`.
 To coerce a WebAssembly [`value`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/values.ml#L9)
 to a JavaScript value:
 
+Assert: the WebAssembly value's type is not `i64`.
+
 1. given a WebAssembly `i32` is interpreted as a signed integer, converted (losslessly) to an
   IEEE754 double and then returned as a JavaScript Number
-1. given a WebAssembly `i64`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 1. given a WebAssembly `f32` (single-precision IEEE754), convert (losslessly) to
    a IEEE754 double, [possibly canonicalize NaN](http://tc39.github.io/ecma262/#sec-setvalueinbuffer),
    and return as a JavaScript Number
@@ -666,8 +677,9 @@ If the WebAssembly value is optional, then given `None`, return JavaScript value
 
 To coerce a JavaScript value to a given WebAssembly [`value type`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/types.ml#L3),
 
+Assert: the target value type is not `i64`.
+
 1. coerce to `i32` via [`ToInt32(v)`](http://tc39.github.io/ecma262/#sec-toint32)
-1. for `i64`, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 1. coerce to `f32` by first applying [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
    and then converting the resulting IEEE754 64-bit double to a 32-bit float using `roundTiesToEven`
 1. coerce to `f64` via [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
