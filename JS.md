@@ -719,10 +719,6 @@ fetch('demo.wasm').then(response =>
 });
 ```
 
-## TODO
-
-* JS API for cyclic imports
-
 [future general]: FutureFeatures.md
 [future streaming]: FutureFeatures.md#streaming-compilation
 [future types]: FutureFeatures.md#more-table-operators-and-types
