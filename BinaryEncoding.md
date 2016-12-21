@@ -53,6 +53,15 @@ represented by _at most_ ceil(_N_/7) bytes that may contain padding `0x80` or `0
 
 Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
 
+## Instruction Opcodes
+
+In the MVP, the opcodes of [instructions](Semantics.md) are all encoded in a
+single byte since there are far fewer than 256 opcodes. Future features like
+[SIMD](FutureFeatures.md#fixed-width-simd) and [atomics](FutureFeatures.md#threads)
+will bring the total count above 256 and so an extension scheme will be
+necessary, designating one or more single-byte values as prefixes for multi-byte
+opcodes.
+
 ## Language Types
 
 All types are distinguished by a negative `varint7` values that is the first byte of their encoding (representing a type constructor):
@@ -456,7 +465,9 @@ count may be greater or less than the actual number of locals.
 # Function Bodies
 
 Function bodies consist of a sequence of local variable declarations followed by 
-[bytecode instructions](Semantics.md). Each function body must end with the `end` opcode.
+[bytecode instructions](Semantics.md). Instructions are encoded as an
+[opcode](#instruction-opcodes) followed by zero or more *immediates* as defined
+by the tables below. Each function body must end with the `end` opcode.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
