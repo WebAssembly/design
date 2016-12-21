@@ -56,7 +56,7 @@ Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
 ## Instruction Opcodes
 
 In the MVP, the opcodes of [instructions](Semantics.md) are all encoded in a
-single byte since there are far fewer than 256 opcodes. Future features like
+single byte since there are fewer than 256 opcodes. Future features like
 [SIMD](FutureFeatures.md#fixed-width-simd) and [atomics](FutureFeatures.md#threads)
 will bring the total count above 256 and so an extension scheme will be
 necessary, designating one or more single-byte values as prefixes for multi-byte
