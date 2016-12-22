@@ -506,6 +506,29 @@ Yes:
 * [Existing web standards](https://www.w3.org/TR/PNG/) demonstrate many of
   the advantages of a layered encoding strategy.
 
+
+## Why does the file signature start with `00 06 04 ...`?
+
+The first byte is a control character so that JavaScript modules (which cannot 
+contain control characters) can easily be distinguished from WebAssembly 
+modules.
+
+As mentioned in [BinaryEncoding](BinaryEncoding.md#high-level-structure), the 
+initial three bytes ensure that the initial eight bytes are a valid section 
+(with a payload length of 6 and a name of length 4), so that the file as a whole 
+is just a list of sections. The WebAssembly format may thus be considered an 
+instance an instance of a more general "List Of Sections" or "LOS" format. 
+Because LOS files are just a sequence of sections, LOS files can be 
+concatenated. Concatenation is not a useful operation for WebAssembly modules 
+themselves because the result would not be a valid module most cases, but it 
+might be useful for related formats, such as object files or debug information 
+files defined outside the WebAssembly specification. By convention, the initial 
+three bytes 00 06 04 identify an LOS file, implying that any LOS-based format 
+should choose a 4-byte name for its header section, leaving one byte afterward 
+for a version number.
+
+
+
 [future general]: FutureFeatures.md
 [future flow control]: FutureFeatures.md#more-expressive-control-flow
 [future integers]: FutureFeatures.md#additional-integer-operations
