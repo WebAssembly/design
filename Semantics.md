@@ -174,6 +174,12 @@ the addition of the offset to the address never causes wrapping, so if the
 address for an access is out-of-bounds, the effective address will always also
 be out-of-bounds.
 
+It is a validation error if a load or store has an offset immediate where:
+```
+offset + numBytesTouched(load/store) - 1 > 2^32 - 1
+```
+If this condition is true, the load or store is guaranteed to be out of bounds.
+
 In wasm32, address operands and offset attributes have type `i32`, and linear
 memory sizes are limited to 4 GiB (of course, actual sizes are further limited
 by [available resources](Nondeterminism.md)). In wasm64, address operands and
