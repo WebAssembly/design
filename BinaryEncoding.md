@@ -584,6 +584,8 @@ natural alignment. The bits after the
 are reserved for [future :unicorn:][future threads] use
 (e.g., for shared memory ordering requirements).
 
+It is a validation error if `offset + numBytesTouched(load/store) - 1 > 2^32 - 1`. If this condition is true, the load or store is guaranteed to be out of bounds.
+
 The `reserved` immediate to the `current_memory` and `grow_memory` operators is
 for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 
