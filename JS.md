@@ -396,7 +396,7 @@ Let `exportsObject` be a new [frozen](https://tc39.github.io/ecma262/#sec-object
 plain JS object with [[Prototype]] set to Null and with properties defined
 by mapping each export in `exports` to an enumerable, non-writable,
 non-configurable data property. Note: the validity and uniqueness checks
-performed during [module compilation](#webassemblymodule-constructor) ensure
+performed during [module validation](#webassemblymodule-constructor) ensure
 that each property name is valid and no properties are defined twice.
 
 Let `instanceObject` be a new `WebAssembly.Instance` object setting
