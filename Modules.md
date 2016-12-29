@@ -48,7 +48,9 @@ In the future, other kinds of imports may be added. Imports are designed to
 allow modules to share code and data while still allowing separate compilation
 and caching.
 
-All imports include two opaque names: a *module name* and an *export name*. The
+All imports include two opaque names: a *module name* and an *
+
+name*. The
 interpretation of these names is up to the host environment but designed to
 allow a host environments, like the [Web](Web.md), to support a two-level
 namespace.
@@ -117,6 +119,8 @@ The meaning an exported definition is defined by the host environment. However,
 if another WebAssembly instance imports the definition, then both instances
 will share the same definition and the associated state (global variable value,
 linear memory bytes, table elements) is shared.
+
+Export names must be unique.
 
 In the MVP, only *immutable* global variables can be exported.
 
