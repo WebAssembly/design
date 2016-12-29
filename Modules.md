@@ -118,6 +118,8 @@ if another WebAssembly instance imports the definition, then both instances
 will share the same definition and the associated state (global variable value,
 linear memory bytes, table elements) is shared.
 
+Export names must be unique.
+
 In the MVP, only *immutable* global variables can be exported.
 
 ## Integration with ES6 modules
