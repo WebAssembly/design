@@ -470,9 +470,12 @@ exception is thrown (i.e., this constructor cannot be called as a function witho
 If `Type(memoryDescriptor)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
+If not [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`memoryDescriptor`, `"initial"`), a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
+
 Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"initial"`)).
 
-If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
+If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`memoryDescriptor`, `"maximum"`),
 then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"maximum"`)).
 If `maximum` is smaller than `initial`, then throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
 Otherwise, let `maximum` be `None`.
@@ -568,9 +571,12 @@ is thrown.
 (Note: this check is intended to be relaxed in the
 [future :unicorn:][future types] to allow different element types.)
 
+If not [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`tableDescriptor`, `"initial"`), a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
+
 Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"initial"`)).
 
-If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
+If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`tableDescriptor`, `"maximum"`),
 then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"maximum"`)).
 If `maximum` is smaller than `initial`, then throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
 Otherwise, let `maximum` be None.
