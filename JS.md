@@ -516,10 +516,12 @@ is thrown.
 
 Let `d` be [`ToNonWrappingUint32`](#tononwrappinguint32)(`delta`).
 
-Let `ret` be the result of performing a
-[`grow_memory`](Semantics.md#resizing) operation given delta `d`.
+Let `ret` be the current size of memory in pages (before resizing).
 
-If `ret` is `-1`, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
+Perform [`Memory.grow`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/memory.mli#L27)
+with delta `d`. On failure, a 
+[`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror)
+is thrown.
 
 Perform [`DetachArrayBuffer`](http://tc39.github.io/ecma262/#sec-detacharraybuffer)(`M.[[BufferObject]]`).
 
@@ -529,7 +531,7 @@ aliases `M.[[Memory]]` and whose
 [[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
 is set to the new byte length of `M.[[Memory]]`.
 
-Return [`ToJSValue`](#ToJSValue)(`ret`).
+Return `ret` as a Number value.
 
 ### `WebAssembly.Memory.prototype.buffer`
 
@@ -597,9 +599,26 @@ Return `T.[[Values]].length`.
 
 ### `WebAssembly.Table.prototype.grow`
 
-This method calls [`Table.grow`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/table.ml#L79), having performed
-[`ToNonWrappingUint32`](#tononwrappinguint32) on the first argument.
-On failure, a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror) is thrown.
+The `grow` method has the signature:
+
+```
+grow(delta)
+```
+
+Let `T` be the `this` value. If `T` is not a `WebAssembly.Table`,
+a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
+
+Let `d` be [`ToNonWrappingUint32`](#tononwrappinguint32)(`delta`).
+
+Let `ret` be the current length of the table (before resizing).
+
+Perform [`Table.grow`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/table.ml#L40),
+with delta `d`. On failure, a
+[`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror)
+is thrown.
+
+Return `ret` as a Number value.
 
 ### `WebAssembly.Table.prototype.get`
 
@@ -718,10 +737,6 @@ fetch('demo.wasm').then(response =>
     instance.exports.f(); // "world!"
 });
 ```
-
-## TODO
-
-* JS API for cyclic imports
 
 [future general]: FutureFeatures.md
 [future streaming]: FutureFeatures.md#streaming-compilation
