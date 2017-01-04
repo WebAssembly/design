@@ -232,6 +232,9 @@ This function returns an `Array` produced by mapping each
 `sectionNameString` to an `ArrayBuffer` containing a copy of the section's
 `payload_data`. (Note: `payload_data` does not include `name` or `name_len`.)
 
+The `Array` is populated in the same order as that in which custom sections
+appeared in the WebAssembly binary.
+
 ### Structured Clone of a `WebAssembly.Module`
 
 A `WebAssembly.Module` is a
