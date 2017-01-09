@@ -316,7 +316,7 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
 1. If `i` is a global import:
   1. [Assert](https://tc39.github.io/ecma262/#assert): the global is immutable
      by MVP validation constraint.
-  1. If `v` is an `i64` or `Type(v)` is not Number, throw a `WebAssembly.LinkError`.
+  1. If the `global_type` of `i` is `i64` or `Type(v)` is not Number, throw a `WebAssembly.LinkError`.
   1. Append [`ToWebAssemblyValue`](#towebassemblyvalue)`(v)` to `imports`.
 1. If `i` is a memory import:
   1. If `v` is not a [`WebAssembly.Memory` object](#webassemblymemory-objects),
