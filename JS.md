@@ -301,8 +301,9 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
   1. If [`IsCallable(v)`](https://tc39.github.io/ecma262/#sec-iscallable) is `false`,
      throw a `WebAssembly.LinkError`.
   1. If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
-    1. If the signature of `v` does not match the signature of `i`, throw a 
-       `WebAssembly.LinkError`.
+    1. (The signature of `v.[[Closure]]` is checked against the import's declared
+       [`func_type`](https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#func_type)
+       by `Eval.init` below.)
     1. Let `closure` be `v.[[Closure]]`.
   1. Otherwise:
     1. Let `closure` be a new [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9)
@@ -324,11 +325,17 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
 1. If `i` is a memory import:
   1. If `v` is not a [`WebAssembly.Memory` object](#webassemblymemory-objects),
       throw a `WebAssembly.LinkError`.
+  1. (The imported `Memory`'s `length` and `maximum` properties are checked against the import's declared
+      [`memory_type`](https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#memory_type)
+      by `Eval.init` below.)
   1. Append `v` to `memories`.
   1. Append `v.[[Memory]]` to `imports`.
 1. Otherwise (`i` is a table import):
   1. If `v` is not a [`WebAssembly.Table` object](#webassemblytable-objects),
      throw a `WebAssembly.LinkError`.
+  1. (The imported `Table`'s `length`, `maximum` and `element` properties are checked against the import's declared
+      [`table_type`](https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#table_type)
+      by `Eval.init` below.)
   1. Append `v` to `tables`.
   1. Append `v.[[Table]]` to `imports`.
   1. For each index `i` of `v.[[Table]]`:
