@@ -301,8 +301,9 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
   1. If [`IsCallable(v)`](https://tc39.github.io/ecma262/#sec-iscallable) is `false`,
      throw a `WebAssembly.LinkError`.
   1. If `v` is an [Exported Function Exotic Object](#exported-function-exotic-objects):
-    1. If the signature of `v` does not match the signature of `i`, throw a 
-       `WebAssembly.LinkError`.
+    1. (The signature of `v.[[Closure]]` is checked against the import's declared
+       [`func_type`](https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#func_type)
+       by `Eval.init` below.)
     1. Let `closure` be `v.[[Closure]]`.
   1. Otherwise:
     1. Let `closure` be a new [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9)
