@@ -36,6 +36,13 @@ the global object. Like the `Math` and `JSON` objects, the `WebAssembly` object
 is a plain JS object (not a constructor or function) that acts like a namespace
 and has the following properties:
 
+### `WebAssembly [ @@toStringTag ]` Property
+
+The initial value of the [`@@toStringTag`](https://tc39.github.io/ecma262/#sec-well-known-symbols)
+property is the String value `"WebAssembly"`.
+
+This property has the attributes { [[Writable]]: `false`, [[Enumerable]]: `false`, [[Configurable]]: `true` }.
+
 ### Constructor Properties of the `WebAssembly` object
 
 The following intrinsic objects are added:
@@ -173,6 +180,13 @@ Otherwise, this function performs synchronous compilation of the `BufferSource`:
 1. On success, a new `WebAssembly.Module` object is returned with [[Module]] set to
    the validated `Ast.module`.
 1. On failure, a new `WebAssembly.CompileError` is thrown.
+
+### `WebAssembly.Module.prototype [ @@toStringTag ]` Property
+
+The initial value of the [`@@toStringTag`](https://tc39.github.io/ecma262/#sec-well-known-symbols)
+property is the String value `"WebAssembly.Module"`.
+
+This property has the attributes { [[Writable]]: `false`, [[Enumerable]]: `false`, [[Configurable]]: `true` }.
 
 ### `WebAssembly.Module.exports`
 
@@ -433,6 +447,13 @@ Perform [`CreateDataProperty`](https://tc39.github.io/ecma262/#sec-createdatapro
 
 Return `instanceObject`.
 
+### `WebAssembly.Instance.prototype [ @@toStringTag ]` Property
+
+The initial value of the [`@@toStringTag`](https://tc39.github.io/ecma262/#sec-well-known-symbols)
+property is the String value `"WebAssembly.Instance"`.
+
+This property has the attributes { [[Writable]]: `false`, [[Enumerable]]: `false`, [[Configurable]]: `true` }.
+
 ## Exported Function Exotic Objects
 
 A function with [function index](Modules.md#function-index-space) `index`
@@ -533,6 +554,13 @@ the detachment performed by [`m.grow`](#webassemblymemoryprototypegrow) shall th
 
 Return a new `WebAssembly.Memory` instance with [[Memory]] set to `m` and
 [[BufferObject]] set to `buffer`.
+
+### `WebAssembly.Memory.prototype [ @@toStringTag ]` Property
+
+The initial value of the [`@@toStringTag`](https://tc39.github.io/ecma262/#sec-well-known-symbols)
+property is the String value `"WebAssembly.Memory"`.
+
+This property has the attributes { [[Writable]]: `false`, [[Enumerable]]: `false`, [[Configurable]]: `true` }.
 
 ### `WebAssembly.Memory.prototype.grow`
 
@@ -695,6 +723,13 @@ Set `T.[[Table]][i]` to `elem`.
 Set `T.[[Values]][i]` to `value`.
 
 Return `undefined`.
+
+### `WebAssembly.Table.prototype [ @@toStringTag ]` Property
+
+The initial value of the [`@@toStringTag`](https://tc39.github.io/ecma262/#sec-well-known-symbols)
+property is the String value `"WebAssembly.Table"`.
+
+This property has the attributes { [[Writable]]: `false`, [[Enumerable]]: `false`, [[Configurable]]: `true` }.
 
 ## ToJSValue
 
