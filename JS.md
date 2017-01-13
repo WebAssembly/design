@@ -224,12 +224,10 @@ Array customSections(moduleObject, sectionName)
 If `moduleObject` is not a `WebAssembly.Module`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-Let `sectionNameString` be the result of [`ToString`](https://tc39.github.io/ecma262/#sec-tostring)(`sectionName`).
-
 This function returns an `Array` produced by mapping each
-[custom section](BinaryEncoding.md#high-level-structure) (i.e., section with
-`id` 0) whose `name` field ([decoded as UTF-8](Web.md#names)) is equal to
-`sectionNameString` to an `ArrayBuffer` containing a copy of the section's
+[custom section](BinaryEncoding.md#high-level-structure) `s` (i.e., section with
+`id` 0) to the Object `{ name: String(s.section_name), data: ArrayBuffer(s.payload_data) }` where
+`ArrayBuffer(s.payload_data)` is an `ArrayBuffer` containing a copy of the section's
 `payload_data`. (Note: `payload_data` does not include `name` or `name_len`.)
 
 The `Array` is populated in the same order as that in which custom sections
