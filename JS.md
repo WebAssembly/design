@@ -483,7 +483,7 @@ WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined
    of the function's [[Closure]].
 1. If `sig` contains an `i64` (as argument or result), a
    [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
-   is thrown.
+   is thrown each time the [[Call]] method is invoked.
 1. Let `args` be an empty list of coerced values.
 1. Let `inArity` be the number of arguments and `outArity` be the number of results in `sig`.
 1. For all values `v` in `argValues`, in the order of their appearance:
