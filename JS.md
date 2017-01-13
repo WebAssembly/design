@@ -746,8 +746,8 @@ Given `demo.was` (encoded to `demo.wasm`):
 
 ```lisp
 (module
-    (import $i1 "js" "import1")
-    (import $i2 "js" "import2")
+    (import "js" "import1" (func $i1))
+    (import "js" "import2" (func $i2))
     (func $main (call $i1))
     (start $main)
     (func (export "f") (call $i2))
