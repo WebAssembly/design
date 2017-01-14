@@ -199,9 +199,9 @@ Array exports(moduleObject)
 If `moduleObject` is not a `WebAssembly.Module`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-This function returns an `Array` produced by mapping each
+This function returns a new `Array` every time it is called. Each such `Array` is produced by mapping each
 [`Ast.export`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L152)
-`e` of [moduleObject.[[Module]].exports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L187)
+`e` of [moduleObject.[[Module]].exports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L187), in the order of occurrence in the binary module's exports table,
 to the Object `{ name: String(e.name), kind: e.ekind }` where `e.name` is [decoded as UTF8](Web.md#names)
 and `e.ekind` is mapped to one of the String values `"function"`, `"table"`, `"memory"`, `"global"`.
 
@@ -218,9 +218,9 @@ Array imports(moduleObject)
 If `moduleObject` is not a `WebAssembly.Module`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-This function returns an `Array` produced by mapping each
+This function returns a new `Array` every time it is called. Each such `Array` is produced by mapping each
 [`Ast.import`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L167)
-`i` of [moduleObject.[[Module]].imports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L203)
+`i` of [moduleObject.[[Module]].imports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L203), in the order of occurrence in the binary module's imports table,
 to the Object `{ module: String(i.module_name), name: String(i.item_name), kind: i.ikind }` where
 `i.module_name` and `i.item_name` are  [decoded as UTF8](Web.md#names) and
 `i.ikind` is mapped to one of the String values `"function"`, `"table"`, `"memory"`, `"global"`.
@@ -240,11 +240,11 @@ is thrown.
 
 Let `sectionNameString` be the result of [`ToString`](https://tc39.github.io/ecma262/#sec-tostring)(`sectionName`).
 
-This function returns an `Array` produced by mapping each
+This function returns a new `Array` every time it is called. Each such `Array` is produced by mapping each
 [custom section](BinaryEncoding.md#high-level-structure) (i.e., section with
 `id` 0) whose `name` field ([decoded as UTF-8](Web.md#names)) is equal to
 `sectionNameString` to an `ArrayBuffer` containing a copy of the section's
-`payload_data`. (Note: `payload_data` does not include `name` or `name_len`.)
+`payload_data`. (Note: `payload_data` does not include `name` or `name_len`.).
 
 The `Array` is populated in the same order as that in which custom sections
 appeared in the WebAssembly binary.
