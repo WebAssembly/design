@@ -201,11 +201,13 @@ is thrown.
 
 This function returns a new `Array` every time it is called. Each such `Array` is produced by mapping each
 [`Ast.export`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L152)
-`e` of [moduleObject.[[Module]].exports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L187), in the order of occurrence in the binary module's exports table,
+`e` of [moduleObject.[[Module]].exports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L187)
 to the Object `{ name: String(e.name), kind: e.ekind }` where `e.name` is [decoded as UTF8](Web.md#names)
 and `e.ekind` is mapped to one of the String values `"function"`, `"table"`, `"memory"`, `"global"`.
 
 Note: other fields like `signature` may be added in the future.
+
+The returned `Array` is populated in the same order as that in which exports appeared in the WebAssembly binary's exports table.
 
 ### `WebAssembly.Module.imports`
 
@@ -220,12 +222,14 @@ is thrown.
 
 This function returns a new `Array` every time it is called. Each such `Array` is produced by mapping each
 [`Ast.import`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L167)
-`i` of [moduleObject.[[Module]].imports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L203), in the order of occurrence in the binary module's imports table,
+`i` of [moduleObject.[[Module]].imports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L203)
 to the Object `{ module: String(i.module_name), name: String(i.item_name), kind: i.ikind }` where
 `i.module_name` and `i.item_name` are  [decoded as UTF8](Web.md#names) and
 `i.ikind` is mapped to one of the String values `"function"`, `"table"`, `"memory"`, `"global"`.
 
 Note: other fields like `signature` may be added in the future.
+
+The returned `Array` is populated in the same order as that in which imports appeared in the WebAssembly binary's imports table.
 
 ### `WebAssembly.Module.customSections`
 
