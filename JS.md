@@ -207,7 +207,7 @@ and `e.ekind` is mapped to one of the String values `"function"`, `"table"`, `"m
 
 Note: other fields like `signature` may be added in the future.
 
-The returned `Array` is populated in the same order as that in which exports appeared in the WebAssembly binary's exports table.
+The returned `Array` is populated in the same order exports appear in the WebAssembly binary's exports table.
 
 ### `WebAssembly.Module.imports`
 
@@ -229,7 +229,7 @@ to the Object `{ module: String(i.module_name), name: String(i.item_name), kind:
 
 Note: other fields like `signature` may be added in the future.
 
-The returned `Array` is populated in the same order as that in which imports appeared in the WebAssembly binary's imports table.
+The returned `Array` is populated in the same order imports appear in the WebAssembly binary's imports table.
 
 ### `WebAssembly.Module.customSections`
 
@@ -250,8 +250,7 @@ This function returns a new `Array` every time it is called. Each such `Array` i
 `sectionNameString` to an `ArrayBuffer` containing a copy of the section's
 `payload_data`. (Note: `payload_data` does not include `name` or `name_len`.).
 
-The `Array` is populated in the same order as that in which custom sections
-appeared in the WebAssembly binary.
+The `Array` is populated in the same order custom sections appear in the WebAssembly binary.
 
 ### Structured Clone of a `WebAssembly.Module`
 
