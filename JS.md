@@ -638,9 +638,9 @@ is thrown.
 Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"initial"`)).
 
 If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
-then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"maximum"`)).
-If `maximum` is smaller than `initial`, then throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
-Otherwise, let `maximum` be None.
+then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"maximum"`)). Otherwise, let `maximum` be None.
+
+If `maximum` is not None and is smaller than `initial`, then throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
 
 Let `table` be the result of calling 
 [`Table.create`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/table.ml#L68)
