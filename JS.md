@@ -270,6 +270,18 @@ Given the above engine optimizations, structured cloning provides developers
 explicit control over both compiled-code caching and cross-window/worker code
 sharing.
 
+### Structured Clone of a `WebAssembly.Memory`
+
+A `WebAssembly.Memory` is a
+[cloneable object](https://html.spec.whatwg.org/multipage/infrastructure.html#cloneable-objects)
+which can only be cloned between workers, but not windows, nor stored in
+IndexedDB.
+The semantics of a structured clone is identical to SharedArrayBuffer.
+
+Given the above engine optimizations, structured cloning provides developers
+explicit control over both compiled-code caching and cross-window/worker code
+sharing. As well as the ability to share memory between web workers.
+
 ## `WebAssembly.Instance` Objects
 
 A `WebAssembly.Instance` object represents the instantiation of a 
