@@ -190,8 +190,6 @@ Each section is identified by a 1-byte *section code* that encodes either a know
 The section length and payload data then follow.
 Known sections have non-zero ids, while custom sections have a `0` id followed by an identifying string as
 part of the payload.
-Custom sections are ignored by the WebAssembly implementation, and thus validation errors within them do not
-invalidate a module.
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
@@ -201,9 +199,13 @@ invalidate a module.
 | name | `bytes` ? | section name string, present if `id == 0` |
 | payload_data  | `bytes` | content of this section, of length `payload_len - sizeof(name) - sizeof(name_len)` |
 
-Each known section is optional and may appear at most once.
-Custom sections all have the same `id`, and can be named non-uniquely (all bytes composing their names can be identical).
-Known sections from this list may not appear out of order.
+Each known section is optional and may appear at most once. Custom sections all have the same `id` (0), and can be named non-uniquely (all bytes composing their names may be identical).
+
+Custom sections are intended to be used for debugging information, future evolution, or third party extensions. For MVP, we use a specific custom section (the [Name Section](#name-section)) for debugging information. 
+
+If a wasm implementation reads and validates any custom section during module validation time, such validation errors do not invalidate the module.
+
+Known sections from the list below may not appear out of order, while custom sections may be interspersed before, between, as well as after any of the elements of the list, in any order. Certain custom sections may have their own ordering and cardinality requiremens. For example, the [Name section](#name-section) is expected to appear at most once, immediately after the Data section. 
 The content of each section is encoded in its `payload_data`.
 
 | Section Name | Code | Description |
@@ -424,12 +426,13 @@ a `data_segment` is:
 
 Custom section `name` field: `"name"`
 
-The names section is a [custom section](#high-level-structure). 
+The name section is a [custom section](#high-level-structure). 
 It is therefore encoded with id `0` followed by the name string `"name"`.
-Like all custom sections, a validation error in this section does not cause validation of the module to fail.
+Like all custom sections, a validation error in this section does not cause validation of the module to fail. Furthermore, the wasm implementation may choose to keep and use any valid information it gathered from this section up to the point of invalidation, or discard it. The wasm implementation may also choose to read and validate this section lazily, after the module has been instantiated, should debugging be required.
+
 The name section may appear only once, and only after the [Data section](#Data-section).
 The expectation is that, when a binary WebAssembly module is viewed in a browser or other development
-environment, the names in this section will be used as the names of functions
+environment, the data in this section will be used as the names of functions
 and locals in the [text format](TextFormat.md).
 
 | Field | Type | Description |
@@ -439,8 +442,7 @@ and locals in the [text format](TextFormat.md).
 
 The sequence of `function_names` assigns names to the corresponding
 [function index](Modules.md#function-index-space). (Note: this assigns names to both
-imported and module-defined functions.) The count may be greater or less than
-the actual number of functions.
+imported and module-defined functions.) The count may differ from the actual number of functions.
 
 #### Function names
 
@@ -452,7 +454,7 @@ the actual number of functions.
 | local_names | `local_name*` | sequence of local names |
 
 The sequence of `local_name` assigns names to the corresponding local index. The
-count may be greater or less than the actual number of locals.
+count may differ from the actual number of locals.
 
 #### Local name
 
