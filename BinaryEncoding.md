@@ -203,9 +203,10 @@ Each known section is optional and may appear at most once. Custom sections all 
 
 Custom sections are intended to be used for debugging information, future evolution, or third party extensions. For MVP, we use a specific custom section (the [Name Section](#name-section)) for debugging information. 
 
-If a wasm implementation reads and validates any custom section during module validation time, such validation errors do not invalidate the module.
+If a WebAssembly implementation interprets the payload of any custom section during module validation or compilation, errors in that payload must not invalidate the module.
 
-Known sections from the list below may not appear out of order, while custom sections may be interspersed before, between, as well as after any of the elements of the list, in any order. Certain custom sections may have their own ordering and cardinality requiremens. For example, the [Name section](#name-section) is expected to appear at most once, immediately after the Data section. 
+Known sections from the list below may not appear out of order, while custom sections may be interspersed before, between, as well as after any of the elements of the list, in any order. Certain custom sections may have their own ordering and cardinality requirements. For example, the [Name section](#name-section) is expected to appear at most once, immediately after the Data section. Violation of such requirements may at most cause an implementatin to ignore the section, while not invalidating the module.
+
 The content of each section is encoded in its `payload_data`.
 
 | Section Name | Code | Description |
@@ -428,7 +429,7 @@ Custom section `name` field: `"name"`
 
 The name section is a [custom section](#high-level-structure). 
 It is therefore encoded with id `0` followed by the name string `"name"`.
-Like all custom sections, a validation error in this section does not cause validation of the module to fail. Furthermore, the wasm implementation may choose to keep and use any valid information it gathered from this section up to the point of invalidation, or discard it. The wasm implementation may also choose to read and validate this section lazily, after the module has been instantiated, should debugging be required.
+Like all custom sections, this section being malformed does not cause the validation of the module to fail. It is up to the implementation how it handles a malformed or partially malformed name section. The wasm implementation is also free to choose to read and validate this section lazily, after the module has been instantiated, should debugging be required.
 
 The name section may appear only once, and only after the [Data section](#Data-section).
 The expectation is that, when a binary WebAssembly module is viewed in a browser or other development
