@@ -429,7 +429,7 @@ Custom section `name` field: `"name"`
 
 The name section is a [custom section](#high-level-structure). 
 It is therefore encoded with id `0` followed by the name string `"name"`.
-Like all custom sections, this section being malformed does not cause the validation of the module to fail. It is up to the implementation how it handles a malformed or partially malformed name section. The wasm implementation is also free to choose to read and validate this section lazily, after the module has been instantiated, should debugging be required.
+Like all custom sections, this section being malformed does not cause the validation of the module to fail. It is up to the implementation how it handles a malformed or partially malformed name section. The wasm implementation is also free to choose to read and process this section lazily, after the module has been instantiated, should debugging be required.
 
 The name section may appear only once, and only after the [Data section](#Data-section).
 The expectation is that, when a binary WebAssembly module is viewed in a browser or other development
