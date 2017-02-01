@@ -380,8 +380,8 @@ for example:
 
 IEEE 754-2008 6.2 says that instructions returning a NaN *should* return one of
 their input NaNs. In WebAssembly, implementations may do this, however they are
-not required to. Since IEEE 754-2008 states this as a "should", it isn't a
-requirement for IEEE 754-2008 conformance.
+not required to. Since IEEE 754-2008 states this as a "should" (as opposed to a
+"shall"), it isn't a requirement for IEEE 754-2008 conformance.
 
 An alternative design would be to require engines to always "canonicalize"
 NaNs whenever their bits could be observed. This would eliminate the
