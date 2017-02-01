@@ -351,13 +351,15 @@ nondeterministic bit patterns in most circumstances. The bit pattern of a NaN
 is not usually significant, however there are a few ways that it can be
 observed:
  - a `reinterpret` conversion to an integer type
- - a `store` to memory followed by a load with a different type or offset
+ - a `store` to linear memory followed by a load with a different type or index
+ - a NaN stored to an imported or exported global variable or linear memory may
+   be observed by the outside environment
  - a NaN passed to a `call` or `call_indirect` to an imported function may
    be observed by the outside environment
  - a return value of an exported function may be observed by the outside
    environment
- - `copysign` can be used to copy the sign bit onto another value which can
-   then be observed
+ - `copysign` can be used to copy the sign bit onto a non-NaN value, where
+   it then be observed
 
 The motivation for nondeterminism in NaN bit patterns is that popular platforms
 have differing behavior. IEEE 754-2008 makes some recommendations, but has few
