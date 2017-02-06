@@ -79,7 +79,7 @@ and the final standard format may look entirely different:
 * [ilwasm][] emits compatible s-expressions.
 * [binaryen][] can consume compatible s-expressions.
 
-  [prototype specification]: https://github.com/WebAssembly/spec/tree/master/interpreter/test
+  [prototype specification]: https://github.com/WebAssembly/spec/tree/master/interpreter/spec
   [LLVM backend]: https://github.com/llvm-mirror/llvm/tree/master/test/CodeGen/WebAssembly
   [WAVM backend]: https://github.com/AndrewScheidecker/WAVM/tree/master/Test
   [V8 prototype]: https://github.com/WebAssembly/v8-native-prototype
