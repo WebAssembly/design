@@ -688,14 +688,17 @@ outside the range which rounds to an integer in range) traps.
 ## Validation
 
 A module binary has to be _validated_ before it is compiled.
-Validation ensures that the module is well-defined and that its code cannot exhibit any undefined behaviour.
+Validation ensures that the module is well-defined and that its code cannot exhibit any undefined behavior.
 In particular, along with some runtime checks, it ensures that no program can access or corrupt memory it does not own.
 
 Validation of code is mostly defined in terms of type-checking the use of the operand stack.
 It sequentially checks for each that the expected operands can be popped from the stack, and tracks which new operands are pushed onto it. At the start of a function the stack is empty; at its end it has to match the return type of the function. In addition, instructions inside a `block` (or `loop` or `if`) cannot consume operands pushed outside; at the end of the block the remaining inner operands must match the block signature.
 
-A special case are instructions performing an unconditional control flow transfer (`br`, `br_table`, `return`, `unreachable`), because execution never proceeds after them.
-The stack after such an instruction is defined as _unreachable_.
-An unreachable stack is valid input for any instruction, and an instruction with unreachable input will produce unreachable output.
-An unreachable stack also matches any possible signature at the end of a block or function.
+A special case are instructions performing an unconditional control transfer (`br`, `br_table`, `return`, `unreachable`), because execution never proceeds after them.
+The stack after such an instruction is unconstrained, und thus said to be _polymorphic_.
+Instructions after an unconditional control transfer still need to type-check,
+but conceptually, values of any type can be popped off a polymorphic stack for the sake of checking consecutive instructions.
+A polymophic stack also matches any possible signature at the end of a block or function.
 After the end of a block, the stack is determined by the block signature and the stack before the block.
+
+The details of validation are currently defined by the [spec interpreter](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/valid.ml#L162).
