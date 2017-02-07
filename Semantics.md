@@ -687,3 +687,22 @@ outside the range which rounds to an integer in range) traps.
 [future types]: FutureFeatures.md#more-table-operators-and-types
 [future large pages]: FutureFeatures.md#large-page-support
 [future ieee 754]: FutureFeatures.md#full-ieee-754-2008-conformance
+
+
+## Validation
+
+A module binary must be _validated_ before it is compiled.
+Validation ensures that the module is well-defined and that its code cannot exhibit any undefined behavior.
+In particular, along with some runtime checks, this ensures that no program can access or corrupt memory it does not own.
+
+Validation of code is mostly defined in terms of type-checking the use of the operand stack.
+It sequentially checks for each instruction that the expected operands can be popped from the stack and tracks which new operands are pushed onto it. At the start of a function the stack is empty; at its end it must match the return type of the function. In addition, instructions inside a `block` (or `loop` or `if`) cannot consume operands pushed outside. At the end of the block the remaining inner operands must match the block signature.
+
+A special case is unconditional control transfers (`br`, `br_table`, `return`, `unreachable`), because execution never proceeds after them.
+The stack after such an instruction is unconstrained, and thus said to be _polymorphic_.
+The following instructions still must type-check,
+but conceptually, values of any type can be popped off a polymorphic stack for the sake of checking consecutive instructions.
+A polymophic stack also matches any possible signature at the end of a block or function.
+After the end of a block, the stack is determined by the block signature and the stack before the block.
+
+The details of validation are currently defined by the [spec interpreter](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/valid.ml#L162).
