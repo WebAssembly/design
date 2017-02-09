@@ -702,7 +702,7 @@ A special case is unconditional control transfers (`br`, `br_table`, `return`, `
 The stack after such an instruction is unconstrained, and thus said to be _polymorphic_.
 The following instructions still must type-check,
 but conceptually, values of any type can be popped off a polymorphic stack for the sake of checking consecutive instructions.
-A polymophic stack also matches any possible signature at the end of a block or function.
+A polymorphic stack also matches any possible signature at the end of a block or function.
 After the end of a block, the stack is determined by the block signature and the stack before the block.
 
 The details of validation are currently defined by the [spec interpreter](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/valid.ml#L162).
