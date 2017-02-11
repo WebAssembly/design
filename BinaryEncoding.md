@@ -444,8 +444,8 @@ The name section contains a sequence of name subsections:
 | name_payload_len | `varuint32` | size of this subsection in bytes |
 | name_payload_data | `bytes` | content of this section, of length `name_payload_len` |
 
-Since name subsections have a given length, unknown or unwanted names can be
-skipped over by an engine. The current list of valid `name_type` codes are:
+Since name subsections have a given length, unknown or unwanted names types can
+be skipped over by an engine. The current list of valid `name_type` codes are:
 
 | Name Type | Code | Description |
 | --------- | ---- | ----------- |
