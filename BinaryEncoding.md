@@ -456,42 +456,47 @@ When present, name subsections must appear in this order and at most once. The
 end of the last subsection must coincide with the last byte of the name
 section to be a well-formed name section.
 
-#### Name List
+#### Name Map
 
-In any of the subsequent subsections, a `name_list` is encoded as:
-
-| Name Type | Type | Description |
-| --------- | ---- | ----------- |
-| count | `varuint32` | number of `name` in names |
-| names | `name*` | sequence of `name` |
-
-where a `name` is encoded as:
-
-| Name Type | Type | Description |
-| --------- | ---- | ----------- |
-| name_len | `varuint32` | number of bytes in name_str |
-| name_str | `bytes` | UTF8 encoding of the name |
-
-#### Function names
-
-The function names subsection is a `name_list` which assign a name to each
-function by [function index](Modules.md#function-index-space). (Note: this
-assigns names to both imported and module-defined functions.) The count
-may differ from the actual number of functions.
-
-#### Local names
-
-The local names subsection assigns a `name_list` to each function defined inside
-the module according to its index in the [Function section](#function-section).
-(Note: this does not assign names to imports; imports have no locals.) The
-`name_list` for a given function assigns a name to each local. The counts may
-differ from both the number of functions and number of locals in a given
-function.
+In the following subsections, a `name_map` is encoded as:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| count | `varuint32` | count of `name_list` in func_locals |
-| func_locals | `name_list*` | sequence of `name_list`, one per function |
+| count | `varuint32` | number of `name` in names |
+| names | `name*` | sequence of `name` sorted by index |
+
+where a `name` is encoded as:
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| index | `varuint32` | the index which is being named |
+| name_len | `varuint32` | number of bytes in name_str |
+| name_str | `bytes` | binary encoding of the name |
+
+#### Function names
+
+The function names subsection is a `name_map` which assigns names to
+a subset of the [function index space](Modules.md#function-index-space)
+(both imports and module-defined).
+
+#### Local names
+
+The local names subsection assigns `name_map`s to a subset of functions in the
+[function index space](Modules.md#function-index-space) (both imports and
+module-defined). The `name_map` for a given function assigns names to a
+subset of local variable indices.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| count | `varuint32` | count of `local_names` in funcs |
+| funcs | `local_names*` | sequence of `local_names` sorted by index |
+
+where a `local_name` is encoded as:
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| index | `varuint32` | the index of the function whose locals are being named |
+| local_map | `name_map` | assignment of names to local indices |
 
 # Function Bodies
 
