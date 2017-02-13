@@ -305,6 +305,12 @@ is thrown. If the list of
 is not empty and `Type(importObject)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
+Note: Imported JavaScript functions are wrapped as [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9) values in the following algorithm. For the purpose of the algorithm, a _new_ [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9) value is always generated fresh and considered distinct from any other previously created host function value, including those wrapping the same JavaScript function object.
+Consequently, two [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7) values are considered equal if and only if:
+
+* Either they are both WebAssembly functions for the same instance and referring to the same function definition.
+* Or they are the same host function value.
+
 Let `funcs`, `memories` and `tables` be initially-empty lists of callable JavaScript objects, `WebAssembly.Memory` objects and `WebAssembly.Table` objects, respectively.
 
 Let `imports` be an initially-empty list of [`external`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L11) values.
@@ -325,8 +331,8 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
        by `Eval.init` below.)
     1. Let `closure` be `v.[[Closure]]`.
   1. Otherwise:
-    1. Let `closure` be a new [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9)
-       of the given signature:
+    1. Let `closure` be a new [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9) value
+       of the given signature and the following behavior:
       1. If the signature contains an `i64` (as argument or result), the host
          function immediately throws a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
          when called.
@@ -432,11 +438,6 @@ each [external](https://github.com/WebAssembly/spec/blob/master/interpreter/spec
 1. Otherwise `e` must be a [table](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L13) `t`:
   1. Assert: There is an element `table` in `tables` whose `table.[[Table]]` is `t`.
   1. Return that `table`.
-
-Note: For the purpose of the above algorithm, two [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7) values are considered equal if and only if:
-
-* Either they are both WebAssembly functions for the same instance and referring to the same function definition.
-* Or they are identical host functions (i.e., each host function value created from a JavaScript function is considered fresh).
 
 Let `exportsObject` be a new [frozen](https://tc39.github.io/ecma262/#sec-object.freeze)
 plain JS object with [[Prototype]] set to Null and with properties defined
