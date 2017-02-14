@@ -59,7 +59,7 @@ To illustrate, consider 4 examples:
   the application to test `(has_feature "mprotect")` to avoid calling the
   `abort()`. The `has_feature` query could be exposed to C++ code via
   the existing `__builtin_cpu_supports`.
-* [SIMD]][future simd] - When SIMD operators have a good-enough
+* [SIMD][future simd] - When SIMD operators have a good-enough
   polyfill, e.g., `f32x4.fma` via `f32x4.mul`/`add`, Strategy 2 could be used 
   (similar to the `i32.min_s` example above). However, when a SIMD feature has no
   efficient polyfill (e.g., `f64x2`, which introduces both operators *and*
