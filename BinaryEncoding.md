@@ -462,10 +462,10 @@ In the following subsections, a `name_map` is encoded as:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| count | `varuint32` | number of `name` in names |
-| names | `name*` | sequence of `name` sorted by index |
+| count | `varuint32` | number of `naming` in names |
+| names | `naming*` | sequence of `naming` sorted by index |
 
-where a `name` is encoded as:
+where a `naming` is encoded as:
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
