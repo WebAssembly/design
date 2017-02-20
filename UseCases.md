@@ -46,8 +46,8 @@ design of WebAssembly.
 
 # How WebAssembly can be used
 
-* Entire code base in Web Assembly.
-* Main frame in Web Assembly, but the UI is in JavaScript / HTML.
-* Re-use existing code by targeting Web Assembly, embedded in a larger
+* Entire code base in WebAssembly.
+* Main frame in WebAssembly, but the UI is in JavaScript / HTML.
+* Re-use existing code by targeting WebAssembly, embedded in a larger
   JavaScript / HTML application. This could be anything from simple helper
   libraries, to compute-oriented task offload.
