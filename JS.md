@@ -88,7 +88,7 @@ If the given `bytes` argument is not a
 the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
 with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
-Otherwise, this function starts an asychronous task to compile a `WebAssembly.Module`
+Otherwise, this function starts an asynchronous task to compile a `WebAssembly.Module`
 as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor).
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `WebAssembly.Module` object. On failure, the `Promise` is 

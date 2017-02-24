@@ -22,6 +22,107 @@ and retrieve compiled modules from offline storage, instantiate compiled modules
 with JavaScript imports, call the exported functions of instantiated modules,
 alias the exported memory of instantiated modules, etc.
 
+The Web embedding includes additional methods useful in that context.
+Non-web embeddings are not required to support these additional methods.
+
+### Additional Web Embedding API
+
+#### `WebAssembly.compile`
+
+:cyclone: Added for milestone 2, developers must feature detect.
+
+In Web embeddings, the following overloads are added (in addition to the core
+JS API method of the same name).
+
+```
+Promise<WebAssembly.Module> compile(Response source)
+
+Promise<WebAssembly.Module> compile(Promise<Response> source)
+```
+
+Developers can set the argument `source` with either a promise that resolves
+with a
+[`Response`](https://fetch.spec.whatwg.org/#response-class)
+object or a
+[`Response`](https://fetch.spec.whatwg.org/#response-class)
+object (which is automatically cast to a
+promise).
+If when unwrapped that `Promise` is not a `Response` object, then the returned `Promise` is
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
+with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+Renderer-side
+security checks about tainting for cross-origin content are tied to the types
+of filtered responses defined in
+[`Fetch`](https://fetch.spec.whatwg.org/#concept-fetch).
+
+This function starts an asynchronous task to compile a `WebAssembly.Module`
+as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor).
+On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
+with the resulting `WebAssembly.Module` object. On failure, the `Promise` is
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
+`WebAssembly.CompileError`.
+
+The `Promise<Response>` is used as the source of the bytes to compile.
+MIME type information is
+[`extracted`](https://fetch.spec.whatwg.org/#concept-header-extract-mime-type)
+from the `Response`, WebAssembly `source` data must have a MIME type of `application/wasm`,
+extra parameters are not allowed (including empty `application/wasm;`).
+MIME type mismatch or `opaque` response types
+[reject](http://tc39.github.io/ecma262/#sec-rejectpromise) the Promise with a
+`WebAssembly.CompileError`.
+
+#### `WebAssembly.instantiate`
+
+:cyclone: Added for milestone 2, developers must feature detect.
+
+In Web embeddings, the following overloads are added (in addition to the core
+JS API method of the same name).
+
+```
+Promise<{module:WebAssembly.Module, instance:WebAssembly.Instance}>
+  instantiate(Response source [, importObject])
+
+Promise<{module:WebAssembly.Module, instance:WebAssembly.Instance}>
+  instantiate(Promise<Response> source [, importObject])
+```
+
+Developers can set the argument `source` with either a promise that resolves
+with a
+[`Response`](https://fetch.spec.whatwg.org/#response-class)
+object or a
+[`Response`](https://fetch.spec.whatwg.org/#response-class)
+object (which is automatically cast to a
+promise).
+If when unwrapped that `Promise` is not a `Response` object, then the returned `Promise` is
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
+with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+Renderer-side
+security checks about tainting for cross-origin content are tied to the types
+of filtered responses defined in
+[`Fetch`](https://fetch.spec.whatwg.org/#concept-fetch).
+
+This function starts an asynchronous task that first compiles a `WebAssembly.Module`
+based on bytes from `source` as described in
+the [`WebAssembly.Module` constructor](#webassemblymodule-constructor)
+and then instantiate the resulting `Module` with `importObject` as described in the
+[`WebAssembly.Instance` constructor](#webassemblyinstance-constructor).
+On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
+with a plain JavaScript object pair `{module, instance}` containing the resulting
+`WebAssembly.Module` and `WebAssembly.Instance`. The 2 properties `module` and `instance` of the returned pair are  configurable, enumerable and writable.
+
+On failure, the `Promise` is
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
+`WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
+
+The `Promise<Response>` is used as the source of the bytes to compile.
+MIME type information is
+[`extracted`](https://fetch.spec.whatwg.org/#concept-header-extract-mime-type)
+from the `Response`, WebAssembly `source` data must have a MIME type of `application/wasm`,
+extra parameters are not allowed (including empty `application/wasm;`).
+MIME type mismatch or `opaque` response types
+[reject](http://tc39.github.io/ecma262/#sec-rejectpromise) the Promise with a
+`WebAssembly.CompileError`.
+
 ## Modules
 
 WebAssembly's [modules](Modules.md) allow for natural [integration with
