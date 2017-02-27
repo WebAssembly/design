@@ -111,8 +111,7 @@ If neither of the following overloads match, then the returned `Promise` is
 with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 ```
-Promise<{module:WebAssembly.Module, instance:WebAssembly.Instance}>
-  instantiate(BufferSource bytes [, importObject])
+Promise<WebAssembly.Instance> instantiate(BufferSource bytes [, importObject])
 ```
 
 This description applies if the first argument is a 
@@ -123,8 +122,7 @@ from `bytes` as described in the [`WebAssembly.Module` constructor](#webassembly
 and then instantiate the resulting `Module` with `importObject` as described in the
 [`WebAssembly.Instance` constructor](#webassemblyinstance-constructor).
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
-with a plain JavaScript object pair `{module, instance}` containing the resulting
-`WebAssembly.Module` and `WebAssembly.Instance`. The 2 properties `module` and `instance` of the returned pair are  configurable, enumerable and writable. 
+with the instance.
 
 On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
@@ -147,6 +145,37 @@ On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulf
 with the resulting `WebAssembly.Instance` object. On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
 `WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
+
+#### `WebAssembly.compileAndInstantiate`
+
+The `compileAndInstantiate` function has the signature:
+
+```
+Promise<{module:WebAssembly.Module, instance:WebAssembly.Instance}>
+    compileAndInstantiate(BufferSource bytes [, importObject])
+```
+
+If the given `bytes` argument is not a
+[`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
+the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
+with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+
+This function starts an asynchronous task that first compiles a `WebAssembly.Module`
+from `bytes` as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor)
+and then instantiate the resulting `Module` with `importObject` as described in the
+[`WebAssembly.Instance` constructor](#webassemblyinstance-constructor).
+On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
+with a plain JavaScript object pair `{module, instance}` containing the resulting
+`WebAssembly.Module` and `WebAssembly.Instance`. The 2 properties `module` and
+`instance` of the returned pair are  configurable, enumerable and writable. 
+
+On failure, the `Promise` is
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
+`WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
+
+The asynchronous compilation is logically performed on a copy of the state of
+the given `BufferSource` captured during the call to `instantiate`; subsequent mutations
+of the `BufferSource` after `instantiate` return do not affect ongoing compilations.
 
 ## `WebAssembly.Module` Objects
 
