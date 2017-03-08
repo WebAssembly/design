@@ -157,7 +157,7 @@ A packed tuple that describes the limits of a
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| flags | `varuint1` | set if the maximum field is present |
+| flags | `varuint1` | `1` if the maximum field is present, `0` otherwise |
 | initial | `varuint32` | initial length (in units of table elements or wasm pages) |
 | maximum | `varuint32`? | only present if specified by `flags` |
 
