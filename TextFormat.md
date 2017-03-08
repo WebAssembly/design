@@ -4,7 +4,7 @@ WebAssembly will define a standardized text format
 that encodes a WebAssembly module with all its contained definitions
 in a way that is equivalent to the [binary format](BinaryEncoding.md).
 This format will use [S-expressions][] (avoiding syntax bikeshed discussions) to express modules and definitions while allowing a [linear representation](#linear-instructions) for the code in function bodies.
-This format is used understood by tools and used in browsers when [debugging](#debug-symbol-integration)
+This format is understood by tools and used in browsers when [debugging](#debug-symbol-integration)
 modules.
 
   [S-expressions]: https://en.wikipedia.org/wiki/S-expression
@@ -104,7 +104,7 @@ story, a lightweight, optional "debug symbol" global section may be defined
 which associates names with each indexed entity and, when present, these names
 will be used in the text format projected from a binary WebAssembly module.
 
-# Design consdierations
+# Design considerations
 
 The text format for WebAssembly needs to
 be able to represent any well-structured module unambiguously.
