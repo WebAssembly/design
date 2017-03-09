@@ -20,19 +20,16 @@ Examples can be found in the WebAssembly [test suite][].
 The following tools currently understand this format:
 
 * [specification interpreter][] consumes an s-expression syntax.
-* [WAVM backend][] consumes compatible s-expressions.
 * [wabt][] consumes compatible s-expressions.
-* [LLVM backend][] (the `CHECK:` parts of these tests) emits compatible s-expressions.
-* [ilwasm][] emits compatible s-expressions.
 * [binaryen][] can consume compatible s-expressions.
+* [LLVM backend][] (the `CHECK:` parts of these tests) emits compatible s-expressions.
+* [WAVM backend][] consumes compatible s-expressions.
 
   [specification interpreter]: https://github.com/WebAssembly/spec/tree/master/interpreter/
-  [LLVM backend]: https://github.com/llvm-mirror/llvm/tree/master/test/CodeGen/WebAssembly
-  [WAVM backend]: https://github.com/AndrewScheidecker/WAVM/tree/master/Test
-  [V8 prototype]: https://github.com/WebAssembly/v8-native-prototype
-  [ilwasm]: https://github.com/WebAssembly/ilwasm
   [wabt]: https://github.com/WebAssembly/wabt
   [binaryen]: https://github.com/WebAssembly/binaryen
+  [LLVM backend]: https://github.com/llvm-mirror/llvm/tree/master/test/CodeGen/WebAssembly
+  [WAVM backend]: https://github.com/AndrewScheidecker/WAVM/tree/master/Test
 
 The recommended file extension for WebAssembly code in textual format is `.wat`.
 
