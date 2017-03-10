@@ -472,6 +472,10 @@ lighter-weight alternative to load-time polyfilling (approach 2 in
 were to be standardized and performed natively such that no user-space translation 
 pass was otherwise necessary.
 
+### Array globals 
+
+If globals are additionally allowed array types, significant portions of memory could be moved out of linear memory which could reduce fragmentation issues. Languages like Fortran which limit aliasing would be one use case. C/C++ compilers could also determine that some global variables never have their address taken.
+
 ### Streaming Compilation
 
 The WebAssembly binary format is designed to allow streaming decoding,
