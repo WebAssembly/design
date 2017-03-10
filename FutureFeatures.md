@@ -474,7 +474,7 @@ pass was otherwise necessary.
 
 ### Array globals 
 
-If globals are additionally allowed array types, significant portions of memory could be moved out of linear memory which could reduce fragmentation issues. Languages like Fortran which limit aliasing would be one use case. C/C++ compilers could also determine that some global variables never have their address taken.
+If globals are allowed array types, significant portions of memory could be moved out of linear memory which could reduce fragmentation issues. Languages like Fortran which limit aliasing would be one use case. C/C++ compilers could also determine that some global variables never have their address taken.
 
 ### Streaming Compilation
 
