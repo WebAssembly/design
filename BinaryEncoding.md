@@ -253,9 +253,9 @@ The import section declares all imports that will be used in the module.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | module_len | `varuint32` | module string length |
-| module_str | `bytes` | module string of `module_len` bytes |
+| module_str | `bytes` | module name: `module_len` bytes holding valid utf8 string |
 | field_len | `varuint32` | field name length |
-| field_str | `bytes` | field name string of `field_len` bytes |
+| field_str | `bytes` | field name: `field_len` bytes holding valid utf8 string |
 | kind | `external_kind` | the kind of definition being imported |
 
 Followed by, if the `kind` is `Function`:
@@ -356,7 +356,7 @@ The encoding of the [Export section](Modules.md#exports):
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | field_len | `varuint32` | field name string length |
-| field_str | `bytes` | field name string of `field_len` bytes |
+| field_str | `bytes` | field name: `field_len` bytes holding valid utf8 string |
 | kind | `external_kind` | the kind of definition being exported |
 | index | `varuint32` | the index into the corresponding [index space](Modules.md) |
 
@@ -471,7 +471,7 @@ where a `naming` is encoded as:
 | ----- | ---- | ----------- |
 | index | `varuint32` | the index which is being named |
 | name_len | `varuint32` | number of bytes in name_str |
-| name_str | `bytes` | binary encoding of the name |
+| name_str | `bytes` | utf8 encoding of the name |
 
 #### Function names
 
