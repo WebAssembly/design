@@ -253,7 +253,7 @@ The import section declares all imports that will be used in the module.
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | module_len | `varuint32` | length of `module_str` in bytes |
-| module_str | `bytes` | module name: valid UTF-8 byte sequnce |
+| module_str | `bytes` | module name: valid UTF-8 byte sequence |
 | field_len | `varuint32` | length of `field_str` in bytes |
 | field_str | `bytes` | field name: valid UTF-8 byte sequence |
 | kind | `external_kind` | the kind of definition being imported |
