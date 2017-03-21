@@ -122,7 +122,7 @@ This function starts an asynchronous task that first compiles a `WebAssembly.Mod
 from `bytes` as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor)
 and then queue a task to instantiate the resulting `Module` with `importObject` as described in the
 [`WebAssembly.Instance` constructor](#webassemblyinstance-constructor). After the instantiation task runs
-and before any subsequent steps are taken, other unspecified asynchronuous tasks may be run.
+and before any subsequent steps are taken, other unspecified asynchronous tasks may be run.
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with a plain JavaScript object pair `{module, instance}` containing the resulting
 `WebAssembly.Module` and `WebAssembly.Instance`. The 2 properties `module` and `instance` of the returned pair are  configurable, enumerable and writable. 
@@ -144,7 +144,7 @@ This description applies if the first argument is a `WebAssembly.Module` instanc
 This function asynchronously queues a task that instantiates a `WebAssembly.Instance`
 from `moduleObject` and `importObject` as described in the
 [`WebAssembly.Instance` constructor](#webassemblyinstance-constructor). After the instantiation task runs
-and before any subsequent steps are taken, other unspecified asynchronuous tasks may be run.
+and before any subsequent steps are taken, other unspecified asynchronous tasks may be run.
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `WebAssembly.Instance` object. On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
