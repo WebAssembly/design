@@ -208,6 +208,7 @@ operation was performed.
 The sign-agnostic operations are further described [below](#32-bit-integer-operators).
 
 | Name | Read | Modify | Write |
+| ---- | ---- | ---- | ---- |
 | `i32.atomic_add8_s` | 1 byte, sign-extended i8 to i32 | sign-agnostic addition | 1 byte, wrapped from i32 to i8 |
 | `i32.atomic_add8_u` | 1 byte, zero-extended i8 to i32 | sign-agnostic addition | 1 byte, wrapped from i32 to i8 |
 | `i32.atomic_add16_s` | 2 bytes, sign-extended i16 to i32 | sign-agnostic addition | 2 bytes, wrapped from i32 to i16 |
@@ -287,6 +288,7 @@ store the replacement value, but only if the loaded value matches the expected
 value.
 
 | Name | Read | Modify | Write |
+| ---- | ---- | ---- | ---- |
 | `i32.atomic_cmpxchg8_s` | 1 byte, sign-extended i8 to i32 | nop | (conditional) 1 byte, wrapped from i32 to i8 |
 | `i32.atomic_cmpxchg8_u` | 1 byte, zero-extended i8 to i32 | nop | (conditional) 1 byte, wrapped from i32 to i8 |
 | `i32.atomic_cmpxchg16_s` | 2 bytes, sign-extended i16 to i32 | nop | (conditional) 2 bytes, wrapped from i32 to i16 |
