@@ -64,12 +64,9 @@ opcodes.
 
 ## Language Types
 
-All types are distinguished by a negative `varint7` values that is the first
-byte of their encoding (representing a type constructor).
-Some types have an additional operand indicating table number, encoded as a
-varuint32:
+All types are distinguished by a negative `varint7` values that is the first byte of their encoding (representing a type constructor):
 
-| Encoding | Type constructor |
+| Opcode | Type constructor |
 |--------|------------------|
 | `-0x01` (i.e., the byte `0x7f`) | `i32` |
 | `-0x02` (i.e., the byte `0x7e`) | `i64` |
@@ -77,7 +74,6 @@ varuint32:
 | `-0x04` (i.e., the byte `0x7c`) | `f64` |
 | `-0x10` (i.e., the byte `0x70`) | `anyfunc` |
 | `-0x20` (i.e., the byte `0x60`) | `func` |
-| `-0x30` (i.e., the byte `0x50`) | `table` followed by varuint32 indicating a table number (currently only can be zero). This type is only allowed in import function signatures for parameter and return types. |
 | `-0x40` (i.e., the byte `0x40`) | pseudo type for representing an empty `block_type` |
 
 Some of these will be followed by additional fields, see below.
@@ -93,20 +89,6 @@ A `varint7` indicating a [value type](Semantics.md#types). One of:
 * `f64`
 
 as encoded above.
-
-### `table` types
-`table` types are indexed references into a statically specified type table
-(currently only table 0).
-Functions including these types in their signatures expect an i32 for inputs
-(for the table index). They expect an i32 operand, for the index of the return
-value destination.
-In general the behavior of functions including these table types as parameters
-is left to the embedder. For a JavaScript embedding, these will typically by
-JS Objects.
-Calls to imported JS Functions will fail when called outside the original
-Wasm thread, unless the function has been specifically designed to be called
-off the main thread. In a context without exceptions, such failures will
-exit the thread, or throw otherwise.
 
 ### `block_type`
 A `varint7` indicating a block signature. These types are encoded as:
@@ -178,8 +160,6 @@ A packed tuple that describes the limits of a
 | flags | `varuint1` | `1` if the maximum field is present, `0` otherwise |
 | initial | `varuint32` | initial length (in units of table elements or wasm pages) |
 | maximum | `varuint32`? | only present if specified by `flags` |
-
-Note: In the [future :unicorn:][future threads], the "flags" field may be changed to `varuint32`, e.g., to include a flag for sharing between threads.
 
 ### `init_expr`
 The encoding of an [initializer expression](Modules.md#initializer-expression)
@@ -607,187 +587,40 @@ operand the index into the table. Its `reserved` immediate is for
 
 ## Memory-related operators ([described here](Semantics.md#linear-memory-accesses))
 
-| Name | Opcode | Immediates | Description |
+| Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.load` | `0x28` | 0x00 + `memory_flags` `offset` | load from memory |
-| `i64.load` | `0x29` | 0x00 + `memory_flags` `offset` | load from memory |
-| `f32.load` | `0x2a` | 0x00 + `memory_flags` `offset` | load from memory |
-| `f64.load` | `0x2b` | 0x00 + `memory_flags` `offset` | load from memory |
-| `i32.load8_s` | `0x2c` | 0x00 + `memory_flags` `offset` | load from memory |
-| `i32.load8_u` | `0x2d` | 0x00 + `memory_flags` `offset` | load from memory  |
-| `i32.load16_s` | `0x2e` | 0x00 + `memory_flags` `offset` | load from memory |
-| `i32.load16_u` | `0x2f` | 0x00 + `memory_flags` `offset` | load from memory |
-| `i64.load8_s` | `0x30` | 0x00 + `memory_flags` `offset` | load from memory |
-| `i64.load8_u` | `0x31` | 0x00 + `memory_flags` `offset` | load from memory |
-| `i64.load16_s` | `0x32` | 0x00 + `memory_flags` `offset` | load from memory |
-| `i64.load16_u` | `0x33` | 0x00 + `memory_flags` `offset` | load from memory |
-| `i64.load32_s` | `0x34` | 0x00 + `memory_flags` `offset` | load from memory |
-| `i64.load32_u` | `0x35` | 0x00 + `memory_flags` `offset` | load from memory |
-| `i32.store` | `0x36` | 0x00 + `memory_flags` `offset` | store to memory |
-| `i64.store` | `0x37` | 0x00 + `memory_flags` `offset` | store to memory |
-| `f32.store` | `0x38` | 0x00 + `memory_flags` `offset` | store to memory |
-| `f64.store` | `0x39` | 0x00 + `memory_flags` `offset` | store to memory |
-| `i32.store8` | `0x3a` | 0x00 + `memory_flags` `offset` | store to memory |
-| `i32.store16` | `0x3b` | 0x00 + `memory_flags` `offset` | store to memory |
-| `i64.store8` | `0x3c` | 0x00 + `memory_flags` `offset` | store to memory |
-| `i64.store16` | `0x3d` | 0x00 + `memory_flags` `offset` | store to memory |
-| `i64.store32` | `0x3e` | 0x00 + `memory_flags` `offset` | store to memory |
+| `i32.load` | `0x28` | `memory_immediate` | load from memory |
+| `i64.load` | `0x29` | `memory_immediate` | load from memory |
+| `f32.load` | `0x2a` | `memory_immediate` | load from memory |
+| `f64.load` | `0x2b` | `memory_immediate` | load from memory |
+| `i32.load8_s` | `0x2c` | `memory_immediate` | load from memory |
+| `i32.load8_u` | `0x2d` | `memory_immediate` | load from memory  |
+| `i32.load16_s` | `0x2e` | `memory_immediate` | load from memory |
+| `i32.load16_u` | `0x2f` | `memory_immediate` | load from memory |
+| `i64.load8_s` | `0x30` | `memory_immediate` | load from memory |
+| `i64.load8_u` | `0x31` | `memory_immediate` | load from memory |
+| `i64.load16_s` | `0x32` | `memory_immediate` | load from memory |
+| `i64.load16_u` | `0x33` | `memory_immediate` | load from memory |
+| `i64.load32_s` | `0x34` | `memory_immediate` | load from memory |
+| `i64.load32_u` | `0x35` | `memory_immediate` | load from memory |
+| `i32.store` | `0x36` | `memory_immediate` | store to memory |
+| `i64.store` | `0x37` | `memory_immediate` | store to memory |
+| `f32.store` | `0x38` | `memory_immediate` | store to memory |
+| `f64.store` | `0x39` | `memory_immediate` | store to memory |
+| `i32.store8` | `0x3a` | `memory_immediate` | store to memory |
+| `i32.store16` | `0x3b` | `memory_immediate` | store to memory |
+| `i64.store8` | `0x3c` | `memory_immediate` | store to memory |
+| `i64.store16` | `0x3d` | `memory_immediate` | store to memory |
+| `i64.store32` | `0x3e` | `memory_immediate` | store to memory |
 | `current_memory` | `0x3f` | reserved : `varuint1` | query the size of memory |
 | `grow_memory` | `0x40` | reserved : `varuint1` | grow the size of memory |
 
-## Atomics
+The `memory_immediate` type is encoded as follows:
 
-| Name | Opcode | Immediate | Description |
-| ---- | ---- | ---- | ---- |
-| `i32.sc_load` | `0x28` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `i64.sc_load` | `0x29` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `f32.sc_load` | `0x2a` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `f64.sc_load` | `0x2b` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `i32.sc_load8_s` | `0x2c` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `i32.sc_load8_u` | `0x2d` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `i32.sc_load16_s` | `0x2e` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `i32.sc_load16_u` | `0x2f` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `i64.sc_load8_s` | `0x30` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `i64.sc_load8_u` | `0x31` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `i64.sc_load16_s` | `0x32` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `i64.sc_load16_u` | `0x33` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `i64.sc_load32_s` | `0x34` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `i64.sc_load32_u` | `0x35` | 0x08 + `memory_flags` `offset` | atomic load from memory |
-| `i32.sc_store` | `0x36` | 0x08 + `memory_flags` `offset` | store to memory |
-| `i64.sc_store` | `0x37` | 0x08 + `memory_flags` `offset` | store to memory |
-| `f32.sc_store` | `0x38` | 0x08 + `memory_flags` `offset` | store to memory |
-| `f64.sc_store` | `0x39` | 0x08 + `memory_flags` `offset` | store to memory |
-| `i32.sc_store8` | `0x3a` | 0x08 + `memory_flags` `offset` | store to memory |
-| `i32.sc_store16` | `0x3b` | 0x08 + `memory_flags` `offset` | store to memory |
-| `i64.sc_store8` | `0x3c` | 0x08 + `memory_flags` `offset` | store to memory |
-| `i64.sc_store16` | `0x3d` | 0x08 + `memory_flags` `offset` | store to memory |
-| `i64.sc_store32` | `0x3e` | 0x08 + `memory_flags` `offset` | store to memory |
-| `i32.sc_add` | `0x28` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `i64.sc_add` | `0x29` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `f32.sc_add` | `0x2a` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `f64.sc_add` | `0x2b` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `i32.sc_add8_s` | `0x2c` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `i32.sc_add8_u` | `0x2d` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `i32.sc_add16_s` | `0x2e` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `i32.sc_add16_u` | `0x2f` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `i64.sc_add8_s` | `0x30` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `i64.sc_add8_u` | `0x31` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `i64.sc_add16_s` | `0x32` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `i64.sc_add16_u` | `0x33` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `i64.sc_add32_s` | `0x34` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `i64.sc_add32_u` | `0x35` | 0x18 + `memory_flags` `offset` | atomic add to memory |
-| `i32.sc_sub` | `0x28` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `i64.sc_sub` | `0x29` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `f32.sc_sub` | `0x2a` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `f64.sc_sub` | `0x2b` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `i32.sc_sub8_s` | `0x2c` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `i32.sc_sub8_u` | `0x2d` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `i32.sc_sub16_s` | `0x2e` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `i32.sc_sub16_u` | `0x2f` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `i64.sc_sub8_s` | `0x30` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `i64.sc_sub8_u` | `0x31` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `i64.sc_sub16_s` | `0x32` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `i64.sc_sub16_u` | `0x33` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `i64.sc_sub32_s` | `0x34` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `i64.sc_sub32_u` | `0x35` | 0x28 + `memory_flags` `offset` | atomic sub to memory |
-| `i32.sc_and` | `0x28` | 0x28 + `memory_flags` `offset` | atomic and to memory |
-| `i64.sc_and` | `0x29` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `f32.sc_and` | `0x2a` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `f64.sc_and` | `0x2b` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `i32.sc_and8_s` | `0x2c` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `i32.sc_and8_u` | `0x2d` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `i32.sc_and16_s` | `0x2e` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `i32.sc_and16_u` | `0x2f` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `i64.sc_and8_s` | `0x30` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `i64.sc_and8_u` | `0x31` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `i64.sc_and16_s` | `0x32` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `i64.sc_and16_u` | `0x33` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `i64.sc_and32_s` | `0x34` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `i64.sc_and32_u` | `0x35` | 0x38 + `memory_flags` `offset` | atomic and to memory |
-| `i32.sc_or` | `0x28` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `i64.sc_or` | `0x29` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `f32.sc_or` | `0x2a` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `f64.sc_or` | `0x2b` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `i32.sc_or8_s` | `0x2c` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `i32.sc_or8_u` | `0x2d` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `i32.sc_or16_s` | `0x2e` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `i32.sc_or16_u` | `0x2f` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `i64.sc_or8_s` | `0x30` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `i64.sc_or8_u` | `0x31` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `i64.sc_or16_s` | `0x32` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `i64.sc_or16_u` | `0x33` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `i64.sc_or32_s` | `0x34` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `i64.sc_or32_u` | `0x35` | 0x48 + `memory_flags` `offset` | atomic or to memory |
-| `i32.sc_xor` | `0x28` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `i64.sc_xor` | `0x29` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `f32.sc_xor` | `0x2a` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `f64.sc_xor` | `0x2b` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `i32.sc_xor8_s` | `0x2c` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `i32.sc_xor8_u` | `0x2d` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `i32.sc_xor16_s` | `0x2e` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `i32.sc_xor16_u` | `0x2f` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `i64.sc_xor8_s` | `0x30` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `i64.sc_xor8_u` | `0x31` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `i64.sc_xor16_s` | `0x32` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `i64.sc_xor16_u` | `0x33` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `i64.sc_xor32_s` | `0x34` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `i64.sc_xor32_u` | `0x35` | 0x58 + `memory_flags` `offset` | atomic xor to memory |
-| `i32.sc_swap` | `0x28` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `i64.sc_swap` | `0x29` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `f32.sc_swap` | `0x2a` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `f64.sc_swap` | `0x2b` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `i32.sc_swap8_s` | `0x2c` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `i32.sc_swap8_u` | `0x2d` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `i32.sc_swap16_s` | `0x2e` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `i32.sc_swap16_u` | `0x2f` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `i64.sc_swap8_s` | `0x30` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `i64.sc_swap8_u` | `0x31` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `i64.sc_swap16_s` | `0x32` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `i64.sc_swap16_u` | `0x33` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `i64.sc_swap32_s` | `0x34` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `i64.sc_swap32_u` | `0x35` | 0x68 + `memory_flags` `offset1` `offset2` | atomic swap to memory |
-| `i32.sc_cmp_swap` | `0x28` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `i64.sc_cmp_swap` | `0x29` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `f32.sc_cmp_swap` | `0x2a` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `f64.sc_cmp_swap` | `0x2b` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `i32.sc_cmp_swap8_s` | `0x2c` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `i32.sc_cmp_swap8_u` | `0x2d` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `i32.sc_cmp_swap16_s` | `0x2e` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `i32.sc_cmp_swap16_u` | `0x2f` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `i64.sc_cmp_swap8_s` | `0x30` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `i64.sc_cmp_swap8_u` | `0x31` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `i64.sc_cmp_swap16_s` | `0x32` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `i64.sc_cmp_swap16_u` | `0x33` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `i64.sc_cmp_swap32_s` | `0x34` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-| `i64.sc_cmp_swap32_u` | `0x35` | 0x78 + `memory_flags` `offset1` `offset2` | atomic compare exchange to memory |
-
-The `offset`, `offset1`, `offset2` values are encoded as varuint32 values
-and represent the offset of the one or two access locations involved in the
-load or atomic operation.
-
-`memory_flags`, is summed with an additional value expressing which atomic op
-and its style of atomic constraint. This tables captures intent of the
-combined encoding, which is stored as a varuint32 (effectively one byte at this
-time as the values are 0x7f or less).
-
-| Bit | Description |
-| ---- | ---- |
-| 1-0 | a bitfield which currently contains the alignment in the least significant bits, encoded as `log2(alignment)` For atomics this must match the operation size. |
-| 2 | Reserved for future use, always 0. |
-| 3 | Indicates a sequentially consistent atomic operation when 1, otherwise 0. |
-| 7-4 | Encodes the type of operation `atomic_op` (load family only). |
-| 31-7 | Reserved for future use, always 0. |
-
-| 7-4 bit value | Description |
-| ---- | ---- |
-| 0 | load |
-| 1 | add |
-| 2 | sub |
-| 3 | and |
-| 4 | or |
-| 5 | xor |
-| 6 | swap |
-| 7 | cmp_swap |
+| Name | Type | Description |
+| ---- | ---- | ---- |
+| flags | `varuint32` | a bitfield which currently contains the alignment in the least significant bits, encoded as `log2(alignment)` |
+| offset | `varuint32` | the value of the offset |
 
 As implied by the `log2(alignment)` encoding, the alignment must be a power of 2.
 As an additional validation criteria, the alignment must be less or equal to 
@@ -950,21 +783,135 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `f32.reinterpret/i32` | `0xbe` | | |
 | `f64.reinterpret/i64` | `0xbf` | | |
 
-## Threads Operations
+## Thread operators ([described here](Semantics.md#thread-operators))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.wait` | `0xc0` | `offset` | SAB like wait, takes an index + `offset` and an f64 timeout |
-| `i64.wait` | `0xc1` | `offset` | SAB like wait, takes an index + `offset`and an f64 timeout |
-| `i32.wake` | `0xc2` | `offset` | SAB like wake, takes an index + `offset` |
-| `i64.wake` | `0xc3` | `offest` | SAB like wake, takes an index + `offset` |
-| `i32.thread_create` | `0xc4` | `table` | Creates a thread, stores thread in `table` at an i32 index. Returns 0 on success or non-zero otherwise. |
-| `i32.thread_join` | `0xc5` | `table` | Waits to join to thread stored at an i32 index in `table`. Returns 0 on success or non-zero otherwise. |
-| `thread_exit` | `0xc6` | | Halts current thread. |
+| `is_lock_free` | `0xe600` | | |
+| `i32.wait` | `0xe601` | `offset` | |
+| `i64.wait` | `0xe602` | `offset` | |
+| `i32.wake` | `0xe603` | `offset` | |
+| `i64.wake` | `0xe604` | `offest` | |
+
+## Atomic read-modify-write operators ([described here](Semantics.md#atomic-memory-accesses))
+
+| Name | Opcode | Immediates | Description |
+| ---- | ---- | ---- | ---- |
+| `i32.atomic_add` | `0xe610` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic_add` | `0xe611` | `0` `memory immediate` | atomic add to memory |
+| `i32.atomic_add8_s` | `0xe612` | `0` `memory immediate` | atomic add to memory |
+| `i32.atomic_add8_u` | `0xe613` | `0` `memory immediate` | atomic add to memory |
+| `i32.atomic_add16_s` | `0xe614` | `0` `memory immediate` | atomic add to memory |
+| `i32.atomic_add16_u` | `0xe615` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic_add8_s` | `0xe616` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic_add8_u` | `0xe617` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic_add16_s` | `0xe618` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic_add16_u` | `0xe619` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic_add32_s` | `0xe61a` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic_add32_u` | `0xe61b` | `0` `memory immediate` | atomic add to memory |
+| `i32.atomic_sub` | `0xe610` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic_sub` | `0xe611` | `1` `memory immediate` | atomic sub from memory |
+| `i32.atomic_sub8_s` | `0xe612` | `1` `memory immediate` | atomic sub from memory |
+| `i32.atomic_sub8_u` | `0xe613` | `1` `memory immediate` | atomic sub from memory |
+| `i32.atomic_sub16_s` | `0xe614` | `1` `memory immediate` | atomic sub from memory |
+| `i32.atomic_sub16_u` | `0xe615` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic_sub8_s` | `0xe616` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic_sub8_u` | `0xe617` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic_sub16_s` | `0xe618` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic_sub16_u` | `0xe619` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic_sub32_s` | `0xe61a` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic_sub32_u` | `0xe61b` | `1` `memory immediate` | atomic sub from memory |
+| `i32.atomic_and` | `0xe610` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic_and` | `0xe611` | `2` `memory immediate` | atomic and with memory |
+| `i32.atomic_and8_s` | `0xe612` | `2` `memory immediate` | atomic and with memory |
+| `i32.atomic_and8_u` | `0xe613` | `2` `memory immediate` | atomic and with memory |
+| `i32.atomic_and16_s` | `0xe614` | `2` `memory immediate` | atomic and with memory |
+| `i32.atomic_and16_u` | `0xe615` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic_and8_s` | `0xe616` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic_and8_u` | `0xe617` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic_and16_s` | `0xe618` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic_and16_u` | `0xe619` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic_and32_s` | `0xe61a` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic_and32_u` | `0xe61b` | `2` `memory immediate` | atomic and with memory |
+| `i32.atomic_or` | `0xe610` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic_or` | `0xe611` | `3` `memory immediate` | atomic or with memory |
+| `i32.atomic_or8_s` | `0xe612` | `3` `memory immediate` | atomic or with memory |
+| `i32.atomic_or8_u` | `0xe613` | `3` `memory immediate` | atomic or with memory |
+| `i32.atomic_or16_s` | `0xe614` | `3` `memory immediate` | atomic or with memory |
+| `i32.atomic_or16_u` | `0xe615` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic_or8_s` | `0xe616` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic_or8_u` | `0xe617` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic_or16_s` | `0xe618` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic_or16_u` | `0xe619` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic_or32_s` | `0xe61a` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic_or32_u` | `0xe61b` | `3` `memory immediate` | atomic or with memory |
+| `i32.atomic_xor` | `0xe610` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic_xor` | `0xe611` | `4` `memory immediate` | atomic xor with memory |
+| `i32.atomic_xor8_s` | `0xe612` | `4` `memory immediate` | atomic xor with memory |
+| `i32.atomic_xor8_u` | `0xe613` | `4` `memory immediate` | atomic xor with memory |
+| `i32.atomic_xor16_s` | `0xe614` | `4` `memory immediate` | atomic xor with memory |
+| `i32.atomic_xor16_u` | `0xe615` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic_xor8_s` | `0xe616` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic_xor8_u` | `0xe617` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic_xor16_s` | `0xe618` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic_xor16_u` | `0xe619` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic_xor32_s` | `0xe61a` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic_xor32_u` | `0xe61b` | `4` `memory immediate` | atomic xor with memory |
+| `i32.atomic_xchg` | `0xe610` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic_xchg` | `0xe611` | `5` `memory immediate` | atomic exchange with memory |
+| `i32.atomic_xchg8_s` | `0xe612` | `5` `memory immediate` | atomic exchange with memory |
+| `i32.atomic_xchg8_u` | `0xe613` | `5` `memory immediate` | atomic exchange with memory |
+| `i32.atomic_xchg16_s` | `0xe614` | `5` `memory immediate` | atomic exchange with memory |
+| `i32.atomic_xchg16_u` | `0xe615` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic_xchg8_s` | `0xe616` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic_xchg8_u` | `0xe617` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic_xchg16_s` | `0xe618` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic_xchg16_u` | `0xe619` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic_xchg32_s` | `0xe61a` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic_xchg32_u` | `0xe61b` | `5` `memory immediate` | atomic exchange with memory |
+| `i32.atomic_cmpxchg` | `0xe610` | `6` `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic_cmpxchg` | `0xe611` | `6` `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic_cmpxchg8_s` | `0xe612` | `6` `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic_cmpxchg8_u` | `0xe613` | `6` `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic_cmpxchg16_s` | `0xe614` | `6` `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic_cmpxchg16_u` | `0xe615` | `6` `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic_cmpxchg8_s` | `0xe616` | `6` `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic_cmpxchg8_u` | `0xe617` | `6` `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic_cmpxchg16_s` | `0xe618` | `6` `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic_cmpxchg16_u` | `0xe619` | `6` `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic_cmpxchg32_s` | `0xe61a` | `6` `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic_cmpxchg32_u` | `0xe61b` | `6` `memory immediate` | atomic compare exchange with memory |
+
+## Atomic load/store operators ([described here](Semantics.md#atomic-memory-accesses))
+
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
+| `i32.atomic_load` | `0xe628` | `memory immediate` | atomic load from memory |
+| `i64.atomic_load` | `0xe629` | `memory immediate` | atomic load from memory |
+| `f32.atomic_load` | `0xe62a` | `memory immediate` | atomic load from memory |
+| `f64.atomic_load` | `0xe62b` | `memory immediate` | atomic load from memory |
+| `i32.atomic_load8_s` | `0xe62c` | `memory immediate` | atomic load from memory |
+| `i32.atomic_load8_u` | `0xe62d` | `memory immediate` | atomic load from memory |
+| `i32.atomic_load16_s` | `0xe62e` | `memory immediate` | atomic load from memory |
+| `i32.atomic_load16_u` | `0xe62f` | `memory immediate` | atomic load from memory |
+| `i64.atomic_load8_s` | `0xe630` | `memory immediate` | atomic load from memory |
+| `i64.atomic_load8_u` | `0xe631` | `memory immediate` | atomic load from memory |
+| `i64.atomic_load16_s` | `0xe632` | `memory immediate` | atomic load from memory |
+| `i64.atomic_load16_u` | `0xe633` | `memory immediate` | atomic load from memory |
+| `i64.atomic_load32_s` | `0xe634` | `memory immediate` | atomic load from memory |
+| `i64.atomic_load32_u` | `0xe635` | `memory immediate` | atomic load from memory |
+| `i32.atomic_store` | `0xe636` | `memory immediate` | atomic store to memory |
+| `i64.atomic_store` | `0xe637` | `memory immediate` | atomic store to memory |
+| `f32.atomic_store` | `0xe638` | `memory immediate` | atomic store to memory |
+| `f64.atomic_store` | `0xe639` | `memory immediate` | atomic store to memory |
+| `i32.atomic_store8` | `0xe63a` | `memory immediate` | atomic store to memory |
+| `i32.atomic_store16` | `0xe63b` | `memory immediate` | atomic store to memory |
+| `i64.atomic_store8` | `0xe63c` | `memory immediate` | atomic store to memory |
+| `i64.atomic_store16` | `0xe63d` | `memory immediate` | atomic store to memory |
+| `i64.atomic_store32` | `0xe63e` | `memory immediate` | atomic store to memory |
 
 [future general]: FutureFeatures.md
 [future multiple return]: FutureFeatures.md#multiple-return
-[future threads]: FutureFeatures.md#threads
 [future types]: FutureFeatures.md#more-table-operators-and-types
 [future multiple tables]: FutureFeatures.md#multiple-tables-and-memories
 [future compression]: https://github.com/WebAssembly/decompressor-prototype/blob/master/CompressionLayer1.md

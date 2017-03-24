@@ -42,7 +42,7 @@ environment such as a browser, a trap results in throwing a JavaScript exception
 If developer tools are active, attaching a debugger before the
 termination would be sensible.
 
-## Stack Overflow
+## Stack overflow
 
 Call stack space is limited by unspecified and dynamically varying constraints
 and is a source of [nondeterminism](Nondeterminism.md). If program call stack usage
@@ -81,7 +81,7 @@ Note that the value types `i32` and `i64` are not inherently signed or
 unsigned. The interpretation of these types is determined by individual
 operators.
 
-## Linear Memory
+## Linear memory
 
 A *linear memory* is a contiguous, byte-addressable range of memory spanning
 from offset `0` and extending up to a varying *memory size*. This size is always 
@@ -112,10 +112,15 @@ or [defined inside the module](Modules.md#linear-memory-section). After import
 or definition, there is no difference when accessing a linear memory whether it
 was imported or defined internally.
 
-In the MVP, linear memory cannot be shared between threads of execution.
-The addition of [threads :unicorn:][future threads] will allow this.
+### Shared linear memory
 
-### Linear Memory Accesses
+A Linear memory can be marked as shared, which allows it to be shared between
+threads of execution. The shared memory can be imported or defined in the
+module. It is a validation error to attempt to import shared linear
+memory if the module's memory import doesn't specify that it allows shared
+memory.
+
+### Linear memory accesses
 
 Linear memory access is accomplished with explicit `load` and `store` operators.
 All `load` and `store` operators use little-endian byte order when translating
@@ -156,6 +161,144 @@ size in which case integer wrapping is implied.
 Store operators do not produce a value.
 
 The above operators operate on the [default linear memory](#linear-memory).
+
+### Atomic memory accesses
+
+Atomic memory accesses are separated into two categories, load/store and
+read-modify-write. All atomic memory accesses require a shared linear memory.
+Attempting to use atomic access operators on non-shared linear memory is a
+validation error.
+
+Currently all atomic memory accesses are [sequentially
+consistent](https://en.wikipedia.org/wiki/Sequential_consistency). This
+restriction may be relaxed in the future.
+
+Atomic load/store memory accesses behave like their non-atomic counterparts,
+with the exception that the ordering of accesses is sequentially consistent.
+
+  * `i32.atomic_load8_s`: atomically load 1 byte and sign-extend i8 to i32
+  * `i32.atomic_load8_u`: atomically load 1 byte and zero-extend i8 to i32
+  * `i32.atomic_load16_s`: atomically load 2 bytes and sign-extend i16 to i32
+  * `i32.atomic_load16_u`: atomically load 2 bytes and zero-extend i16 to i32
+  * `i32.atomic_load`: atomically load 4 bytes as i32
+  * `i64.atomic_load8_s`: atomically load 1 byte and sign-extend i8 to i64
+  * `i64.atomic_load8_u`: atomically load 1 byte and zero-extend i8 to i64
+  * `i64.atomic_load16_s`: atomically load 2 bytes and sign-extend i16 to i64
+  * `i64.atomic_load16_u`: atomically load 2 bytes and zero-extend i16 to i64
+  * `i64.atomic_load32_s`: atomically load 4 bytes and sign-extend i32 to i64
+  * `i64.atomic_load32_u`: atomically load 4 bytes and zero-extend i32 to i64
+  * `i64.atomic_load`: atomically load 8 bytes as i64
+  * `f32.atomic_load`: atomically load 4 bytes as f32
+  * `f64.atomic_load`: atomically load 8 bytes as f64
+  * `i32.atomic_store8`: wrap i32 to i8 and atomically store 1 byte
+  * `i32.atomic_store16`: wrap i32 to i16 and atomically store 2 bytes
+  * `i32.atomic_store`: (no conversion) atomically store 4 bytes
+  * `i64.atomic_store8`: wrap i64 to i8 and atomically store 1 byte
+  * `i64.atomic_store16`: wrap i64 to i16 and atomically store 2 bytes
+  * `i64.atomic_store32`: wrap i64 to i32 and atomically store 4 bytes
+  * `i64.atomic_store`: (no conversion) atomically store 8 bytes
+  * `f32.atomic_store`: (no conversion) atomically store 4 bytes
+  * `f64.atomic_store`: (no conversion) atomically store 8 bytes
+
+Atomic read-modify-write (RMW) operators atomically read a value from a memory
+index, modify the value, and store the resulting value to the same memory
+index. All RMW operators return the value read from memory before the modify
+operation was performed.
+
+The sign-agnostic operations are further described [below](#32-bit-integer-operators).
+
+| Name | Read | Modify | Write |
+| `i32.atomic_add8_s` | 1 byte, sign-extended i8 to i32 | sign-agnostic addition | 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_add8_u` | 1 byte, zero-extended i8 to i32 | sign-agnostic addition | 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_add16_s` | 2 bytes, sign-extended i16 to i32 | sign-agnostic addition | 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_add16_u` | 2 bytes, zero-extended i16 to i32 | sign-agnostic addition | 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_add` | 4 bytes as i32 | sign-agnostic addition | 4 bytes |
+| `i64.atomic_add8_s` | 1 byte, sign-extended i8 to i64 | sign-agnostic addition | 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_add8_u` | 1 byte, zero-extended i8 to i64 | sign-agnostic addition | 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_add16_s` | 2 bytes, sign-extended i16 to i64 | sign-agnostic addition | 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_add16_u` | 2 bytes, zero-extended i16 to i64 | sign-agnostic addition | 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_add32_s` | 4 bytes, sign-extended i32 to i64 | sign-agnostic addition | 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_add32_u` | 4 bytes, zero-extended i32 to i64 | sign-agnostic addition | 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_add` | 8 bytes | sign-agnostic addition | 8 bytes |
+| `i32.atomic_sub8_s` | 1 byte, sign-extended i8 to i32 | sign-agnostic subtraction | 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_sub8_u` | 1 byte, zero-extended i8 to i32 | sign-agnostic subtraction | 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_sub16_s` | 2 bytes, sign-extended i16 to i32 | sign-agnostic subtraction | 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_sub16_u` | 2 bytes, zero-extended i16 to i32 | sign-agnostic subtraction | 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_sub` | 4 bytes as i32 | sign-agnostic subtraction | 4 bytes |
+| `i64.atomic_sub8_s` | 1 byte, sign-extended i8 to i64 | sign-agnostic subtraction | 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_sub8_u` | 1 byte, zero-extended i8 to i64 | sign-agnostic subtraction | 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_sub16_s` | 2 bytes, sign-extended i16 to i64 | sign-agnostic subtraction | 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_sub16_u` | 2 bytes, zero-extended i16 to i64 | sign-agnostic subtraction | 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_sub32_s` | 4 bytes, sign-extended i32 to i64 | sign-agnostic subtraction | 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_sub32_u` | 4 bytes, zero-extended i32 to i64 | sign-agnostic subtraction | 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_sub` | 8 bytes | sign-agnostic subtraction | 8 bytes |
+| `i32.atomic_and8_s` | 1 byte, sign-extended i8 to i32 | sign-agnostic bitwise and | 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_and8_u` | 1 byte, zero-extended i8 to i32 | sign-agnostic bitwise and | 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_and16_s` | 2 bytes, sign-extended i16 to i32 | sign-agnostic bitwise and | 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_and16_u` | 2 bytes, zero-extended i16 to i32 | sign-agnostic bitwise and | 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_and` | 4 bytes as i32 | sign-agnostic bitwise and | 4 bytes |
+| `i64.atomic_and8_s` | 1 byte, sign-extended i8 to i64 | sign-agnostic bitwise and | 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_and8_u` | 1 byte, zero-extended i8 to i64 | sign-agnostic bitwise and | 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_and16_s` | 2 bytes, sign-extended i16 to i64 | sign-agnostic bitwise and | 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_and16_u` | 2 bytes, zero-extended i16 to i64 | sign-agnostic bitwise and | 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_and32_s` | 4 bytes, sign-extended i32 to i64 | sign-agnostic bitwise and | 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_and32_u` | 4 bytes, zero-extended i32 to i64 | sign-agnostic bitwise and | 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_and` | 8 bytes | sign-agnostic bitwise and | 8 bytes |
+| `i32.atomic_or8_s` | 1 byte, sign-extended i8 to i32 | sign-agnostic inclusive or | 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_or8_u` | 1 byte, zero-extended i8 to i32 | sign-agnostic inclusive or | 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_or16_s` | 2 bytes, sign-extended i16 to i32 | sign-agnostic inclusive or | 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_or16_u` | 2 bytes, zero-extended i16 to i32 | sign-agnostic inclusive or | 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_or` | 4 bytes as i32 | sign-agnostic inclusive or | 4 bytes |
+| `i64.atomic_or8_s` | 1 byte, sign-extended i8 to i64 | sign-agnostic inclusive or | 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_or8_u` | 1 byte, zero-extended i8 to i64 | sign-agnostic inclusive or | 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_or16_s` | 2 bytes, sign-extended i16 to i64 | sign-agnostic inclusive or | 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_or16_u` | 2 bytes, zero-extended i16 to i64 | sign-agnostic inclusive or | 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_or32_s` | 4 bytes, sign-extended i32 to i64 | sign-agnostic inclusive or | 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_or32_u` | 4 bytes, zero-extended i32 to i64 | sign-agnostic inclusive or | 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_or` | 8 bytes | sign-agnostic inclusive or | 8 bytes |
+| `i32.atomic_xor8_s` | 1 byte, sign-extended i8 to i32 | sign-agnostic exclusive or | 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_xor8_u` | 1 byte, zero-extended i8 to i32 | sign-agnostic exclusive or | 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_xor16_s` | 2 bytes, sign-extended i16 to i32 | sign-agnostic exclusive or | 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_xor16_u` | 2 bytes, zero-extended i16 to i32 | sign-agnostic exclusive or | 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_xor` | 4 bytes as i32 | sign-agnostic exclusive or | 4 bytes |
+| `i64.atomic_xor8_s` | 1 byte, sign-extended i8 to i64 | sign-agnostic exclusive or | 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_xor8_u` | 1 byte, zero-extended i8 to i64 | sign-agnostic exclusive or | 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_xor16_s` | 2 bytes, sign-extended i16 to i64 | sign-agnostic exclusive or | 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_xor16_u` | 2 bytes, zero-extended i16 to i64 | sign-agnostic exclusive or | 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_xor32_s` | 4 bytes, sign-extended i32 to i64 | sign-agnostic exclusive or | 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_xor32_u` | 4 bytes, zero-extended i32 to i64 | sign-agnostic exclusive or | 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_xor` | 8 bytes | sign-agnostic exclusive or | 8 bytes |
+| `i32.atomic_xchg8_s` | 1 byte, sign-extended i8 to i32 | nop | 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_xchg8_u` | 1 byte, zero-extended i8 to i32 | nop | 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_xchg16_s` | 2 bytes, sign-extended i16 to i32 | nop | 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_xchg16_u` | 2 bytes, zero-extended i16 to i32 | nop | 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_xchg` | 4 bytes as i32 | nop | 4 bytes |
+| `i64.atomic_xchg8_s` | 1 byte, sign-extended i8 to i64 | nop | 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_xchg8_u` | 1 byte, zero-extended i8 to i64 | nop | 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_xchg16_s` | 2 bytes, sign-extended i16 to i64 | nop | 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_xchg16_u` | 2 bytes, zero-extended i16 to i64 | nop | 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_xchg32_s` | 4 bytes, sign-extended i32 to i64 | nop | 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_xchg32_u` | 4 bytes, zero-extended i32 to i64 | nop | 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_xchg` | 8 bytes | nop | 8 bytes |
+
+The atomic compare exchange RMW operators take three operands: a linear memory
+index, an expected value, and a replacement value. The operators conditionally
+store the replacement value, but only if the loaded value matches the expected
+value.
+
+| Name | Read | Modify | Write |
+| `i32.atomic_cmpxchg8_s` | 1 byte, sign-extended i8 to i32 | nop | (conditional) 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_cmpxchg8_u` | 1 byte, zero-extended i8 to i32 | nop | (conditional) 1 byte, wrapped from i32 to i8 |
+| `i32.atomic_cmpxchg16_s` | 2 bytes, sign-extended i16 to i32 | nop | (conditional) 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_cmpxchg16_u` | 2 bytes, zero-extended i16 to i32 | nop | (conditional) 2 bytes, wrapped from i32 to i16 |
+| `i32.atomic_cmpxchg` | 4 bytes as i32 | nop | (conditional) 4 bytes |
+| `i64.atomic_cmpxchg8_s` | 1 byte, sign-extended i8 to i64 | nop | (conditional) 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_cmpxchg8_u` | 1 byte, zero-extended i8 to i64 | nop | (conditional) 1 byte, wrapped from i64 to i8 |
+| `i64.atomic_cmpxchg16_s` | 2 bytes, sign-extended i16 to i64 | nop | (conditional) 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_cmpxchg16_u` | 2 bytes, zero-extended i16 to i64 | nop | (conditional) 2 bytes, wrapped from i64 to i16 |
+| `i64.atomic_cmpxchg32_s` | 4 bytes, sign-extended i32 to i64 | nop | (conditional) 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_cmpxchg32_u` | 4 bytes, zero-extended i32 to i64 | nop | (conditional) 4 bytes, wrapped from i64 to i32 |
+| `i64.atomic_cmpxchg` | 8 bytes | nop | (conditional) 8 bytes |
 
 ### Addressing
 
@@ -211,7 +354,7 @@ Thus, it is recommend that WebAssembly producers align frequently-used data to
 permit the use of natural alignment access, and use loads and stores with the
 greatest alignment values practical, while always avoiding misaligned accesses.
 
-### Out of Bounds
+### Out of bounds
 
 Out of bounds accesses trap.
 
@@ -461,7 +604,7 @@ supported (including NaN values of all possible bit patterns).
   * `f32.const`: produce the value of an f32 immediate
   * `f64.const`: produce the value of an f64 immediate
 
-## 32-bit Integer operators
+## 32-bit integer operators
 
 Integer operators are signed, unsigned, or sign-agnostic. Signed operators
 use two's complement signed integer representation.
@@ -677,6 +820,48 @@ outside the range which rounds to an integer in range) traps.
     It is intended to be used for example after calls to functions which are known by the producer not to return.
     This trap is intended to be impossible for user code to catch or handle, even in the future when it may be possible to
     handle some other kinds of traps or exceptions.
+
+## Thread operators
+
+  * `is_lock_free`: return 1 if an atomic memory access of a given size can be
+    completed without the execution engine acquiring a lock. If not, return `0`.
+
+### Wait
+
+The wake and wait operators are optimizations over busy-waiting for a value to
+change. It is a validation error to use these operators on non-shared linear
+memory.
+
+The wait operators take three operands: a linear memory index, an
+expected value, and a relative timeout in milliseconds. The wait operation
+begins by performing an atomic load from the given memory index. If the loaded
+value is not equal to the expected value, the operator returns 1 ("not-equal").
+If the values are equal, the thread is suspended. If the thread is woken (by
+execution of the corresponding "wake" operator on another thread), the wait
+operator returns 0 ("ok"). If the timeout expires before another thread wakes
+this one, this operator returns 2 ("timed-out").
+
+| Value | Description |
+| ---- | ---- |
+| 0 | "ok", woken by another thread |
+| 1 | "not-equal", the loaded value did not match the expected value |
+| 2 | "timed-out", not woken by another thread before timeout expired |
+
+The timeout must be non-negative, and can also be positive infinity. If the
+timeout is positive infinity then the timeout will never expire.
+
+  * `i32.wait`: load i32 value, compare to expected, and wait for `i32.wake` at same memory index
+  * `i64.wait`: load i64 value, compare to expected, and wait for `i64.wake` at same memory index
+
+### Wake
+
+The wake operators take two operands: a linear memory index, and a wake count.
+The operation will wake a maximum of "wake count" threads that are waiting on
+the same memory index. The operator returns the number of thread that were
+woken.
+
+  * `i32.wake`: wake up to N threads waiting on the given memory index via `i32.wait`
+  * `i64.wake`: wake up to N threads waiting on the given memory index via `i64.wait`
 
 [future general]: FutureFeatures.md
 [future threads]: FutureFeatures.md#threads
