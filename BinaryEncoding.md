@@ -869,6 +869,9 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `i64.atomic_xchg16_u` | `0xe619` | `5` `memory immediate` | atomic exchange with memory |
 | `i64.atomic_xchg32_s` | `0xe61a` | `5` `memory immediate` | atomic exchange with memory |
 | `i64.atomic_xchg32_u` | `0xe61b` | `5` `memory immediate` | atomic exchange with memory |
+
+## Atomic compare exchange operators ([described here](Semantics.md#atomic-memory-accesses))
+
 | `i32.atomic_cmpxchg` | `0xe61c` | `memory immediate` | atomic compare exchange with memory |
 | `i64.atomic_cmpxchg` | `0xe61d` | `memory immediate` | atomic compare exchange with memory |
 | `i32.atomic_cmpxchg8_s` | `0xe61e` | `memory immediate` | atomic compare exchange with memory |
