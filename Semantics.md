@@ -42,7 +42,7 @@ environment such as a browser, a trap results in throwing a JavaScript exception
 If developer tools are active, attaching a debugger before the
 termination would be sensible.
 
-## Stack overflow
+## Stack Overflow
 
 Call stack space is limited by unspecified and dynamically varying constraints
 and is a source of [nondeterminism](Nondeterminism.md). If program call stack usage
@@ -81,7 +81,7 @@ Note that the value types `i32` and `i64` are not inherently signed or
 unsigned. The interpretation of these types is determined by individual
 operators.
 
-## Linear memory
+## Linear Memory
 
 A *linear memory* is a contiguous, byte-addressable range of memory spanning
 from offset `0` and extending up to a varying *memory size*. This size is always 
@@ -112,7 +112,7 @@ or [defined inside the module](Modules.md#linear-memory-section). After import
 or definition, there is no difference when accessing a linear memory whether it
 was imported or defined internally.
 
-### Shared linear memory
+### Shared Linear Memory
 
 A Linear memory can be marked as shared, which allows it to be shared between
 threads of execution. The shared memory can be imported or defined in the
@@ -120,7 +120,7 @@ module. It is a validation error to attempt to import shared linear
 memory if the module's memory import doesn't specify that it allows shared
 memory.
 
-### Linear memory accesses
+### Linear Memory Accesses
 
 Linear memory access is accomplished with explicit `load` and `store` operators.
 All `load` and `store` operators use little-endian byte order when translating
@@ -162,12 +162,12 @@ Store operators do not produce a value.
 
 The above operators operate on the [default linear memory](#linear-memory).
 
-### Atomic memory accesses
+### Atomic Memory Accesses
 
-Atomic memory accesses are separated into two categories, load/store and
-read-modify-write. All atomic memory accesses require a shared linear memory.
-Attempting to use atomic access operators on non-shared linear memory is a
-validation error.
+Atomic memory accesses are separated into three categories, load/store,
+read-modify-write, and compare-exchange. All atomic memory accesses require a
+shared linear memory. Attempting to use atomic access operators on non-shared
+linear memory is a validation error.
 
 Currently all atomic memory accesses are [sequentially
 consistent](https://en.wikipedia.org/wiki/Sequential_consistency). This
@@ -282,7 +282,7 @@ The sign-agnostic operations are further described [below](#32-bit-integer-opera
 | `i64.atomic_xchg32_u` | 4 bytes, zero-extended i32 to i64 | nop | 4 bytes, wrapped from i64 to i32 |
 | `i64.atomic_xchg` | 8 bytes | nop | 8 bytes |
 
-The atomic compare exchange RMW operators take three operands: a linear memory
+The atomic compare exchange operators take three operands: a linear memory
 index, an expected value, and a replacement value. The operators conditionally
 store the replacement value, but only if the loaded value matches the expected
 value.
@@ -356,7 +356,7 @@ Thus, it is recommend that WebAssembly producers align frequently-used data to
 permit the use of natural alignment access, and use loads and stores with the
 greatest alignment values practical, while always avoiding misaligned accesses.
 
-### Out of bounds
+### Out of Bounds
 
 Out of bounds accesses trap.
 
@@ -606,7 +606,7 @@ supported (including NaN values of all possible bit patterns).
   * `f32.const`: produce the value of an f32 immediate
   * `f64.const`: produce the value of an f64 immediate
 
-## 32-bit integer operators
+## 32-bit Integer operators
 
 Integer operators are signed, unsigned, or sign-agnostic. Signed operators
 use two's complement signed integer representation.
@@ -825,8 +825,10 @@ outside the range which rounds to an integer in range) traps.
 
 ## Thread operators
 
-  * `is_lock_free`: return 1 if an atomic memory access of a given size can be
-    completed without the execution engine acquiring a lock. If not, return `0`.
+  * `is_lock_free`: If the atomic step of an atomic primitive (see
+    [Atomic Memory Accesses](#atomic-memory-accesses)) on a datum of size N
+    bytes will be performed without the agent acquiring a lock outside the N
+    bytes comprising the datum, then return `1`. Otherwise, return `0`.
 
 ### Wait
 
@@ -834,23 +836,23 @@ The wake and wait operators are optimizations over busy-waiting for a value to
 change. It is a validation error to use these operators on non-shared linear
 memory.
 
-The wait operators take three operands: a linear memory index, an
-expected value, and a relative timeout in milliseconds. The wait operation
-begins by performing an atomic load from the given memory index. If the loaded
-value is not equal to the expected value, the operator returns 1 ("not-equal").
-If the values are equal, the thread is suspended. If the thread is woken (by
-execution of the corresponding "wake" operator on another thread), the wait
-operator returns 0 ("ok"). If the timeout expires before another thread wakes
-this one, this operator returns 2 ("timed-out").
+The wait operators take three operands: a linear memory index, an expected
+value, and a relative timeout in milliseconds as an f64. The timeout must be
+non-negative, and can also be positive infinity. If the timeout is positive
+infinity then the timeout will never expire.
+
+The wait operation begins by performing an atomic load from the given memory
+index. If the loaded value is not equal to the expected value, the operator
+returns 1 ("not-equal"). If the values are equal, the thread is suspended. If
+the thread is woken (by execution of the corresponding "wake" operator on
+another thread), the wait operator returns 0 ("ok"). If the timeout expires
+before another thread wakes this one, this operator returns 2 ("timed-out").
 
 | Value | Description |
 | ---- | ---- |
 | 0 | "ok", woken by another thread |
 | 1 | "not-equal", the loaded value did not match the expected value |
 | 2 | "timed-out", not woken by another thread before timeout expired |
-
-The timeout must be non-negative, and can also be positive infinity. If the
-timeout is positive infinity then the timeout will never expire.
 
   * `i32.wait`: load i32 value, compare to expected, and wait for `i32.wake` at same memory index
   * `i64.wait`: load i64 value, compare to expected, and wait for `i64.wake` at same memory index
