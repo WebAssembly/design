@@ -872,6 +872,8 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 
 ## Atomic compare exchange operators ([described here](Semantics.md#atomic-memory-accesses))
 
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
 | `i32.atomic_cmpxchg` | `0xe61c` | `memory immediate` | atomic compare exchange with memory |
 | `i64.atomic_cmpxchg` | `0xe61d` | `memory immediate` | atomic compare exchange with memory |
 | `i32.atomic_cmpxchg8_s` | `0xe61e` | `memory immediate` | atomic compare exchange with memory |
