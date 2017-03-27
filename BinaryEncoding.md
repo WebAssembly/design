@@ -797,123 +797,123 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.atomic_add` | `0xe610` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic_add` | `0xe611` | `0` `memory immediate` | atomic add to memory |
-| `i32.atomic_add8_s` | `0xe612` | `0` `memory immediate` | atomic add to memory |
-| `i32.atomic_add8_u` | `0xe613` | `0` `memory immediate` | atomic add to memory |
-| `i32.atomic_add16_s` | `0xe614` | `0` `memory immediate` | atomic add to memory |
-| `i32.atomic_add16_u` | `0xe615` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic_add8_s` | `0xe616` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic_add8_u` | `0xe617` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic_add16_s` | `0xe618` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic_add16_u` | `0xe619` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic_add32_s` | `0xe61a` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic_add32_u` | `0xe61b` | `0` `memory immediate` | atomic add to memory |
-| `i32.atomic_sub` | `0xe610` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic_sub` | `0xe611` | `1` `memory immediate` | atomic sub from memory |
-| `i32.atomic_sub8_s` | `0xe612` | `1` `memory immediate` | atomic sub from memory |
-| `i32.atomic_sub8_u` | `0xe613` | `1` `memory immediate` | atomic sub from memory |
-| `i32.atomic_sub16_s` | `0xe614` | `1` `memory immediate` | atomic sub from memory |
-| `i32.atomic_sub16_u` | `0xe615` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic_sub8_s` | `0xe616` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic_sub8_u` | `0xe617` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic_sub16_s` | `0xe618` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic_sub16_u` | `0xe619` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic_sub32_s` | `0xe61a` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic_sub32_u` | `0xe61b` | `1` `memory immediate` | atomic sub from memory |
-| `i32.atomic_and` | `0xe610` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic_and` | `0xe611` | `2` `memory immediate` | atomic and with memory |
-| `i32.atomic_and8_s` | `0xe612` | `2` `memory immediate` | atomic and with memory |
-| `i32.atomic_and8_u` | `0xe613` | `2` `memory immediate` | atomic and with memory |
-| `i32.atomic_and16_s` | `0xe614` | `2` `memory immediate` | atomic and with memory |
-| `i32.atomic_and16_u` | `0xe615` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic_and8_s` | `0xe616` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic_and8_u` | `0xe617` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic_and16_s` | `0xe618` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic_and16_u` | `0xe619` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic_and32_s` | `0xe61a` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic_and32_u` | `0xe61b` | `2` `memory immediate` | atomic and with memory |
-| `i32.atomic_or` | `0xe610` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic_or` | `0xe611` | `3` `memory immediate` | atomic or with memory |
-| `i32.atomic_or8_s` | `0xe612` | `3` `memory immediate` | atomic or with memory |
-| `i32.atomic_or8_u` | `0xe613` | `3` `memory immediate` | atomic or with memory |
-| `i32.atomic_or16_s` | `0xe614` | `3` `memory immediate` | atomic or with memory |
-| `i32.atomic_or16_u` | `0xe615` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic_or8_s` | `0xe616` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic_or8_u` | `0xe617` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic_or16_s` | `0xe618` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic_or16_u` | `0xe619` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic_or32_s` | `0xe61a` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic_or32_u` | `0xe61b` | `3` `memory immediate` | atomic or with memory |
-| `i32.atomic_xor` | `0xe610` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic_xor` | `0xe611` | `4` `memory immediate` | atomic xor with memory |
-| `i32.atomic_xor8_s` | `0xe612` | `4` `memory immediate` | atomic xor with memory |
-| `i32.atomic_xor8_u` | `0xe613` | `4` `memory immediate` | atomic xor with memory |
-| `i32.atomic_xor16_s` | `0xe614` | `4` `memory immediate` | atomic xor with memory |
-| `i32.atomic_xor16_u` | `0xe615` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic_xor8_s` | `0xe616` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic_xor8_u` | `0xe617` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic_xor16_s` | `0xe618` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic_xor16_u` | `0xe619` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic_xor32_s` | `0xe61a` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic_xor32_u` | `0xe61b` | `4` `memory immediate` | atomic xor with memory |
-| `i32.atomic_xchg` | `0xe610` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic_xchg` | `0xe611` | `5` `memory immediate` | atomic exchange with memory |
-| `i32.atomic_xchg8_s` | `0xe612` | `5` `memory immediate` | atomic exchange with memory |
-| `i32.atomic_xchg8_u` | `0xe613` | `5` `memory immediate` | atomic exchange with memory |
-| `i32.atomic_xchg16_s` | `0xe614` | `5` `memory immediate` | atomic exchange with memory |
-| `i32.atomic_xchg16_u` | `0xe615` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic_xchg8_s` | `0xe616` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic_xchg8_u` | `0xe617` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic_xchg16_s` | `0xe618` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic_xchg16_u` | `0xe619` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic_xchg32_s` | `0xe61a` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic_xchg32_u` | `0xe61b` | `5` `memory immediate` | atomic exchange with memory |
+| `i32.atomic.rmw.add` | `0xe610` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic.rmw.add` | `0xe611` | `0` `memory immediate` | atomic add to memory |
+| `i32.atomic.rmw_s.add8` | `0xe612` | `0` `memory immediate` | atomic add to memory |
+| `i32.atomic.rmw_u.add8` | `0xe613` | `0` `memory immediate` | atomic add to memory |
+| `i32.atomic.rmw16_s.add` | `0xe614` | `0` `memory immediate` | atomic add to memory |
+| `i32.atomic.rmw16_u.add` | `0xe615` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic.rmw8_s.add` | `0xe616` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic.rmw8_u.add` | `0xe617` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic.rmw16_s.add` | `0xe618` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic.rmw16_u.add` | `0xe619` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic.rmw32_s.add` | `0xe61a` | `0` `memory immediate` | atomic add to memory |
+| `i64.atomic.rmw32_u.add` | `0xe61b` | `0` `memory immediate` | atomic add to memory |
+| `i32.atomic.rmw.sub` | `0xe610` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic.rmw.sub` | `0xe611` | `1` `memory immediate` | atomic sub from memory |
+| `i32.atomic.rmw_s.sub8` | `0xe612` | `1` `memory immediate` | atomic sub from memory |
+| `i32.atomic.rmw_u.sub8` | `0xe613` | `1` `memory immediate` | atomic sub from memory |
+| `i32.atomic.rmw16_s.sub` | `0xe614` | `1` `memory immediate` | atomic sub from memory |
+| `i32.atomic.rmw16_u.sub` | `0xe615` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic.rmw8_s.sub` | `0xe616` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic.rmw8_u.sub` | `0xe617` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic.rmw16_s.sub` | `0xe618` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic.rmw16_u.sub` | `0xe619` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic.rmw32_s.sub` | `0xe61a` | `1` `memory immediate` | atomic sub from memory |
+| `i64.atomic.rmw32_u.sub` | `0xe61b` | `1` `memory immediate` | atomic sub from memory |
+| `i32.atomic.rmw.and` | `0xe610` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic.rmw.and` | `0xe611` | `2` `memory immediate` | atomic and with memory |
+| `i32.atomic.rmw_s.and8` | `0xe612` | `2` `memory immediate` | atomic and with memory |
+| `i32.atomic.rmw_u.and8` | `0xe613` | `2` `memory immediate` | atomic and with memory |
+| `i32.atomic.rmw16_s.and` | `0xe614` | `2` `memory immediate` | atomic and with memory |
+| `i32.atomic.rmw16_u.and` | `0xe615` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic.rmw8_s.and` | `0xe616` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic.rmw8_u.and` | `0xe617` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic.rmw16_s.and` | `0xe618` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic.rmw16_u.and` | `0xe619` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic.rmw32_s.and` | `0xe61a` | `2` `memory immediate` | atomic and with memory |
+| `i64.atomic.rmw32_u.and` | `0xe61b` | `2` `memory immediate` | atomic and with memory |
+| `i32.atomic.rmw.or` | `0xe610` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic.rmw.or` | `0xe611` | `3` `memory immediate` | atomic or with memory |
+| `i32.atomic.rmw8_s.or` | `0xe612` | `3` `memory immediate` | atomic or with memory |
+| `i32.atomic.rmw8_u.or` | `0xe613` | `3` `memory immediate` | atomic or with memory |
+| `i32.atomic.rmw16_s.or` | `0xe614` | `3` `memory immediate` | atomic or with memory |
+| `i32.atomic.rmw16_u.or` | `0xe615` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic.rmw8_s.or` | `0xe616` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic.rmw8_u.or` | `0xe617` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic.rmw16_s.or` | `0xe618` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic.rmw16_u.or` | `0xe619` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic.rmw32_s.or` | `0xe61a` | `3` `memory immediate` | atomic or with memory |
+| `i64.atomic.rmw32_u.or` | `0xe61b` | `3` `memory immediate` | atomic or with memory |
+| `i32.atomic.rmw.xor` | `0xe610` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic.rmw.xor` | `0xe611` | `4` `memory immediate` | atomic xor with memory |
+| `i32.atomic.rmw8_s.xor` | `0xe612` | `4` `memory immediate` | atomic xor with memory |
+| `i32.atomic.rmw8_u.xor` | `0xe613` | `4` `memory immediate` | atomic xor with memory |
+| `i32.atomic.rmw16_s.xor` | `0xe614` | `4` `memory immediate` | atomic xor with memory |
+| `i32.atomic.rmw16_u.xor` | `0xe615` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic.rmw8_s.xor` | `0xe616` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic.rmw8_u.xor` | `0xe617` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic.rmw16_s.xor` | `0xe618` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic.rmw16_u.xor` | `0xe619` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic.rmw32_s.xor` | `0xe61a` | `4` `memory immediate` | atomic xor with memory |
+| `i64.atomic.rmw32_u.xor` | `0xe61b` | `4` `memory immediate` | atomic xor with memory |
+| `i32.atomic.rmw.xchg` | `0xe610` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic.rmw.xchg` | `0xe611` | `5` `memory immediate` | atomic exchange with memory |
+| `i32.atomic.rmw8_s.xchg` | `0xe612` | `5` `memory immediate` | atomic exchange with memory |
+| `i32.atomic.rmw8_u.xchg` | `0xe613` | `5` `memory immediate` | atomic exchange with memory |
+| `i32.atomic.rmw16_s.xchg` | `0xe614` | `5` `memory immediate` | atomic exchange with memory |
+| `i32.atomic.rmw16_u.xchg` | `0xe615` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic.rmw8_s.xchg` | `0xe616` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic.rmw8_u.xchg` | `0xe617` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic.rmw16_s.xchg` | `0xe618` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic.rmw16_u.xchg` | `0xe619` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic.rmw32_s.xchg` | `0xe61a` | `5` `memory immediate` | atomic exchange with memory |
+| `i64.atomic.rmw32_u.xchg` | `0xe61b` | `5` `memory immediate` | atomic exchange with memory |
 
 ## Atomic compare exchange operators ([described here](Semantics.md#atomic-memory-accesses))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.atomic_cmpxchg` | `0xe61c` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic_cmpxchg` | `0xe61d` | `memory immediate` | atomic compare exchange with memory |
-| `i32.atomic_cmpxchg8_s` | `0xe61e` | `memory immediate` | atomic compare exchange with memory |
-| `i32.atomic_cmpxchg8_u` | `0xe61f` | `memory immediate` | atomic compare exchange with memory |
-| `i32.atomic_cmpxchg16_s` | `0xe620` | `memory immediate` | atomic compare exchange with memory |
-| `i32.atomic_cmpxchg16_u` | `0xe621` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic_cmpxchg8_s` | `0xe622` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic_cmpxchg8_u` | `0xe623` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic_cmpxchg16_s` | `0xe624` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic_cmpxchg16_u` | `0xe625` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic_cmpxchg32_s` | `0xe626` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic_cmpxchg32_u` | `0xe627` | `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic.cmpxchg` | `0xe61c` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.cmpxchg` | `0xe61d` | `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic.cmpxchg8_s` | `0xe61e` | `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic.cmpxchg8_u` | `0xe61f` | `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic.cmpxchg16_s` | `0xe620` | `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic.cmpxchg16_u` | `0xe621` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.cmpxchg8_s` | `0xe622` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.cmpxchg8_u` | `0xe623` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.cmpxchg16_s` | `0xe624` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.cmpxchg16_u` | `0xe625` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.cmpxchg32_s` | `0xe626` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.cmpxchg32_u` | `0xe627` | `memory immediate` | atomic compare exchange with memory |
 
 ## Atomic load/store operators ([described here](Semantics.md#atomic-memory-accesses))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.atomic_load` | `0xe628` | `memory immediate` | atomic load from memory |
-| `i64.atomic_load` | `0xe629` | `memory immediate` | atomic load from memory |
-| `f32.atomic_load` | `0xe62a` | `memory immediate` | atomic load from memory |
-| `f64.atomic_load` | `0xe62b` | `memory immediate` | atomic load from memory |
-| `i32.atomic_load8_s` | `0xe62c` | `memory immediate` | atomic load from memory |
-| `i32.atomic_load8_u` | `0xe62d` | `memory immediate` | atomic load from memory |
-| `i32.atomic_load16_s` | `0xe62e` | `memory immediate` | atomic load from memory |
-| `i32.atomic_load16_u` | `0xe62f` | `memory immediate` | atomic load from memory |
-| `i64.atomic_load8_s` | `0xe630` | `memory immediate` | atomic load from memory |
-| `i64.atomic_load8_u` | `0xe631` | `memory immediate` | atomic load from memory |
-| `i64.atomic_load16_s` | `0xe632` | `memory immediate` | atomic load from memory |
-| `i64.atomic_load16_u` | `0xe633` | `memory immediate` | atomic load from memory |
-| `i64.atomic_load32_s` | `0xe634` | `memory immediate` | atomic load from memory |
-| `i64.atomic_load32_u` | `0xe635` | `memory immediate` | atomic load from memory |
-| `i32.atomic_store` | `0xe636` | `memory immediate` | atomic store to memory |
-| `i64.atomic_store` | `0xe637` | `memory immediate` | atomic store to memory |
-| `f32.atomic_store` | `0xe638` | `memory immediate` | atomic store to memory |
-| `f64.atomic_store` | `0xe639` | `memory immediate` | atomic store to memory |
-| `i32.atomic_store8` | `0xe63a` | `memory immediate` | atomic store to memory |
-| `i32.atomic_store16` | `0xe63b` | `memory immediate` | atomic store to memory |
-| `i64.atomic_store8` | `0xe63c` | `memory immediate` | atomic store to memory |
-| `i64.atomic_store16` | `0xe63d` | `memory immediate` | atomic store to memory |
-| `i64.atomic_store32` | `0xe63e` | `memory immediate` | atomic store to memory |
+| `i32.atomic.load` | `0xe628` | `memory immediate` | atomic load from memory |
+| `i64.atomic.load` | `0xe629` | `memory immediate` | atomic load from memory |
+| `f32.atomic.load` | `0xe62a` | `memory immediate` | atomic load from memory |
+| `f64.atomic.load` | `0xe62b` | `memory immediate` | atomic load from memory |
+| `i32.atomic.load8_s` | `0xe62c` | `memory immediate` | atomic load from memory |
+| `i32.atomic.load8_u` | `0xe62d` | `memory immediate` | atomic load from memory |
+| `i32.atomic.load16_s` | `0xe62e` | `memory immediate` | atomic load from memory |
+| `i32.atomic.load16_u` | `0xe62f` | `memory immediate` | atomic load from memory |
+| `i64.atomic.load8_s` | `0xe630` | `memory immediate` | atomic load from memory |
+| `i64.atomic.load8_u` | `0xe631` | `memory immediate` | atomic load from memory |
+| `i64.atomic.load16_s` | `0xe632` | `memory immediate` | atomic load from memory |
+| `i64.atomic.load16_u` | `0xe633` | `memory immediate` | atomic load from memory |
+| `i64.atomic.load32_s` | `0xe634` | `memory immediate` | atomic load from memory |
+| `i64.atomic.load32_u` | `0xe635` | `memory immediate` | atomic load from memory |
+| `i32.atomic.store` | `0xe636` | `memory immediate` | atomic store to memory |
+| `i64.atomic.store` | `0xe637` | `memory immediate` | atomic store to memory |
+| `f32.atomic.store` | `0xe638` | `memory immediate` | atomic store to memory |
+| `f64.atomic.store` | `0xe639` | `memory immediate` | atomic store to memory |
+| `i32.atomic.store8` | `0xe63a` | `memory immediate` | atomic store to memory |
+| `i32.atomic.store16` | `0xe63b` | `memory immediate` | atomic store to memory |
+| `i64.atomic.store8` | `0xe63c` | `memory immediate` | atomic store to memory |
+| `i64.atomic.store16` | `0xe63d` | `memory immediate` | atomic store to memory |
+| `i64.atomic.store32` | `0xe63e` | `memory immediate` | atomic store to memory |
 
 [future general]: FutureFeatures.md
 [future multiple return]: FutureFeatures.md#multiple-return
