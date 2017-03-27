@@ -799,8 +799,8 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | ---- | ---- | ---- | ---- |
 | `i32.atomic.rmw.add` | `0xe610` | `0` `memory immediate` | atomic add to memory |
 | `i64.atomic.rmw.add` | `0xe611` | `0` `memory immediate` | atomic add to memory |
-| `i32.atomic.rmw_s.add8` | `0xe612` | `0` `memory immediate` | atomic add to memory |
-| `i32.atomic.rmw_u.add8` | `0xe613` | `0` `memory immediate` | atomic add to memory |
+| `i32.atomic.rmw8_s.add` | `0xe612` | `0` `memory immediate` | atomic add to memory |
+| `i32.atomic.rmw8_u.add` | `0xe613` | `0` `memory immediate` | atomic add to memory |
 | `i32.atomic.rmw16_s.add` | `0xe614` | `0` `memory immediate` | atomic add to memory |
 | `i32.atomic.rmw16_u.add` | `0xe615` | `0` `memory immediate` | atomic add to memory |
 | `i64.atomic.rmw8_s.add` | `0xe616` | `0` `memory immediate` | atomic add to memory |
@@ -811,8 +811,8 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `i64.atomic.rmw32_u.add` | `0xe61b` | `0` `memory immediate` | atomic add to memory |
 | `i32.atomic.rmw.sub` | `0xe610` | `1` `memory immediate` | atomic sub from memory |
 | `i64.atomic.rmw.sub` | `0xe611` | `1` `memory immediate` | atomic sub from memory |
-| `i32.atomic.rmw_s.sub8` | `0xe612` | `1` `memory immediate` | atomic sub from memory |
-| `i32.atomic.rmw_u.sub8` | `0xe613` | `1` `memory immediate` | atomic sub from memory |
+| `i32.atomic.rmw8_s.sub` | `0xe612` | `1` `memory immediate` | atomic sub from memory |
+| `i32.atomic.rmw8_u.sub` | `0xe613` | `1` `memory immediate` | atomic sub from memory |
 | `i32.atomic.rmw16_s.sub` | `0xe614` | `1` `memory immediate` | atomic sub from memory |
 | `i32.atomic.rmw16_u.sub` | `0xe615` | `1` `memory immediate` | atomic sub from memory |
 | `i64.atomic.rmw8_s.sub` | `0xe616` | `1` `memory immediate` | atomic sub from memory |
@@ -823,8 +823,8 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `i64.atomic.rmw32_u.sub` | `0xe61b` | `1` `memory immediate` | atomic sub from memory |
 | `i32.atomic.rmw.and` | `0xe610` | `2` `memory immediate` | atomic and with memory |
 | `i64.atomic.rmw.and` | `0xe611` | `2` `memory immediate` | atomic and with memory |
-| `i32.atomic.rmw_s.and8` | `0xe612` | `2` `memory immediate` | atomic and with memory |
-| `i32.atomic.rmw_u.and8` | `0xe613` | `2` `memory immediate` | atomic and with memory |
+| `i32.atomic.rmw8_s.and` | `0xe612` | `2` `memory immediate` | atomic and with memory |
+| `i32.atomic.rmw8_u.and` | `0xe613` | `2` `memory immediate` | atomic and with memory |
 | `i32.atomic.rmw16_s.and` | `0xe614` | `2` `memory immediate` | atomic and with memory |
 | `i32.atomic.rmw16_u.and` | `0xe615` | `2` `memory immediate` | atomic and with memory |
 | `i64.atomic.rmw8_s.and` | `0xe616` | `2` `memory immediate` | atomic and with memory |
