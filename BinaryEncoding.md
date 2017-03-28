@@ -72,6 +72,9 @@ All types are distinguished by a negative `varint7` values that is the first byt
 | `-0x02` (i.e., the byte `0x7e`) | `i64` |
 | `-0x03` (i.e., the byte `0x7d`) | `f32` |
 | `-0x04` (i.e., the byte `0x7c`) | `f64` |
+| `-0x05` (i.e., the byte `0x7b`) | `i8` |
+| `-0x06` (i.e., the byte `0x7a`) | `i16` |
+| `-0x07` (i.e., the byte `0x79`) | `obj` |
 | `-0x10` (i.e., the byte `0x70`) | `anyfunc` |
 | `-0x20` (i.e., the byte `0x60`) | `func` |
 | `-0x40` (i.e., the byte `0x40`) | pseudo type for representing an empty `block_type` |
@@ -80,15 +83,28 @@ Some of these will be followed by additional fields, see below.
 
 Note: Gaps are reserved for [future :unicorn:][future general] extensions. The use of a signed scheme is so that types can coexist in a single space with (positive) indices into the type section, which may be relevant for future extensions of the type system.
 
+Note: The types `i8`, `i16` and `obj` are added in version `0x2`, which
+includes [Typed Object support :unicorn:](GC.md).
+
 ### `value_type`
 A `varint7` indicating a [value type](Semantics.md#types). One of:
 
+* `i8` (version `0x2`, part of [Typed Object support :unicorn:](GC.md))
+* `i16` (version `0x2`, part of [Typed Object support :unicorn:](GC.md))
 * `i32`
 * `i64`
 * `f32`
 * `f64`
+* `obj` (version `0x2`, part of [Typed Object support :unicorn:](GC.md))
 
 as encoded above.
+
+Note: In WebAssembly, locals are never an `i8` or `i16` though, since those
+locals can also be represented by a 32-bit integer. See the memory-related
+operators [`i32.loadX_s` and
+`i32.loadX_u`](Semantics.md#linear-memory-accesses). Using 32-bit values for
+`i8` and `i16` values avoids adding redundant opcodes to load and store `i8`
+and `i16` values from and to memory.
 
 ### `block_type`
 A `varint7` indicating a block signature. These types are encoded as:
@@ -98,10 +114,10 @@ A `varint7` indicating a block signature. These types are encoded as:
 
 ### `elem_type`
 
-A `varint7` indicating the types of elements in a [table](AstSemantics.md#table).
+A `varint7` indicating the types of elements in a [table](Semantics.md#table).
 In the MVP, only one type is available:
 
-* [`anyfunc`](AstSemantics.md#table)
+* [`anyfunc`](Semantics.md#table)
 
 Note: In the [future :unicorn:][future general], other element types may be allowed.
 
@@ -117,6 +133,31 @@ The description of a function signature. Its type constructor is followed by an 
 | return_type | `value_type?` | the result type of the function (if return_count is 1) |
 
 Note: In the [future :unicorn:][future multiple return], `return_count` and `return_type` might be generalised to allow multiple values.
+
+### `obj_type`
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| form | `varint7` | the value for the `obj` type constructor as defined above |
+| flags | `varint7` | the flags (see below) describing the object layout |
+| count | `varuint32` | the number of fields |
+| types | `value_type*` | the types of the fields |
+
+The possible flags in the `flags` field are:
+
+- `packed` (value `0x1`): Enable packing struct's fields (by avoiding any
+  padding between fields).
+- `transparent` (value `0x2`): Enable sharing of the underlaying buffer of the
+  Typed Object. See also the security notes about when enabling [Typed Object's
+  opacity](https://github.com/nikomatsakis/typed-objects-explainer/blob/master/core.md#opacity)
+  is possible or not.
+
+The flags are bitwise OR-ed together.
+
+By setting the `transparent` flag, it is possible to cast raw memory to a Typed
+Object without copying the values. This also means that values written on a
+transparent Typed Object are also immediately visible to the underlaying
+buffer.
 
 ## Other Types
 
@@ -433,8 +474,8 @@ Like all custom sections, this section being malformed does not cause the valida
 
 The name section may appear only once, and only after the [Data section](#Data-section).
 The expectation is that, when a binary WebAssembly module is viewed in a browser or other development
-environment, the data in this section will be used as the names of functions
-and locals in the [text format](TextFormat.md).
+environment, the data in this section will be used as the names of functions,
+types and locals in the [text format](TextFormat.md).
 
 The name section contains a sequence of name subsections:
 
@@ -451,6 +492,8 @@ be skipped over by an engine. The current list of valid `name_type` codes are:
 | --------- | ---- | ----------- |
 | [Function](#function-names) | `1` | Assigns names to functions |
 | [Local](#local-names) | `2` | Assigns names to locals in functions |
+| [Type](#type-names) | `3` | Assigns names to types |
+| [Field](#field-names) | `4` | Assigns names to fields of a type |
 
 When present, name subsections must appear in this order and at most once. The
 end of the last subsection must coincide with the last byte of the name
@@ -498,6 +541,14 @@ where a `local_name` is encoded as:
 | index | `varuint32` | the index of the function whose locals are being named |
 | local_map | `name_map` | assignment of names to local indices |
 
+#### Type names
+
+TODO:
+
+#### Field names
+
+TODO:
+
 # Function Bodies
 
 Function bodies consist of a sequence of local variable declarations followed by 
@@ -522,7 +573,6 @@ It is legal to have several entries with the same type.
 | ----- | ---- | ----------- |
 | count | `varuint32` | number of local variables of the following type |
 | type | `value_type` | type of the variables |
-
 
 ## Control flow operators ([described here](Semantics.md#control-flow-structures))
 
@@ -565,10 +615,18 @@ Note: Gaps in the opcode space, here and elsewhere, are reserved for
 | ---- | ---- | ---- | ---- |
 | `call` | `0x10` | function_index : `varuint32` | call a function by its [index](Modules.md#function-index-space) |
 | `call_indirect` | `0x11` | type_index : `varuint32`, reserved : `varuint1` | call a function indirect with an expected signature |
+| `new_object` | `0x12` | type_index : `varuint32` | zero-initialise an allocated object of type `type_index` and return the object |
 
 The `call_indirect` operator takes a list of function arguments and as the last
 operand the index into the table. Its `reserved` immediate is for
 [future :unicorn:][future multiple tables] use and must be `0` in the MVP.
+
+The `new_object` operator can trap when the Host environment is out of memory.
+The `type_index` immediate points to the type located in the Type section.
+
+Note: validation should check that `type_index` points to a `value_type` that
+is set to `obj` to avoid constructing an object using a function signature
+(function signatures and type descriptors are interleaved in the Type section).
 
 ## Parametric operators ([described here](Semantics.md#type-parametric-operators))
 
@@ -591,6 +649,7 @@ operand the index into the table. Its `reserved` immediate is for
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
+| `get_field` | `0x27` | object: `memory_immediate`, type_index: `varuint32`, field_index: `varuint32` | compute offset of field given a type and add offset to memory immediate |
 | `i32.load` | `0x28` | `memory_immediate` | load from memory |
 | `i64.load` | `0x29` | `memory_immediate` | load from memory |
 | `f32.load` | `0x2a` | `memory_immediate` | load from memory |
@@ -785,6 +844,12 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `i64.reinterpret/f64` | `0xbd` | | |
 | `f32.reinterpret/i32` | `0xbe` | | |
 | `f64.reinterpret/i64` | `0xbf` | | |
+
+## Type casting ([described here](Semantics.md#type-casting))
+
+| Name | Opcode | Immediate | Description |
+| ---- | ---- | ---- | ---- |
+| `dynamic_cast` | `0xc0` | local_index: `varuint32`, type_index : `varuint32` | cast local variable to another type |
 
 [future general]: FutureFeatures.md
 [future multiple return]: FutureFeatures.md#multiple-return
