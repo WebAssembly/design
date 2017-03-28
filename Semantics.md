@@ -200,10 +200,13 @@ with the exception that the ordering of accesses is sequentially consistent.
   * `f32.atomic.store`: (no conversion) atomically store 4 bytes
   * `f64.atomic.store`: (no conversion) atomically store 8 bytes
 
-Atomic read-modify-write (RMW) operators atomically read a value from a memory
-index, modify the value, and store the resulting value to the same memory
-index. All RMW operators return the value read from memory before the modify
-operation was performed.
+Atomic read-modify-write (RMW) operators atomically read a value from an
+address , modify the value, and store the resulting value to the same address.
+All RMW operators return the value read from memory before the modify operation
+was performed.
+
+The RMW operators have two operands, an address and a value used in the modify
+operation.
 
 The sign-agnostic operations are further described [below](#32-bit-integer-operators).
 
@@ -282,10 +285,11 @@ The sign-agnostic operations are further described [below](#32-bit-integer-opera
 | `i64.atomic.rmw32_u.xchg` | 4 bytes | nop | 4 bytes | zero-extended i32 to i64 |
 | `i64.atomic.rmw.xchg` | 8 bytes | nop | 8 bytes | as i64 |
 
-The atomic compare exchange operators take three operands: a linear memory
-index, an `expected` value, and a `replacement` value. The operators
-conditionally store the `replacement` value, but only if the `loaded` value is
-equal to the `expected` value.
+The atomic compare exchange operators take three operands: an address, an
+`expected` value, and a `replacement` value. If the `loaded` value is equal to
+the `expected` value, the `replacement` value is stored to the same memory
+address. If the values are not equal, no value is stored. In either case, the
+`loaded` value is returned.
 
 | Name | Load (as `loaded`) | Compare `expected` with `loaded` | Conditionally Store `replacement` | Return `loaded` |
 | ---- | ---- | ---- | ---- | ---- |
@@ -825,10 +829,11 @@ outside the range which rounds to an integer in range) traps.
 
 ## Thread operators
 
-  * `is_lock_free`: If the atomic step of an atomic primitive (see
-    [Atomic Memory Accesses](#atomic-memory-accesses)) on a datum of size N
-    bytes will be performed without the agent acquiring a lock outside the N
-    bytes comprising the datum, then return `1`. Otherwise, return `0`.
+  * `is_lock_free`: Given an operand `N`, if the atomic step of an atomic
+    primitive (see [Atomic Memory Accesses](#atomic-memory-accesses)) on a
+    datum of size `N` bytes will be performed without the agent acquiring a
+    lock outside the `N` bytes comprising the datum, then return `1`.
+    Otherwise, return `0`.
 
 ### Wait
 
@@ -836,17 +841,17 @@ The wake and wait operators are optimizations over busy-waiting for a value to
 change. It is a validation error to use these operators on non-shared linear
 memory.
 
-The wait operators take three operands: a linear memory index, an expected
+The wait operators take three operands: an address operand, an expected
 value, and a relative timeout in milliseconds as an f64. The timeout must be
 non-negative, and can also be positive infinity. If the timeout is positive
 infinity then the timeout will never expire.
 
-The wait operation begins by performing an atomic load from the given memory
-index. If the loaded value is not equal to the expected value, the operator
-returns 1 ("not-equal"). If the values are equal, the thread is suspended. If
-the thread is woken (by execution of the corresponding "wake" operator on
-another thread), the wait operator returns 0 ("ok"). If the timeout expires
-before another thread wakes this one, this operator returns 2 ("timed-out").
+The wait operation begins by performing an atomic load from the given address.
+If the loaded value is not equal to the expected value, the operator returns 1
+("not-equal"). If the values are equal, the thread is suspended. If the thread
+is woken (by execution of the corresponding "wake" operator on another thread),
+the wait operator returns 0 ("ok"). If the timeout expires before another
+thread wakes this one, this operator returns 2 ("timed-out").
 
 | Value | Description |
 | ---- | ---- |
@@ -854,18 +859,18 @@ before another thread wakes this one, this operator returns 2 ("timed-out").
 | 1 | "not-equal", the loaded value did not match the expected value |
 | 2 | "timed-out", not woken by another thread before timeout expired |
 
-  * `i32.wait`: load i32 value, compare to expected, and wait for `i32.wake` at same memory index
-  * `i64.wait`: load i64 value, compare to expected, and wait for `i64.wake` at same memory index
+  * `i32.wait`: load i32 value, compare to expected, and wait for `i32.wake` at same address
+  * `i64.wait`: load i64 value, compare to expected, and wait for `i64.wake` at same address
 
 ### Wake
 
-The wake operators take two operands: a linear memory index, and a wake count.
-The operation will wake a maximum of "wake count" threads that are waiting on
-the same memory index. The operator returns the number of thread that were
+The wake operators take two operands: an address operand, and a wake count. The
+operation will wake a maximum of "wake count" threads that are waiting on the
+same address. The operator returns the number of thread that were
 woken.
 
-  * `i32.wake`: wake up to N threads waiting on the given memory index via `i32.wait`
-  * `i64.wake`: wake up to N threads waiting on the given memory index via `i64.wait`
+  * `i32.wake`: wake up to N threads waiting on the given address via `i32.wait`
+  * `i64.wake`: wake up to N threads waiting on the given address via `i64.wait`
 
 [future general]: FutureFeatures.md
 [future threads]: FutureFeatures.md#threads
