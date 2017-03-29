@@ -213,7 +213,8 @@ greatest alignment values practical, while always avoiding misaligned accesses.
 
 ### Out of Bounds
 
-Out of bounds accesses trap.
+Out of bounds accesses trap. If the access is a store, if any of the accessed
+bytes are out of bounds, none of the bytes are modified.
 
 ### Resizing
 
