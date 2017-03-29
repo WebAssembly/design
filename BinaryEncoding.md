@@ -178,17 +178,23 @@ The following documents the current prototype format. This format is based on an
 
 ## High-level structure
 
-The module starts with a preamble of two fields:
+The module starts with a preamble of the following eight bytes:
 
-| Field | Type | Description |
-| ----- |  ----- | ----- |
-| magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
-| version | `uint32` | Version number, currently 0xd. The version for MVP will be reset to 1. |
+    00 06 04 77 61 73 6D 0E
 
-The module preamble is followed by a sequence of sections.
+WebAssembly modules consist entirely of a list of *sections*, and these initial
+eight bytes are the first section, which is a *custom* section with a 6-byte 
+payload, consisting of the name "wasm" in ASCII and a version number (0x0E) 
+which, in the MVP, will be reset to 1, i.e.
+
+    00 06 04 77 61 73 6D 01
+
+**Note**: binary version 0xE is identical to 0xD except for the file header, so 
+readers of 0xE can retain compatibility by also accepting the old signature, 
+`00 61 73 6D 0D 00 00 00`.
+
 Each section is identified by a 1-byte *section code* that encodes either a known section or a custom section.
-The section length and payload data then follow.
-Known sections have non-zero ids, while custom sections have a `0` id followed by an identifying string as
+The section length and payload data then follow. Known sections have non-zero ids, while custom sections have a `0` id followed by an identifying string as
 part of the payload.
 
 | Field | Type | Description |
