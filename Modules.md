@@ -48,7 +48,8 @@ In the future, other kinds of imports may be added. Imports are designed to
 allow modules to share code and data while still allowing separate compilation
 and caching.
 
-All imports include two opaque names: a *module name* and an *export name*. The
+All imports include two opaque names: a *module name* and an *export name*,
+which are required to be [valid UTF-8]. The
 interpretation of these names is up to the host environment but designed to
 allow a host environments, like the [Web](Web.md), to support a two-level
 namespace.
@@ -108,7 +109,8 @@ native `syscall`. For example, a shell environment could define a builtin
 
 A module can declare a sequence of **exports** which are returned at
 instantiation time to the host environment. Each export has three fields:
-a *name*, whose meaning is defined by the host environment, a *type*,
+a *name*, which is required to be [valid UTF-8],
+whose meaning is defined by the host environment, a *type*,
 indicating whether the export is a function, global, memory or table, and
 an *index* into the type's corresponding [index space](Modules.md).
 
@@ -380,3 +382,4 @@ In the future, operators like `i32.add` could be added to allow more expressive
 [future types]: FutureFeatures.md#more-table-operators-and-types
 [future dom]: FutureFeatures.md#gc/dom-integration
 [future multiple tables]: FutureFeatures.md#multiple-tables-and-memories
+[valid UTF-8]: https://encoding.spec.whatwg.org/#utf-8-decode-without-bom-or-fail

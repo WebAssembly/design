@@ -195,8 +195,8 @@ part of the payload.
 | ----- |  ----- | ----- |
 | id | `varuint7` | section code |
 | payload_len  | `varuint32` | size of this section in bytes |
-| name_len | `varuint32` ? | length of the section name in bytes, present if `id == 0` |
-| name | `bytes` ? | section name string, present if `id == 0` |
+| name_len | `varuint32` ? | length of `name` in bytes, present if `id == 0` |
+| name | `bytes` ? | section name: valid UTF-8 byte sequence, present if `id == 0` |
 | payload_data  | `bytes` | content of this section, of length `payload_len - sizeof(name) - sizeof(name_len)` |
 
 Each known section is optional and may appear at most once. Custom sections all have the same `id` (0), and can be named non-uniquely (all bytes composing their names may be identical).
@@ -252,10 +252,10 @@ The import section declares all imports that will be used in the module.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| module_len | `varuint32` | module string length |
-| module_str | `bytes` | module string of `module_len` bytes |
-| field_len | `varuint32` | field name length |
-| field_str | `bytes` | field name string of `field_len` bytes |
+| module_len | `varuint32` | length of `module_str` in bytes |
+| module_str | `bytes` | module name: valid UTF-8 byte sequence |
+| field_len | `varuint32` | length of `field_str` in bytes |
+| field_str | `bytes` | field name: valid UTF-8 byte sequence |
 | kind | `external_kind` | the kind of definition being imported |
 
 Followed by, if the `kind` is `Function`:
@@ -355,8 +355,8 @@ The encoding of the [Export section](Modules.md#exports):
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| field_len | `varuint32` | field name string length |
-| field_str | `bytes` | field name string of `field_len` bytes |
+| field_len | `varuint32` | length of `field_str` in bytes |
+| field_str | `bytes` | field name: valid UTF-8 byte sequence |
 | kind | `external_kind` | the kind of definition being exported |
 | index | `varuint32` | the index into the corresponding [index space](Modules.md) |
 
@@ -470,8 +470,8 @@ where a `naming` is encoded as:
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | index | `varuint32` | the index which is being named |
-| name_len | `varuint32` | number of bytes in name_str |
-| name_str | `bytes` | binary encoding of the name |
+| name_len | `varuint32` | length of `name_str` in bytes |
+| name_str | `bytes` | UTF-8 encoding of the name |
 
 #### Function names
 
