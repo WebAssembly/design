@@ -510,11 +510,13 @@ call one with the `new` operator.
 
 A `WebAssembly.Memory` object contains a single [linear memory](Semantics.md#linear-memory)
 which can be simultaneously referenced by multiple `Instance` objects. Each
-`Memory` object has two internal slots:
+`Memory` object has four internal slots:
 
  * [[Memory]] : a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/memory.mli)
  * [[BufferObject]] : the current `ArrayBuffer` whose [[ArrayBufferByteLength]]
    matches the current byte length of [[Memory]]
+ * [[Initial]] : the `initial` number of WebAssembly pages
+ * [[Maximum]] : the `maximum` number of WebAssembly pages, or `undefined` if `maximum` is `None`
 
 ### `WebAssembly.Memory` Constructor
 
@@ -607,6 +609,36 @@ accessor function performs the following steps:
 
 If `this` is not a `WebAssembly.Memory`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown. Otherwise return `M.[[BufferObject]]`.
+
+### `WebAssembly.Memory.prototype.length`
+
+This is an accessor property whose [[Set]] is Undefined and whose [[Get]]
+accessor function performs the following steps:
+
+Let `T` be the `this` value. If `T` is not a `WebAssembly.Memory`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
+
+Return `T.[[BufferObject]].[[ArrayBufferByteLength]]`.
+
+### `WebAssembly.Memory.prototype.initial`
+
+This is an accessor property whose [[Set]] is Undefined and whose [[Get]]
+accessor function performs the following steps:
+
+Let `T` be the `this` value. If `T` is not a `WebAssembly.Memory`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
+
+Return `T.[[Initial]]`.
+
+### `WebAssembly.Memory.prototype.maximum`
+
+This is an accessor property whose [[Set]] is Undefined and whose [[Get]]
+accessor function performs the following steps:
+
+Let `T` be the `this` value. If `T` is not a `WebAssembly.Memory`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
+
+Return `T.[[Maximum]]`.
 
 ## `WebAssembly.Table` Objects
 
