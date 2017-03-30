@@ -874,18 +874,18 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
-| `i32.atomic.cmpxchg` | `0xff1c` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.cmpxchg` | `0xff1d` | `memory immediate` | atomic compare exchange with memory |
-| `i32.atomic.cmpxchg8_s` | `0xff1e` | `memory immediate` | atomic compare exchange with memory |
-| `i32.atomic.cmpxchg8_u` | `0xff1f` | `memory immediate` | atomic compare exchange with memory |
-| `i32.atomic.cmpxchg16_s` | `0xff20` | `memory immediate` | atomic compare exchange with memory |
-| `i32.atomic.cmpxchg16_u` | `0xff21` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.cmpxchg8_s` | `0xff22` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.cmpxchg8_u` | `0xff23` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.cmpxchg16_s` | `0xff24` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.cmpxchg16_u` | `0xff25` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.cmpxchg32_s` | `0xff26` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.cmpxchg32_u` | `0xff27` | `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic.rmw.cmpxchg` | `0xff1c` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.rmw.cmpxchg` | `0xff1d` | `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic.rmw8_s.cmpxchg` | `0xff1e` | `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic.rmw8_u.cmpxchg` | `0xff1f` | `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic.rmw16_s.cmpxchg` | `0xff20` | `memory immediate` | atomic compare exchange with memory |
+| `i32.atomic.rmw16_u.cmpxchg` | `0xff21` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.rmw8_s.cmpxchg` | `0xff22` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.rmw8_u.cmpxchg` | `0xff23` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.rmw16_s.cmpxchg` | `0xff24` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.rmw16_u.cmpxchg` | `0xff25` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.rmw32_s.cmpxchg` | `0xff26` | `memory immediate` | atomic compare exchange with memory |
+| `i64.atomic.rmw32_u.cmpxchg` | `0xff27` | `memory immediate` | atomic compare exchange with memory |
 
 ## Atomic load/store operators ([described here](Semantics.md#atomic-memory-accesses))
 
