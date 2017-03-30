@@ -561,8 +561,11 @@ Any attempts to [`detach`](http://tc39.github.io/ecma262/#sec-detacharraybuffer)
 the detachment performed by [`m.grow`](#webassemblymemoryprototypegrow) shall throw a 
 [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 
-Return a new `WebAssembly.Memory` instance with [[Memory]] set to `m` and
-[[BufferObject]] set to `buffer`.
+Return a new `WebAssembly.Memory` instance with
+[[Memory]] set to `m`,
+[[BufferObject]] set to `buffer`,
+[[Initial]] set to `initial`, and
+[[Maximum]] set to `undefined` if `maximum` is `None` or `maximum` otherwise.
 
 ### `WebAssembly.Memory.prototype [ @@toStringTag ]` Property
 
