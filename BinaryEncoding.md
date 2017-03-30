@@ -183,7 +183,7 @@ The module starts with a preamble of two fields:
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
-| version | `uint32` | Version number, currently 0xd. The version for MVP will be reset to 1. |
+| version | `uint32` | Version number, `0x1` |
 
 The module preamble is followed by a sequence of sections.
 Each section is identified by a 1-byte *section code* that encodes either a known section or a custom section.
