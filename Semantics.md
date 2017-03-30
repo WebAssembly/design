@@ -344,10 +344,12 @@ the address and offset operands.
 
 If the effective address of a memory access is a multiple of the alignment
 attribute value of the memory access, the memory access is considered *aligned*,
-otherwise it is considered *misaligned*. Aligned and misaligned accesses have
-the same behavior. 
+otherwise it is considered *misaligned*.
 
-Alignment affects performance as follows:
+Misaligned atomic accesses trap. For non-atomic accesses, aligned and
+misaligned accesses have the same behavior.
+
+Alignment of non-atomic accesses affects performance as follows:
 
  * Aligned accesses with at least natural alignment are fast.
  * Aligned accesses with less than natural alignment may be somewhat slower
