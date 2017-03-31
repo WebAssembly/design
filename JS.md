@@ -7,6 +7,14 @@ be loaded and run directly from an HTML `<script type='module'>` tag—and
 any other Web API that loads ES6 modules via URL—as part of 
 [ES6 Module integration](Modules.md#integration-with-es6-modules).)
 
+## Post-MVP JavaScript API
+
+Some JavaScript APIs were added post-MVP and can be
+[feature-tested](FeatureTest.md) together. These are grouped together,
+and each group is denoted with one of the following symbols:
+
+* ⚜
+
 ## Traps
 
 Whenever WebAssembly semantics specify a [trap](Semantics.md#traps),
@@ -613,7 +621,9 @@ accessor function performs the following steps:
 If `this` is not a `WebAssembly.Memory`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown. Otherwise return `M.[[BufferObject]]`.
 
-### `WebAssembly.Memory.prototype.length`
+### `WebAssembly.Memory.prototype.byteLength`
+
+[⚜](#Post-MVP-JavaScript-API)
 
 This is an accessor property whose [[Set]] is Undefined and whose [[Get]]
 accessor function performs the following steps:
@@ -625,6 +635,8 @@ Return `T.[[BufferObject]].[[ArrayBufferByteLength]]`.
 
 ### `WebAssembly.Memory.prototype.initial`
 
+[⚜](#Post-MVP-JavaScript-API)
+
 This is an accessor property whose [[Set]] is Undefined and whose [[Get]]
 accessor function performs the following steps:
 
@@ -634,6 +646,8 @@ is thrown.
 Return `T.[[Initial]]`.
 
 ### `WebAssembly.Memory.prototype.maximum`
+
+[⚜](#Post-MVP-JavaScript-API)
 
 This is an accessor property whose [[Set]] is Undefined and whose [[Get]]
 accessor function performs the following steps:
