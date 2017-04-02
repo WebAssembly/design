@@ -7,6 +7,8 @@ be loaded and run directly from an HTML `<script type='module'>` tag—and
 any other Web API that loads ES6 modules via URL—as part of 
 [ES6 Module integration](Modules.md#integration-with-es6-modules).)
 
+WebAssembly JS API declaration file for TypeScript can be found [here](https://github.com/01alchemist/webassembly-types/blob/master/webassembly.d.ts) which enable autocompletion and make TypeScript compiler happy.
+
 ## Traps
 
 Whenever WebAssembly semantics specify a [trap](Semantics.md#traps),
