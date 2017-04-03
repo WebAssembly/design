@@ -789,9 +789,14 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | ---- | ---- | ---- | ---- |
 | `is_lock_free` | `0xff00` | | |
 | `i32.wait` | `0xff01` | `memory immediate` | |
-| `i64.wait` | `0xff02` | `memory immediate` | |
-| `i32.wake` | `0xff03` | `memory immediate` | |
-| `i64.wake` | `0xff04` | `memory immediate` | |
+| `i32.wake` | `0xff02` | `memory immediate` | |
+
+The `memory_immediate` type is encoded as follows:
+
+| Name | Type | Description |
+| ---- | ---- | ---- |
+| flags | `varuint32` | a bitfield which currently must be 0 |
+| offset | `varuint32` | the value of the offset |
 
 ## Atomic read-modify-write operators ([described here](Semantics.md#atomic-memory-accesses))
 
@@ -870,6 +875,13 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `i64.atomic.rmw32_s.xchg` | `0xff1a` | `5` `memory immediate` | atomic exchange with memory |
 | `i64.atomic.rmw32_u.xchg` | `0xff1b` | `5` `memory immediate` | atomic exchange with memory |
 
+The `memory_immediate` type is encoded as follows:
+
+| Name | Type | Description |
+| ---- | ---- | ---- |
+| flags | `varuint32` | a bitfield which currently must be 0 |
+| offset | `varuint32` | the value of the offset |
+
 ## Atomic compare exchange operators ([described here](Semantics.md#atomic-memory-accesses))
 
 | Name | Opcode | Immediate | Description |
@@ -886,6 +898,13 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `i64.atomic.rmw16_u.cmpxchg` | `0xff25` | `memory immediate` | atomic compare exchange with memory |
 | `i64.atomic.rmw32_s.cmpxchg` | `0xff26` | `memory immediate` | atomic compare exchange with memory |
 | `i64.atomic.rmw32_u.cmpxchg` | `0xff27` | `memory immediate` | atomic compare exchange with memory |
+
+The `memory_immediate` type is encoded as follows:
+
+| Name | Type | Description |
+| ---- | ---- | ---- |
+| flags | `varuint32` | a bitfield which currently must be 0 |
+| offset | `varuint32` | the value of the offset |
 
 ## Atomic load/store operators ([described here](Semantics.md#atomic-memory-accesses))
 
@@ -914,6 +933,13 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `i64.atomic.store8` | `0xff3c` | `memory immediate` | atomic store to memory |
 | `i64.atomic.store16` | `0xff3d` | `memory immediate` | atomic store to memory |
 | `i64.atomic.store32` | `0xff3e` | `memory immediate` | atomic store to memory |
+
+The `memory_immediate` type is encoded as follows:
+
+| Name | Type | Description |
+| ---- | ---- | ---- |
+| flags | `varuint32` | a bitfield which currently must be 0 |
+| offset | `varuint32` | the value of the offset |
 
 [future general]: FutureFeatures.md
 [future multiple return]: FutureFeatures.md#multiple-return

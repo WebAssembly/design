@@ -831,29 +831,39 @@ outside the range which rounds to an integer in range) traps.
 
 ## Thread operators
 
-  * `is_lock_free`: Given an operand `N`, if the atomic step of an atomic
-    primitive (see [Atomic Memory Accesses](#atomic-memory-accesses)) on a
-    datum of size `N` bytes will be performed without the agent acquiring a
-    lock outside the `N` bytes comprising the datum, then return `1`.
-    Otherwise, return `0`.
+  * `is_lock_free`: Given an operand `N` of type `i32`, if the atomic step of
+    an atomic primitive (see [Atomic Memory Accesses](#atomic-memory-accesses))
+    on a datum of size `N` bytes will be performed without the [agent](agent)
+    acquiring a lock outside the `N` bytes comprising the datum, then return
+    `1`. Otherwise, return `0`. Once the value of `is_lock_free` for a given
+    value `N` has been observed for any [agent](agent) in an
+    [agent cluster](agent cluster) , it cannot change.
 
 ### Wait
 
 The wake and wait operators are optimizations over busy-waiting for a value to
 change. It is a validation error to use these operators on non-shared linear
-memory.
+memory. They are non-atomic and have sequentially consistent memory ordering.
 
-The wait operators take three operands: an address operand, an expected
-value, and a relative timeout in milliseconds as an f64. The timeout must be
-non-negative, and can also be positive infinity. If the timeout is positive
-infinity then the timeout will never expire.
+Both wake and wait operators trap if the effective address of either operator
+is misaligned or out-of-bounds.
 
-The wait operation begins by performing an atomic load from the given address.
-If the loaded value is not equal to the expected value, the operator returns 1
-("not-equal"). If the values are equal, the thread is suspended. If the thread
-is woken (by execution of the corresponding "wake" operator on another thread),
-the wait operator returns 0 ("ok"). If the timeout expires before another
-thread wakes this one, this operator returns 2 ("timed-out").
+The wait operator take three operands: an address operand, an expected
+value as an `i32`, and a relative timeout in milliseconds as an `f64`.
+
+| `timeout` value | Behavior |
+| ---- | ---- |
+| `timeout` <= 0 | Expires immediately |
+| 0 < `timeout` < Positive infinity | Expires after `timeout` milliseconds |
+| Positive infinity | Never expires |
+| NaN | Never expires |
+
+The wait operation begins by performing an atomic 32-bit load from the given
+address. If the loaded value is not equal to the expected value, the operator
+returns 1 ("not-equal"). If the values are equal, the thread is suspended. If
+the thread is woken (by execution of the corresponding "wake" operator on
+another thread), the wait operator returns 0 ("ok"). If the timeout expires
+before another thread wakes this one, this operator returns 2 ("timed-out").
 
 | Value | Description |
 | ---- | ---- |
@@ -862,18 +872,24 @@ thread wakes this one, this operator returns 2 ("timed-out").
 | 2 | "timed-out", not woken by another thread before timeout expired |
 
   * `i32.wait`: load i32 value, compare to expected, and wait for `i32.wake` at same address
-  * `i64.wait`: load i64 value, compare to expected, and wait for `i64.wake` at same address
 
 ### Wake
 
-The wake operators take two operands: an address operand, and a wake count. The
-operation will wake a maximum of "wake count" threads that are waiting on the
-same address. The operator returns the number of thread that were
-woken.
+The wake operator take two operands: an address operand, and a wake count as an
+`i32`. The operation will wake as many waiters as are waiting on the same
+effective address, up to the maximum as specified by `wake count`. The operator
+returns the number of waiters that were woken as an `i32`.
 
-  * `i32.wake`: wake up to N threads waiting on the given address via `i32.wait`
-  * `i64.wake`: wake up to N threads waiting on the given address via `i64.wait`
+| `wake count` value | Behavior |
+| ---- | ---- |
+| `wake count` < 0 | Wake all waiters |
+| `wake count` == 0 | Wake no waiters |
+| `wake count` > 0 | Wake up to `wake count` waiters |
 
+  * `i32.wake`: wake up `wake count` threads waiting on the given address via `i32.wait`
+
+[agent]: https://tc39.github.io/ecma262/#sec-agents
+[agent cluster]: https://tc39.github.io/ecma262/#sec-agent-clusters
 [future general]: FutureFeatures.md
 [future threads]: FutureFeatures.md#threads
 [future tail calls]: FutureFeatures.md#general-purpose-proper-tail-calls
