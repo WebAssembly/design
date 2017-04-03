@@ -837,9 +837,9 @@ outside the range which rounds to an integer in range) traps.
     acquiring a lock outside the `N` bytes comprising the datum, then return
     `1`. Otherwise, return `0`. Once the value of `is_lock_free` for a given
     value `N` has been observed for any [agent](agent) in an
-    [agent cluster](agent cluster) , it cannot change.
+    [agent cluster](agent cluster), it cannot change.
 
-### Wait
+### Wait and Wake operators
 
 The wake and wait operators are optimizations over busy-waiting for a value to
 change. It is a validation error to use these operators on non-shared linear
@@ -847,6 +847,12 @@ memory. They are non-atomic and have sequentially consistent memory ordering.
 
 Both wake and wait operators trap if the effective address of either operator
 is misaligned or out-of-bounds.
+
+The embedder is also permitted to suspend or wake a thread. In those cases,
+these operators will behave as though the equivalent wake or wait operation was
+performed by the execution engine.
+
+### Wait
 
 The wait operator take three operands: an address operand, an expected
 value as an `i32`, and a relative timeout in milliseconds as an `f64`.
@@ -886,7 +892,7 @@ returns the number of waiters that were woken as an `i32`.
 | `wake count` == 0 | Wake no waiters |
 | `wake count` > 0 | Wake up to `wake count` waiters |
 
-  * `i32.wake`: wake up `wake count` threads waiting on the given address via `i32.wait`
+  * `i32.wake`: wake up `min(wake count, num waiters)` threads waiting on the given address via `i32.wait`
 
 [agent]: https://tc39.github.io/ecma262/#sec-agents
 [agent cluster]: https://tc39.github.io/ecma262/#sec-agent-clusters
