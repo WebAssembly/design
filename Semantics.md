@@ -848,14 +848,15 @@ memory. They are non-atomic and have sequentially consistent memory ordering.
 Both wake and wait operators trap if the effective address of either operator
 is misaligned or out-of-bounds.
 
-The embedder is also permitted to suspend or wake a thread. In those cases,
-these operators will behave as though the equivalent wake or wait operation was
-performed by the execution engine.
+The embedder is also permitted to suspend or wake a thread. A suspended thread
+can be woken by the embedder or the wake operator, regardless of how the thread
+was suspended (e.g. via the embedder or a wait operator).
 
 ### Wait
 
-The wait operator take three operands: an address operand, an expected
-value as an `i32`, and a relative timeout in milliseconds as an `f64`.
+The wait operator take three operands: an address operand, an expected value,
+and a relative timeout in milliseconds as an `f64`. The return value is `0`,
+`1`, or `2`, returned as an `i32`.
 
 | `timeout` value | Behavior |
 | ---- | ---- |
@@ -864,25 +865,25 @@ value as an `i32`, and a relative timeout in milliseconds as an `f64`.
 | Positive infinity | Never expires |
 | NaN | Never expires |
 
-The wait operation begins by performing an atomic 32-bit load from the given
-address. If the loaded value is not equal to the expected value, the operator
-returns 1 ("not-equal"). If the values are equal, the thread is suspended. If
-the thread is woken (by execution of the corresponding "wake" operator on
-another thread), the wait operator returns 0 ("ok"). If the timeout expires
-before another thread wakes this one, this operator returns 2 ("timed-out").
-
-| Value | Description |
+| Return value | Description |
 | ---- | ---- |
-| 0 | "ok", woken by another thread |
-| 1 | "not-equal", the loaded value did not match the expected value |
-| 2 | "timed-out", not woken by another thread before timeout expired |
+| `0` | "ok", woken by another thread or the embedder |
+| `1` | "not-equal", the loaded value did not match the expected value |
+| `2` | "timed-out", not woken before timeout expired |
 
-  * `i32.wait`: load i32 value, compare to expected, and wait for `i32.wake` at same address
+The wait operation begins by performing an atomic load from the given address.
+If the loaded value is not equal to the expected value, the operator returns 1
+("not-equal"). If the values are equal, the thread is suspended. If the thread
+is woken, the wait operator returns 0 ("ok"). If the timeout expires before
+another thread wakes this one, this operator returns 2 ("timed-out").
+
+  * `i32.wait`: load i32 value, compare to expected (as `i32`), and wait for wake at same address
+  * `i64.wait`: load i64 value, compare to expected (as `i64`), and wait for wake at same address
 
 ### Wake
 
-The wake operator take two operands: an address operand, and a wake count as an
-`i32`. The operation will wake as many waiters as are waiting on the same
+The wake operator take two operands: an address operand, and a `wake count` as
+an `i32`. The operation will wake as many waiters as are waiting on the same
 effective address, up to the maximum as specified by `wake count`. The operator
 returns the number of waiters that were woken as an `i32`.
 
@@ -892,7 +893,7 @@ returns the number of waiters that were woken as an `i32`.
 | `wake count` == 0 | Wake no waiters |
 | `wake count` > 0 | Wake up to `wake count` waiters |
 
-  * `i32.wake`: wake up `min(wake count, num waiters)` threads waiting on the given address via `i32.wait`
+  * `wake`: wake up `min(wake count, num waiters)` threads waiting on the given address
 
 [agent]: https://tc39.github.io/ecma262/#sec-agents
 [agent cluster]: https://tc39.github.io/ecma262/#sec-agent-clusters

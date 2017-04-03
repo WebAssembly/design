@@ -788,8 +788,9 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
 | `is_lock_free` | `0xff00` | | |
-| `i32.wait` | `0xff01` | `memory immediate` | |
-| `i32.wake` | `0xff02` | `memory immediate` | |
+| `wake` | `0xff01` | `memory immediate` | |
+| `i32.wait` | `0xff02` | `memory immediate` | |
+| `i64.wait` | `0xff03` | `memory immediate` | |
 
 The `memory_immediate` type is encoded as follows:
 
