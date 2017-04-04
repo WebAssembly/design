@@ -3,20 +3,23 @@
 This page describes a proposal for the post-MVP
 [threads feature][future threads].
 
-## Modifications to [Portability.md][]
+## Modifications to [Portability.md](Portability.md)
 
 ...
+
 Only 32-bit atomic accesses are guaranteed to be lock-free. This matches the
 [ECMAScript specification](https://tc39.github.io/ecma262/#sec-atomics.islockfree).
 
 * Availability of lock-free atomic memory operators, when naturally aligned,
   for 32-bit accesses. At a minimum this must include an atomic
   compare-and-exchange operator (or equivalent load-linked/store-conditional).
-...
-
-## Modifications to [Semantics.md][]
 
 ...
+
+## Modifications to [Semantics.md](Semantics.md)
+
+...
+
 If the effective address of a memory access is a multiple of the alignment
 attribute value of the memory access, the memory access is considered
 *aligned*, otherwise it is considered *misaligned*.
@@ -25,9 +28,10 @@ Misaligned atomic accesses trap. For non-atomic accesses, aligned and
 misaligned accesses have the same behavior.
 
 Alignment of non-atomic accesses affects performance as follows:
+
 ...
 
-## Additions to [Semantics.md][]
+## Additions to [Semantics.md](Semantics.md)
 
 ### Shared Linear Memory
 
@@ -233,7 +237,7 @@ another thread wakes this one, this operator returns 2 ("timed-out").
   * `i32.wait`: load i32 value, compare to expected (as `i32`), and wait for wake at same address
   * `i64.wait`: load i64 value, compare to expected (as `i64`), and wait for wake at same address
 
-## Additions to [BinaryEncoding.md][]
+## Additions to [BinaryEncoding.md](BinaryEncoding.md)
 
 ### Thread operators ([described here](Semantics.md#thread-operators))
 
