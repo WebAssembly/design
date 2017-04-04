@@ -37,8 +37,8 @@ characteristics:
   processes executing on the same machine.
 * An execution environment which offers forward progress guarantees to all
   threads of execution (even when executing in a non-parallel manner).
-* Availability of lock-free atomic memory operators, when naturally aligned,
-  for 32-bit accesses. At a minimum this must include an atomic
+* Availability of lock-free atomic memory operators, when naturally aligned, for
+  8- 16- and 32-bit accesses. At a minimum this must include an atomic
   compare-and-exchange operator (or equivalent load-linked/store-conditional).
 * wasm64 additionally requires lock-free atomic memory operators, when naturally
   aligned, for 64-bit accesses.

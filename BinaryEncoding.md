@@ -161,6 +161,8 @@ A packed tuple that describes the limits of a
 | initial | `varuint32` | initial length (in units of table elements or wasm pages) |
 | maximum | `varuint32`? | only present if specified by `flags` |
 
+Note: In the [future :unicorn:][future threads], the "flags" field may be changed to `varuint32`, e.g., to include a flag for sharing between threads.
+
 ### `init_expr`
 The encoding of an [initializer expression](Modules.md#initializer-expression)
 is the normal encoding of the expression followed by the `end` opcode as a
@@ -181,7 +183,7 @@ The module starts with a preamble of two fields:
 | Field | Type | Description |
 | ----- |  ----- | ----- |
 | magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
-| version | `uint32` | Version number, currently 0xd. The version for MVP will be reset to 1. |
+| version | `uint32` | Version number, `0x1` |
 
 The module preamble is followed by a sequence of sections.
 Each section is identified by a 1-byte *section code* that encodes either a known section or a custom section.
@@ -193,8 +195,8 @@ part of the payload.
 | ----- |  ----- | ----- |
 | id | `varuint7` | section code |
 | payload_len  | `varuint32` | size of this section in bytes |
-| name_len | `varuint32` ? | length of the section name in bytes, present if `id == 0` |
-| name | `bytes` ? | section name string, present if `id == 0` |
+| name_len | `varuint32` ? | length of `name` in bytes, present if `id == 0` |
+| name | `bytes` ? | section name: valid UTF-8 byte sequence, present if `id == 0` |
 | payload_data  | `bytes` | content of this section, of length `payload_len - sizeof(name) - sizeof(name_len)` |
 
 Each known section is optional and may appear at most once. Custom sections all have the same `id` (0), and can be named non-uniquely (all bytes composing their names may be identical).
@@ -250,10 +252,10 @@ The import section declares all imports that will be used in the module.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| module_len | `varuint32` | module string length |
-| module_str | `bytes` | module string of `module_len` bytes |
-| field_len | `varuint32` | field name length |
-| field_str | `bytes` | field name string of `field_len` bytes |
+| module_len | `varuint32` | length of `module_str` in bytes |
+| module_str | `bytes` | module name: valid UTF-8 byte sequence |
+| field_len | `varuint32` | length of `field_str` in bytes |
+| field_str | `bytes` | field name: valid UTF-8 byte sequence |
 | kind | `external_kind` | the kind of definition being imported |
 
 Followed by, if the `kind` is `Function`:
@@ -353,8 +355,8 @@ The encoding of the [Export section](Modules.md#exports):
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| field_len | `varuint32` | field name string length |
-| field_str | `bytes` | field name string of `field_len` bytes |
+| field_len | `varuint32` | length of `field_str` in bytes |
+| field_str | `bytes` | field name: valid UTF-8 byte sequence |
 | kind | `external_kind` | the kind of definition being exported |
 | index | `varuint32` | the index into the corresponding [index space](Modules.md) |
 
@@ -468,8 +470,8 @@ where a `naming` is encoded as:
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | index | `varuint32` | the index which is being named |
-| name_len | `varuint32` | number of bytes in name_str |
-| name_str | `bytes` | binary encoding of the name |
+| name_len | `varuint32` | length of `name_str` in bytes |
+| name_str | `bytes` | UTF-8 encoding of the name |
 
 #### Function names
 
@@ -626,7 +628,8 @@ As implied by the `log2(alignment)` encoding, the alignment must be a power of 2
 As an additional validation criteria, the alignment must be less or equal to 
 natural alignment. The bits after the
 `log(memory-access-size)` least-significant bits must be set to 0. These bits
-are reserved for use (e.g., for shared memory ordering requirements).
+are reserved for [future :unicorn:][future threads] use
+(e.g., for shared memory ordering requirements).
 
 The `reserved` immediate to the `current_memory` and `grow_memory` operators is
 for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
@@ -783,167 +786,9 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `f32.reinterpret/i32` | `0xbe` | | |
 | `f64.reinterpret/i64` | `0xbf` | | |
 
-## Thread operators ([described here](Semantics.md#thread-operators))
-
-| Name | Opcode | Immediate | Description |
-| ---- | ---- | ---- | ---- |
-| `is_lock_free` | `0xff00` | | |
-| `wake` | `0xff01` | `memory immediate` | |
-| `i32.wait` | `0xff02` | `memory immediate` | |
-| `i64.wait` | `0xff03` | `memory immediate` | |
-
-The `memory_immediate` type is encoded as follows:
-
-| Name | Type | Description |
-| ---- | ---- | ---- |
-| flags | `varuint32` | a bitfield which currently must be 0 |
-| offset | `varuint32` | the value of the offset |
-
-## Atomic read-modify-write operators ([described here](Semantics.md#atomic-memory-accesses))
-
-| Name | Opcode | Immediates | Description |
-| ---- | ---- | ---- | ---- |
-| `i32.atomic.rmw.add` | `0xff10` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic.rmw.add` | `0xff11` | `0` `memory immediate` | atomic add to memory |
-| `i32.atomic.rmw8_s.add` | `0xff12` | `0` `memory immediate` | atomic add to memory |
-| `i32.atomic.rmw8_u.add` | `0xff13` | `0` `memory immediate` | atomic add to memory |
-| `i32.atomic.rmw16_s.add` | `0xff14` | `0` `memory immediate` | atomic add to memory |
-| `i32.atomic.rmw16_u.add` | `0xff15` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic.rmw8_s.add` | `0xff16` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic.rmw8_u.add` | `0xff17` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic.rmw16_s.add` | `0xff18` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic.rmw16_u.add` | `0xff19` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic.rmw32_s.add` | `0xff1a` | `0` `memory immediate` | atomic add to memory |
-| `i64.atomic.rmw32_u.add` | `0xff1b` | `0` `memory immediate` | atomic add to memory |
-| `i32.atomic.rmw.sub` | `0xff10` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic.rmw.sub` | `0xff11` | `1` `memory immediate` | atomic sub from memory |
-| `i32.atomic.rmw8_s.sub` | `0xff12` | `1` `memory immediate` | atomic sub from memory |
-| `i32.atomic.rmw8_u.sub` | `0xff13` | `1` `memory immediate` | atomic sub from memory |
-| `i32.atomic.rmw16_s.sub` | `0xff14` | `1` `memory immediate` | atomic sub from memory |
-| `i32.atomic.rmw16_u.sub` | `0xff15` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic.rmw8_s.sub` | `0xff16` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic.rmw8_u.sub` | `0xff17` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic.rmw16_s.sub` | `0xff18` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic.rmw16_u.sub` | `0xff19` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic.rmw32_s.sub` | `0xff1a` | `1` `memory immediate` | atomic sub from memory |
-| `i64.atomic.rmw32_u.sub` | `0xff1b` | `1` `memory immediate` | atomic sub from memory |
-| `i32.atomic.rmw.and` | `0xff10` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic.rmw.and` | `0xff11` | `2` `memory immediate` | atomic and with memory |
-| `i32.atomic.rmw8_s.and` | `0xff12` | `2` `memory immediate` | atomic and with memory |
-| `i32.atomic.rmw8_u.and` | `0xff13` | `2` `memory immediate` | atomic and with memory |
-| `i32.atomic.rmw16_s.and` | `0xff14` | `2` `memory immediate` | atomic and with memory |
-| `i32.atomic.rmw16_u.and` | `0xff15` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic.rmw8_s.and` | `0xff16` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic.rmw8_u.and` | `0xff17` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic.rmw16_s.and` | `0xff18` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic.rmw16_u.and` | `0xff19` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic.rmw32_s.and` | `0xff1a` | `2` `memory immediate` | atomic and with memory |
-| `i64.atomic.rmw32_u.and` | `0xff1b` | `2` `memory immediate` | atomic and with memory |
-| `i32.atomic.rmw.or` | `0xff10` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic.rmw.or` | `0xff11` | `3` `memory immediate` | atomic or with memory |
-| `i32.atomic.rmw8_s.or` | `0xff12` | `3` `memory immediate` | atomic or with memory |
-| `i32.atomic.rmw8_u.or` | `0xff13` | `3` `memory immediate` | atomic or with memory |
-| `i32.atomic.rmw16_s.or` | `0xff14` | `3` `memory immediate` | atomic or with memory |
-| `i32.atomic.rmw16_u.or` | `0xff15` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic.rmw8_s.or` | `0xff16` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic.rmw8_u.or` | `0xff17` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic.rmw16_s.or` | `0xff18` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic.rmw16_u.or` | `0xff19` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic.rmw32_s.or` | `0xff1a` | `3` `memory immediate` | atomic or with memory |
-| `i64.atomic.rmw32_u.or` | `0xff1b` | `3` `memory immediate` | atomic or with memory |
-| `i32.atomic.rmw.xor` | `0xff10` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic.rmw.xor` | `0xff11` | `4` `memory immediate` | atomic xor with memory |
-| `i32.atomic.rmw8_s.xor` | `0xff12` | `4` `memory immediate` | atomic xor with memory |
-| `i32.atomic.rmw8_u.xor` | `0xff13` | `4` `memory immediate` | atomic xor with memory |
-| `i32.atomic.rmw16_s.xor` | `0xff14` | `4` `memory immediate` | atomic xor with memory |
-| `i32.atomic.rmw16_u.xor` | `0xff15` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic.rmw8_s.xor` | `0xff16` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic.rmw8_u.xor` | `0xff17` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic.rmw16_s.xor` | `0xff18` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic.rmw16_u.xor` | `0xff19` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic.rmw32_s.xor` | `0xff1a` | `4` `memory immediate` | atomic xor with memory |
-| `i64.atomic.rmw32_u.xor` | `0xff1b` | `4` `memory immediate` | atomic xor with memory |
-| `i32.atomic.rmw.xchg` | `0xff10` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic.rmw.xchg` | `0xff11` | `5` `memory immediate` | atomic exchange with memory |
-| `i32.atomic.rmw8_s.xchg` | `0xff12` | `5` `memory immediate` | atomic exchange with memory |
-| `i32.atomic.rmw8_u.xchg` | `0xff13` | `5` `memory immediate` | atomic exchange with memory |
-| `i32.atomic.rmw16_s.xchg` | `0xff14` | `5` `memory immediate` | atomic exchange with memory |
-| `i32.atomic.rmw16_u.xchg` | `0xff15` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic.rmw8_s.xchg` | `0xff16` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic.rmw8_u.xchg` | `0xff17` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic.rmw16_s.xchg` | `0xff18` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic.rmw16_u.xchg` | `0xff19` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic.rmw32_s.xchg` | `0xff1a` | `5` `memory immediate` | atomic exchange with memory |
-| `i64.atomic.rmw32_u.xchg` | `0xff1b` | `5` `memory immediate` | atomic exchange with memory |
-
-The `memory_immediate` type is encoded as follows:
-
-| Name | Type | Description |
-| ---- | ---- | ---- |
-| flags | `varuint32` | a bitfield which currently must be 0 |
-| offset | `varuint32` | the value of the offset |
-
-## Atomic compare exchange operators ([described here](Semantics.md#atomic-memory-accesses))
-
-| Name | Opcode | Immediate | Description |
-| ---- | ---- | ---- | ---- |
-| `i32.atomic.rmw.cmpxchg` | `0xff1c` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.rmw.cmpxchg` | `0xff1d` | `memory immediate` | atomic compare exchange with memory |
-| `i32.atomic.rmw8_s.cmpxchg` | `0xff1e` | `memory immediate` | atomic compare exchange with memory |
-| `i32.atomic.rmw8_u.cmpxchg` | `0xff1f` | `memory immediate` | atomic compare exchange with memory |
-| `i32.atomic.rmw16_s.cmpxchg` | `0xff20` | `memory immediate` | atomic compare exchange with memory |
-| `i32.atomic.rmw16_u.cmpxchg` | `0xff21` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.rmw8_s.cmpxchg` | `0xff22` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.rmw8_u.cmpxchg` | `0xff23` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.rmw16_s.cmpxchg` | `0xff24` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.rmw16_u.cmpxchg` | `0xff25` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.rmw32_s.cmpxchg` | `0xff26` | `memory immediate` | atomic compare exchange with memory |
-| `i64.atomic.rmw32_u.cmpxchg` | `0xff27` | `memory immediate` | atomic compare exchange with memory |
-
-The `memory_immediate` type is encoded as follows:
-
-| Name | Type | Description |
-| ---- | ---- | ---- |
-| flags | `varuint32` | a bitfield which currently must be 0 |
-| offset | `varuint32` | the value of the offset |
-
-## Atomic load/store operators ([described here](Semantics.md#atomic-memory-accesses))
-
-| Name | Opcode | Immediate | Description |
-| ---- | ---- | ---- | ---- |
-| `i32.atomic.load` | `0xff28` | `memory immediate` | atomic load from memory |
-| `i64.atomic.load` | `0xff29` | `memory immediate` | atomic load from memory |
-| `f32.atomic.load` | `0xff2a` | `memory immediate` | atomic load from memory |
-| `f64.atomic.load` | `0xff2b` | `memory immediate` | atomic load from memory |
-| `i32.atomic.load8_s` | `0xff2c` | `memory immediate` | atomic load from memory |
-| `i32.atomic.load8_u` | `0xff2d` | `memory immediate` | atomic load from memory |
-| `i32.atomic.load16_s` | `0xff2e` | `memory immediate` | atomic load from memory |
-| `i32.atomic.load16_u` | `0xff2f` | `memory immediate` | atomic load from memory |
-| `i64.atomic.load8_s` | `0xff30` | `memory immediate` | atomic load from memory |
-| `i64.atomic.load8_u` | `0xff31` | `memory immediate` | atomic load from memory |
-| `i64.atomic.load16_s` | `0xff32` | `memory immediate` | atomic load from memory |
-| `i64.atomic.load16_u` | `0xff33` | `memory immediate` | atomic load from memory |
-| `i64.atomic.load32_s` | `0xff34` | `memory immediate` | atomic load from memory |
-| `i64.atomic.load32_u` | `0xff35` | `memory immediate` | atomic load from memory |
-| `i32.atomic.store` | `0xff36` | `memory immediate` | atomic store to memory |
-| `i64.atomic.store` | `0xff37` | `memory immediate` | atomic store to memory |
-| `f32.atomic.store` | `0xff38` | `memory immediate` | atomic store to memory |
-| `f64.atomic.store` | `0xff39` | `memory immediate` | atomic store to memory |
-| `i32.atomic.store8` | `0xff3a` | `memory immediate` | atomic store to memory |
-| `i32.atomic.store16` | `0xff3b` | `memory immediate` | atomic store to memory |
-| `i64.atomic.store8` | `0xff3c` | `memory immediate` | atomic store to memory |
-| `i64.atomic.store16` | `0xff3d` | `memory immediate` | atomic store to memory |
-| `i64.atomic.store32` | `0xff3e` | `memory immediate` | atomic store to memory |
-
-The `memory_immediate` type is encoded as follows:
-
-| Name | Type | Description |
-| ---- | ---- | ---- |
-| flags | `varuint32` | a bitfield which currently must be 0 |
-| offset | `varuint32` | the value of the offset |
-
 [future general]: FutureFeatures.md
 [future multiple return]: FutureFeatures.md#multiple-return
+[future threads]: FutureFeatures.md#threads
 [future types]: FutureFeatures.md#more-table-operators-and-types
 [future multiple tables]: FutureFeatures.md#multiple-tables-and-memories
 [future compression]: https://github.com/WebAssembly/decompressor-prototype/blob/master/CompressionLayer1.md
