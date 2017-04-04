@@ -130,14 +130,11 @@ the ES6 module system](Modules.md#integration-with-es6-modules).
 
 ### Names
 
-A WebAssembly module imports and exports functions. WebAssembly names functions
-using arbitrary-length byte sequences. Any 8-bit values are permitted in a
-WebAssembly name, including the null byte and byte sequences that don't
-correspond to any Unicode code point regardless of encoding. The most natural
-Web representation of a mapping of function names to functions is a JS object
-in which each function is a property. Property names in JS are UTF-16 encoded
-strings. A WebAssembly module may fail validation on the Web if it imports or
-exports functions whose names do not transcode cleanly to UTF-16 according to
+A WebAssembly module can have imports and exports, which are identified using
+UTF-8 byte sequences. The most natural Web representation of a mapping of export
+names to exports is a JS object in which each export is a property with a name
+encoded in UTF-16. A WebAssembly module fails validation on the Web if it has
+imports or exports whose names do not transcode cleanly to UTF-16 according to
 the following conversion algorithm, assuming that the WebAssembly name is in a
 `Uint8Array` called `array`:
 
