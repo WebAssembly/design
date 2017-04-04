@@ -205,7 +205,7 @@ Custom sections are intended to be used for debugging information, future evolut
 
 If a WebAssembly implementation interprets the payload of any custom section during module validation or compilation, errors in that payload must not invalidate the module.
 
-Known sections from the list below may not appear out of order, while custom sections may be interspersed before, between, as well as after any of the elements of the list, in any order. Certain custom sections may have their own ordering and cardinality requirements. For example, the [Name section](#name-section) is expected to appear at most once, immediately after the Data section. Violation of such requirements may at most cause an implementatin to ignore the section, while not invalidating the module.
+Known sections from the list below may not appear out of order, while custom sections may be interspersed before, between, as well as after any of the elements of the list, in any order. Certain custom sections may have their own ordering and cardinality requirements. For example, the [Name section](#name-section) is expected to appear at most once, immediately after the Data section. Violation of such requirements may at most cause an implementation to ignore the section, while not invalidating the module.
 
 The content of each section is encoded in its `payload_data`.
 
