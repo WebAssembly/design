@@ -295,6 +295,7 @@ A packed tuple that describes the limits of a
 The `resizable_limits` flags field is defined by the following bits:
 
 | Bit (counting from lsb) | If not set | If set |
+| ---- | ---- | ---- |
 | 0 | maximum field is not present | maximum field is present |
 | 1 | the table or memory is not shared | the table or memory is shared |
 
