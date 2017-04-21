@@ -157,6 +157,16 @@ Store operators do not produce a value.
 
 The above operators operate on the [default linear memory](#linear-memory).
 
+The opcode `get_field` is introduced to avoid duplicating the memory-related
+operators for loading and storing values from/to a memory location, while
+providing type safety when accessing the memory location.
+
+Note that `i32.load8_s(get_field(object, type_index, field_index))` should
+only be allowed if `field_index` is actually of type `i8`. This may be relaxed
+to allow any data type to be read regardless of the field type as far as the
+field is not of type `obj`. See also the security notes on [Typed Object's
+opacity](https://github.com/nikomatsakis/typed-objects-explainer/blob/master/core.md#opacity).
+
 ### Addressing
 
 Each linear memory access operator has an address operand and an unsigned
@@ -664,6 +674,15 @@ round-to-nearest ties-to-even rounding.
 Truncation from floating point to integer where IEEE 754-2008 would specify an
 invalid operator exception (e.g. when the floating point value is NaN or
 outside the range which rounds to an integer in range) traps.
+
+## Type casting
+
+Upcasts can be verified by the validator and optimized out since they are a
+no-op. At runtime, checks should verify that a runtime type must be compatible
+with the target type for a downcast.
+
+Upcast cannot fail at runtime. Downcast can fail at runtime, for the same
+reasons that C++'s `dynamic_cast` can fail, and cause a trap.
 
 ## Type-parametric operators
 
