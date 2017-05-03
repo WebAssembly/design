@@ -136,7 +136,7 @@ match, the locations are easily understandable and the same across browsers.
 To achive the same goal of a common representations for WebAssembly constructs, the
 following conventions are adopted.
 
-A wasm location is a reference to a particular instruction in the binary, and may be
+A WebAssembly location is a reference to a particular instruction in the binary, and may be
 displayed by a browser or engine in similar contexts as JavaScript source locations.
 It has the following format:
 `${url}:wasm-function[${funcIndex}]:0x${pcOffset}`
@@ -158,12 +158,12 @@ Names of functions may also be displayed if the module contains a `"name"`
 section; these can be used in the same contexts as JavaScript functions.
 If there are no names provided, then engines should somehow indicate this;
 (it may be sufficient to simply use e.g. an empty string if the name is
-immediately adjacent to a wasm location, as its format clearly indicates
-that the function is a wasm function). Note also that this document does
+immediately adjacent to a WebAssembly location, as its format clearly indicates
+that the function is a WebAssembly function). Note also that this document does
 not specify the full format of strings such as stack frame representations;
 this allows engines to continue using their existing formats for JavaScript
 (which existing code may already be depending on) while still printing
-wasm frames in a format consistent with JavaScript.
+WebAssembly frames in a format consistent with JavaScript.
 
 ## Modules
 
