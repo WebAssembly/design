@@ -187,7 +187,7 @@ is more convenient if the VM itself uses the information (for example to
 generate a stack trace). However existing developer tools implementations are
 designed around the source map model of passing a URL from the VM to the dev
 tools code, which fetches and interprets the information. Therefore it is
-epxected that it will be much simpler to use "real" source maps than to design
+expected that it will be much simpler to use "real" source maps than to design
 another format.
 
 Source maps also have known limitations (e.g. source variables cannot be
