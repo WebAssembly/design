@@ -123,6 +123,48 @@ MIME type mismatch or `opaque` response types
 [reject](http://tc39.github.io/ecma262/#sec-rejectpromise) the Promise with a
 `WebAssembly.CompileError`.
 
+## Developer-facing display conventions
+
+Browsers, JavaScript engines, and offline tools have common ways of referring to
+JavaScript artifacts and language constructs. For example, locations in
+JavaScript source code are printed in stack traces or error messages, and are
+represented naturally as decimal-format lines and columns in text files. Names
+of functions and variables are taken directly from the sources. Therefore (for
+example) even though the exact format of Error.stack strings does not always
+match, the locations are easily understandable and the same across browsers.
+
+To achive the same goal of a common representations for WebAssembly constructs, the
+following conventions are adopted.
+
+A wasm location is a reference to a particular instruction in the binary, and may be
+displayed by a browser or engine in similar contexts as JavaScript source locations.
+It has the following format:
+`${url}:wasm-function[${funcIndex}]:0x${pcOffset}`
+Where
+* `${url}` is the URL associated with the module (e.g. via a response object), if any.
+* `${funcIndex}` is an index the [function index space](https://github.com/WebAssembly/design/blob/master/Modules.md#function-index-space).
+* `${pcOffset}` is the offset in the module binary of the first byte of the instruction, printed in hexadecimal with lower-case digits.
+
+Notes:
+* The URL field may be interpreted differently depending on the context. For
+example offline tools may use a file name; or when the ArrayBuffer-based
+`WebAssembly.instantiate` API is used in a browser, it may display the
+location of the API call instead.
+* Using hexadecimal for module offsets matches common conventions in native tools
+such as objdump (where addresses are printed in hex) and makes them visually
+distinct from JavaScript line numbers. Other numbers are represented in decimal.
+
+Names of functions may also be displayed if the module contains a `"name"`
+section; these can be used in the same contexts as JavaScript functions.
+If there are no names provided, then engines should somehow indicate this;
+(it may be sufficient to simply use e.g. an empty string if the name is
+immediately adjacent to a wasm location, as its format clearly indicates
+that the function is a wasm function). Note also that this document does
+not specify the full format of strings such as stack frame representations;
+this allows engines to continue using their existing formats for JavaScript
+(which existing code may already be depending on) while still printing
+wasm frames in a format consistent with JavaScript.
+
 ## Modules
 
 WebAssembly's [modules](Modules.md) allow for natural [integration with
