@@ -139,27 +139,32 @@ following conventions are adopted.
 A WebAssembly location is a reference to a particular instruction in the binary, and may be
 displayed by a browser or engine in similar contexts as JavaScript source locations.
 It has the following format:
-`${url}:wasm-function[${funcIndex}]:0x${pcOffset}`
+`${url}:wasm-function[${funcIndex}]:${pcOffset}`
 Where
-* `${url}` is the URL associated with the module (e.g. via a response object), if any.
-* `${funcIndex}` is an index the [function index space](https://github.com/WebAssembly/design/blob/master/Modules.md#function-index-space).
-* `${pcOffset}` is the offset in the module binary of the first byte of the instruction, printed in hexadecimal with lower-case digits.
+* `${url}` is the URL associated with the module (e.g. via a response
+  object), or other module identifier (see notes).
+* `${funcIndex}` is an index the [function index space](Modules.md#function-index-space).
+* `${pcOffset}` is the offset in the module binary of the first byte
+  of the instruction, printed in hexadecimal with lower-case digits,
+  with a leading `0x` prefix.
 
 Notes:
 * The URL field may be interpreted differently depending on the context. For
 example offline tools may use a file name; or when the ArrayBuffer-based
 `WebAssembly.instantiate` API is used in a browser, it may display the
-location of the API call instead.
+location of the API call instead. It should not be empty however; a
+developer should be able to write their code such that modules from
+different sources are displayed with different identifiers.
 * Using hexadecimal for module offsets matches common conventions in native tools
 such as objdump (where addresses are printed in hex) and makes them visually
 distinct from JavaScript line numbers. Other numbers are represented in decimal.
 
 Names of functions may also be displayed if the module contains a `"name"`
 section; these can be used in the same contexts as JavaScript functions.
-If there are no names provided, then engines should somehow indicate this;
-(it may be sufficient to simply use e.g. an empty string if the name is
-immediately adjacent to a WebAssembly location, as its format clearly indicates
-that the function is a WebAssembly function). Note also that this document does
+If there are no names provided, then engines should simply ensure that
+the location can still be identified (e.g. by showing the function
+number instead, if the full location is not already being shown).
+Note also that this document does
 not specify the full format of strings such as stack frame representations;
 this allows engines to continue using their existing formats for JavaScript
 (which existing code may already be depending on) while still printing
