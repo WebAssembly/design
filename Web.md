@@ -69,7 +69,7 @@ from the `Response`, WebAssembly `source` data must have a MIME type of `applica
 extra parameters are not allowed (including empty `application/wasm;`).
 MIME type mismatch or `opaque` response types
 [reject](http://tc39.github.io/ecma262/#sec-rejectpromise) the Promise with a
-`WebAssembly.CompileError`.
+`TypeError`.
 
 #### `WebAssembly.instantiate`
 
