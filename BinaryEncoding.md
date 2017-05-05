@@ -451,6 +451,8 @@ be skipped over by an engine. The current list of valid `name_type` codes are:
 | --------- | ---- | ----------- |
 | [Function](#function-names) | `1` | Assigns names to functions |
 | [Local](#local-names) | `2` | Assigns names to locals in functions |
+| [Module](#module-name) | `3` | Assigns a name to the module |
+
 
 When present, name subsections must appear in this order and at most once. The
 end of the last subsection must coincide with the last byte of the name
@@ -497,6 +499,16 @@ where a `local_name` is encoded as:
 | ----- | ---- | ----------- |
 | index | `varuint32` | the index of the function whose locals are being named |
 | local_map | `name_map` | assignment of names to local indices |
+
+#### Module name
+
+The module name subsection assigns a name to the module itself. It simply
+consists of a single string:
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| name_len | `varuint32` | length of `name_str` in bytes |
+| name_str | `bytes` | UTF-8 encoding of the name |
 
 # Function Bodies
 
