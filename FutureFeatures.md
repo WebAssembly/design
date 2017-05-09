@@ -561,3 +561,13 @@ static signature validation check. This could be improved by allowing:
   check of a call to a heterogeneous table;
 * any other specific GC reference type, effectively allowing WebAssembly code
   to implement a variety of rooting API schemes.
+
+### Memset and Memcpy Operators
+
+Copying and clearing large memory regions is very common. This can be done in
+the MVP via `i32.load` and `i32.store`, but this is not very fast. The
+following operators can be added to improve performance:
+
+* `move_memory`: Copy data from one memory region to another region, even if overlapping
+* `zero_memory`: Set all bytes in a memory region to zero
+* `set_memory`: Set all bytes in a memory region to a given byte
