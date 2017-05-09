@@ -564,10 +564,15 @@ static signature validation check. This could be improved by allowing:
 
 ### Memset and Memcpy Operators
 
-Copying and clearing large memory regions is very common. This can be done in
-the MVP via `i32.load` and `i32.store`, but this is not very fast. The
-following operators can be added to improve performance:
+Copying and clearing large memory regions is very common, and making these
+operations fast is architecture dependent. Although this can be done in the MVP
+via `i32.load` and `i32.store`, this requires more bytes of code and forces VMs
+to recognize the loops as well. The following operators can be added to improve
+performance:
 
-* `move_memory`: Copy data from one memory region to another region, even if overlapping
+* `move_memory`: Copy data from one memory region to another region, copying backward if the regions overlap
 * `zero_memory`: Set all bytes in a memory region to zero
 * `set_memory`: Set all bytes in a memory region to a given byte
+
+We expect that WebAssembly producers will use these operations when the region
+size is known to be large, and will use loads/stores otherwise.
