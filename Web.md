@@ -139,22 +139,27 @@ following conventions are adopted.
 A WebAssembly location is a reference to a particular instruction in the binary, and may be
 displayed by a browser or engine in similar contexts as JavaScript source locations.
 It has the following format:
-`${url}:wasm-function[${funcIndex}]:${pcOffset}`
+`${id}:wasm-function[${funcIndex}]:${pcOffset}`
 Where
-* `${url}` is the URL associated with the module (e.g. via a response
-  object), or other module identifier (see notes).
-* `${funcIndex}` is an index the [function index space](Modules.md#function-index-space).
+* `${id}` is an identifier associated with the module (e.g. a URL,
+     [module name](BinaryEncoding.md#name-section) or other identifier (see notes).
+* `${funcIndex}` is an index in the [function index space](Modules.md#function-index-space).
 * `${pcOffset}` is the offset in the module binary of the first byte
   of the instruction, printed in hexadecimal with lower-case digits,
   with a leading `0x` prefix.
 
 Notes:
-* The URL field may be interpreted differently depending on the context. For
-example offline tools may use a file name; or when the ArrayBuffer-based
-`WebAssembly.instantiate` API is used in a browser, it may display the
-location of the API call instead. It should not be empty however; a
-developer should be able to write their code such that modules from
-different sources are displayed with different identifiers.
+* The ID field may be interpreted differently depending on the
+context. If the module has a name section with a
+[module name](BinaryEncoding.md#name-section), that should be
+preferred. Otherwise, there are several possiblities: offline tools
+may use a file name; when the response-based
+instantiation [API](#additional-web-embedding-api) is used in a
+browser, the associated URL should be used;
+or when the ArrayBuffer-based instantiation
+[API](JS.md#webassembly-instantiate) is used, the browser may use its best
+effort at showing the location of the API call instead (this may be imprecise,
+e.g. if the call is part of JS code evaluated with `eval`).
 * Using hexadecimal for module offsets matches common conventions in native tools
 such as objdump (where addresses are printed in hex) and makes them visually
 distinct from JavaScript line numbers. Other numbers are represented in decimal.
