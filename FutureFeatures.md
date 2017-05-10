@@ -572,8 +572,8 @@ performance:
 
 * `move_memory`: Copy data from a source memory region to destination region;
    these regions may overlap: the copy is performed as if the source region was 
-   first copied to a temporary buffer, then copied from this temporary buffer 
-   to the destination region
+   first copied to a temporary buffer, then the temporary buffer is copied to
+   the destination region
 * `set_memory`: Set all bytes in a memory region to a given byte
 
 We expect that WebAssembly producers will use these operations when the region
