@@ -208,9 +208,9 @@ comments per se), some simple reinterpretation of concepts is needed.
 
 Source maps specify how to map a (zero-based) line and column position in
 generated code to a file, line, and column location in the source. For
-wasm binary locations, the line number is always 0, and the column number
+wasm binary locations, the line number is always 1, and the column number
 is interpreted as a byte offset into the wasm binary content (this results
-in a more efficient encoding than using the line number instead).
+in a more efficient encoding than using the line number field instead).
 Source locations are interpreted as in the source map spec.
 
 #### Linking generated code to source maps
@@ -218,7 +218,7 @@ Source locations are interpreted as in the source map spec.
 When the generated code is JavaScript, it includes a specially-formatted line
 at the end, which is the URL of the associated source map. For wasm, a custom
 section named `"sourceMappingURL"` contains the URL.
-The URL is defined as in the the WHATWG
+The URL is defined as in the WHATWG
 [URL spec](http://url.spec.whatwg.org), and is
 resolved according to the source map spec,
 For wasm modules with an associated HTTP response (e.g. those using
