@@ -218,11 +218,13 @@ Source locations are interpreted as in the source map spec.
 When the generated code is JavaScript, it includes a specially-formatted line
 at the end, which is the URL of the associated source map. For wasm, a custom
 section named `"sourceMappingURL"` contains the URL.
-As with source maps,
-the URL is defined as in [RFC3986](https://tools.ietf.org/html/rfc3986) (e.g.
-it must be percent-encoded if necessary) and it may be a data URI. The URL
-is also resolved according to the source map spec, and may also be specified
-with the `SourceMap:` HTTP header.
+The URL is defined as in the the WHATWG
+[URL spec](http://url.spec.whatwg.org), and is
+resolved according to the source map spec,
+For wasm modules with an associated HTTP response (e.g. those using
+the response-based compile or instantiation
+[APIs](#additional-web-embedding-api)) the URL may also be specified
+using the `SourceMap:` HTTP header as with JavaScript source maps.
 
 
 
