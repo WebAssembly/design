@@ -449,9 +449,9 @@ be skipped over by an engine. The current list of valid `name_type` codes are:
 
 | Name Type | Code | Description |
 | --------- | ---- | ----------- |
+| [Module](#module-name) | `0` | Assigns a name to the module |
 | [Function](#function-names) | `1` | Assigns names to functions |
 | [Local](#local-names) | `2` | Assigns names to locals in functions |
-| [Module](#module-name) | `3` | Assigns a name to the module |
 
 
 When present, name subsections must appear in this order and at most once. The
