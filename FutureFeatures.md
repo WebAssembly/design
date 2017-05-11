@@ -578,3 +578,5 @@ performance:
 
 We expect that WebAssembly producers will use these operations when the region
 size is known to be large, and will use loads/stores otherwise.
+
+TODO: determine how these operations interact w/ shared memory.
