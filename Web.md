@@ -139,36 +139,42 @@ following conventions are adopted.
 A WebAssembly location is a reference to a particular instruction in the binary, and may be
 displayed by a browser or engine in similar contexts as JavaScript source locations.
 It has the following format:
-`${id}:wasm-function[${funcIndex}]:${pcOffset}`
+`${url}:wasm-function[${funcIndex}]:${pcOffset}`
 Where
-* `${id}` is an identifier associated with the module (e.g. a URL,
-     [module name](BinaryEncoding.md#name-section) or other identifier (see notes).
+* `${url}` is the URL associated with the module, if applicable (see notes).
 * `${funcIndex}` is an index in the [function index space](Modules.md#function-index-space).
 * `${pcOffset}` is the offset in the module binary of the first byte
   of the instruction, printed in hexadecimal with lower-case digits,
   with a leading `0x` prefix.
 
 Notes:
-* The ID field may be interpreted differently depending on the
-context. If the module has a name section with a
-[module name](BinaryEncoding.md#name-section), that should be
-preferred. Otherwise, there are several possiblities: offline tools
-may use a file name; when the response-based
+* The URL field may be interpreted differently depending on the
+context. For example, offline tools may use a filename instead.
+When the response-based
 instantiation [API](#additional-web-embedding-api) is used in a
-browser, the associated URL should be used;
-or when the ArrayBuffer-based instantiation
-[API](JS.md#webassembly-instantiate) is used, the browser may use its best
-effort at showing the location of the API call instead (this may be imprecise,
-e.g. if the call is part of JS code evaluated with `eval`).
+browser, the associated URL should be used; or when the
+ArrayBuffer-based instantiation
+[API](JS.md#webassembly-instantiate) is used, the browser should represent
+the location of the API call.  This representation should be consistent with how
+the browser otherwise represents JavaScript locations; this will necessarily
+handle corner cases such as code evaluated with `eval`, and will differ between
+browsers.
 * Using hexadecimal for module offsets matches common conventions in native tools
 such as objdump (where addresses are printed in hex) and makes them visually
 distinct from JavaScript line numbers. Other numbers are represented in decimal.
 
-Names of functions may also be displayed if the module contains a `"name"`
-section; these can be used in the same contexts as JavaScript functions.
-If there are no names provided, then engines should simply ensure that
-the location can still be identified (e.g. by showing the function
-number instead, if the full location is not already being shown).
+Names of functions may also be displayed if the module contains a
+["name" section](BinaryEncoding.md#name-section);
+these can be used in the same contexts as JavaScript functions.
+If the module's name section includes both module and function names, it
+should be represented as `${module_name}.${function_name}`.
+If the function name is absent, then the output can be context-dependent.
+For example, if the function name is shown alongside its location in a
+stack trace, then just the module name (if present) or an empty string
+can be used, because the function index is shown with the location.
+Otherwise a representation that indicates the function index should be
+used.
+
 Note also that this document does
 not specify the full format of strings such as stack frame representations;
 this allows engines to continue using their existing formats for JavaScript
