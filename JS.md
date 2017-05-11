@@ -31,6 +31,11 @@ Whenever a [stack overflow](Semantics.md#stack-overflow) is happening in
 WebAssembly code, the same exception is thrown as for a stack overflow in
 JavaScript.
 
+## Out of Memory
+
+Whenever validation, compilation or instantiation run out of memory, the
+same exception is thrown as for out of memory conditions in JavaScript.
+
 ## The `WebAssembly` object
 
 The `WebAssembly` object is the initial value of the `WebAssembly` property of
