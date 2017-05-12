@@ -139,7 +139,9 @@ following conventions are adopted.
 A WebAssembly location is a reference to a particular instruction in the binary, and may be
 displayed by a browser or engine in similar contexts as JavaScript source locations.
 It has the following format:
+
 `${url}:wasm-function[${funcIndex}]:${pcOffset}`
+
 Where
 * `${url}` is the URL associated with the module, if applicable (see notes).
 * `${funcIndex}` is an index in the [function index space](Modules.md#function-index-space).
@@ -153,14 +155,14 @@ context. When the response-based
 instantiation [API](#additional-web-embedding-api) is used in a
 browser, the associated URL should be used; or when the
 ArrayBuffer-based instantiation
-[API](JS.md#webassembly-instantiate) is used, the browser should represent
+[API](JS.md#webassemblyinstantiate) is used, the browser should represent
 the location of the API call. This kind of instantiation is analagous to
 executing JavaScript using `eval`; therefore if the browser has an existing
 method to represent the location of the `eval` call it can use a similar
 one for `WebAssembly.instantiate`. For example if the browser uses
-`foo.js line 10 > eval` or `(eval at bar (foo.js:10:3)` for `eval`, it could
+`foo.js line 10 > eval` or `eval at bar (foo.js:10:3)` for `eval`, it could
 use `foo.js line 10 > WebAssembly.instantiate` or
-`(WebAssembly.instantiate at bar (foo.js:10:3)`, respectively.
+`WebAssembly.instantiate at bar (foo.js:10:3)`, respectively.
 Offline tools may use a filename instead.
 * Using hexadecimal for module offsets matches common conventions in native tools
 such as objdump (where addresses are printed in hex) and makes them visually
