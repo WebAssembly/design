@@ -67,8 +67,11 @@ MIME type information is
 [`extracted`](https://fetch.spec.whatwg.org/#concept-header-extract-mime-type)
 from the `Response`, WebAssembly `source` data must have a MIME type of `application/wasm`,
 extra parameters are not allowed (including empty `application/wasm;`).
-MIME type mismatch or `opaque` response types
-[reject](http://tc39.github.io/ecma262/#sec-rejectpromise) the Promise with a
+A MIME type mismatch, a response whose
+[type](https://fetch.spec.whatwg.org/#concept-response-type) is not "basic", "cors", or
+"default", or a response whose status is not an
+[ok status](https://fetch.spec.whatwg.org/#ok-status), must cause the Promise to be
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
 `TypeError`.
 
 #### `WebAssembly.instantiate`
@@ -119,8 +122,11 @@ MIME type information is
 [`extracted`](https://fetch.spec.whatwg.org/#concept-header-extract-mime-type)
 from the `Response`, WebAssembly `source` data must have a MIME type of `application/wasm`,
 extra parameters are not allowed (including empty `application/wasm;`).
-MIME type mismatch or `opaque` response types
-[reject](http://tc39.github.io/ecma262/#sec-rejectpromise) the Promise with a
+A MIME type mismatch, a response whose
+[type](https://fetch.spec.whatwg.org/#concept-response-type) is not "basic", "cors", or
+"default", or a response whose status is not an
+[ok status](https://fetch.spec.whatwg.org/#ok-status), must cause the Promise to be
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
 `WebAssembly.CompileError`.
 
 ## Modules
