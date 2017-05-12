@@ -619,7 +619,7 @@ accessor function performs the following steps:
 If `this` is not a `WebAssembly.Memory`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown. Otherwise return `M.[[BufferObject]]`.
 
-### `WebAssembly.Memory.prototype.length`
+### `WebAssembly.Memory.prototype.byteLength`
 
 [⚜](#Post-MVP-JavaScript-API)
 
