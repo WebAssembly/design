@@ -242,6 +242,16 @@ generate WebAssembly code from C and C++, and will use LLVM IR in their
 implementation similarly to how PNaCl and Emscripten do today.
 
 
+## Why not use the .net or jvm virtual machines and bytecodes?
+
+Simply, web browsers already have their own virtual machines for executing 
+platform-independent code, and integrating the existing infrastructure of .net 
+or the jvm into browser environments on top of these existing systems would 
+incur massive costs for end-users. Also, the design goals in jvm and .net's 
+runtimes and bytecodes are far from aligning with those of this project, 
+similar to the incongruencies in the above section on llvm bytecode.
+
+
 ## Why is there no fast-math mode with relaxed floating point semantics?
 
 Optimizing compilers commonly have fast-math flags which permit the compiler to
