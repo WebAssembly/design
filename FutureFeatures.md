@@ -472,20 +472,9 @@ lighter-weight alternative to load-time polyfilling (approach 2 in
 were to be standardized and performed natively such that no user-space translation 
 pass was otherwise necessary.
 
-### Mutable global variables
+### Array globals 
 
-In the MVP, there are no global variables; C/C++ global variables are stored in
-linear memory and thus accessed through normal
-[linear memory operators](Semantics.md#linear-memory-operators).
-[Dynamic linking](DynamicLinking.md) will add some form of immutable global
-variable analogous to "symbols" in native binaries. In some cases, though,
-it may be useful to have a fully mutable global variable which lives outside
-linear memory. This would allow more aggressive compiler optimizations (due to
-better alias information). If globals are additionally allowed array types,
-significant portions of memory could be moved out of linear memory which could
-reduce fragmentation issues. Languages like Fortran which limit aliasing would be
-one use case. C/C++ compilers could also determine that some global variables never
-have their address taken.
+If globals are allowed array types, significant portions of memory could be moved out of linear memory which could reduce fragmentation issues. Languages like Fortran which limit aliasing would be one use case. C/C++ compilers could also determine that some global variables never have their address taken.
 
 ### Streaming Compilation
 
