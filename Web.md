@@ -149,16 +149,19 @@ Where
 
 Notes:
 * The URL field may be interpreted differently depending on the
-context. For example, offline tools may use a filename instead.
-When the response-based
+context. When the response-based
 instantiation [API](#additional-web-embedding-api) is used in a
 browser, the associated URL should be used; or when the
 ArrayBuffer-based instantiation
 [API](JS.md#webassembly-instantiate) is used, the browser should represent
-the location of the API call.  This representation should be consistent with how
-the browser otherwise represents JavaScript locations; this will necessarily
-handle corner cases such as code evaluated with `eval`, and will differ between
-browsers.
+the location of the API call. This kind of instantiation is analagous to
+executing JavaScript using `eval`; therefore if the browser has an existing
+method to represent the location of the `eval` call it can use a similar
+one for `WebAssembly.instantiate`. For example if the browser uses
+`foo.js line 10 > eval` or `(eval at bar (foo.js:10:3)` for `eval`, it could
+use `foo.js line 10 > WebAssembly.instantiate` or
+`(WebAssembly.instantiate at bar (foo.js:10:3)`, respectively.
+Offline tools may use a filename instead.
 * Using hexadecimal for module offsets matches common conventions in native tools
 such as objdump (where addresses are printed in hex) and makes them visually
 distinct from JavaScript line numbers. Other numbers are represented in decimal.
@@ -173,7 +176,7 @@ For example, if the function name is shown alongside its location in a
 stack trace, then just the module name (if present) or an empty string
 can be used, because the function index is shown with the location.
 Otherwise a representation that indicates the function index should be
-used.
+used (for example `${module_name}.wasm-function[${funcIndex}]`).
 
 Note also that this document does
 not specify the full format of strings such as stack frame representations;
