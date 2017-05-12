@@ -60,7 +60,7 @@ as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constr
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `WebAssembly.Module` object. On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
-`TypeError`.
+`WebAssembly.CompileError` or `TypeError`, depending on the type of failure.
 
 The `Promise<Response>` is used as the source of the bytes to compile.
 MIME type information is
