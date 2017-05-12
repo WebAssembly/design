@@ -472,20 +472,9 @@ lighter-weight alternative to load-time polyfilling (approach 2 in
 were to be standardized and performed natively such that no user-space translation 
 pass was otherwise necessary.
 
-### Mutable global variables
+### Array globals 
 
-In the MVP, there are no global variables; C/C++ global variables are stored in
-linear memory and thus accessed through normal
-[linear memory operators](Semantics.md#linear-memory-operators).
-[Dynamic linking](DynamicLinking.md) will add some form of immutable global
-variable analogous to "symbols" in native binaries. In some cases, though,
-it may be useful to have a fully mutable global variable which lives outside
-linear memory. This would allow more aggressive compiler optimizations (due to
-better alias information). If globals are additionally allowed array types,
-significant portions of memory could be moved out of linear memory which could
-reduce fragmentation issues. Languages like Fortran which limit aliasing would be
-one use case. C/C++ compilers could also determine that some global variables never
-have their address taken.
+If globals are allowed array types, significant portions of memory could be moved out of linear memory which could reduce fragmentation issues. Languages like Fortran which limit aliasing would be one use case. C/C++ compilers could also determine that some global variables never have their address taken.
 
 ### Streaming Compilation
 
@@ -561,3 +550,22 @@ static signature validation check. This could be improved by allowing:
   check of a call to a heterogeneous table;
 * any other specific GC reference type, effectively allowing WebAssembly code
   to implement a variety of rooting API schemes.
+
+### Memset and Memcpy Operators
+
+Copying and clearing large memory regions is very common, and making these
+operations fast is architecture dependent. Although this can be done in the MVP
+via `i32.load` and `i32.store`, this requires more bytes of code and forces VMs
+to recognize the loops as well. The following operators can be added to improve
+performance:
+
+* `move_memory`: Copy data from a source memory region to destination region;
+   these regions may overlap: the copy is performed as if the source region was 
+   first copied to a temporary buffer, then the temporary buffer is copied to
+   the destination region
+* `set_memory`: Set all bytes in a memory region to a given byte
+
+We expect that WebAssembly producers will use these operations when the region
+size is known to be large, and will use loads/stores otherwise.
+
+TODO: determine how these operations interact w/ shared memory.

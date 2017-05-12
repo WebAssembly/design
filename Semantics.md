@@ -213,7 +213,8 @@ greatest alignment values practical, while always avoiding misaligned accesses.
 
 ### Out of Bounds
 
-Out of bounds accesses trap.
+Out of bounds accesses trap. If the access is a store, if any of the accessed
+bytes are out of bounds, none of the bytes are modified.
 
 ### Resizing
 
@@ -361,7 +362,7 @@ In practice, outer `block`s can be used to place labels for any given branching
 pattern, except that the nesting restriction makes it impossible to branch into the middle of a loop
 from outside the loop. This limitation ensures by construction that all control flow graphs
 are well-structured as in high-level languages like Java, JavaScript and Go.
-Notice that that a branch to a `block`'s label is  equivalent to a labeled `break` in
+Notice that a branch to a `block`'s label is  equivalent to a labeled `break` in
 high-level languages; branches simply break out of a `block`, and branches to a `loop`
 correspond to a "continue" statement.
 
@@ -664,7 +665,7 @@ Truncation from floating point to integer where IEEE 754-2008 would specify an
 invalid operator exception (e.g. when the floating point value is NaN or
 outside the range which rounds to an integer in range) traps.
 
-## Type-parametric operators.
+## Type-parametric operators
 
   * `drop`: a unary operator that discards the value of its operand.
   * `select`: a ternary operator with two operands, which have the same type as
