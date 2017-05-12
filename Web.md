@@ -60,7 +60,7 @@ as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constr
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `WebAssembly.Module` object. On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
-`WebAssembly.CompileError`.
+`TypeError`.
 
 The `Promise<Response>` is used as the source of the bytes to compile.
 MIME type information is
@@ -115,7 +115,8 @@ with a plain JavaScript object pair `{module, instance}` containing the resultin
 
 On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
-`WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
+`TypeError`, `WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`,
+depending on the cause of failure.
 
 The `Promise<Response>` is used as the source of the bytes to compile.
 MIME type information is
@@ -127,7 +128,7 @@ A MIME type mismatch, a response whose
 "default", or a response whose status is not an
 [ok status](https://fetch.spec.whatwg.org/#ok-status), must cause the Promise to be
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
-`WebAssembly.CompileError`.
+`TypeError`.
 
 ## Modules
 
