@@ -242,13 +242,13 @@ generate WebAssembly code from C and C++, and will use LLVM IR in their
 implementation similarly to how PNaCl and Emscripten do today.
 
 
-## Why not use the .net or jvm virtual machines and bytecodes?
+## Why not use the .NET or Java virtual machines and bytecodes?
 
 Simply, web browsers already have their own virtual machines for executing 
-platform-independent code, and integrating the existing infrastructure of .net 
-or the jvm into browser environments on top of these existing systems would 
-incur massive costs for end-users. Also, the design goals in jvm and .net's 
-runtimes and bytecodes are far from aligning with those of this project, 
+platform-independent code, and integrating the existing infrastructure of .NET 
+or the JVM into browser environments on top of these existing systems would 
+incur serious runtime costs for end-users. Also, the design goals in JVM and 
+.NET's runtimes and bytecodes are far from aligning with those of this project, 
 similar to the incongruencies in the above section on llvm bytecode.
 
 
