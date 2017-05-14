@@ -249,7 +249,7 @@ platform-independent code, and integrating the existing infrastructure of .NET
 or the JVM into browser environments on top of these existing systems would 
 incur serious runtime costs for end-users. Also, the design goals in JVM and 
 .NET's runtimes and bytecodes are far from aligning with those of this project, 
-similar to the incongruencies in the above section on llvm bytecode.
+similar to the incongruencies in the above section on LLVM bytecode.
 
 
 ## Why is there no fast-math mode with relaxed floating point semantics?
