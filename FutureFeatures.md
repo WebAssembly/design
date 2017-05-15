@@ -476,30 +476,6 @@ pass was otherwise necessary.
 
 If globals are allowed array types, significant portions of memory could be moved out of linear memory which could reduce fragmentation issues. Languages like Fortran which limit aliasing would be one use case. C/C++ compilers could also determine that some global variables never have their address taken.
 
-### Streaming Compilation
-
-The WebAssembly binary format is designed to allow streaming decoding,
-validation and compilation. In the MVP, however, the only way to compile
-WebAssembly in a browser is through [JS API](JS.md) functions which
-require all code to be available in an `ArrayBuffer` before compilation
-can begin.
-
-There are two future features that would allow streaming compilation
-of WebAssembly in browsers:
-
-* [ES6 Module integration](Modules.md#integration-with-es6-modules) would allow
-  the browser's network layer to feed a stream directly into the engine.
-* The asynchronous [`WebAssembly.compile`](JS.md#wasmcompile) function could be 
-  extended to accept a readable stream (as defined by the 
-  [Streams API](https://streams.spec.whatwg.org))
-  which would allow the engine to compile the stream as chunks became available,
-  fulfilling the promise when the stream was complete. Readable streams
-  can come from not just the network (via [`fetch`](http://fetch.spec.whatwg.org/)),
-  but also JS stream writers and likely other future Web APIs. Thus, this feature
-  would enable Web apps to perform their own (["layer 1"](BinaryEncoding.md))
-  custom compression (on top of the spec-defined binary format, under generic
-  HTTP `Content-Encoding` compression).
-
 ### Multiple Return
 
 The stack based nature of WebAssembly lends itself to the possibility
