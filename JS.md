@@ -283,6 +283,7 @@ internal slot:
 
 * [[Instance]] : an [`Instance.instance`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L17)
   which is the WebAssembly spec definition of an instance
+ * [[Exports]] : the exports object created during instantiation
 
 ### `WebAssembly.Instance` Constructor
 
@@ -451,9 +452,8 @@ performed during [module validation](#webassemblymodule-constructor) ensure
 that each property name is valid and no properties are defined twice.
 
 Let `instanceObject` be a new `WebAssembly.Instance` object setting
-the internal `[[Instance]]` slot to `instance`.
-
-Perform [`CreateDataProperty`](https://tc39.github.io/ecma262/#sec-createdataproperty)(`instance`, `"exports"`, `exportsObject`).
+the internal `[[Instance]]` slot to `instance` and the `[[Exports]]` slot to
+`exportsObject`.
 
 Return `instanceObject`.
 
@@ -463,6 +463,16 @@ The initial value of the [`@@toStringTag`](https://tc39.github.io/ecma262/#sec-w
 property is the String value `"WebAssembly.Instance"`.
 
 This property has the attributes { [[Writable]]: `false`, [[Enumerable]]: `false`, [[Configurable]]: `true` }.
+
+### `WebAssembly.Instance.prototype.exports` property
+
+This is an accessor property whose [[Set]] is Undefined and whose [[Get]]
+accessor function performs the following steps:
+
+Let `T` be the `this` value. If `T` is not a `WebAssembly.Instance`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
+
+Return `T.[[Exports]]`.
 
 ## Exported Function Exotic Objects
 
