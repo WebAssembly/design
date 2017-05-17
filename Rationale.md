@@ -136,7 +136,7 @@ some platforms for increased TLB efficiency.
 The `grow_memory` operator returns the old memory size. This is desirable for
 using `grow_memory` independently on multiple threads, so that each thread can
 know where the region it allocated starts. The obvious alternative would be for
-such threads to communicate manually, however wasm implementations will likely
+such threads to communicate manually, however WebAssembly implementations will likely
 already be communicating between threads in order to properly allocate the sum
 of the allocation requests, so it's expected that they can provide the needed
 information without significant extra effort.
@@ -566,3 +566,44 @@ Yes:
 [future general]: FutureFeatures.md
 [future flow control]: FutureFeatures.md#more-expressive-control-flow
 [future integers]: FutureFeatures.md#additional-integer-operations
+
+
+## Why "polymorphic" stack typing after control transfer?
+
+For a stack machine, the fundamental property that type checking must ensure is that for every _edge_ in a control flow graph (formed by the individual instructions), the assumptions about the stack match up.
+At the same time, type checking should be fast, so be expressible by a linear traversal.
+
+There is no control edge from an unconditional control transfer instruction (like `br`, `br_table`, `return`, or `unreachable`) to the textually following instruction -- the next instruction is unreachable.
+Consequently, no constraint has to be imposed between the two regarding the stack.
+In a linear type checking algorithm this can be expressed by allowing to assume any type of stack.
+In type system terms, the instruction can thus be said to be _polymorphic_ in its stack type.
+
+This solution is canonical in the sense that it induces the minimal type constraints necessary to ensure soundness, while also maintaining the following useful structural properties about valid (i.e., well-typed) code:
+
+* It is composable: if instruction sequences A and B are valid, then block(A,B) is valid (e.g. at empty stack type).
+* It is decomposable: if block(A,B) is valid, then both A and B are valid.
+* It generalises an expression language: every expression is directly expressible, even if it contains control transfer.
+* It is agnostic to reachability: neither the specification nor producers need to define, check, or otherwise care about reachability (unless they choose to, e.g. to perform dead code elimination).
+* It maintains basic transformations: for example, (i32.const 1) (br_if $l) can always be replaced with (br $l).
+
+Some of these properties are relevant to support certain compilation techniques without artificial complication for producers.
+As a small but representative example, consider a textbook one-pass compiler, which would often use something like the following scheme for compiling expressions:
+```
+compile(A + B) = compile(A); compile(B); emit(i32.add)
+compile(A / B) = compile(A); compile(B); emit(dup i32.eqz (br_if $div_zero) drop i32.div)
+compile(A / 0) = compile(A); emit(br $div_zero)
+```
+The third case is a specialisation of the second, a simple optimisation.
+Without polymorphic typing of the `br` instruction, however, this simple scheme would not work, since `compile((x/0)+y)` would result in invalid code. Worse, it can lead to subtle compiler bugs.
+Similar situations arise in production compilers, for example, in the asm.js-to-wasm compilers that some of the WebAssembly VMs/tools are implementing.
+
+Other solutions that have been discussed would lose most of the above properties. For example:
+
+* Disallowing certain forms of unreachable code (whether by rules or by construction) would break all but decomposability.
+* Allowing but not type-checking unreachable code would break decomposability and requires the spec to provide a syntactic definition of reachability (which is unlikely to match the definition otherwise used by producers).
+* Requiring the stack to be empty after a jump remains agnostic to reachability and maintains decomposability, but still breaks all other properties.
+
+It is worth noting that this kind of type checking, in general, is not unusual.
+For example, the JVM also poses no constraint on the stack type after a jump (however, in its modern form, it recommends type annotations in the form of _stack maps_, which are then required after jumps to make the instantiation of the polymorphic typing rule explicit).
+Moreover, programming languages that allow control transfer _expressions_ usually type them polymorphically as well (e.g., `throw`/`raise`, which is an expression in some languages).
+
