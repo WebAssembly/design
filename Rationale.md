@@ -136,7 +136,7 @@ some platforms for increased TLB efficiency.
 The `grow_memory` operator returns the old memory size. This is desirable for
 using `grow_memory` independently on multiple threads, so that each thread can
 know where the region it allocated starts. The obvious alternative would be for
-such threads to communicate manually, however wasm implementations will likely
+such threads to communicate manually, however WebAssembly implementations will likely
 already be communicating between threads in order to properly allocate the sum
 of the allocation requests, so it's expected that they can provide the needed
 information without significant extra effort.
@@ -580,7 +580,7 @@ In type system terms, the instruction can thus be said to be _polymorphic_ in it
 
 This solution is canonical in the sense that it induces the minimal type constraints necessary to ensure soundness, while also maintaining the following useful structural properties about valid (i.e., well-typed) code:
 
-* It is composable: if statement sequences A and B are valid, then block(A,B) is valid.
+* It is composable: if instruction sequences A and B are valid, then block(A,B) is valid (e.g. at empty stack type).
 * It is decomposable: if block(A,B) is valid, then both A and B are valid.
 * It generalises an expression language: every expression is directly expressible, even if it contains control transfer.
 * It is agnostic to reachability: neither the specification nor producers need to define, check, or otherwise care about reachability (unless they choose to, e.g. to perform dead code elimination).
@@ -595,7 +595,7 @@ compile(A / 0) = compile(A); emit(br $div_zero)
 ```
 The third case is a specialisation of the second, a simple optimisation.
 Without polymorphic typing of the `br` instruction, however, this simple scheme would not work, since `compile((x/0)+y)` would result in invalid code. Worse, it can lead to subtle compiler bugs.
-Similar situations arise in production compilers, for example, in the asm.js-to-wasm compilers that some of the Wasm VMs/tools are implementing.
+Similar situations arise in production compilers, for example, in the asm.js-to-wasm compilers that some of the WebAssembly VMs/tools are implementing.
 
 Other solutions that have been discussed would lose most of the above properties. For example:
 
