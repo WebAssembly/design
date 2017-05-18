@@ -113,12 +113,19 @@ If neither of the following overloads match, then the returned `Promise` is
 with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 ```
-Promise<{module:WebAssembly.Module, instance:WebAssembly.Instance}>
+dictionary WebAssemblyInstantiatedSource {
+   required WebAssembly.Module module;
+   required WebAssembly.Instance instance;
+};
+
+Promise<WebAssemblyInstantiatedSource>
   instantiate(BufferSource bytes [, importObject])
 ```
 
-This description applies if the first argument is a 
-[`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource).
+If the given `bytes` argument is not a
+[`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
+the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
+with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 This function starts an asynchronous task that first compiles a `WebAssembly.Module`
 from `bytes` as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor)

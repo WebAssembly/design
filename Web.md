@@ -31,25 +31,24 @@ Non-web embeddings are not required to support these additional methods.
 
 :cyclone: Added for milestone 2, developers must feature detect.
 
-In Web embeddings, the following overloads are added (in addition to the core
-JS API method of the same name).
+In Web embeddings, the following methods are added.
 
 ```
-Promise<WebAssembly.Module> compile(Response source)
-
-Promise<WebAssembly.Module> compile(Promise<Response> source)
+Promise<WebAssembly.Module> compileStreaming(source)
 ```
 
-Developers can set the argument `source` with either a promise that resolves
-with a
+`source` is unconditionally passed through the built-in value
+of `Promise.resolve`.
+If the result is not a `Response` object, then the returned `Promise` is
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
+with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+This allows developers to pass either a promise that resolves
+to a
 [`Response`](https://fetch.spec.whatwg.org/#response-class)
 object or a
 [`Response`](https://fetch.spec.whatwg.org/#response-class)
 object (which is automatically cast to a
-promise).
-If when unwrapped that `Promise` is not a `Response` object, then the returned `Promise` is
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
-with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+promise) for the `source`.
 Renderer-side
 security checks about tainting for cross-origin content are tied to the types
 of filtered responses defined in
@@ -62,7 +61,7 @@ with the resulting `WebAssembly.Module` object. On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
 `WebAssembly.CompileError`.
 
-The `Promise<Response>` is used as the source of the bytes to compile.
+The resolved `Response` is used as the source of the bytes to compile.
 MIME type information is
 [`extracted`](https://fetch.spec.whatwg.org/#concept-header-extract-mime-type)
 from the `Response`, WebAssembly `source` data must have a MIME type of `application/wasm`,
@@ -75,27 +74,29 @@ MIME type mismatch or `opaque` response types
 
 :cyclone: Added for milestone 2, developers must feature detect.
 
-In Web embeddings, the following overloads are added (in addition to the core
-JS API method of the same name).
+In Web embeddings, the following methods are added.
 
 ```
-Promise<{module:WebAssembly.Module, instance:WebAssembly.Instance}>
-  instantiate(Response source [, importObject])
+dictionary WebAssemblyInstantiatedSource {
+   required WebAssembly.Module module;
+   required WebAssembly.Instance instance;
+};
 
-Promise<{module:WebAssembly.Module, instance:WebAssembly.Instance}>
-  instantiate(Promise<Response> source [, importObject])
+Promise<InstantiatedSource> instantiateStreaming(source [, importObject])
 ```
 
-Developers can set the argument `source` with either a promise that resolves
-with a
+`source` is unconditionally passed through the built-in value
+of `Promise.resolve`.
+If the result is not a `Response` object, then the returned `Promise` is
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
+with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+This allows developers to pass either a promise that resolves
+to a
 [`Response`](https://fetch.spec.whatwg.org/#response-class)
 object or a
 [`Response`](https://fetch.spec.whatwg.org/#response-class)
 object (which is automatically cast to a
-promise).
-If when unwrapped that `Promise` is not a `Response` object, then the returned `Promise` is
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
-with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
+promise) for the `source`.
 Renderer-side
 security checks about tainting for cross-origin content are tied to the types
 of filtered responses defined in
@@ -114,7 +115,7 @@ On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
 `WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
 
-The `Promise<Response>` is used as the source of the bytes to compile.
+The resolved `Response` is used as the source of the bytes to compile.
 MIME type information is
 [`extracted`](https://fetch.spec.whatwg.org/#concept-header-extract-mime-type)
 from the `Response`, WebAssembly `source` data must have a MIME type of `application/wasm`,
