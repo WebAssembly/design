@@ -168,23 +168,26 @@ Offline tools may use a filename instead.
 such as objdump (where addresses are printed in hex) and makes them visually
 distinct from JavaScript line numbers. Other numbers are represented in decimal.
 
-Names of functions may also be displayed if the module contains a
-["name" section](BinaryEncoding.md#name-section);
-these can be used in the same contexts as JavaScript functions.
-If the module's name section includes both module and function names, it
-should be represented as `${module_name}.${function_name}`.
-If the function name is absent, then the output can be context-dependent.
-For example, if the function name is shown alongside its location in a
-stack trace, then just the module name (if present) or an empty string
-can be used, because the function index is shown with the location.
-Otherwise a representation that indicates the function index should be
-used (for example `${module_name}.wasm-function[${funcIndex}]`).
+While the `name` property of [exported WebAssembly functions](JS.md#exported-function-exotic-objects)
+is specified by the JS API, synthesized function names are also
+displayed in other contexts like devtool callstacks and `Error.stack`.
+If a WebAssembly module contains a ["name" section](BinaryEncoding.md#name-section),
+these names should be used to synthesize a function name as follows:
+* If a function name subsection is present, the displayed name should
+  be `${module_name}.${function_name}` or `${function_name}`, depending
+  on whether the module name is present.
+* Otherwise, the output can be context-dependent:
+  * If the function name is shown alongside its location in a
+    stack trace, then just the module name (if present) or an empty string
+    can be used (because the function index is already in the location).
+  * Otherwise, `${module_name}.wasm-function[${funcIndex}]` or 
+    `wasm-function[${funcIndex}]` should be used to convey the function index.
 
-Note also that this document does
-not specify the full format of strings such as stack frame representations;
-this allows engines to continue using their existing formats for JavaScript
-(which existing code may already be depending on) while still printing
-WebAssembly frames in a format consistent with JavaScript.
+Note that this document does not specify the full format of strings such as
+stack frame representations; this allows engines to continue using their
+existing formats for JavaScript (which existing code may already be depending
+on) while still printing WebAssembly frames in a format consistent with
+JavaScript.
 
 ## Modules
 
