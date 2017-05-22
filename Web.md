@@ -27,7 +27,7 @@ Non-web embeddings are not required to support these additional methods.
 
 ### Additional Web Embedding API
 
-#### `WebAssembly.compile`
+#### `WebAssembly.compileStreaming`
 
 :cyclone: Added for milestone 2, developers must feature detect.
 
@@ -70,7 +70,7 @@ MIME type mismatch or `opaque` response types
 [reject](http://tc39.github.io/ecma262/#sec-rejectpromise) the Promise with a
 `TypeError`.
 
-#### `WebAssembly.instantiate`
+#### `WebAssembly.instantiateStreaming`
 
 :cyclone: Added for milestone 2, developers must feature detect.
 
