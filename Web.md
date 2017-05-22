@@ -124,6 +124,72 @@ MIME type mismatch or `opaque` response types
 [reject](http://tc39.github.io/ecma262/#sec-rejectpromise) the Promise with a
 `WebAssembly.CompileError`.
 
+## Developer-facing display conventions
+
+Browsers, JavaScript engines, and offline tools have common ways of referring to
+JavaScript artifacts and language constructs. For example, locations in
+JavaScript source code are printed in stack traces or error messages, and are
+represented naturally as decimal-format lines and columns in text files. Names
+of functions and variables are taken directly from the sources. Therefore (for
+example) even though the exact format of Error.stack strings does not always
+match, the locations are easily understandable and the same across browsers.
+
+To achive the same goal of a common representations for WebAssembly constructs, the
+following conventions are adopted.
+
+A WebAssembly location is a reference to a particular instruction in the binary, and may be
+displayed by a browser or engine in similar contexts as JavaScript source locations.
+It has the following format:
+
+`${url}:wasm-function[${funcIndex}]:${pcOffset}`
+
+Where
+* `${url}` is the URL associated with the module, if applicable (see notes).
+* `${funcIndex}` is an index in the [function index space](Modules.md#function-index-space).
+* `${pcOffset}` is the offset in the module binary of the first byte
+  of the instruction, printed in hexadecimal with lower-case digits,
+  with a leading `0x` prefix.
+
+Notes:
+* The URL field may be interpreted differently depending on the
+context. When the response-based
+instantiation [API](#additional-web-embedding-api) is used in a
+browser, the associated URL should be used; or when the
+ArrayBuffer-based instantiation
+[API](JS.md#webassemblyinstantiate) is used, the browser should represent
+the location of the API call. This kind of instantiation is analagous to
+executing JavaScript using `eval`; therefore if the browser has an existing
+method to represent the location of the `eval` call it can use a similar
+one for `WebAssembly.instantiate`. For example if the browser uses
+`foo.js line 10 > eval` or `eval at bar (foo.js:10:3)` for `eval`, it could
+use `foo.js line 10 > WebAssembly.instantiate` or
+`WebAssembly.instantiate at bar (foo.js:10:3)`, respectively.
+Offline tools may use a filename instead.
+* Using hexadecimal for module offsets matches common conventions in native tools
+such as objdump (where addresses are printed in hex) and makes them visually
+distinct from JavaScript line numbers. Other numbers are represented in decimal.
+
+While the `name` property of [exported WebAssembly functions](JS.md#exported-function-exotic-objects)
+is specified by the JS API, synthesized function names are also
+displayed in other contexts like devtool callstacks and `Error.stack`.
+If a WebAssembly module contains a ["name" section](BinaryEncoding.md#name-section),
+these names should be used to synthesize a function name as follows:
+* If a function name subsection is present, the displayed name should
+  be `${module_name}.${function_name}` or `${function_name}`, depending
+  on whether the module name is present.
+* Otherwise, the output can be context-dependent:
+  * If the function name is shown alongside its location in a
+    stack trace, then just the module name (if present) or an empty string
+    can be used (because the function index is already in the location).
+  * Otherwise, `${module_name}.wasm-function[${funcIndex}]` or 
+    `wasm-function[${funcIndex}]` should be used to convey the function index.
+
+Note that this document does not specify the full format of strings such as
+stack frame representations; this allows engines to continue using their
+existing formats for JavaScript (which existing code may already be depending
+on) while still printing WebAssembly frames in a format consistent with
+JavaScript.
+
 ## Modules
 
 WebAssembly's [modules](Modules.md) allow for natural [integration with
