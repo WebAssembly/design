@@ -18,31 +18,6 @@ the [MVP](MVP.md).
 
 This is covered in the [tooling](Tooling.md) section.
 
-### Threads
-#### :star: :star:
-
-Provide low-level buildings blocks for pthreads-style shared memory: shared
-memory between threads, atomics and futexes (or [synchronic][]).
-
-New atomic memory operators, including loads/stores annotated with their atomic
-ordering property, will follow the [C++11 memory model][], similarly to the
-[PNaCl atomic support][] and the [SharedArrayBuffer][] proposal. Regular loads
-and stores will be bound by a happens-before relationship to atomic operators
-in the same thread of execution, which themselves synchronize-with atomics in
-other threads. Following these rules, regular load/store operators can still be
-elided, duplicated, and split up. This guarantees that data-race free code
-executes as if it were sequentially consistent. Even when there are data races,
-WebAssembly will ensure that the [nondeterminism](Nondeterminism.md) remains
-limited and local.
-
-Modules can have thread-local variables that are disjoint from linear memory
-and can thus be represented efficiently by the engine.
-
-  [synchronic]: http://wg21.link/n4195
-  [C++11 memory model]: http://www.hboehm.info/c++mm/
-  [PNaCl atomic support]: https://developer.chrome.com/native-client/reference/pnacl-c-cpp-language-support#memory-model-and-atomics
-  [SharedArrayBuffer]: https://github.com/tc39/ecmascript_sharedmem
-
 ### Fixed-width SIMD
 #### :star:
 
