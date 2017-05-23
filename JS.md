@@ -169,7 +169,7 @@ with the resulting `WebAssembly.Instance` object. On failure, the `Promise` is
 A `WebAssembly.Module` object represents the stateless result of compiling a
 WebAssembly binary-format module and contains one internal slot:
 
- * [[Module]] : an [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L176)
+ * [[WebAssembly.Module]] : an [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L176)
    which is the spec definition of a module
 
 ### `WebAssembly.Module` Constructor
@@ -195,7 +195,7 @@ Otherwise, this function performs synchronous compilation of the `BufferSource`:
    according to the rules in [spec/valid.ml](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/valid.ml#L415).
 1. The spec `string` values inside `Ast.module` are decoded as UTF8 as described in 
    [Web.md](Web.md#names).
-1. On success, a new `WebAssembly.Module` object is returned with [[Module]] set to
+1. On success, a new `WebAssembly.Module` object is returned with [[WebAssembly.Module]] set to
    the validated `Ast.module`.
 1. On failure, a new `WebAssembly.CompileError` is thrown.
 
@@ -219,7 +219,7 @@ is thrown.
 
 This function returns a new `Array` every time it is called. Each such `Array` is produced by mapping each
 [`Ast.export`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L152)
-`e` of [moduleObject.[[Module]].exports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L187)
+`e` of [moduleObject.[[WebAssemby.Module]].exports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L187)
 to the Object `{ name: String(e.name), kind: e.ekind }` where `e.name` is [decoded as UTF8](Web.md#names)
 and `e.ekind` is mapped to one of the String values `"function"`, `"table"`, `"memory"`, `"global"`.
 
@@ -240,7 +240,7 @@ is thrown.
 
 This function returns a new `Array` every time it is called. Each such `Array` is produced by mapping each
 [`Ast.import`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L167)
-`i` of [moduleObject.[[Module]].imports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L203)
+`i` of [moduleObject.[[WebAssembly.Module]].imports](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L203)
 to the Object `{ module: String(i.module_name), name: String(i.item_name), kind: i.ikind }` where
 `i.module_name` and `i.item_name` are  [decoded as UTF8](Web.md#names) and
 `i.ikind` is mapped to one of the String values `"function"`, `"table"`, `"memory"`, `"global"`.
@@ -270,22 +270,6 @@ This function returns a new `Array` every time it is called. Each such `Array` i
 
 The `Array` is populated in the same order custom sections appear in the WebAssembly binary.
 
-### Structured Clone of a `WebAssembly.Module`
-
-A `WebAssembly.Module` is a
-[cloneable object](https://html.spec.whatwg.org/multipage/infrastructure.html#cloneable-objects)
-which means it can be cloned between windows/workers and also
-stored/retrieved into/from an [IDBObjectStore](https://w3c.github.io/IndexedDB/#object-store).
-The semantics of a structured clone is as-if the binary source, from which the
-`WebAssembly.Module` was compiled, were cloned and recompiled into the target realm.
-Engines should attempt to share/reuse internal compiled code when performing
-a structured clone although, in corner cases like CPU upgrade or browser
-update, this may not be possible and full recompilation may be necessary.
-
-Given the above engine optimizations, structured cloning provides developers
-explicit control over both compiled-code caching and cross-window/worker code
-sharing.
-
 ## `WebAssembly.Instance` Objects
 
 A `WebAssembly.Instance` object represents the instantiation of a 
@@ -313,7 +297,7 @@ If `moduleObject` is not a `WebAssembly.Module`, a [`TypeError`](https://tc39.gi
 is thrown.
 
 Let `module` be the [`Ast.module`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L176)
-`moduleObject.[[Module]]`.
+`moduleObject.[[WebAssembly.Module]]`.
 
 If the `importObject` parameter is not `undefined` and `Type(importObject)` is
 not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
@@ -371,7 +355,7 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
       [`memory_type`](https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#memory_type)
       by `Eval.init` below.)
    1. Append `v` to `memories`.
-   1. Append `v.[[Memory]]` to `imports`.
+   1. Append `v.[[WebAssembly.Memory]]` to `imports`.
 1. Otherwise (`i` is a table import):
    1. If `v` is not a [`WebAssembly.Table` object](#webassemblytable-objects),
       throw a `WebAssembly.LinkError`.
@@ -446,7 +430,7 @@ each [external](https://github.com/WebAssembly/spec/blob/master/interpreter/spec
    1. If `v` is an `i64`, throw a `WebAssembly.LinkError`.
    1. Return [`ToJSValue`](#tojsvalue)`(v)`.
 1. If `e` is a [memory](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L14) `m`:
-   1. If there is an element `memory` in `memories` whose `memory.[[Memory]]` is `m`, then return `memory`.
+   1. If there is an element `memory` in `memories` whose `memory.[[WebAssembly.Memory]]` is `m`, then return `memory`.
    1. (Note: At most one `WebAssembly.Memory` object is created for any memory, so the above `memory` is unique, even if there are multiple occurrances in the list. Moreover, if the item was an import, the original object will be found.)
    1. Otherwise:
       1. Let `memory` be a new `WebAssembly.Memory` object created via [`CreateMemoryObject`](#creatememoryobject) from `m`.
@@ -537,9 +521,9 @@ A `WebAssembly.Memory` object contains a single [linear memory](Semantics.md#lin
 which can be simultaneously referenced by multiple `Instance` objects. Each
 `Memory` object has two internal slots:
 
- * [[Memory]] : a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/memory.mli)
- * [[BufferObject]] : the current `ArrayBuffer` whose [[ArrayBufferByteLength]]
-   matches the current byte length of [[Memory]]
+ * [[WebAssembly.Memory]] : a [memory instance](https://webassembly.github.io/spec/exec/runtime.html#memory-instances)
+ * [[BufferObject]] : the current `ArrayBuffer` or `SharedArrayBuffer` whose [[ArrayBufferByteLength]]
+   matches the byte length of [[WebAssembly.Memory]].
 
 ### `WebAssembly.Memory` Constructor
 
@@ -571,7 +555,7 @@ Return the result of [`CreateMemoryObject`](#creatememoryobject)(`memory`).
 
 ### CreateMemoryObject
 
-Given a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/memory.mli#L1)
+Given a [memory instance](https://webassembly.github.io/spec/exec/runtime.html#memory-instances)
 `m`, to create a `WebAssembly.Memory`:
 
 Let `buffer` be a new `ArrayBuffer` whose
@@ -584,7 +568,7 @@ Any attempts to [`detach`](http://tc39.github.io/ecma262/#sec-detacharraybuffer)
 the detachment performed by [`m.grow`](#webassemblymemoryprototypegrow) shall throw a 
 [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 
-Return a new `WebAssembly.Memory` instance with [[Memory]] set to `m` and
+Return a new `WebAssembly.Memory` instance with [[WebAssembly.Memory]] set to `m` and
 [[BufferObject]] set to `buffer`.
 
 ### `WebAssembly.Memory.prototype [ @@toStringTag ]` Property
@@ -615,13 +599,22 @@ with delta `d`. On failure, a
 [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror)
 is thrown.
 
-Perform [`DetachArrayBuffer`](http://tc39.github.io/ecma262/#sec-detacharraybuffer)(`M.[[BufferObject]]`).
+If `M.[[BufferObject]]` is a not Shared Data Block:
+  1. Assign to `M.[[BufferObject]]` a new `ArrayBuffer` whose
+     [[[ArrayBufferData]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
+     aliases `M.[[WebAssembly.Memory]]` and whose
+     [[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
+     is set to the new byte length of `M.[[WebAssembly.Memory]]`.
+  2. Do the same in all Shared Data Block which mirror `M.[[BufferObject]]`,
+     doing so atomically in relation to other updates of such blocks.
+Otherwise:
+  1. perform [`DetachArrayBuffer`](http://tc39.github.io/ecma262/#sec-detacharraybuffer)(`M.[[BufferObject]]`).
 
-Assign to `M.[[BufferObject]]` a new `ArrayBuffer` whose
-[[[ArrayBufferData]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
-aliases `M.[[Memory]]` and whose 
-[[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
-is set to the new byte length of `M.[[Memory]]`.
+  2. Assign to `M.[[BufferObject]]` a new `ArrayBuffer` whose
+     [[[ArrayBufferData]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
+     aliases `M.[[WebAssembly.Memory]]` and whose
+     [[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
+     is set to the new byte length of `M.[[WebAssembly.Memory]]`.
 
 Return `ret` as a Number value.
 
@@ -639,7 +632,7 @@ A `WebAssembly.Table` object contains a single [table](Semantics.md#table)
 which can be simultaneously referenced by multiple `Instance` objects. Each
 `Table` object has two internal slots:
 
- * [[Table]] : a [`Table.table`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/table.mli#L1)
+ * [[Table]] : a [`table instance`](https://webassembly.github.io/spec/exec/runtime.html#table-instances)
  * [[Values]] : an array whose elements are either `null` or [Exported Function Exotic Object](#exported-function-exotic-objects)
 
 ### `WebAssembly.Table` Constructor

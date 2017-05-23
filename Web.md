@@ -202,6 +202,95 @@ Given these values, to process a potential WebAssembly response:
       _reason_.
 1. Return _returnValue_.
 
+### Structured serialization of a `WebAssembly.Memory`
+
+A `WebAssembly.Memory` is a
+[serializable object](https://html.spec.whatwg.org/multipage/infrastructure.html#serializable-objects), and will require changes to the
+[HTML Standard](https://html.spec.whatwg.org/multipage/infrastructure.html#serialization-steps) as follows:
+
+[StructuredSerializeInternal](https://html.spec.whatwg.org/multipage/infrastructure.html#structuredserializeinternal) adds a new step after step 12:
+
+* Otherwise, if *value* has a [[WebAssembly.Memory]] internal slot, then:
+  1. Let *memory* be *value*.[[WebAssembly.Memory]], which is a
+     [`memory instance`](https://webassembly.github.io/spec/exec/runtime.html#memory-instances).
+  2. Let *data* be *memory*'s `data` field, which is a sizable vector of bytes.
+  3. Let *maximum* be the value of *memory*'s `max` field, which is an optional u32.
+  4. If *data* is a Shared Data Block, then:
+     1. If *forStorage* is true, then throw a
+        "[`DataCloneError`](https://heycam.github.io/webidl/#datacloneerror)"
+        [`DOMException`](https://heycam.github.io/webidl/#dfn-DOMException).
+     2. Otherwise,
+        set *serialized* to { [[Type]]: "WebAssembly.Memory",
+        [[MemoryData]]: *data*,
+        [[MemoryMaximum]]: *maximum*,
+        [[AgentCluster]]: the [current Realm Record](https://tc39.github.io/ecma262/#current-realm)'s corresponding [agent cluster](https://tc39.github.io/ecma262/#sec-agent-clusters) }.
+  5. Otherwise throw a
+     "[`DataCloneError`](https://heycam.github.io/webidl/#datacloneerror)"
+     [`DOMException`](https://heycam.github.io/webidl/#dfn-DOMException).
+
+[StructuredDeserialize](https://html.spec.whatwg.org/multipage/infrastructure.html#structureddeserialize) adds a new step after step 12:
+
+* Otherwise, if *serialized*.[[Type]] is "WebAssembly.Memory", then:
+  1. Assert *serialized*.[[MemoryData]] is a Shared Data Block.
+  2. If *targetRealm*'s corresponding [agent cluster](https://tc39.github.io/ecma262/#sec-agent-clusters) is not
+     *serialized*.[[AgentCluster]], then throw a
+     "[`DataCloneError`](https://heycam.github.io/webidl/#datacloneerror)"
+     [`DOMException`](https://heycam.github.io/webidl/#dfn-DOMException).
+  3. Set *value* to a new WebAssembly.Memory object in *targetRealm*, where:
+     1. *value*'s internal slot [[WebAssembly.Memory]] is set to a new
+        [`memory instance`](https://webassembly.github.io/spec/exec/runtime.html#memory-instances) *mem*, where:
+        1. *mem*'s `data` field is set to *serialized*.[[MemoryData]].
+        2. *mem*'s `max` size is set to *serialized*.[[MemoryMaximum]].
+     2. *value*'s internal slot [[BufferObject]] is set to a new `SharedArrayBuffer` *buf*, where:
+        1. *buf*'s internal slot [[ArrayBufferData]]
+           aliases *mem*'s `data` field, which is a sizable vector of bytes.
+        2. *buf*'s internal slot [[ArrayBufferByteLength]]
+           is set to the byte length of *mem*'s linear memory.
+        3. The above is done atomically in relation to other updates to all
+           aliases of [[BufferObject]].
+
+
+### Structured serialization of a `WebAssembly.Module`
+
+A `WebAssembly.Module` is a
+[serializable object](https://html.spec.whatwg.org/multipage/infrastructure.html#serializable-objects), and will require changes to the
+[HTML Standard](https://html.spec.whatwg.org/multipage/infrastructure.html#serialization-steps) as follows:
+
+[StructuredSerializeInternal](https://html.spec.whatwg.org/multipage/infrastructure.html#structuredserializeinternal) adds a new step after step 12:
+
+* Otherwise, if *value* has a [[WebAssembly.Module]] internal slot, then:
+  1. If *forStorage* is true and the relevant settings
+     object of *value* is not "Secure" per the
+     ["Is the environment settings object a secure context?"](https://w3c.github.io/webappsec-secure-contexts/#settings-object)
+     algorithm, throw a
+     "[`DataCloneError`](https://heycam.github.io/webidl/#datacloneerror)"
+     [`DOMException`](https://heycam.github.io/webidl/#dfn-DOMException).
+  2. Otherwise,
+     set *serialized* to { [[Type]]: "WebAssembly.Module",
+     [[WebAssembly.Module]]: *value*.[[WebAssembly.Module]],
+     [[AgentCluster]]: the [current Realm Record](https://tc39.github.io/ecma262/#current-realm)'s corresponding [agent cluster](https://tc39.github.io/ecma262/#sec-agent-clusters) }.
+
+[StructuredDeserialize](https://html.spec.whatwg.org/multipage/infrastructure.html#structureddeserialize) adds a new step after step 12:
+
+* Otherwise, if *serialized*.[[Type]] is "WebAssembly.Module", then:
+  1. If *targetRealm*'s corresponding [agent cluster](https://tc39.github.io/ecma262/#sec-agent-clusters) is not
+     *serialized*.[[AgentCluster]], then throw a
+     "[`DataCloneError`](https://heycam.github.io/webidl/#datacloneerror)"
+     [`DOMException`](https://heycam.github.io/webidl/#dfn-DOMException).
+  2. Otherwise, set *value* to a new WebAssembly.Module object in *targetRealm*
+     whose [[WebAssembly.Module]] internal slot *value* is *serialized*.[[WebAssembly.Module]].
+
+The semantics of a structured serialization is as-if the binary source, from which the
+`WebAssembly.Module` was compiled, is serialized, then deserialized, and recompiled into the target realm.
+Engines should attempt to share/reuse internal compiled code when performing
+a structured serialization, although in corner cases like CPU upgrade or browser
+update, this might not be possible and full recompilation may be necessary.
+
+Given the above engine optimizations, structured serialization provides developers
+explicit control over both compiled-code caching and cross-window/worker code
+sharing.
+
+
 ## Developer-facing display conventions
 
 Browsers, JavaScript engines, and offline tools have common ways of referring to
