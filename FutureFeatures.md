@@ -18,19 +18,6 @@ the [MVP](MVP.md).
 
 This is covered in the [tooling](Tooling.md) section.
 
-### Fixed-width SIMD
-#### :star:
-
-Support fixed-width SIMD vectors, initially only for 128-bit wide vectors as
-demonstrated in [PNaCl's SIMD][] and [SIMD.js][].
-
-SIMD adds new local types (e.g., `f32x4`) so it has to be part of the core
-semantics. SIMD operators (e.g., `f32x4.add`) could be either builtin
-operators (no different from `i32.add`) or exports of a builtin SIMD module.
-
-  [PNaCl's SIMD]: https://developer.chrome.com/native-client/reference/pnacl-c-cpp-language-support#portable-simd-vectors
-  [SIMD.js]: https://github.com/tc39/ecmascript_simd
-
 ### Zero-cost Exception Handling
 #### :star:
 
