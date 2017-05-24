@@ -1,12 +1,26 @@
 # Features to add after the MVP
 
 These are features that make sense in the context of the
-[high-level goals](HighLevelGoals.md) of WebAssembly but won't be part of the
+[high-level goals](HighLevelGoals.md) of WebAssembly but weren't part of the
 initial [Minimum Viable Product](MVP.md) release.
 
-We expect several essential features to be standardized immediately after the
-MVP. Others will be prioritized based on developer feedback, and all will be
-available under [feature tests](FeatureTest.md).
+**Note:** we are in the process of migrating all post-MVP featues to tracking
+issues.
+
+## Tracking Issues
+
+| Feature          | Tracking issue | Status      |
+|------------------|----------------|-------------|
+| Threads          | [1073][]       | in progress |
+| Fixed-width SIMD | [1075][]       | in progress |
+
+  [1073]: https://github.com/WebAssembly/design/issues/1073
+  [1075]: https://github.com/WebAssembly/design/issues/1075
+
+
+## Legacy Future Features
+
+**Note:** these will soon move to tracking issues.
 
 :star: = Essential features we want to prioritize adding shortly after
 the [MVP](MVP.md).
