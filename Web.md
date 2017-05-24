@@ -59,15 +59,18 @@ as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constr
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `WebAssembly.Module` object. On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
-`WebAssembly.CompileError`.
+`WebAssembly.CompileError` or `TypeError`, depending on the type of failure.
 
 The resolved `Response` is used as the source of the bytes to compile.
 MIME type information is
 [`extracted`](https://fetch.spec.whatwg.org/#concept-header-extract-mime-type)
 from the `Response`, WebAssembly `source` data must have a MIME type of `application/wasm`,
 extra parameters are not allowed (including empty `application/wasm;`).
-MIME type mismatch or `opaque` response types
-[reject](http://tc39.github.io/ecma262/#sec-rejectpromise) the Promise with a
+A MIME type mismatch, a response whose
+[type](https://fetch.spec.whatwg.org/#concept-response-type) is not "basic", "cors", or
+"default", or a response whose status is not an
+[ok status](https://fetch.spec.whatwg.org/#ok-status), must cause the Promise to be
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
 `TypeError`.
 
 #### `WebAssembly.instantiateStreaming`
@@ -113,16 +116,20 @@ with a plain JavaScript object pair `{module, instance}` containing the resultin
 
 On failure, the `Promise` is
 [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
-`WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
+`TypeError`, `WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`,
+depending on the cause of failure.
 
 The resolved `Response` is used as the source of the bytes to compile.
 MIME type information is
 [`extracted`](https://fetch.spec.whatwg.org/#concept-header-extract-mime-type)
 from the `Response`, WebAssembly `source` data must have a MIME type of `application/wasm`,
 extra parameters are not allowed (including empty `application/wasm;`).
-MIME type mismatch or `opaque` response types
-[reject](http://tc39.github.io/ecma262/#sec-rejectpromise) the Promise with a
-`WebAssembly.CompileError`.
+A MIME type mismatch, a response whose
+[type](https://fetch.spec.whatwg.org/#concept-response-type) is not "basic", "cors", or
+"default", or a response whose status is not an
+[ok status](https://fetch.spec.whatwg.org/#ok-status), must cause the Promise to be
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
+`TypeError`.
 
 ## Developer-facing display conventions
 
