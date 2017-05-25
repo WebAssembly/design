@@ -11,11 +11,13 @@ issues.
 
 | Feature          | Tracking issue | Status      |
 |------------------|----------------|-------------|
+| Specification    | [1077][]       | in progress |
 | Threads          | [1073][]       | in progress |
 | Fixed-width SIMD | [1075][]       | in progress |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
+  [1077]: https://github.com/WebAssembly/design/issues/1077
 
 
 ## Legacy Future Features
