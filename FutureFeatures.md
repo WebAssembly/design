@@ -15,11 +15,13 @@ issues.
 | Threads            | [1073][]       | in progress |
 | Fixed-width SIMD   | [1075][]       | in progress |
 | Exception handling | [1078][]       | in progress |
+| Garbage collection | [1079][]       | in progress |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
   [1077]: https://github.com/WebAssembly/design/issues/1077
   [1078]: https://github.com/WebAssembly/design/issues/1078
+  [1079]: https://github.com/WebAssembly/design/issues/1079
 
 
 ## Legacy Future Features
