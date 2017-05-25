@@ -9,15 +9,17 @@ issues.
 
 ## Tracking Issues
 
-| Feature          | Tracking issue | Status      |
-|------------------|----------------|-------------|
-| Specification    | [1077][]       | in progress |
-| Threads          | [1073][]       | in progress |
-| Fixed-width SIMD | [1075][]       | in progress |
+| Feature            | Tracking issue | Status      |
+|--------------------|----------------|-------------|
+| Specification      | [1077][]       | in progress |
+| Threads            | [1073][]       | in progress |
+| Fixed-width SIMD   | [1075][]       | in progress |
+| Exception handling | [1078][]       | in progress |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
   [1077]: https://github.com/WebAssembly/design/issues/1077
+  [1078]: https://github.com/WebAssembly/design/issues/1078
 
 
 ## Legacy Future Features
@@ -34,38 +36,6 @@ the [MVP](MVP.md).
 
 This is covered in the [tooling](Tooling.md) section.
 
-### Zero-cost Exception Handling
-#### :star:
-
-The WebAssembly MVP may support four no-exception
-modes for C++:
-
-* Compiler transforms `throw` to `abort()`.
-* Compiler-enforced `-fno-exceptions` mode (note [caveats][]).
-* Compiler conversion of exceptions to branching at all callsites.
-* In a Web environment exception handling can be emulated using JavaScript
-  exception handling, which can provide correct semantics but isn't fast.
-
-These modes are suboptimal for code bases which rely on C++ exception handling,
-but are perfectly acceptable for C code, or for C++ code which avoids
-exceptions. This doesn't prevent developers from using the C++ standard library:
-their code will function correctly (albeit slower at times) as long as it
-doesn't encounter exceptional cases.
-
-Post-MVP, WebAssembly will gain support for developer access to stack unwinding,
-inspection, and limited manipulation. These are critical to supporting zero-cost
-exception handling by exposing [low-level capabilities][].
-
-In turn, stack unwinding, inspection, and limited manipulation will be used to
-implement `setjmp`/`longjmp`. This can enable all of the defined behavior of
-`setjmp`/`longjmp`, namely unwinding the stack without calling C++
-destructors. It does not, however, allow the undefined behavior case of jumping
-forward to a stack that was already unwound which is sometimes used to implement
-coroutines. Coroutine support is being
-[considered separately](FutureFeatures.md#coroutines).
-
-  [caveats]: https://blog.mozilla.org/nnethercote/2011/01/18/the-dangers-of-fno-exceptions
-  [low-level capabilities]: https://extensiblewebmanifesto.org
 
 ### Feature Testing
 #### :star:
