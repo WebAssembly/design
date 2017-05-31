@@ -159,7 +159,7 @@ emscripten) has a number of advantages over the default WebAssembly
 configuration. Not only does this better defend against code reuse attacks that
 leverage indirect function calls (2), but it also enhances the built-in function
 signature checks by operating at the C/C++ type level, which is semantically
-richer that the WebAssembly [type level](AstSemantics.md#types), which consists
+richer that the WebAssembly [type level](Semantics.md#types), which consists
 of only four value types. Currently, enabling this feature has a small
 performance cost for each indirect call, because an integer range check is
 used to verify that the target index is trusted, but this will be eliminated in

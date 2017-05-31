@@ -98,10 +98,10 @@ A `varint7` indicating a block signature. These types are encoded as:
 
 ### `elem_type`
 
-A `varint7` indicating the types of elements in a [table](AstSemantics.md#table).
+A `varint7` indicating the types of elements in a [table](Semantics.md#table).
 In the MVP, only one type is available:
 
-* [`anyfunc`](AstSemantics.md#table)
+* [`anyfunc`](Semantics.md#table)
 
 Note: In the [future :unicorn:][future general], other element types may be allowed.
 
