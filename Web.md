@@ -228,6 +228,11 @@ Transcoding failure is detected by `decodeURIComponent`, which may throw
 `URIError`. If it does, the WebAssembly module will not validate. This validation
 rule is only mandatory for Web embedding.
 
+## 64-bit integers
+
+Currently Javascript doesn't support 64-bit integers so they will be disallowed
+as parameters in imports and exports and in return values in the JS bindings.
+
 ## Security
 
 WebAssembly's [security](Security.md) model should depend on the
