@@ -23,7 +23,7 @@ with JavaScript imports, call the exported functions of instantiated modules,
 alias the exported memory of instantiated modules, etc.
 
 The Web embedding includes additional methods useful in that context.
-Non-web embeddings are not required to support these additional methods.
+In non-web embeddings, these APIs may not be present.
 
 ### Additional Web Embedding API
 
@@ -31,7 +31,9 @@ Non-web embeddings are not required to support these additional methods.
 
 :cyclone: Added for milestone 2, developers must feature detect.
 
-In Web embeddings, the following methods are added.
+In Web embeddings, the following methods are added. 
+
+Note that it is expected that `compileStreaming` and `instantiateStreaming` be either both present or both absent.
 
 ```
 Promise<WebAssembly.Module> compileStreaming(source)
