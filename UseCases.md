@@ -26,7 +26,7 @@ WebAssembly 的[整体目标](HighLevelGoals.md) 定义了 WebAssembly 适合做
 * VPN。
 * 加密工具。
 * 本地 Web 服务器。
-* Common NPAPI users, within the web's security model and APIs.（没懂）
+* 使用 NPAPI 分发的插件，但受到 Web 安全协议的保护，可以使用 Web APIs。
 * 企业软件功能性客户端（比如：数据库）
 
 
