@@ -1,53 +1,46 @@
-# Use Cases
+# 使用场景
 
-WebAssembly's [high-level goals](HighLevelGoals.md) define *what* WebAssembly
-aims to achieve, and in *which order*. *How* WebAssembly achieves its goals is
-documented for [Web](Web.md) and [non-Web](NonWeb.md) platforms. The following
-is an unordered and incomplete list of applications/domains/computations that
-would benefit from WebAssembly and are being considered as use cases during the
-design of WebAssembly.
+WebAssembly 的[整体目标](HighLevelGoals.md) 定义了 WebAssembly 适合做*什么*。那些事在 Web 平台可以实现的，那些是非 Web 平台可以实现的。下面给出了一个不完善的无序列表，包括应用/领域/计算等方向，它们可能将从 WebAssembly 中受益的， WebAssamlby 的设计过程中也会将它们做为用例。
 
-## Inside the browser
+## 在浏览器中
 
-* Better execution for languages and toolkits that are currently cross-compiled
-  to the Web (C/C++, GWT, …).
-* Image / video editing.
-* Games:
-  - Casual games that need to start quickly.
-  - AAA games that have heavy assets.
-  - Game portals (mixed-party/origin content).
-* Peer-to-peer applications (games, collaborative editing, decentralized and
-  centralized).
-* Music applications (streaming, caching).
-* Image recognition.
-* Live video augmentation (e.g. putting hats on people's heads).
-* VR and augmented reality (very low latency).
-* CAD applications.
-* Scientific visualization and simulation.
-* Interactive educational software, and news articles.
-* Platform simulation / emulation (ARC, DOSBox, QEMU, MAME, …).
-* Language interpreters and virtual machines.
-* POSIX user-space environment, allowing porting of existing POSIX applications.
-* Developer tooling (editors, compilers, debuggers, …).
-* Remote desktop.
-* VPN.
-* Encryption.
-* Local web server.
-* Common NPAPI users, within the web's security model and APIs.
-* Fat client for enterprise applications (e.g. databases).
+* 更好的让一些语言和工具可以编译到 Web 平台运行。
+* 图片/视频编辑。
+* 游戏：
+  - 需要快速打开的小游戏
+  - AAA 级，资源量很大的游戏。
+  - 游戏门户（代理/原创游戏平台）
+* P2P 应用（游戏，实时合作编辑）
+* 音乐播放器（流媒体，缓存）
+* 图像识别
+* 视频直播
+* VR 和虚拟现实
+* CAD 软件
+* 科学可视化和仿真
+* 互动教育软件和新闻文章。
+* 模拟/仿真平台(ARC, DOSBox, QEMU, MAME, …)。
+* 语言编译器/虚拟机。
+* POSIX用户空间环境，允许移植现有的POSIX应用程序。
+* 开发者工具（编辑器，编译器，调试器...）
+* 远程桌面。
+* VPN。
+* 加密工具。
+* 本地 Web 服务器。
+* Common NPAPI users, within the web's security model and APIs.（没懂）
+* 企业软件功能性客户端（比如：数据库）
 
-# Outside the browser
 
-* Game distribution service (portable and secure).
-* Server-side compute of untrusted code.
-* Server-side application.
-* Hybrid native apps on mobile devices.
-* Symmetric computations across multiple nodes
+# 脱离浏览器
 
-# How WebAssembly can be used
+* 游戏分发服务（便携、安全）。
+* 服务端执行不可信任的代码。
+* 服务端应用。
+* 移动混合原生应用。
+* 多节点对称计算
 
-* Entire code base in WebAssembly.
-* Main frame in WebAssembly, but the UI is in JavaScript / HTML.
-* Re-use existing code by targeting WebAssembly, embedded in a larger
-  JavaScript / HTML application. This could be anything from simple helper
-  libraries, to compute-oriented task offload.
+
+# 如何使用 WebAssembly
+
+* 整个代码库都用 WebAssembly。
+* 主要使用 WebAssembly 计算，UI 使用 JavaScript/HTML。
+* 在大型 JavaScript/HTML 应用中复用已经存在的 WebAssembly 代码。像使用助手库一样，分担一些计算任务。
