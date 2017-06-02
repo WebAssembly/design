@@ -9,19 +9,21 @@ issues.
 
 ## Tracking Issues
 
-| Feature            | Tracking issue | Status      |
-|--------------------|----------------|-------------|
-| Specification      | [1077][]       | in progress |
-| Threads            | [1073][]       | in progress |
-| Fixed-width SIMD   | [1075][]       | in progress |
-| Exception handling | [1078][]       | in progress |
-| Garbage collection | [1079][]       | in progress |
+| Feature                       | Tracking issue | Status      |
+|-------------------------------|----------------|-------------|
+| Specification                 | [1077][]       | in progress |
+| Threads                       | [1073][]       | in progress |
+| Fixed-width SIMD              | [1075][]       | in progress |
+| Exception handling            | [1078][]       | in progress |
+| Garbage collection            | [1079][]       | in progress |
+| ECMAScript module integration | [1087][]       | no started  |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
   [1077]: https://github.com/WebAssembly/design/issues/1077
   [1078]: https://github.com/WebAssembly/design/issues/1078
   [1079]: https://github.com/WebAssembly/design/issues/1079
+  [1087]: https://github.com/WebAssembly/design/issues/1087
 
 
 ## Legacy Future Features
