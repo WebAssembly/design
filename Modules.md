@@ -124,58 +124,6 @@ Export names must be unique.
 
 In the MVP, only *immutable* global variables can be exported.
 
-## Integration with ES6 modules
-
-While ES6 defines how to parse, link and execute a module, ES6 does not
-define when this parsing/linking/execution occurs. An additional extension
-to the HTML spec is required to say when a script is parsed as a module instead
-of normal global code. This work is [ongoing](https://github.com/whatwg/loader/blob/master/roadmap.md).
-Currently, the following entry points for modules are being considered:
-
-* `<script type="module">`;
-* an overload to the `Worker` constructor;
-* an overload to the `importScripts` Worker API;
-
-Additionally, an ES6 module can recursively import other modules via `import`
-statements.
-
-For WebAssembly/ES6 module integration, the idea is that all the above module
-entry points could also load WebAssembly modules simply by passing the URL of a
-WebAssembly module. The distinction of whether the module was WebAssembly or ES6
-code could be made by namespacing or by content sniffing the first bytes of the
-fetched resource (which, for WebAssembly, would be a non-ASCII&mdash;and thus
-illegal as JavaScript&mdash;[magic number](https://en.wikipedia.org/wiki/Magic_number_%28programming%29)).
-Thus, the whole module-loading pipeline (resolving the name to a URL, fetching
-the URL, any other [loader hooks](http://whatwg.github.io/loader/)) would be
-shared and only the final stage would fork into either the JavaScript parser or
-the WebAssembly decoder.
-
-Any non-builtin imports from within a WebAssembly module would be treated as
-if they were `import` statements of an ES6 module. If an ES6 module `import`ed
-a WebAssembly module, the WebAssembly module's exports would be linked as if
-they were the exports of an ES6 module. Once parsing and linking phases
-were complete, a WebAssembly module would have its start function, defined
-by the start module option, called in place of executing the ES6 module
-top-level script. By default, multiple loads of the same module URL (in
-the same realm) reuse the same instance. It may be worthwhile in the future
-to consider extensions to allow applications to load/compile/link a module
-once and instantiate multiple times (each with a separate linear memory).
-
-This integration strategy should allow WebAssembly modules to be fairly
-interchangeable with ES6 modules (ignoring
-[GC/Web API :unicorn:][future dom] signature restrictions of the
-WebAssembly MVP) and thus it should be natural to compose a single application
-from both kinds of code. This goal motivates the
-[semantic design](Semantics.md#linear-memory) of giving each WebAssembly
-module its own disjoint linear memory. Otherwise, if all modules shared a single
-linear memory (all modules with the same realm? origin? window?&mdash;even the
-scope of "all" is a nuanced question), a single app using multiple
-independent libraries would have to hope that all the WebAssembly modules
-transitively used by those libraries "played well" together (e.g., explicitly
-shared `malloc` and coordinated global address ranges). Instead, the
-[dynamic linking future feature](DynamicLinking.md) is intended
-to allow *explicitly* sharing state between module instances.
-
 ## Module start function
 
 If the module has a start node defined, the function it refers should be called
