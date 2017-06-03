@@ -67,7 +67,7 @@ The following intrinsic objects are added:
 The `validate` function has the signature:
 
 ```
-Boolean validate(BufferSource bytes)
+validate(BufferSource bytes): {ok: Boolean, error: String}
 ```
 
 If the given `bytes` argument is not a
@@ -75,7 +75,11 @@ If the given `bytes` argument is not a
 then a `TypeError` is thrown.
 
 Otherwise, this function performs *validation* as defined by the [WebAssembly
-specification](https://github.com/WebAssembly/spec/blob/master/interpreter/) and returns `true` if validation succeeded, `false` if validation failed.
+specification](https://github.com/WebAssembly/spec/blob/master/interpreter/).
+It returns a plain JavaScript object with a property `ok`
+whose falue is `true` if validation succeeded, and `false` otherwise.
+Furthermore, iff `ok` is `false`, a property `error` is present indicating the cause of failure with an implementation-dependent error message.
+Both properties are configurable, enumerable and writable.
 
 #### `WebAssembly.compile`
 
