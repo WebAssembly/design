@@ -1,6 +1,6 @@
 # 使用场景
 
-WebAssembly 的[整体目标](HighLevelGoals.md) 定义了 WebAssembly 适合做*什么*。那些事在 Web 平台可以实现的，那些是非 Web 平台可以实现的。下面给出了一个不完善的无序列表，包括应用/领域/计算等方向，它们可能将从 WebAssembly 中受益的， WebAssamlby 的设计过程中也会将它们做为用例。
+WebAssembly 的[整体目标](HighLevelGoals.md) 定义了 WebAssembly 适合做*什么*。哪些是在 Web 平台可以实现的，哪些是非 Web 平台可以实现的。下面给出了一个不完善的无序列表，包括应用/领域/计算等方向，它们可能将从 WebAssembly 中受益的， WebAssamlby 的设计过程中也会将它们做为用例。
 
 ## 在浏览器中
 
