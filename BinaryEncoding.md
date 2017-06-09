@@ -820,5 +820,5 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 [future types]: FutureFeatures.md#more-table-operators-and-types
 [future multiple tables]: FutureFeatures.md#multiple-tables-and-memories
 [future compression]: https://github.com/WebAssembly/decompressor-prototype/blob/master/CompressionLayer1.md
-[threads]: https://github.com/WebAssembly/threads
-[SIMD]: https://github.com/WebAssembly/simd
+[threads :unicorn:]: https://github.com/WebAssembly/threads
+[SIMD :unicorn:]: https://github.com/WebAssembly/simd
