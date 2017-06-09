@@ -810,14 +810,14 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `f64.convert_s/i64` | `0xb9` | | |
 | `f64.convert_u/i64` | `0xba` | | |
 | `f64.promote/f32` | `0xbb` | | |
-| `i32.trunc_s:sat/f32` | `0xfc` `0x00` | | saturating form of `i32.trunc_s/f32` |
-| `i32.trunc_u:sat/f32` | `0xfc` `0x01` | | saturating form of `i32.trunc_u/f32` |
-| `i32.trunc_s:sat/f64` | `0xfc` `0x02` | | saturating form of `i32.trunc_s/f64` |
-| `i32.trunc_u:sat/f64` | `0xfc` `0x03` | | saturating form of `i32.trunc_u/f64` |
-| `i64.trunc_s:sat/f32` | `0xfc` `0x04` | | saturating form of `i64.trunc_s/f32` |
-| `i64.trunc_u:sat/f32` | `0xfc` `0x05` | | saturating form of `i64.trunc_u/f32` |
-| `i64.trunc_s:sat/f64` | `0xfc` `0x06` | | saturating form of `i64.trunc_s/f64` |
-| `i64.trunc_u:sat/f64` | `0xfc` `0x07` | | saturating form of `i64.trunc_u/f64` |
+| `i32.trunc_s:sat/f32` | `0xfc` `0x00` | | :bowling: saturating form of `i32.trunc_s/f32` |
+| `i32.trunc_u:sat/f32` | `0xfc` `0x01` | | :bowling: saturating form of `i32.trunc_u/f32` |
+| `i32.trunc_s:sat/f64` | `0xfc` `0x02` | | :bowling: saturating form of `i32.trunc_s/f64` |
+| `i32.trunc_u:sat/f64` | `0xfc` `0x03` | | :bowling: saturating form of `i32.trunc_u/f64` |
+| `i64.trunc_s:sat/f32` | `0xfc` `0x04` | | :bowling: saturating form of `i64.trunc_s/f32` |
+| `i64.trunc_u:sat/f32` | `0xfc` `0x05` | | :bowling: saturating form of `i64.trunc_u/f32` |
+| `i64.trunc_s:sat/f64` | `0xfc` `0x06` | | :bowling: saturating form of `i64.trunc_s/f64` |
+| `i64.trunc_u:sat/f64` | `0xfc` `0x07` | | :bowling: saturating form of `i64.trunc_u/f64` |
 
 ## Reinterpretations ([described here](Semantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions))
 
