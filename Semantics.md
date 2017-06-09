@@ -640,6 +640,14 @@ is NaN, and *ordered* otherwise.
   * `f64.convert_u/i32`: convert an unsigned 32-bit integer to a 64-bit float
   * `f64.convert_u/i64`: convert an unsigned 64-bit integer to a 64-bit float
   * `f64.reinterpret/i64`: reinterpret the bits of a 64-bit integer as a 64-bit float
+  * `i32.trunc_s:sat/f32`: truncate a 32-bit float to a signed 32-bit integer with saturation
+  * `i32.trunc_s:sat/f64`: truncate a 64-bit float to a signed 32-bit integer with saturation
+  * `i32.trunc_u:sat/f32`: truncate a 32-bit float to an unsigned 32-bit integer with saturation
+  * `i32.trunc_u:sat/f64`: truncate a 64-bit float to an unsigned 32-bit integer with saturation
+  * `i64.trunc_s:sat/f32`: truncate a 32-bit float to a signed 64-bit integer with saturation
+  * `i64.trunc_s:sat/f64`: truncate a 64-bit float to a signed 64-bit integer with saturation
+  * `i64.trunc_u:sat/f32`: truncate a 32-bit float to an unsigned 64-bit integer with saturation
+  * `i64.trunc_u:sat/f64`: truncate a 64-bit float to an unsigned 64-bit integer with saturation
 
 Wrapping and extension of integer values always succeed.
 Promotion and demotion of floating point values always succeed.
@@ -665,7 +673,12 @@ round-to-nearest ties-to-even rounding.
 
 Truncation from floating point to integer where IEEE 754-2008 would specify an
 invalid operator exception (e.g. when the floating point value is NaN or
-outside the range which rounds to an integer in range) traps.
+outside the range which rounds to an integer in range) is handled as follows:
+ - For instructions with no exceptional behavior specified, a trap is produced.
+ - For instructions with the `:sat` modifier, no trap is produced, and:
+    - If the floating-point value is positive, the maximum integer value is returned.
+    - If the floating-point value is negative, the minimum integer value is returned.
+    - If the floating-point value is NaN, zero is returned.
 
 ## Type-parametric operators
 
