@@ -55,12 +55,20 @@ Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
 
 ## Instruction Opcodes
 
-In the MVP, the opcodes of [instructions](Semantics.md) are all encoded in a
-single byte since there are fewer than 256 opcodes. Future features like
-[SIMD](FutureFeatures.md#fixed-width-simd) and [atomics](FutureFeatures.md#threads)
-will bring the total count above 256 and so an extension scheme will be
-necessary, designating one or more single-byte values as prefixes for multi-byte
-opcodes.
+The opcodes for many common instructions are encoded in a single byte.
+
+The opcodes for some families of instructions are encoded as a *prefix byte*
+followed by an LEB128 value. Prefix byte values are allocated starting at `0xfe`
+and counting downwards.
+
+### Prefix Bytes
+
+| Opcode | Name     | Description |
+| ------ | -------- | ----------- |
+| `0xff` | reserved | Reserved for unknown future language evolution |
+| `0xfe` | threads  | Expected to be used for [threads] |
+| `0xfd` | simd     | Expected to be used for [SIMD] |
+| `0xfc` | numeric  | Numeric operations |
 
 ## Language Types
 
@@ -788,6 +796,14 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `f64.convert_s/i64` | `0xb9` | | |
 | `f64.convert_u/i64` | `0xba` | | |
 | `f64.promote/f32` | `0xbb` | | |
+| `i32.trunc_s:sat/f32` | `0xfc` `0x00` | | saturating form of `i32.trunc_s/f32` |
+| `i32.trunc_u:sat/f32` | `0xfc` `0x01` | | saturating form of `i32.trunc_u/f32` |
+| `i32.trunc_s:sat/f64` | `0xfc` `0x02` | | saturating form of `i32.trunc_s/f64` |
+| `i32.trunc_u:sat/f64` | `0xfc` `0x03` | | saturating form of `i32.trunc_u/f64` |
+| `i64.trunc_s:sat/f32` | `0xfc` `0x04` | | saturating form of `i64.trunc_s/f32` |
+| `i64.trunc_u:sat/f32` | `0xfc` `0x05` | | saturating form of `i64.trunc_u/f32` |
+| `i64.trunc_s:sat/f64` | `0xfc` `0x06` | | saturating form of `i64.trunc_s/f64` |
+| `i64.trunc_u:sat/f64` | `0xfc` `0x07` | | saturating form of `i64.trunc_u/f64` |
 
 ## Reinterpretations ([described here](Semantics.md#datatype-conversions))
 
@@ -804,3 +820,5 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 [future types]: FutureFeatures.md#more-table-operators-and-types
 [future multiple tables]: FutureFeatures.md#multiple-tables-and-memories
 [future compression]: https://github.com/WebAssembly/decompressor-prototype/blob/master/CompressionLayer1.md
+[threads]: https://github.com/WebAssembly/threads
+[SIMD]: https://github.com/WebAssembly/simd
