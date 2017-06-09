@@ -65,10 +65,10 @@ and counting downwards.
 
 | Opcode | Name     | Description |
 | ------ | -------- | ----------- |
-| `0xff` | reserved | Reserved for unknown future language evolution |
-| `0xfe` | threads  | Expected to be used for [threads] |
-| `0xfd` | simd     | Expected to be used for [SIMD] |
-| `0xfc` | numeric  | Numeric operations |
+| `0xff` | reserved | Reserved for unknown future language evolution :milky_way: |
+| `0xfe` | threads  | Expected to be used for [threads :unicorn:] |
+| `0xfd` | simd     | Expected to be used for [SIMD :unicorn:] |
+| `0xfc` | numeric  | Numeric operations :bowling: |
 
 ## Language Types
 
