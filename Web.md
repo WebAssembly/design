@@ -27,59 +27,43 @@ In non-web embeddings, these APIs may not be present.
 
 ### Additional Web Embedding API
 
+In Web embeddings, the following methods are added.
+
+Note that it is expected that `compileStreaming` and `instantiateStreaming` be either both present or both absent.
+
 #### `WebAssembly.compileStreaming`
 
 :cyclone: Added for milestone 2, developers must feature detect.
-
-In Web embeddings, the following methods are added. 
-
-Note that it is expected that `compileStreaming` and `instantiateStreaming` be either both present or both absent.
 
 ```
 Promise<WebAssembly.Module> compileStreaming(source)
 ```
 
-`source` is unconditionally passed through the built-in value
-of `Promise.resolve`.
-If the result is not a `Response` object, then the returned `Promise` is
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
-with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
-This allows developers to pass either a promise that resolves
-to a
-[`Response`](https://fetch.spec.whatwg.org/#response-class)
-object or a
-[`Response`](https://fetch.spec.whatwg.org/#response-class)
-object (which is automatically cast to a
-promise) for the `source`.
-Renderer-side
-security checks about tainting for cross-origin content are tied to the types
-of filtered responses defined in
-[`Fetch`](https://fetch.spec.whatwg.org/#concept-fetch).
+_This function accepts a [`Response`](https://fetch.spec.whatwg.org/#response-class) object, or a
+promise for one, and compiles the resulting bytes of the response. This compilation can be performed
+in the background and in a streaming manner. If the `Response` is not
+[CORS-same-origin](https://html.spec.whatwg.org/multipage/urls-and-fetching.html#cors-same-origin),
+does not represent an [ok status](https://fetch.spec.whatwg.org/#ok-status), or does not match the
+`` `application/wasm` `` MIME type, the returned promise will be rejected with a `TypeError`; if
+compilation fails, the returned promise will be rejected with a `WebAssembly.CompileError`._
 
-This function starts an asynchronous task to compile a `WebAssembly.Module`
-as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor).
-On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
-with the resulting `WebAssembly.Module` object. On failure, the `Promise` is
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
-`WebAssembly.CompileError` or `TypeError`, depending on the type of failure.
-
-The resolved `Response` is used as the source of the bytes to compile.
-MIME type information is
-[`extracted`](https://fetch.spec.whatwg.org/#concept-header-extract-mime-type)
-from the `Response`, WebAssembly `source` data must have a MIME type of `application/wasm`,
-extra parameters are not allowed (including empty `application/wasm;`).
-A MIME type mismatch, a response whose
-[type](https://fetch.spec.whatwg.org/#concept-response-type) is not "basic", "cors", or
-"default", or a response whose status is not an
-[ok status](https://fetch.spec.whatwg.org/#ok-status), must cause the Promise to be
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
-`TypeError`.
+1. Return the result of [processing a potential WebAssembly
+   response](#process-a-potential-webassembly-response), given _source_, with the following steps:
+   - Processing steps, given _bytes_:
+      1. Compile _bytes_, in the same fashion as specified for the [`WebAssembly.Module`
+         constructor](https://github.com/WebAssembly/design/blob/master/JS.md#webassemblymodule-constructor).
+      1. If compilation completes successfully, return a success with the validated `Ast.module`
+         compilation result.
+      1. Otherwise, if compilation fails, return a failure with the failure reason.
+   - Success steps, given _module_
+      1. Return a new `WebAssembly.Module` instance, with its [[Module]] set to _module_.
+   - Failure steps, given _reason_
+      1. Return a new `WebAssembly.CompileError` containing the compilation failure information
+         stored in _reason_.
 
 #### `WebAssembly.instantiateStreaming`
 
 :cyclone: Added for milestone 2, developers must feature detect.
-
-In Web embeddings, the following methods are added.
 
 ```
 dictionary WebAssemblyInstantiatedSource {
@@ -90,48 +74,133 @@ dictionary WebAssemblyInstantiatedSource {
 Promise<InstantiatedSource> instantiateStreaming(source [, importObject])
 ```
 
-`source` is unconditionally passed through the built-in value
-of `Promise.resolve`.
-If the result is not a `Response` object, then the returned `Promise` is
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
-with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
-This allows developers to pass either a promise that resolves
-to a
-[`Response`](https://fetch.spec.whatwg.org/#response-class)
-object or a
-[`Response`](https://fetch.spec.whatwg.org/#response-class)
-object (which is automatically cast to a
-promise) for the `source`.
-Renderer-side
-security checks about tainting for cross-origin content are tied to the types
-of filtered responses defined in
-[`Fetch`](https://fetch.spec.whatwg.org/#concept-fetch).
+_This function accepts a [`Response`](https://fetch.spec.whatwg.org/#response-class) object, or a
+promise for one, and compiles and instantiates the resulting bytes of the response. This compilation
+can be performed in the background and in a streaming manner. If the `Response` is not
+[CORS-same-origin](https://html.spec.whatwg.org/multipage/urls-and-fetching.html#cors-same-origin),
+does not represent an [ok status](https://fetch.spec.whatwg.org/#ok-status), or does not match the
+`` `application/wasm` `` MIME type, the returned promise will be rejected with a `TypeError`; if
+compilation or instantiation fails, the returned promise will be rejected with a
+`WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError` depending on the
+cause of failure._
 
-This function starts an asynchronous task that first compiles a `WebAssembly.Module`
-based on bytes from `source` as described in
-the [`WebAssembly.Module` constructor](#webassemblymodule-constructor)
-and then instantiate the resulting `Module` with `importObject` as described in the
-[`WebAssembly.Instance` constructor](#webassemblyinstance-constructor).
-On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
-with a plain JavaScript object pair `{module, instance}` containing the resulting
-`WebAssembly.Module` and `WebAssembly.Instance`. The 2 properties `module` and `instance` of the returned pair are  configurable, enumerable and writable.
+1. Return the result of [processing a potential WebAssembly
+   response](#process-a-potential-webassembly-response), given _source_, with the following steps:
+   - Processing steps, given _bytes_:
+      1. Compile _bytes_, in the same fashion as specified for the [`WebAssembly.Module`
+         constructor](https://github.com/WebAssembly/design/blob/master/JS.md#webassemblymodule-constructor).
+      1. If compilation completes successfully:
+         1. Let _module_ be the `Ast.module` compilation result.
+         1. Instantiate _module_ in the in the same fashion as specified for the
+            [`WebAssembly.Instance`
+            constructor](https://github.com/WebAssembly/design/blob/master/JS.md#webassemblyinstance-constructor).
+         1. If instantiation completes successfully, return a success with a
+            [tuple](https://infra.spec.whatwg.org/#tuple) containing _module_, the resulting
+            instance, and the resulting exports.
+         1. Otherwise, if instantiation fails, return a failure with the failure reason.
+      1. Otherwise, if compilation fails, return a failure with the failure reason.
+   - Success steps, given a tuple (_module_, _instance_, _exports_)
+      1. Create _exportsObject_ from _exports_, in the same fashion as specified for the
+         [`WebAssembly.Instance`
+         constructor](https://github.com/WebAssembly/design/blob/master/JS.md#webassemblyinstance-constructor).
+      1. Create _instanceObject_ from _exportsObject_ and _instance_, in the same fashion as specified for the
+         [`WebAssembly.Instance`
+         constructor](https://github.com/WebAssembly/design/blob/master/JS.md#webassemblyinstance-constructor).
+      1. Let _moduleObject_ be a new `WebAssembly.Module` instance, with its [[Module]] set to _module_.
+      1. Let _result_ be [ObjectCreate](https://tc39.github.io/ecma262/#sec-objectcreate)([%ObjectPrototype%](https://tc39.github.io/ecma262/#sec-properties-of-the-object-prototype-object)).
+      1. Perform
+         [CreateDataProperty](https://tc39.github.io/ecma262/#sec-createdataproperty)(_result_,
+         "`module`", _moduleObject_).
+      1. Perform
+         [CreateDataProperty](https://tc39.github.io/ecma262/#sec-createdataproperty)(_result_,
+         "`instance`", _instanceObject_).
+      1. Return _result_.
+   - Failure steps, given _reason_
+      1. Return a new `WebAssembly.CompileError`, `WebAssembly.LinkError`, or
+         `WebAssembly.RuntimeError` as appropriate for the failure information stored in _reason_.
 
-On failure, the `Promise` is
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
-`TypeError`, `WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`,
-depending on the cause of failure.
+#### Process a potential WebAssembly response
 
-The resolved `Response` is used as the source of the bytes to compile.
-MIME type information is
-[`extracted`](https://fetch.spec.whatwg.org/#concept-header-extract-mime-type)
-from the `Response`, WebAssembly `source` data must have a MIME type of `application/wasm`,
-extra parameters are not allowed (including empty `application/wasm;`).
-A MIME type mismatch, a response whose
-[type](https://fetch.spec.whatwg.org/#concept-response-type) is not "basic", "cors", or
-"default", or a response whose status is not an
-[ok status](https://fetch.spec.whatwg.org/#ok-status), must cause the Promise to be
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
-`TypeError`.
+The above two functions both reuse much of the same infrastructure for extracting bytes from an
+appropriate [`Response`](https://fetch.spec.whatwg.org/#response-class) object, differing only in
+what they do with those bytes in the end. As such we define the following shared spec-level
+procedure:
+
+Process a potential WebAssembly response accepts an input _argument_ and three sets of steps
+_processingSteps_, _successSteps_, and _failureSteps_:
+
+- _argument_ is an arbitrary author-supplied JavaScript value.
+- _processingSteps_ will occur [in
+  parallel](https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel) (i.e. "off the
+  main thread"), accepts a [byte sequence](https://infra.spec.whatwg.org/#byte-sequence), and must
+  return a Realm-agnostic success or failure value.
+- _successSteps_ and _failureSteps_ will occur in tasks posted back to the main event loop; they
+  accept the Realm-agnostic values returned from _processingSteps_, and must transform them into
+  JavaScript objects that can be used to appropriately fulfill or reject the returned promise.
+
+Given these values, to process a potential WebAssembly response:
+
+1. Let _returnValue_ be [a new
+   promise](https://www.w3.org/2001/tag/doc/promises-guide#a-new-promise).
+1. Let _sourceAsPromise_ be [a promise resolved
+   with](https://www.w3.org/2001/tag/doc/promises-guide#a-promise-resolved-with) _argument_.
+1. [Upon fulfillment](https://www.w3.org/2001/tag/doc/promises-guide#upon-fulfillment) of
+   _sourceAsPromise_ with value _unwrappedSource_:
+   1. If _unwrappedSource_ is not a [`Response`](https://fetch.spec.whatwg.org/#response-class)
+      object, [reject](https://www.w3.org/2001/tag/doc/promises-guide#reject-promise) _returnValue_
+      with a `TypeError` exception and abort these substeps.
+   1. Let _response_ be _unwrappedSource_'s
+      [response](https://fetch.spec.whatwg.org/#concept-response-response).
+   1. Let _mimeType_ be the result of
+      [extracting a MIME type](https://fetch.spec.whatwg.org/#concept-header-extract-mime-type) from
+      _response_'s [header list](https://fetch.spec.whatwg.org/#concept-response-header-list).
+   1. If _mimeType_ is not `` `application/wasm` ``, reject _returnValue_ with a `TypeError` and
+      abort these substeps. (NOTE: extra parameters are not allowed, including the empty
+      `` `application/wasm;` ``.)
+   1. If _response_ is not
+      [CORS-same-origin](https://html.spec.whatwg.org/multipage/urls-and-fetching.html#cors-same-origin),
+      reject _returnValue_ with a `TypeError` and abort these substeps.
+   1. If _response_'s [status](https://fetch.spec.whatwg.org/#concept-response-status) is not an
+      [ok status](https://fetch.spec.whatwg.org/#ok-status), reject _returnValue_ with a `TypeError`
+      and abort these substeps.
+   1. [Consume](https://fetch.spec.whatwg.org/#concept-body-consume-body) _response_'s body as an
+      `ArrayBuffer`, and let _bodyPromise_ be the result. (NOTE: although it is specified here that
+      the response is consumed entirely before _processingSteps_ proceeds, that is purely for ease of
+      specification; implementations are likely to instead perform processing in a streaming
+      fashion. The different is unobservable, and thus the simpler model is specified.)
+      <!-- Using consume is a bit silly as it creates an ArrayBuffer but then we just want the
+      underlying bytes. This is because of how streams is specced in terms of promises and JS
+      objects whereas we want to operate more directly on the underlying concept. We can revisit
+      this if things change in the Streams/Fetch specs. -->
+   1. [Upon fulfillment](https://www.w3.org/2001/tag/doc/promises-guide#upon-fulfillment) of
+      _bodyPromise_ with value _bodyArrayBuffer_:
+      1. Let _bytes_ be the [byte sequence](https://infra.spec.whatwg.org/#byte-sequence) underlying
+         _bodyArrayBuffer_.
+      1. [In parallel](https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel),
+         perform _processingSteps_, given _bytes_.
+      1. If _processingSteps_ succeeds with value _processingSuccessValue_, [queue a
+         task](https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-task) on the
+         [networking task
+         source](https://html.spec.whatwg.org/multipage/webappapis.html#networking-task-source) to
+         run _successSteps_ given _processingSuccessValue_, and let _successResult_ be the result of
+         those steps. [Resolve](https://www.w3.org/2001/tag/doc/promises-guide#resolve-promise)
+         _returnValue_ with _successResult_.
+      1. Otherwise, if _processingSteps_ fails with reason _processingFailureReason_, [queue a
+         task](https://html.spec.whatwg.org/multipage/webappapis.html#queue-a-task) on the
+         [networking task
+         source](https://html.spec.whatwg.org/multipage/webappapis.html#networking-task-source) to
+         run _failureSteps_ given _processingFailureReason_, and let _failureResult_ be the result
+         of those steps. [Reject](https://www.w3.org/2001/tag/doc/promises-guide#reject-promise)
+         _returnValue_ with _failureResult_.
+   1. [Upon rejection](https://www.w3.org/2001/tag/doc/promises-guide#upon-rejection) of
+      _bodyPromise_ with reason _reason_:
+      1. [Reject](https://www.w3.org/2001/tag/doc/promises-guide#reject-promise) _returnValue_ with
+         _reason_.
+1. [Upon rejection](https://www.w3.org/2001/tag/doc/promises-guide#upon-rejection) of
+   _sourceAsPromise_ with reason _reason_:
+   1. [Reject](https://www.w3.org/2001/tag/doc/promises-guide#reject-promise) _returnValue_ with
+      _reason_.
+1. Return _returnValue_.
 
 ## Developer-facing display conventions
 
@@ -190,7 +259,7 @@ these names should be used to synthesize a function name as follows:
   * If the function name is shown alongside its location in a
     stack trace, then just the module name (if present) or an empty string
     can be used (because the function index is already in the location).
-  * Otherwise, `${module_name}.wasm-function[${funcIndex}]` or 
+  * Otherwise, `${module_name}.wasm-function[${funcIndex}]` or
     `wasm-function[${funcIndex}]` should be used to convey the function index.
 
 Note that this document does not specify the full format of strings such as
