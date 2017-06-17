@@ -496,6 +496,13 @@ The function names subsection is a `name_map` which assigns names to
 a subset of the [function index space](Modules.md#function-index-space)
 (both imports and module-defined).
 
+Each function may be named at most once.  Naming a function more than once
+results in the section being malformed.
+
+However, names need not be unique.  The same name may be given for multiple
+functions. This is common for C++ programs where the multiple compilation units
+that comprise a binary can contain local functions with the same name.
+
 #### Local names
 
 The local names subsection assigns `name_map`s to a subset of functions in the
