@@ -312,7 +312,10 @@ use cases:
   * `f64.fma`: fused multiply-add (results always conforming to IEEE 754-2008)
 
 `minnum` and `maxnum` operators would treat `-0.0` as being effectively less
-than `0.0`.
+than `0.0`. Also, it's advisable to follow the IEEE 754-2018 draft, which has
+removed IEEE 754-2008's `minNum` and `maxNum` (which return qNaN when either
+operand is sNaN) and replaced them with `minimumNumber` and `maximumNumber`,
+which prefer to return a number even when one operand is sNaN.
 
 Note that some operators, like `fma`, may not be available or may not perform
 well on all platforms. These should be guarded by
