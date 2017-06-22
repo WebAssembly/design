@@ -1,0 +1,15 @@
+before_script:
+- git config --global user.name 'fanmingfei'
+- git config --global user.email 'az8641683@163.com'
+
+script:
+- mkdir .website
+- cd .website
+- git clone https://$ROBOT_TOKEN@github.com/$USER/website
+- cd website
+- git submodule update --init --recursive
+- cd design
+- git pull origin master
+- cd ../
+- git commit -am 'auto update'
+- git push origin master
