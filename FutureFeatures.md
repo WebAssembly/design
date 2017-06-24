@@ -4,7 +4,7 @@ These are features that make sense in the context of the
 [high-level goals](HighLevelGoals.md) of WebAssembly but weren't part of the
 initial [Minimum Viable Product](MVP.md) release.
 
-**Note:** we are in the process of migrating all post-MVP featues to tracking
+**Note:** we are in the process of migrating all post-MVP features to tracking
 issues.
 
 ## Tracking Issues
