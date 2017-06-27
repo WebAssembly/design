@@ -2,7 +2,7 @@
 
 This document describes the [portable](Portability.md) binary encoding of the WebAssembly modules.
 
-The binary encoding is a dense representation of module information that enables 
+The binary encoding is a dense representation of module information that enables
 small files, fast decoding, and reduced memory usage.
 See the [rationale document](Rationale.md#why-a-binary-encoding) for more detail.
 
@@ -15,15 +15,15 @@ The encoding is split into three layers:
   scenarios like JIT, instrumentation tools, and debugging.
 * **Layer 1** [:unicorn:][future compression] provides structural compression on top of layer 0, exploiting
   specific knowledge about the nature of the syntax tree and its nodes.
-  The structural compression introduces more efficient encoding of values, 
+  The structural compression introduces more efficient encoding of values,
   rearranges values within the module, and prunes structurally identical
   tree nodes.
 * **Layer 2** [:unicorn:][future compression] Layer 2 applies generic compression algorithms, like [gzip](http://www.gzip.org/) and [Brotli](https://datatracker.ietf.org/doc/draft-alakuijala-brotli/), that are already available in browsers and other tooling.
 
 Most importantly, the layering approach allows development and standardization to
 occur incrementally. For example, Layer 1 and Layer 2 encoding techniques can be
-experimented with by application-level decompressing to the layer below. As 
-compression techniques  stabilize, they can be standardized and moved into native 
+experimented with by application-level decompressing to the layer below. As
+compression techniques  stabilize, they can be standardized and moved into native
 implementations.
 
 See
@@ -201,7 +201,7 @@ part of the payload.
 
 Each known section is optional and may appear at most once. Custom sections all have the same `id` (0), and can be named non-uniquely (all bytes composing their names may be identical).
 
-Custom sections are intended to be used for debugging information, future evolution, or third party extensions. For MVP, we use a specific custom section (the [Name Section](#name-section)) for debugging information. 
+Custom sections are intended to be used for debugging information, future evolution, or third party extensions. For MVP, we use a specific custom section (the [Name Section](#name-section)) for debugging information.
 
 If a WebAssembly implementation interprets the payload of any custom section during module validation or compilation, errors in that payload must not invalidate the module.
 
@@ -217,7 +217,7 @@ The content of each section is encoded in its `payload_data`.
 | [Table](#table-section) | `4` | Indirect function table and other tables |
 | [Memory](#memory-section) | `5` | Memory attributes |
 | [Global](#global-section) | `6` | Global declarations |
-| [Export](#export-section) | `7` | Exports | 
+| [Export](#export-section) | `7` | Exports |
 | [Start](#start-section) | `8` | Start function declaration |
 | [Element](#element-section) | `9` | Elements section |
 | [Code](#code-section) | `10` | Function bodies (code) |
@@ -316,7 +316,7 @@ The encoding of a [Memory section](Modules.md#linear-memory-section):
 | count | `varuint32` | indicating the number of memories defined by the module |
 | entries | `memory_type*` | repeated `memory_type` entries as described [above](#memory_type) |
 
-Note that the initial/maximum fields are specified in units of 
+Note that the initial/maximum fields are specified in units of
 [WebAssembly pages](Semantics.md#linear-memory).
 
 In the MVP, the number of memories must be no more than 1.
@@ -360,7 +360,7 @@ The encoding of the [Export section](Modules.md#exports):
 | kind | `external_kind` | the kind of definition being exported |
 | index | `varuint32` | the index into the corresponding [index space](Modules.md) |
 
-For example, if the "kind" is `Function`, then "index" is a 
+For example, if the "kind" is `Function`, then "index" is a
 [function index](Modules.md#function-index-space). Note that, in the MVP, the
 only valid index value for a memory or table export is 0.
 
@@ -427,14 +427,19 @@ a `data_segment` is:
 
 Custom section `name` field: `"name"`
 
-The name section is a [custom section](#high-level-structure). 
-It is therefore encoded with id `0` followed by the name string `"name"`.
-Like all custom sections, this section being malformed does not cause the validation of the module to fail. It is up to the implementation how it handles a malformed or partially malformed name section. The wasm implementation is also free to choose to read and process this section lazily, after the module has been instantiated, should debugging be required.
+The name section is a [custom section](#high-level-structure).  It is therefore
+encoded with id `0` followed by the name string `"name"`.  Like all custom
+sections, this section being malformed does not cause the validation of the
+module to fail. It is up to the implementation how it handles a malformed or
+partially malformed name section. The WebAssembly implementation is also free to
+choose to read and process this section lazily, after the module has been
+instantiated, should debugging be required.
 
-The name section may appear only once, and only after the [Data section](#Data-section).
-The expectation is that, when a binary WebAssembly module is viewed in a browser or other development
-environment, the data in this section will be used as the names of functions
-and locals in the [text format](TextFormat.md).
+The name section may appear only once, and only after the [Data
+section](#Data-section).  The expectation is that, when a binary WebAssembly
+module is viewed in a browser or other development environment, the data in this
+section will be used as the names of functions and locals in the [text
+format](TextFormat.md).
 
 The name section contains a sequence of name subsections:
 
@@ -444,42 +449,59 @@ The name section contains a sequence of name subsections:
 | name_payload_len | `varuint32` | size of this subsection in bytes |
 | name_payload_data | `bytes` | content of this section, of length `name_payload_len` |
 
-Since name subsections have a given length, unknown or unwanted names types can
+Since name subsections have a given length, unknown or unwanted subsections can
 be skipped over by an engine. The current list of valid `name_type` codes are:
 
-| Name Type | Code | Description |
-| --------- | ---- | ----------- |
-| [Module](#module-name) | `0` | Assigns a name to the module |
-| [Function](#function-names) | `1` | Assigns names to functions |
-| [Local](#local-names) | `2` | Assigns names to locals in functions |
+| Name Type                   | Code | Description                          |
+| --------------------------- | ---- | ------------------------------------ |
+| [Module](#module-name)      | `0`  | Assigns a name to the module         |
+| [Function](#function-names) | `1`  | Assigns names to functions           |
+| [Local](#local-names)       | `2`  | Assigns names to locals in functions |
 
 
-When present, name subsections must appear in this order and at most once. The
+When present, subsections must appear in this order and at most once. The
 end of the last subsection must coincide with the last byte of the name
 section to be a well-formed name section.
+
+#### Module name
+
+The module name subsection assigns a name to the module itself. It simply
+consists of a single string:
+
+| Field    | Type        | Description                   |
+| -------- | ----------- | ----------------------------- |
+| name_len | `varuint32` | length of `name_str` in bytes |
+| name_str | `bytes`     | UTF-8 encoding of the name    |
 
 #### Name Map
 
 In the following subsections, a `name_map` is encoded as:
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| count | `varuint32` | number of `naming` in names |
-| names | `naming*` | sequence of `naming` sorted by index |
+| Field | Type        | Description                          |
+| ----- | ----------- | ------------------------------------ |
+| count | `varuint32` | number of `naming` in names          |
+| names | `naming*`   | sequence of `naming` sorted by index |
 
 where a `naming` is encoded as:
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| index | `varuint32` | the index which is being named |
-| name_len | `varuint32` | length of `name_str` in bytes |
-| name_str | `bytes` | UTF-8 encoding of the name |
+| Field    | Type        | Description                    |
+| -------- | ----------- | ------------------------------ |
+| index    | `varuint32` | the index which is being named |
+| name_len | `varuint32` | length of `name_str` in bytes  |
+| name_str | `bytes`     | UTF-8 encoding of the name     |
 
 #### Function names
 
 The function names subsection is a `name_map` which assigns names to
 a subset of the [function index space](Modules.md#function-index-space)
 (both imports and module-defined).
+
+Each function may be named at most once.  Naming a function more than once
+results in the section being malformed.
+
+However, names need not be unique.  The same name may be given for multiple
+functions. This is common for C++ programs where the multiple compilation units
+that comprise a binary can contain local functions with the same name.
 
 #### Local names
 
@@ -488,9 +510,9 @@ The local names subsection assigns `name_map`s to a subset of functions in the
 module-defined). The `name_map` for a given function assigns names to a
 subset of local variable indices.
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| count | `varuint32` | count of `local_names` in funcs |
+| Field | Type           | Description                               |
+| ----- | -------------- | ----------------------------------------- |
+| count | `varuint32`    | count of `local_names` in funcs           |
 | funcs | `local_names*` | sequence of `local_names` sorted by index |
 
 where a `local_name` is encoded as:
@@ -500,19 +522,9 @@ where a `local_name` is encoded as:
 | index | `varuint32` | the index of the function whose locals are being named |
 | local_map | `name_map` | assignment of names to local indices |
 
-#### Module name
-
-The module name subsection assigns a name to the module itself. It simply
-consists of a single string:
-
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| name_len | `varuint32` | length of `name_str` in bytes |
-| name_str | `bytes` | UTF-8 encoding of the name |
-
 # Function Bodies
 
-Function bodies consist of a sequence of local variable declarations followed by 
+Function bodies consist of a sequence of local variable declarations followed by
 [bytecode instructions](Semantics.md). Instructions are encoded as an
 [opcode](#instruction-opcodes) followed by zero or more *immediates* as defined
 by the tables below. Each function body must end with the `end` opcode.
@@ -564,8 +576,8 @@ The `br_table` operator has an immediate operand which is encoded as follows:
 | default_target | `varuint32` | an outer block or loop to which to break in the default case |
 
 The `br_table` operator implements an indirect branch. It accepts an optional value argument
-(like other branches) and an additional `i32` expression as input, and 
-branches to the block or loop at the given offset within the `target_table`. If the input value is 
+(like other branches) and an additional `i32` expression as input, and
+branches to the block or loop at the given offset within the `target_table`. If the input value is
 out of range, `br_table` branches to the default target.
 
 Note: Gaps in the opcode space, here and elsewhere, are reserved for
@@ -637,7 +649,7 @@ The `memory_immediate` type is encoded as follows:
 | offset | `varuint32` | the value of the offset |
 
 As implied by the `log2(alignment)` encoding, the alignment must be a power of 2.
-As an additional validation criteria, the alignment must be less or equal to 
+As an additional validation criteria, the alignment must be less or equal to
 natural alignment. The bits after the
 `log(memory-access-size)` least-significant bits must be set to 0. These bits
 are reserved for [future :unicorn:][future threads] use
