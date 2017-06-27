@@ -4,24 +4,26 @@ These are features that make sense in the context of the
 [high-level goals](HighLevelGoals.md) of WebAssembly but weren't part of the
 initial [Minimum Viable Product](MVP.md) release.
 
-**Note:** we are in the process of migrating all post-MVP featues to tracking
+**Note:** we are in the process of migrating all post-MVP features to tracking
 issues.
 
 ## Tracking Issues
 
-| Feature            | Tracking issue | Status      |
-|--------------------|----------------|-------------|
-| Specification      | [1077][]       | in progress |
-| Threads            | [1073][]       | in progress |
-| Fixed-width SIMD   | [1075][]       | in progress |
-| Exception handling | [1078][]       | in progress |
-| Garbage collection | [1079][]       | in progress |
+| Feature                       | Tracking issue | Status      |
+|-------------------------------|----------------|-------------|
+| Specification                 | [1077][]       | in progress |
+| Threads                       | [1073][]       | in progress |
+| Fixed-width SIMD              | [1075][]       | in progress |
+| Exception handling            | [1078][]       | in progress |
+| Garbage collection            | [1079][]       | in progress |
+| ECMAScript module integration | [1087][]       | no started  |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
   [1077]: https://github.com/WebAssembly/design/issues/1077
   [1078]: https://github.com/WebAssembly/design/issues/1078
   [1079]: https://github.com/WebAssembly/design/issues/1079
+  [1087]: https://github.com/WebAssembly/design/issues/1087
 
 
 ## Legacy Future Features
@@ -310,7 +312,10 @@ use cases:
   * `f64.fma`: fused multiply-add (results always conforming to IEEE 754-2008)
 
 `minnum` and `maxnum` operators would treat `-0.0` as being effectively less
-than `0.0`.
+than `0.0`. Also, it's advisable to follow the IEEE 754-2018 draft, which has
+removed IEEE 754-2008's `minNum` and `maxNum` (which return qNaN when either
+operand is sNaN) and replaced them with `minimumNumber` and `maximumNumber`,
+which prefer to return a number even when one operand is sNaN.
 
 Note that some operators, like `fma`, may not be available or may not perform
 well on all platforms. These should be guarded by
