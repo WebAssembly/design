@@ -36,26 +36,18 @@ Comparing the two, even for engines which already optimize asm.js, the benefits
 outweigh the costs.
 
 
-## What are WebAssembly's use cases?
+## WebAssembly 都有哪些用途？
 
-WebAssembly was designed with [a variety of use cases in mind](UseCases.md).
+WebAssembly 在设计的时候就考虑到了[广泛的用途](UseCases.md).
 
 
-## Can WebAssembly be polyfilled?
+## WebAssembly 是否能实现一些浏览器不支持的原生API (polyfill)?
 
-We think so. There was an early
-[prototype](https://github.com/WebAssembly/polyfill-prototype-1) with demos 
+我们是这样认为的。这里有一个早期[原型](https://github.com/WebAssembly/polyfill-prototype-1)附带演示页面
 [[1](https://lukewagner.github.io/AngryBotsPacked), 
-[2](https://lukewagner.github.io/PlatformerGamePacked)], which showed
-that decoding a binary WebAssembly-like format into asm.js can be efficient.
-And as the WebAssembly design has changed there have been
-[more](https://github.com/WebAssembly/polyfill-prototype-2)
-[experiments](https://github.com/WebAssembly/binaryen/blob/master/src/wasm2asm.h)
-with polyfilling.
+[2](https://lukewagner.github.io/PlatformerGamePacked)], 他们展示了从 WebAssembly-like 的二进制格式解码为 asm.js 可以是高效的。而且随着 WebAssembly 设计的变化，[更多](https://github.com/WebAssembly/polyfill-prototype-2) polyfilling 的[例子](https://github.com/WebAssembly/binaryen/blob/master/src/wasm2asm.h)涌现出来。
 
-Overall, optimism has been increasing for quick adoption of WebAssembly in
-browsers, which is great, but it has decreased the motivation to work on a
-polyfill.
+总体来说，由于浏览器厂商迅速采纳 WebAssembly 使得人们对其发展保持乐观的态度，但这削减了将它作为一个 polyfill 的工作热情。
 
 It is also the case that polyfilling WebAssembly to asm.js is less urgent
 because of the existence of alternatives, for example, a reverse polyfill -
@@ -74,10 +66,9 @@ However, a WebAssembly polyfill is still an interesting idea and should in
 principle be possible.
 
 
-## Is WebAssembly only for C/C++ programmers?
+## WebAssembly 只服务于 C/C++ 程序员吗？
 
-As explained in the [high-level goals](HighLevelGoals.md), to achieve a Minimum
-Viable Product, the initial focus is on [C/C++](CAndC++.md).
+正如在[长远目标](HighLevelGoals.md)一章中所说，为了实现最小可行性产品，发展之初会主要关注于 [C/C++](CAndC++.md)。
 
 However, by [integrating with JavaScript at the ES6 Module interface](Modules.md#integration-with-es6-modules),
 web developers don't need to write C++ to take advantage of libraries that others have written; 
@@ -95,7 +86,7 @@ increase the size of distributed code, lose browser devtools integration, can ha
 cycle-collection problems and miss optimizations that require integration with the browser.
 
 
-## Which compilers can I use to build WebAssembly programs?
+## 当我构建 WebAssembly 程序时该用什么编译器？
 
 WebAssembly initially focuses on [C/C++](CAndC++.md), and a new, clean
 WebAssembly backend is being developed in upstream clang/LLVM, which can then be
@@ -121,7 +112,7 @@ work with them on ABI matters.
   [WebAssembly Community Group]: https://www.w3.org/community/webassembly/
 
 
-## Will WebAssembly support View Source on the Web?
+## WebAssembly 在将来会支持通过 Web 查看其源码吗？
 
 Yes! WebAssembly defines a [text format](TextFormat.md) to be rendered when
 developers view the source of a WebAssembly module in any developer tool. Also,
@@ -148,7 +139,7 @@ which makes WebAssembly compatible with Emscripten's current asm.js compilation
 model.
 
 
-## Is WebAssembly trying to replace JavaScript?
+## WebAssembly 是否尝试要替代 JavaScript?
 
 No! WebAssembly is designed to be a complement to, not replacement of,
 JavaScript. While WebAssembly will, over time, allow many languages to be
@@ -173,7 +164,7 @@ together in a number of configurations:
   world of their own.
 
 
-## Why not just use LLVM bitcode as a binary format?
+## 为什么不直接使用 LLVM 位码作为二进制格式？
 
 The [LLVM](http://llvm.org/) compiler infrastructure has a lot to recommend it:
 it has an existing intermediate representation (LLVM IR) and binary encoding
