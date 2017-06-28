@@ -1,10 +1,9 @@
 # FAQ
 
-## Why create a new standard when there is already asm.js?
+## 为什么在已经有 asm.js 的基础上还要建立一个新的标准？
 
-... especially since pthreads ([Mozilla pthreads][], [Chromium pthreads][]) and
-SIMD ([simd.js][], [Chromium SIMD][], [simd.js in asm.js][]) are coming to
-JavaScript.
+... 尤其是当 JavaScript 即将迎来 pthreads ([Mozilla pthreads][], [Chromium pthreads][]) 和
+SIMD ([simd.js][], [Chromium SIMD][], [simd.js in asm.js][]) 的时候。
 
   [Mozilla pthreads]: https://blog.mozilla.org/javascript/2015/02/26/the-path-to-parallel-javascript/
   [Chromium pthreads]: https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/d-0ibJwCS24
@@ -12,26 +11,17 @@ JavaScript.
   [Chromium SIMD]: https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/2PIOEJG_aYY
   [simd.js in asm.js]: http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js/676
 
-There are two main benefits WebAssembly provides:
+WebAssembly 具有如下两个主要的优点：
 
-1. The kind of binary format being considered for WebAssembly can be natively
-   decoded much faster than JavaScript can be parsed ([experiments][] show more
-   than 20× faster).  On mobile, large compiled codes can easily take 20–40
-   seconds *just to parse*, so native decoding (especially when combined with
-   other techniques like [streaming][] for better-than-gzip compression) is
-   critical to providing a good cold-load user experience.
+1. 为 WebAssembly 设计的二进制格式可以被原生解码，这比 JavaScript 的解析要快很多（[实验][]表明至少要快20倍以上）。在移动设备上，较大的编译后代码*仅仅解析*就需要占用 20-40 秒，所以原生解码（特别是为了比 gzip 更好的压缩效果时需要与其他技术例如 [streaming][] 结合的时候）对于提供良好的零负载用户体验是非常重要的。
 
-2. By avoiding the simultaneous asm.js constraints of [AOT][]-[compilability][]
-   and good performance even on engines without
-   [specific asm.js optimizations][], a new standard makes it *much easier* to
-   add the [features :unicorn:][future features] required to reach native
-   levels of performance.
+2. 为了避免同步 asm.js 针对 [AOT][]-[编译][]的约束，并保证在没有[针对 asm.js 的特殊优化][]的设备上也有好的性能表现，用一个新的标准使得我们能够*更容易*的添加这些[特性 :unicorn:][future features]，这需要具有原生层面的性能表现能力。
 
-  [experiments]: BinaryEncoding.md#why-a-binary-encoding-instead-of-a-text-only-representation
+  [实验]: BinaryEncoding.md#why-a-binary-encoding-instead-of-a-text-only-representation
   [streaming]: https://www.w3.org/TR/streams-api/
   [AOT]: http://asmjs.org/spec/latest/#ahead-of-time-compilation
-  [compilability]: https://blog.mozilla.org/luke/2014/01/14/asm-js-aot-compilation-and-startup-performance/
-  [specific asm.js optimizations]: https://blog.mozilla.org/luke/2015/02/18/microsoft-announces-asm-js-optimizations/#asmjs-opts
+  [编译]: https://blog.mozilla.org/luke/2014/01/14/asm-js-aot-compilation-and-startup-performance/
+  [针对 asm.js 的特殊优化]: https://blog.mozilla.org/luke/2015/02/18/microsoft-announces-asm-js-optimizations/#asmjs-opts
 
 Of course, every new standard introduces new costs (maintenance, attack surface,
 code size) that must be offset by the benefits. WebAssembly minimizes costs by
