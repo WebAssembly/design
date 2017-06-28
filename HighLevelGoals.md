@@ -1,36 +1,22 @@
-# WebAssembly High-Level Goals
+# WebAssembly 的长久目标
 
-1. Define a [portable](Portability.md), size- and load-time-efficient
-   [binary format](MVP.md#binary-format) to serve as a compilation target which
-   can be compiled to execute at native speed by taking advantage of common
-   hardware capabilities available on a wide range of platforms, including
-   [mobile](https://en.wikipedia.org/wiki/Mobile_device) and
-   [IoT](https://en.wikipedia.org/wiki/Internet_of_Things).
-2. Specify and implement incrementally:
-    * a [Minimum Viable Product (MVP)](MVP.md) for the standard with
-      roughly the same functionality as [asm.js](http://asmjs.org), primarily
-      aimed at [C/C++](CAndC++.md);
-    * [additional features :unicorn:][future features],
-      initially focused on key features like threads,
-      zero cost exceptions, and SIMD,
-      follow by additional features
-      prioritized by feedback and experience, including support for languages
-      other than C/C++.
-3. Design to execute within and integrate well with the *existing*
-   [Web platform](Web.md):
-    * maintain the versionless, [feature-tested](FeatureTest.md) and backwards-compatible evolution story of the Web;
-    * execute in the same semantic universe as JavaScript;
-    * allow synchronous calls to and from JavaScript;
-    * enforce the same-origin and permissions security policies;
-    * access browser functionality through the same Web APIs that are accessible
-      to JavaScript; and
-    * define a human-editable text format that is convertible to and from the
-      binary format, supporting View Source functionality.
-4. Design to support [non-browser embeddings](NonWeb.md) as well.
-5. Make a great platform:
-    * build a new LLVM backend for WebAssembly and an accompanying
-      clang port ([why LLVM first?](FAQ.md#which-compilers-can-i-use-to-build-webassembly-programs));
-    * promote other compilers and tools targeting WebAssembly; and
-    * enable other useful [tooling](Tooling.md).
+1. 定义一个[可移植](Portability.md)、体积小、加载快的[二进制格式](MVP.md#binary-format)作为编译结果。通过充分发挥通用硬件的能力（包括[移动设备](https://en.wikipedia.org/wiki/Mobile_device)以及[物联网](https://en.wikipedia.org/wiki/Internet_of_Things)），使其在大多数平台上能达到原生的执行效率。
+2. 逐步制定与完善：
+    * 主要针对 [C/C++](CAndC++.md)，提供一个和 [asm.js](http://asmjs.org) 有大致相同功能的该标准[最小可行性产品(MVP)](MVP.md)；
+    * [其他特性 :unicorn:][未来特性]，首先关注在线程、零成本异常处理和单指令流多数据流等关键功能特性上，然后优先考虑通过反馈和经验总结的其他特性，比如对非 C／C++ 编程语言的支持。
+    
+3. 被设计为可以与现有的 [Web 平台](Web.md)完美结合并在其中运行：
+    * 维护无版本、[特性可测试](FeatureTest.md)、向后兼容的 Web 演变过程；
+    * 和 JavaScript 执行在相同的语意环境中；
+    * 允许和 JavaScript 相互的同步调用；
+    * 严格遵守同源策略以及浏览器安全策略；
+    * 和 JavaScript 一样，可以访问相同的 Web API 去调用浏览器的功能；以及
+    * 定义一个可与二进制格式相互转化的人类可编辑的文本格式，并且支持查看源码的功能。
+    
+4. 被设计为也可以支持[非浏览器嵌入](NonWeb.md)的运行形式。
+5. 创造一个伟大的平台：
+    * 为 WebAssembly 构建一个新的 LLVM 后端环境和伴随的 Clang 端口（[为什么首选 LLVM?](FAQ.md#which-compilers-can-i-use-to-build-webassembly-programs)）；
+    * 推广面向 WebAssembly 的其他编译器和工具；以及
+    * 启用其他有用的[工具](Tooling.md)。
 
-[future features]: FutureFeatures.md
+[未来特性]: FutureFeatures.md
