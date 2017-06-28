@@ -1,709 +1,594 @@
-# Semantics
-
-This document explains the high-level design of WebAssembly code: its types, constructs, and
-semantics.
-WebAssembly code can be considered a *structured stack machine*; a machine where most computations use a stack
-of values, but control flow is expressed in structured constructs such as blocks, ifs, and loops.
-In practice, implementations need not maintain an actual value stack, nor actual data structures for control; they
-need only behave [as if](https://en.wikipedia.org/wiki/As-if_rule) they did so.
-For full details consult [the formal Specification](https://github.com/WebAssembly/spec),
-for file-level encoding details consult [Binary Encoding](BinaryEncoding.md),
-and for the human-readable text representation consult [Text Format](TextFormat.md).
-
-Each function body consists of a list of instructions which forms an implicit *block*.
-Execution of instructions proceeds by way of a traditional *program counter* that advances
-through the instructions.
-Instructions fall into two categories: *control* instructions that form control constructs and *simple* instructions.
-Control instructions pop their argument value(s) off the stack, may change the
-program counter, and push result value(s) onto the stack.
-Simple instructions pop their argument value(s) from the stack, apply an operator to the values,
-and then push the result value(s) onto the stack, followed by an implicit advancement of
-the program counter.
-
-All instructions and operators in WebAssembly are explicitly typed, with no overloading rules.
-Verification of WebAssembly code requires only a single pass with constant-time
-type checking and well-formedness checking.
-
-WebAssembly offers a set of language-independent operators that closely
-match operators in many programming languages and are efficiently implementable
-on all modern computers. Each operator has a corresponding simple instruction.
-
-The [rationale](Rationale.md) document details why WebAssembly is designed as
-detailed in this document.
-
-[:unicorn:][future general] = Planned [future][future general] feature
-
-## Traps
-
-Some operators may *trap* under some conditions, as noted below. In the MVP,
-trapping means that execution in the WebAssembly instance is terminated and
-abnormal termination is reported to the outside environment. In a JavaScript
-environment such as a browser, a trap results in throwing a JavaScript exception.
-If developer tools are active, attaching a debugger before the
-termination would be sensible.
-
-## Stack Overflow
-
-Call stack space is limited by unspecified and dynamically varying constraints
-and is a source of [nondeterminism](Nondeterminism.md). If program call stack usage
-exceeds the available call stack space at any time, the execution in the
-WebAssembly instance is terminated and abnormal termination is reported to the
-outside environment.
-
-Implementations must have an internal maximum call stack size, and every call
-must take up some resources toward exhausting that size (of course, dynamic
-resources may be exhausted much earlier). This rule exists to avoid differences
-in observable behavior; if some implementations have this property and others
-don't, the same program which runs successfully on some implementations may
-consume unbounded resources and fail on others. Also, in the future, it is
-expected that WebAssembly will add some form of stack-introspection
-functionality, in which case such optimizations would be directly observable.
-
-Support for explicit tail calls is planned in
-[the future :unicorn:][future tail calls],
-which would add an explicit tail-call operator with well-defined effects
-on stack introspection.
-
-## Types
-
-WebAssembly has the following *value types*:
-
-  * `i32`: 32-bit integer
-  * `i64`: 64-bit integer
-  * `f32`: 32-bit floating point
-  * `f64`: 64-bit floating point
-
-Each parameter and local variable has exactly one [value type](Semantics.md#types). Function signatures
-consist of a sequence of zero or more parameter types and a sequence of zero or more return
-types. (Note: in the MVP, a function can have at most one return type).
-
-Note that the value types `i32` and `i64` are not inherently signed or
-unsigned. The interpretation of these types is determined by individual
-operators.
-
-## Linear Memory
-
-A *linear memory* is a contiguous, byte-addressable range of memory spanning
-from offset `0` and extending up to a varying *memory size*. This size is always 
-a multiple of the WebAssembly page size, which is fixed to 64KiB (though large
-page support may be added in an opt-in manner in the 
-[future](FutureFeatures.md#large-page-support)). The initial state of a linear
-memory is defined by the module's [linear memory](Modules.md#linear-memory-section) and
-[data](Modules.md#data-section) sections. The memory size can be dynamically
-increased by the [`grow_memory`](Semantics.md#resizing) operator.
-
-A linear memory can be considered to be an untyped array of bytes, and it is
-unspecified how embedders map this array into their process' own [virtual
-memory][]. Linear memory is sandboxed; it does not alias other linear memories,
-the execution engine's internal data structures, the execution stack, local
-variables, or other process memory.
-
-  [virtual memory]: https://en.wikipedia.org/wiki/Virtual_memory
-
-Every WebAssembly [instance](Modules.md) has one specially-designated *default* 
-linear memory which is the linear memory accessed by all the 
-[memory operators below](#linear-memory-access). In the MVP, there are *only*
-default linear memories but
-[new memory operators :unicorn:][future multiple tables]
-may be added after the MVP which can also access non-default memories.
-
-Linear memories (default or otherwise) can either be [imported](Modules.md#imports)
-or [defined inside the module](Modules.md#linear-memory-section). After import
-or definition, there is no difference when accessing a linear memory whether it
-was imported or defined internally.
-
-In the MVP, linear memory cannot be shared between threads of execution.
-The addition of [threads :unicorn:][future threads] will allow this.
-
-### Linear Memory Accesses
-
-Linear memory access is accomplished with explicit `load` and `store` operators.
-All `load` and `store` operators use little-endian byte order when translating
-between values and bytes.
-Integer loads can specify a *storage size* which is smaller than the result type as
-well as a signedness which determines whether the bytes are sign- or zero-
-extended into the result type.
-
-  * `i32.load8_s`: load 1 byte and sign-extend i8 to i32
-  * `i32.load8_u`: load 1 byte and zero-extend i8 to i32
-  * `i32.load16_s`: load 2 bytes and sign-extend i16 to i32
-  * `i32.load16_u`: load 2 bytes and zero-extend i16 to i32
-  * `i32.load`: load 4 bytes as i32
-  * `i64.load8_s`: load 1 byte and sign-extend i8 to i64
-  * `i64.load8_u`: load 1 byte and zero-extend i8 to i64
-  * `i64.load16_s`: load 2 bytes and sign-extend i16 to i64
-  * `i64.load16_u`: load 2 bytes and zero-extend i16 to i64
-  * `i64.load32_s`: load 4 bytes and sign-extend i32 to i64
-  * `i64.load32_u`: load 4 bytes and zero-extend i32 to i64
-  * `i64.load`: load 8 bytes as i64
-  * `f32.load`: load 4 bytes as f32
-  * `f64.load`: load 8 bytes as f64
-
-Stores have an additional input operand which is the `value` to store to memory.
-Like loads, integer stores may specify a smaller *storage size* than the operand
-size in which case integer wrapping is implied.
-
-  * `i32.store8`: wrap i32 to i8 and store 1 byte
-  * `i32.store16`: wrap i32 to i16 and store 2 bytes
-  * `i32.store`: (no conversion) store 4 bytes
-  * `i64.store8`: wrap i64 to i8 and store 1 byte
-  * `i64.store16`: wrap i64 to i16 and store 2 bytes
-  * `i64.store32`: wrap i64 to i32 and store 4 bytes
-  * `i64.store`: (no conversion) store 8 bytes
-  * `f32.store`: (no conversion) store 4 bytes
-  * `f64.store`: (no conversion) store 8 bytes
-
-Store operators do not produce a value.
-
-The above operators operate on the [default linear memory](#linear-memory).
-
-### Addressing
-
-Each linear memory access operator has an address operand and an unsigned
-integer byte offset immediate. The infinite-precision unsigned sum of the
-address operand's value with the offset's value is called the *effective
-address*, which is interpreted as an unsigned byte index into the linear memory.
-
-Linear memory operators access the bytes starting at the effective address and
-extend for the number of bytes implied by the storage size. If any of the
-accessed bytes are beyond the current memory size, the access is considered
-*out-of-bounds*.
-
-The use of infinite-precision in the effective address computation means that
-the addition of the offset to the address never causes wrapping, so if the
-address for an access is out-of-bounds, the effective address will always also
-be out-of-bounds.
-
-In wasm32, address operands and offset attributes have type `i32`, and linear
-memory sizes are limited to 4 GiB (of course, actual sizes are further limited
-by [available resources](Nondeterminism.md)). In wasm64, address operands and
-offsets have type `i64`. The MVP only includes wasm32; subsequent versions
-will add support for wasm64 and thus
-[>4 GiB linear memory :unicorn:][future 64-bit].
-
-### Alignment
-
-Each linear memory access operator also has an immediate positive integer power
-of 2 alignment attribute which must be no greater than the memory access' size.
-An alignment value which is the same as the memory access' size is considered
-to be a *natural* alignment. The alignment applies to the effective address and
-not merely the address operand, i.e. the immediate offset is taken into account
-when considering alignment.
-
-The alignment has same type (determined by wasm32/wasm64, as described above) as
-the address and offset operands.
-
-If the effective address of a memory access is a multiple of the alignment
-attribute value of the memory access, the memory access is considered *aligned*,
-otherwise it is considered *misaligned*. Aligned and misaligned accesses have
-the same behavior. 
-
-Alignment affects performance as follows:
-
- * Aligned accesses with at least natural alignment are fast.
- * Aligned accesses with less than natural alignment may be somewhat slower
-   (think: implementation makes multiple accesses, either in software or in
-   hardware).
- * Misaligned access of any kind may be *massively* slower (think:
-   implementation takes a signal and fixes things up).
-
-Thus, it is recommend that WebAssembly producers align frequently-used data to
-permit the use of natural alignment access, and use loads and stores with the
-greatest alignment values practical, while always avoiding misaligned accesses.
-
-### Out of Bounds
-
-Out of bounds accesses trap. If the access is a store, if any of the accessed
-bytes are out of bounds, none of the bytes are modified.
-
-### Resizing
-
-In the MVP, linear memory can be resized by a `grow_memory` operator. The
-operand to this operator is in units of the WebAssembly page size,
-which is defined to be 64KiB (though large page support may be added in 
-the [future :unicorn:][future large pages]).
-
- * `grow_memory` : grow linear memory by a given unsigned delta of pages.
-    Return the previous memory size in units of pages or -1 on failure.
-
-When a linear memory has a declared [maximum memory size](Modules.md#linear-memory-section),
-`grow_memory` must fail if it would grow past the maximum. However,
-`grow_memory` may still fail before the maximum if it was not possible to
-reserve the space up front or if enabling the reserved memory fails.
-When there is no maximum memory size declared, `grow_memory` is expected
-to perform a system allocation which may fail.
-
-The current size of the linear memory can be queried by the following operator:
-
-  * `current_memory` : return the current memory size in units of pages.
-
-As stated [above](Semantics.md#linear-memory), linear memory is contiguous,
-meaning there are no "holes" in the linear address space. After the
-MVP, there are [future features :unicorn:][future memory control]
-proposed to allow setting protection and creating mappings within the
-contiguous linear memory.
-
-In the MVP, memory can only be grown. After the MVP, a memory shrinking
-operator may be added. However, due to normal fragmentation, applications are
-instead expected release unused physical pages from the working set using the
-[`discard` :unicorn:][future memory control] future feature.
-
-The above operators operate on the [default linear memory](#linear-memory).
-
-## Table
-
-A *table* is similar to a linear memory whose elements, instead of being bytes,
-are opaque values of a particular *table element type*. This allows the table to
-contain values—like GC references, raw OS handles, or native pointers—that are
-accessed by WebAssembly code indirectly through an integer index. This feature
-bridges the gap between low-level, untrusted linear memory and high-level
-opaque handles/references at the cost of a bounds-checked table indirection.
-
-The table's element type constrains the type of elements stored in the table
-and allows engines to avoid some type checks on table use. When a WebAssembly
-value is stored in a table, the value's type must precisely match the element
-type. Depending on the operator/API used to store the value, this check may be
-static or dynamic. Just like linear memory, updates to a table are observed
-immediately by all instances that reference the table. Host environments may
-also allow storing non-WebAssembly values in tables in which case, as with
-[imports](Modules.md#imports), the meaning of using the value is defined by the
-host environment.
-
-Every WebAssembly [instance](Modules.md) has one specially-designated *default*
-table which is indexed by [`call_indirect`](#calls) and other future
-table operators. Tables can either be [imported](Modules.md#imports) or 
-[defined inside the module](Modules.md#table-section). After import or
-definition, there is no difference when calling into a table whether it was
-imported or defined internally.
-
-In the MVP, the primary purpose of tables is to implement indirect function
-calls in C/C++ using an integer index as the pointer-to-function and the table
-to hold the array of indirectly-callable functions. Thus, in the MVP:
-
-* tables may only be accessed from WebAssembly code via [`call_indirect`](#calls);
-* the only allowed table element type is `anyfunc` (function with any signature);
-* tables may not be directly mutated or resized from WebAssembly code;
-  this can only be done through the host environment (e.g., the `WebAssembly`
-  [JavaScript API](JS.md#webassemblytable-objects)).
-
-These restrictions may be relaxed in the [future :unicorn:][future types].
-
-## Local variables
-
-Each function has a fixed, pre-declared number of *local variables* which occupy a single
-index space local to the function. Parameters are addressed as local variables. Local
-variables do not have addresses and are not aliased by linear memory. Local
-variables have [value types](#types) and are initialized to the appropriate zero value for their
-type (`0` for integers, `+0.` for floating-point) at the beginning of the function,
-except parameters which are initialized to the values of the arguments passed to the function.
-
-  * `get_local`: read the current value of a local variable
-  * `set_local`: set the current value of a local variable
-  * `tee_local`: like `set_local`, but also returns the set value
-
-The details of index space for local variables and their types will be further clarified,
-e.g. whether locals with type `i32` and `i64` must be contiguous and separate from
-others, etc.
-
-## Global variables
-
-A *global variable* stores a single value of a fixed [value type](#types) and may be
-declared either *mutable* or *immutable*. This provides WebAssembly with memory
-locations that are disjoint from any [linear memory](#linear-memory) and thus
-cannot be arbitrarily aliased as bits.
-
-Global variables are accessed via an integer index into the module-defined 
-[global index space](Modules.md#global-index-space). Global variables can 
-either be [imported](Modules.md#imports) or [defined inside the module](Modules.md#global-section).
-After import or definition, there is no difference when accessing a global.
-
-  * `get_global`: get the current value of a global variable
-  * `set_global`: set the current value of a global variable
-
-It is a validation error for a `set_global` to index an immutable global variable.
-
-In the MVP, the primary use case of global variables is to represent
-instantiation-time immutable values as a useful building block for
-[dynamic linking](DynamicLinking.md).
-
-After the MVP, when [reference types](GC.md) are added to the set of [value types](#types),
-global variables will be necessary to allow sharing reference types between
-[threads :unicorn:][future threads] since shared linear memory cannot load or store
-references.
-
-## Control constructs and instructions
-
-WebAssembly offers basic structured control flow constructs such as *blocks*, *loops*, and *ifs*.
-All constructs are formed out of the following control instructions:
-
- * `nop`: no operation, no effect
- * `block`: the beginning of a block construct, a sequence of instructions with a label at the end
- * `loop`: a block with a label at the beginning which may be used to form loops
- * `if`: the beginning of an if construct with an implicit *then* block
- * `else`: marks the else block of an if
- * `br`: branch to a given label in an enclosing construct
- * `br_if`: conditionally branch to a given label in an enclosing construct
- * `br_table`: a jump table which jumps to a label in an enclosing construct
- * `return`: return zero or more values from this function
- * `end`: an instruction that marks the end of a block, loop, if, or function
-
-Blocks are composed of matched pairs of `block` ... `end` instructions, loops with matched pairs of 
-`loop` ... `end` instructions, and ifs with either `if` ... `end` or `if` ... `else` ... `end` sequences.
-For each of these constructs the instructions in the ellipsis are said to be *enclosed* in the
-construct.
-
-### Branches and nesting
-
-The `br`, `br_if`, and `br_table` instructions express low-level branching and are hereafter refered to simply as branches.
-Branches may only reference labels defined by a construct in which they are enclosed.
-For example, references to a `block`'s label can only occur within the `block`'s body.
-
-In practice, outer `block`s can be used to place labels for any given branching
-pattern, except that the nesting restriction makes it impossible to branch into the middle of a loop
-from outside the loop. This limitation ensures by construction that all control flow graphs
-are well-structured as in high-level languages like Java, JavaScript and Go.
-Notice that a branch to a `block`'s label is  equivalent to a labeled `break` in
-high-level languages; branches simply break out of a `block`, and branches to a `loop`
-correspond to a "continue" statement.
-
-### Execution semantics of control instructions
-
-Executing a `return` pops return value(s) off the stack and returns from the current function.
-
-Executing a `block` or `loop` instruction has no effect on the value stack.
-
-Executing the `end` of a `block` or `loop` (including implicit blocks such as in `if` or for a function body) has no effect on the value stack.
-
-Executing the `end` of the implicit block for a function body pops the return value(s) (if any) off the stack and returns from the function.
-
-Executing the `if` instruction pops an `i32` condition off the stack and either falls through to the next instruction
-or sets the program counter to after the `else` or `end` of the `if`.
-
-Executing the `else` instruction of an `if` sets the program counter to after the corresponding `end` of the `if`.
-
-Branches that exit a `block` or `if` may yield value(s) for that construct.
-Branches pop result value(s) off the stack which must be the same type as the declared
-type of the construct which they target. If a conditional or unconditional branch is taken, the values pushed
-onto the stack between the beginning of the construct and the branch are discarded, the result value(s) are
-pushed back onto the stack, and the program counter is updated to the end of the construct. 
-
-Branches that target a `loop` do not yield a value; they pop any values pushed onto the stack since the start of the loop and set the program counter to the start of the loop.
-
-The `drop` operator can be used to explicitly pop a value from the stack.
-
-The implicit popping associated with explicit branches makes compiling expression languages straightforward, even non-local
-control-flow transfer, requiring fewer drops.
-
-Note that in the MVP, all control constructs and control instructions, including `return` are
-restricted to at most one value.
+# 语义
+
+本文档主要介绍WebAssembly代码的高级设计：类型，结构和语义。WebAssembly代码可以被认为是一个结构化堆栈机器; 大多数计算仅使用栈中存储的数值内容，但是控制流使用结构化构造表示，如区块，条件判断ifs 和循环等。 实践中， 具体实现无须为控制流维护实际值栈和数据结构；它们只须遵循[as if](https://en.wikipedia.org/wiki/As-if_rule)规则 。 全部详情请参阅[the formal Specification](https://github.com/WebAssembly/spec), 想要了解文件级编码详情，请阅读[Binary Encoding](http://webassembly.org/docs/binary-encoding/), 人类可读的文本表示请参阅文本格式请阅读[Text Format](http://webassembly.org/docs/text-format/).
+
+> [注]
+>
+> `as-if rule` 只要不改变程序的 **可观察行为（observable behavior）**，就可以任意改变程序代码。在as-if规则下，编译器可以对代码做最大限度的优化，尽可能提升应用程序的执行效率。
+
+函数体由指令序列组成， 也要以把它看作一个隐式块。 同传统程序计数器(PC)一样，指令执行过程通过向前移动的方式处理指令序列。 指令分为两类：控制指令和简单指令。控制指令组成了控制结构和简单指令， 它从栈顶弹出参数值，根据情况决定是否更改PC的内容，然后将结果值压入堆栈。 简单指令从堆栈中弹出一个或多个参数值，批量对这些值应用一个运算符操作后，将结果值压入堆栈，随后自动递增 PC 的内容。
+
+WebAssembly中所有指令和运算符都是显式类型的，不支持重载。 WebAssembly代码验证需要在一个常数时间内同时通过类型检查和合法性检查。
+
+WebAssembly提供了一组语言无关的运算符，它们与许多编程语言中的运算符紧密匹配，并且可在所有现代计算机上高效地实现。 每个运算符都有相应的简单指令。
+
+[理论基础](../rationale/) 文档详细解释了WebAssembly被设计成这样的原因。
+
+[:unicorn:](../future-features/) = [未来功能](../future-features/) 计划
+
+## 中断
+
+一些运算符在某些情况下可能会产生_中断_，下面会提到具体情况。 在MVP中，中断意味着WebAssembly实例中的执行将被终止， 将异常终止报告给外部环境。 在JavaScript环境中，比如浏览器，中断会导致JavaScript异常。如果找开了开发者工具，在终止前添加一个debugger调试会是非常明智的。
+
+## 栈溢出
+
+调用堆栈空间受到未指定和动态变化约束的限制，它们也带来了 [不确定性](../nondeterminism/).。 任何时候程序调用堆栈使用的空间超出了可用的调用堆栈空间，都会终止WebAssembly实例中的执行，异常终止将被报告给外部环境。
+
+实现必须设定一个内部的最大调用堆栈空间尺寸，每次调用必须占用一些资源， 来消耗该值（当然，动态资源可能会更快耗尽）。 这个规则是为了避免观察行为间的差异; 如果某些实现设定了内部最大调用堆栈空间尺寸，有些实则没有，那么在这些没设定最大调用堆栈空间尺寸的实现上成功运行的程序可能会无限制地消耗资源，将这些程序放在其他实现中运行将会失败。 此外，预期WebAssembly未来将添加某种形式的堆栈内省功能，在这种情况下，优化会是直接可见的。
+
+显式尾调用计划在[未来 :unicorn:](../future-features/#general-purpose-proper-tail-calls) 支持。 介时会提供一个显式的尾调用运算符, 它具有明确的栈内省功能定义。
+
+## 类型
+
+WebAssembly 具有以下 _值类型_:
+
+*   `i32`: 32-bit 整型
+
+*   `i64`: 64-bit 整型
+
+*   `f32`: 32-bit 浮点型
+
+*   `f64`: 64-bit 浮点型
+
+每个参数和局部变量都必须是以上四种[值类型](../semantics/#types)之一 . 函数签名由0或多个参数的类型序列及0或多个返回值的类型序列组成。 （注意：在MVP中，一个函数最多可以有一个返回类型）。
+
+需要注意的是， 值类型`i32`和`i64`不是固有有符号或无符号的。 这些类型的解释取决于某个具体的运算符。
+
+## 线性内存
+
+_线性内存_ 是一段 按字节寻址的连续存储区间， 范围从`0` 到一个可变 _内存容量_ 。 这个容量通常是WebAssembly页容量的倍数, WebAssembly的页容量被固定为64KiB（尽量未来可能添加可选的更大页容量支持）。模块文档的[线性内存](http://webassembly.org/docs/modules/#linear-memory-section) 和 [数据](http://webassembly.org/docs/modules/#data-section)部分中给出了线性内存的初始状态定义。可以用 [`grow_memory`](http://webassembly.org/docs/semantics/#resizing) 运算符动态增加线性内存容量。
+
+线性内存可以被认为是一个无类型的字节数组，嵌入器是如何把这个数组映射到进程自己的 [虚拟内存](https://en.wikipedia.org/wiki/Virtual_memory) 中并没给出明确说明。线性内存是沙盒隔离的，它不依赖其它的线性内存、 执行引擎的内部数据结构 ， 执行堆栈、局部变量、其它进程的内存。
+
+每个WebAssembly [实例](http://webassembly.org/docs/modules/)都有特别指定的 _默认_ 线性内存， 这段内存可被所有的[内存运算符](http://webassembly.org/docs/semantics/#linear-memory-access)访问。在MVP中，只有默认的线性内存，但在MVP之后可能会添加可以访问非默认内存的 [新内存运算符 :unicorn:](http://webassembly.org/docs/future-features/#multiple-tables-and-memories) 。
+
+线性内存（默认或其它） 要么是被 [导入](http://webassembly.org/docs/modules/#imports) ， 要么是 [模块内定义](http://webassembly.org/docs/modules/#linear-memory-section)的。这两种方式对后续的线性内存访问没有区别。
+
+在MVP中，线性内存不能在执行线程间共享。未来将会允许线程间共享， 见[线程 :unicorn:](http://webassembly.org/docs/future-features/#threads) .
+
+### 线性内存访问
+
+线性内存访问通过显式调用 `load` 和 `store` 运算符完成。 对值和字节进行转换时， 所有的`load` 和 `store` 运算符都采用小端字节序。加载整数可以指定_存储大小_和符号， 存储大要小小于结果类型的大小, 符号决定结果类型中的字节是符号扩展的还是零扩展的。
+
+> [注]
+>
+> 符号扩展： 二进制中的有符号数，符号位总是位于数的第一位，如果向方位较大的数据类型进行扩展，符号位也应该位于第一位才对，所以当一个负数被扩展时，其扩展的高位全被置位为1；对于整数，因为符号位是0，所以其扩展的位仍然是0
+>
+> 零扩展： 不管要转换成什么整型类型，不要最初值的符号位是什么，扩展的高位都被置位0.
+>
+> 见《深入理解计算机系统》 原书第3版 第2章 信息的表示和处理 2.2.6节 扩展一个数字的位表示
+
+*   `i32.load8_s`: 加载1字节， 将8位整数零扩展为32位整数
+
+*   `i32.load8_u`: 加载1字节， 将8位整数零扩展为32位整数
+
+*   `i32.load16_s`: 加载2字节， 将16位整数符号扩展为32位整数
+
+*   `i32.load16_u`: 加载2字节， 将16位整数零扩展为32位整数
+
+*   `i32.load`: 加载4字节，转换为32位整数
+
+*   `i64.load8_s`: 加载1字节， 将8位整数符号扩展为64位整数
+
+*   `i64.load8_u`: 加载1字节， 将8位整数零扩展为64位整数
+
+*   `i64.load16_s`: 加载2字节， 将16位整数符号扩展为64位整数
+
+*   `i64.load16_u`: 加载2字节， 将16位整数零扩展为64位整数
+
+*   `i64.load32_s`: 加载4字节， 将32位整数符号扩展为64位整数
+
+*   `i64.load32_u`: 加载4字节， 将32位整数零扩展为64位整数
+
+*   `i64.load`: 加载8字节，转换为64位整数
+
+*   `f32.load`: 加载4字节，转换为32位浮点数
+
+*   `f64.load`: 加载8字节，转换为64位浮点数
+
+存储有一个额外的输入操作数，这个操作数就是要存储到内存中的`value`, 同加载一样，整数存储可以指定比操作数更小的_存储大小_， 这种情况下隐含了整数包装。
+
+*   `i32.store8`: 将32位整数包装为8位整数， 存储1字节
+
+*   `i32.store16`: 将32位整数包装为16位整数， 存储2字节
+
+*   `i32.store`: (不转换) 存储4字节
+
+*   `i64.store8`: 将64位整数包装为8位整数， 存储1字节
+
+*   `i64.store16`: 将64位整数包装为16位整数， 存储2字节
+
+*   `i64.store32`: 将64位整数包装为32位整数， 存储4字节
+
+*   `i64.store`: (不转换) 存储8字节
+
+*   `f32.store`: (不转换) 存储4字节
+
+*   `f64.store`: (不转换) 存储8字节
+
+存储运算符不产生`value`
+
+以上运算符都在[默认线性内存](http://webassembly.org/docs/semantics/#linear-memory)上进行操作。
+
+### 寻址
+
+每个线性内存访问运算符都有一个地址操作数和无符号的整数字节偏移立即数。 对地址操作数值与偏移值进行无限精度无符号求和得到的值， 称为_有效地址_，这被解释为线性内存中的无符号字节索引。
+
+线性内存运算符从有效地址开始访问字节，一直访问到存储大小指定的字节数。 如果任何访问的字节超出了当前的内存大小，则访问被认为_越界_。
+
+在有效地址计算中使用无限精度意味着向地址添加偏移量绝对不会导致包装，因此，如果访问地址超出范围，则有效地址将始终为越界。
+
+在wasm32中， 地址操作数和偏移量属性的数据类型为`i32`， 线性内存大小限制为4 GiB（当然，实际大小进一步受 [可用资源](http://webassembly.org/docs/nondeterminism/)的限制）。 在wasm64中，地址操作数和偏移量的数据类型为`i64`。 MVP只包括wasm32; 后续版本将增加对wasm64的支持，从而支持 [>4 GiB 的线性内存 :unicorn:](http://webassembly.org/docs/future-features/#linear-memory-bigger-than-4-gib)。
+
+### 对齐
+
+每个线性内存访问运算符还有一个必须是 2 的正整数幂的立即数，对齐属性必须小于等于可访问内存大小。对齐值与内存访问值的大小一致时， 这个值被认为是自然对齐的。对齐不仅适用于地址操作数， 也适用于有效地址。 即考虑对齐时会想到立即数偏移量
+
+对齐具有和地址操作数、偏移量操作数一致的类型（取决于wasm32/wasm64， 如上所述）。
+
+如果内存访问的有效地址是对齐属性值的倍数， 则内存访问被认为是对齐的， 否则被认为未对齐。对齐和不对齐的访问具有相同的行为。
+
+对齐会影响以下性能：
+
+*   只有自然对齐的对齐访问速度也是很快的
+
+*   小于自然对齐的对齐访问可能会稍微慢一点（ 考虑下：实现可以在软件中或在硬件中进行多次访问）。
+
+*   任何形式的未对齐访问都可能会非常慢（考虑下：实施需要一个信号修复问题）
+
+因些， 建议WebAssembly 生产者对齐频繁使用的数据以允许自然对齐访问， 并且尽可能使用具有最大对齐值的加载和存储，同时始终避免未对齐访问。
+
+### 越界
+
+越界产生中断。 访问存储时，如果访问的字节中任何一个发生越界，则所有访问到的字节都不会被修改。
+
+### 调整
+
+MVP中， 可以用`grow_memory` 运算符调整线性内存的大小。`grow_memory`运算符的操作数以WebAssembly页面大小为单位， 页大小被固定为64KiB ([未来 :unicorn:](http://webassembly.org/docs/future-features/#large-page-support)会添加大页支持)
+
+*   `grow_memory` : 通过给定的页量增量来增加线性内存。返回原来的内存大小（以页为单位），执行失败时返回-1
+
+如果线性内存 声明了[最大内存大小](http://webassembly.org/docs/modules/#linear-memory-section)，且增长超过该最大值时，`grow_memory`必须失败。 但是，如果无法预留空间，或者如果启用预留内存失败，grow_memory可能会在到达最大值之前失败。 当没有声明最大内存大小时，`grow_memory` 将会执行系统分配， 也可能会失败。
+
+当前的线性内存大小可以用下面的运算符查询
+
+*   `current_memory` : 返回当前内存大小， 以页为单位
+
+如上所述， 线性内存是连续的， 也就是说， 线性地址空间中没有"洞"。 MVP以后， [未来功能 :unicorn:](http://webassembly.org/docs/future-features/#finer-grained-control-over-memory) 提议允许在连续线性内存中设置保护和创建映射 。
+
+MVP中， 内存只能增长 。MVP以后， 可能会添加内存缩小运算符。然而， 由于正常的分段，应用程序反而期望未来的[`discard`  :unicorn:](http://webassembly.org/docs/future-features/#finer-grained-control-over-memory) 功能， 从工作集中释放未使用的物理页面.
+
+以上运算符都在[默认线性内存](http://webassembly.org/docs/semantics/#linear-memory)上进行操作。
+
+## 表
+
+_表_类似于线性内存，表元素是不透明值，一种特殊的_表元素类型_， 而不是字节。 这允许表包含值—类似GC引用、原始OS句柄、或原生指针—WebAssembly 代码可以通过整数索引直接获取这些值。 该功能以边界检查表为代价，间接弥补了底层的不受信的线性内存和高层的不透明句柄/引用之间的差距。
+
+表的元素类型限制了存储在表中的元素类型，为引擎避免了一些表使用中的类型检查。 当WebAssembly值存储在表中时，值的类型必须与元素类型精确匹配。 取决于用来存储值的运算符/ API，检查可能是静态也可能动态的。 就像线性内存一样，引用该表的所有实例都会立即观察到表的更新。 宿主环境还可以允许在表中存储非WebAssembly值，在这种情况下，与[导入](http://webassembly.org/docs/modules/#imports) 一样，由宿主环境定义该值的使用含义。
+
+每个WebAssembly实例都有一个特别指定的缺省表，可以被[`call_indirect`](http://webassembly.org/docs/semantics/#calls) 和其他未来的表运算符索引。表要么是被 [导入](http://webassembly.org/docs/modules/#imports) ， 要么是 [模块内定义](http://webassembly.org/docs/modules/#linear-memory-section)的。这两种方式对后续的表内调用访问没有区别。
+
+在MVP中，表的主要目的是实现C / C ++中的间接函数调用（把整数索引当作函数指针使用），并且用表来保存间接函数调用的数组。 因此，在MVP中：
+
+*   WebAssembly 代码只能用 [`call_indirect`](http://webassembly.org/docs/semantics/#calls) 访问表
+
+*   `anyfunc` （任意签名的函数）是唯一允许的表元素类型
+
+*   WebAssembly 代码不能直接改变或调整表； 这些操作只能在宿主环境中进行（如， `WebAssembly`  [JavaScript API](http://webassembly.org/docs/js/#webassemblytable-objects) ）
+
+## 局部变量
+
+每个函数都有一些固定的，预声明的局部变量，它们占用函数内部的单个索引空间。 参数被当作局部变量处理。 局部变量没有地址和线性内存别名。 局部变量具有 [值类型](http://webassembly.org/docs/semantics/#types) ，函数开头将局部变量的类型初始化为相应的零值（整型值初始为0，浮点数初始为+0），形参则被初始化为传递给函数的实参值。
+
+*   `get_local`: 获取局部变量当前值
+
+*   `set_local`: 设置局部变量当前值
+
+*   `tee_local`: 类似 `set_local`, 设置局部变量当前值后返回被设置的新值
+
+关于局部变量索引空间和类型的细节将进一步明确， 例如， 类型为i32和i64的局部变量必须是相邻的，还是被其它变量分开的等等。
+
+## 全局变量
+
+_全局变量_存储固定值类型的单个值，并且可以声明为可变的或不可变的。 这为WebAssembly提供了与任何线性存内存都不相交的内存位置，因此不能任意地作为位来别名。
+
+全局变量只能从模块内定义的 [全局索引空间](http://webassembly.org/docs/modules/#global-index-space) 中通过整数索引的方式获取。全局变量要么是被 [导入](http://webassembly.org/docs/modules/#imports) ， 要么是 [模块内定义](http://webassembly.org/docs/modules/#linear-memory-section)的。这两种方式对后续的全局变量访问没有区别。
+
+*   `get_global`: 获取全局变量的当前值
+
+*   `set_global`: 设置全局变量的当前值
+
+`set_global` 设置不可变全局变量索引会导致验证异常
+
+MVP中，全局变量的主要用例是将实例化不可变值表示为 [动态链接](http://webassembly.org/docs/dynamic-linking/)的有用构建块。
+
+MVP之后，当[引用类型](http://webassembly.org/docs/gc/) 被添加到值类型集合中时，需要使用全局变量来允许 [线程 :unicorn:](http://webassembly.org/docs/future-features/#threads) 间共享引用类型，因为共享线性内存不能加载或存储引用。
+
+## 控制结构和指令
+
+WebAssembly提供基本的结构化控制流结构，如_块_，_循环_和 _ifs_。 所有结构都由以下控制指令组成：
+
+*   `nop`: 无操作， 无效果
+
+*   `block`: 一个块结构的开始，以一个标记结尾的指令序列
+
+*   `loop`: 一个开头有标记的块，可以用来形成循环
+
+*   `if`: 一个具有隐式_then_块的if结构的开始
+
+*   `else`: 标记if指令的else块
+
+*   `br`: 到封闭结构中给定标记的分支
+
+*   `br_if`: 到封闭结构中给定标记的条件分支
+
+*   `br_table`: 跳表， 跳转到封闭结构中的标记
+
+*   `return`: 函数返回0或多个值
+
+*   `end`: 标记块、循环，if或函数的结束的指令
+
+块的组成包括匹配的`block` … `end` 指令对、 匹配的`loop` … `end` 指令对、 `if` … `end` 或者 `if` … `else` … `end` 序列的条件语句 。每个结构中的省略号中的指令被称作被_封闭_在结构中。
+
+### 分支和嵌套
+
+`br`, `br_if`, `br_table` 指令表示底层分支，后续统一简称为分支。 分支仅能引用包围在它们结构内的定义标记。例如，只能在`block`内引用`block`标记。
+
+实际上，除了由于嵌套限制使得不能从循环外部分支进入循环中间, 外部`block`可以用于为任何给定的分支模式放置标记. 这种限制通过构造确保所有控制流程图都具有良好的结构，如高级语言（Java，JavaScript和Go）。 请注意，一个分支到`block`的标记相当于高级语言的标记`break`; 简单地从`block`中跳出，进入循环的声明是`continue`。
+
+### 控制指令的执行语义
+
+执行`return`从值栈弹出返回值（1或多个），并从当前函数返回。
+
+执行`block` 或者`loop`指令对值栈没有影响。
+
+执行 `block` or `loop` 的 `end` 指令，(包括隐式块，如`if`块或函数体）对值堆栈没有影响。
+
+执行函数体隐式块的`end`指令， 会从栈顶弹出返回值（1或多个）（如果有的话）, 并从函数返回。
+
+执行`if`指令从堆栈中弹出一个`i32`条件， 然后要么转到下一条指令， 要么设置程序计数器指向`if`指令的`else`或`end`。
+
+执行`if`的`else`指令设置程序计数器指向`if`相应的`end`
+
+退出`block`或`if`的分支可能产生结构的值 。分支从堆栈中弹出结果值，值类型必须与目标结构声明的类型相同。如果采取条件或无条件的分支，则丢弃在构造和分支的开始之间被推到堆栈上的值，结果值被推回堆栈，更新程序计数器指向构造的结尾。
+
+转向`loop`的分支不会产生值；它们从堆栈中弹出所有从循环开始时进入堆栈中的值，更新程序计数器指向循环的开始位置。
+
+`drop`运算符可以用来显示的从栈顶弹出一个值。
+
+与显式分支相关联的隐式弹出使编译表达式语言简单明了，甚至更少的出栈操作也能实现非局部的控制流传递。
+
+注意，在MVP中，所有的控制结构和控制指令，限制`return`最多返回一个值。
 
 ### `br_table`
 
-A `br_table` consists of a zero-based array of labels, a *default* label,
-and an index operand. A `br_table` jumps to the label indexed in the array
-or the default label if the index is out of bounds.
+`br_table`由一个下标从零开始的标记数组，一个_default_标记，和一个索引操作数组成。`br_table`跳转到数组中的索引标记，如果索引越界，则跳转到默认标记。
 
+## 调用
 
-## Calls
+每个函数都有签名，签名的组成包括：
 
-Each function has a *signature*, which consists of:
+*   返回类型， 一系列值类型
 
-  * Return types, which are a sequence of value types
-  * Argument types, which are a sequence of value types
+*   参数类型， 一系列值类型
 
-WebAssembly doesn't support variable-length argument lists (aka
-varargs). Compilers targeting WebAssembly can instead support them through
-explicit accesses to linear memory.
+WebAssembly 不支持变长参数列表(亦称 varargs). webassembly编译器可以通过显式访问线性内存的方式提供变通支持。
 
-In the MVP, the length of the return types sequence may only be 0 or 1. This
-restriction may be lifted in the future.
+MVP中，返回类型序列的长度可能只有0或1。未来可能取消这一限制。
 
-Direct calls to a function specify the callee by an index into the 
-[function index space](Modules.md#function-index-space).
+直接调用函数通过 [函数索引空间](http://webassembly.org/docs/modules/#function-index-space)中的索引来指定被调用者。
 
-  * `call`: call function directly
+*   `call`: 直接函数调用
 
-A direct call to a function with a mismatched signature is a module verification error.
+直接调用签名不匹配的函数的直接调用会引发一个模块验证异常。
 
-Indirect calls to a function indicate the callee with an `i32` index into
-a [table](#table). The *expected* signature of the target function (specified
-by its index in the [types section](BinaryEncoding.md#type-section)) is given as
-a second immediate.
+间接函数调用用[table](http://webassembly.org/docs/semantics/#table)中的一个`i32`索引 来表示被调用者。目标函数的_期望_签名（由 [类型部分](http://webassembly.org/docs/binary-encoding/#type-section)中的索引指定）作为第二个立即数签名。
 
-  * `call_indirect`: call function indirectly
+*   `call_indirect`: 间接函数调用
 
-Unlike `call`, which checks that the caller and callee signatures match
-statically as part of validation, `call_indirect` checks for signature match
-*dynamically*, comparing the caller's expected signature with the callee function's
-signature and and trapping if there is a mismatch. Since the callee may be in a
-different module which necessarily has a separate [types section](BinaryEncoding.md#type-section),
-and thus index space of types, the signature match must compare the underlying 
-[`func_type`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/types.ml#L5).
-As noted [above](#table), table elements may also be host-environment-defined
-values in which case the meaning of a call (and how the signature is checked)
-is defined by the host-environment, much like calling an import.
+作为验证的一部分，`call` 静态地检查调用者和被调用者的签名是否匹配。不同于`call`，`call_indirect`  _动态_地对比调用者期待的签名和被调用者的函数签名 ，如果不匹配则产生中断。由于被调用者可能在不同的模块中， 那个模块肯定有独立的[类型区间](http://webassembly.org/docs/binary-encoding/#type-section) 、类型索引空间， 因此签名匹配必须对比底层的 [`func_type`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/types.ml#L5). 如上面[表](http://webassembly.org/docs/semantics/#table) 部分所述, 表元素也可以是在宿主环境定义的值 ， 这种情况意味着调用(签名的检查方式)也是宿主环境定义的，就像调用import一样。
 
-In the MVP, the single `call_indirect` operator accesses the [default table](#table).
+MVP中， 唯一的 `call_indirect` 访问了[缺省表](http://webassembly.org/docs/semantics/#table).
 
-Multiple return value calls will be possible, though possibly not in the
-MVP. The details of multiple-return-value calls needs clarification. Calling a
-function that returns multiple values will likely have to be a statement that
-specifies multiple local variables to which to assign the corresponding return
-values.
+多个返回值的调用将成为可能，尽管MVP中不可以。 多个返回值调用的细节需要明确。 调用返回多个值的函数可能必须是一个指定多个局部变量的语句，以分配相应的返回值。
 
-## Constants
+## 常量
 
-These operators have an immediate operand of their associated type which is
-produced as their result value. All possible values of all types are
-supported (including NaN values of all possible bit patterns).
+这些运算符具有其相关类型的立即操作数，它们是作为结果值生成的。所有类型的所有可能值都被支持（包括所有可能的位模式的NaN值）。
 
-  * `i32.const`: produce the value of an i32 immediate
-  * `i64.const`: produce the value of an i64 immediate
-  * `f32.const`: produce the value of an f32 immediate
-  * `f64.const`: produce the value of an f64 immediate
+*   `i32.const`: 产生一个`i32`类型的立即数
 
-## 32-bit Integer operators
+*   `i64.const`: 产生一个`i64`类型的立即数
 
-Integer operators are signed, unsigned, or sign-agnostic. Signed operators
-use two's complement signed integer representation.
+*   `f32.const`: 产生一个`f32`类型的立即数
 
-Signed and unsigned operators trap whenever the result cannot be represented
-in the result type. This includes division and remainder by zero, and signed
-division overflow (`INT32_MIN / -1`). Signed remainder with a non-zero
-denominator always returns the correct value, even when the corresponding
-division would trap. Sign-agnostic operators silently wrap overflowing
-results into the result type.
+*   `f64.const`: 产生一个`f64`类型的立即数
 
-  * `i32.add`: sign-agnostic addition
-  * `i32.sub`: sign-agnostic subtraction
-  * `i32.mul`: sign-agnostic multiplication (lower 32-bits)
-  * `i32.div_s`: signed division (result is truncated toward zero)
-  * `i32.div_u`: unsigned division (result is [floored](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
-  * `i32.rem_s`: signed remainder (result has the sign of the dividend)
-  * `i32.rem_u`: unsigned remainder
-  * `i32.and`: sign-agnostic bitwise and
-  * `i32.or`: sign-agnostic bitwise inclusive or
-  * `i32.xor`: sign-agnostic bitwise exclusive or
-  * `i32.shl`: sign-agnostic shift left
-  * `i32.shr_u`: zero-replicating (logical) shift right
-  * `i32.shr_s`: sign-replicating (arithmetic) shift right
-  * `i32.rotl`: sign-agnostic rotate left
-  * `i32.rotr`: sign-agnostic rotate right
-  * `i32.eq`: sign-agnostic compare equal
-  * `i32.ne`: sign-agnostic compare unequal
-  * `i32.lt_s`: signed less than
-  * `i32.le_s`: signed less than or equal
-  * `i32.lt_u`: unsigned less than
-  * `i32.le_u`: unsigned less than or equal
-  * `i32.gt_s`: signed greater than
-  * `i32.ge_s`: signed greater than or equal
-  * `i32.gt_u`: unsigned greater than
-  * `i32.ge_u`: unsigned greater than or equal
-  * `i32.clz`: sign-agnostic count leading zero bits (All zero bits are considered leading if the value is zero)
-  * `i32.ctz`: sign-agnostic count trailing zero bits (All zero bits are considered trailing if the value is zero)
-  * `i32.popcnt`: sign-agnostic count number of one bits
-  * `i32.eqz`: compare equal to zero (return 1 if operand is zero, 0 otherwise)
+## 32位整型运算符
 
-Shifts counts are wrapped to be less than the log-base-2 of the number of bits
-in the value to be shifted, as an unsigned quantity. For example, in a 32-bit
-shift, only the least 5 significant bits of the count affect the result. In a
-64-bit shift, only the least 6 significant bits of the count affect the result.
+整数运算符包括有符号的，无符号的或符号不可知的。 有符号运算符使用二进制补码有符号整数表示法。
 
-Rotate counts are treated as unsigned.  A count value greater than or equal
-to the number of bits in the value to be rotated yields the same result as
-if the count was wrapped to its least significant N bits, where N is 5 for
-an i32 value or 6 for an i64 value.
+当结果不能用结果类型表示时，有符号和无符号运算符都会产生中断。 包括对零求余、有符号除法溢出（`INT32_MIN / -1`）。带有非零分母的有符号余数总是返回正确值， 即使对应的除法产生中断。 符号不可知的运算符静默地将溢出结果包装成结果类型。
 
-All comparison operators yield 32-bit integer results with `1` representing
-`true` and `0` representing `false`.
+*   `i32.add`: 符号不可知加法
 
-## 64-bit integer operators
+*   `i32.sub`: 符号不可知减法
 
-The same operators are available on 64-bit integers as the those available for
-32-bit integers.
+*   `i32.mul`: 符号不可知乘法 (lower 32-bit)
 
-## Floating point operators
+*   `i32.div_s`: 有符号除法 (结果截断为零)
 
-Floating point arithmetic follows the IEEE 754-2008 standard, except that:
- - The IEEE 754-2008 section 6.2 recommendation that operations propagate NaN
-   bits from their operands is permitted but not required.
- - WebAssembly uses "non-stop" mode, and floating point exceptions are not
-   otherwise observable. In particular, neither alternate floating point
-   exception handling attributes nor the non-computational operators on status
-   flags are supported. There is no observable difference between quiet and
-   signalling NaN. However, positive infinity, negative infinity, and NaN are
-   still always produced as result values to indicate overflow, invalid, and
-   divide-by-zero conditions, as specified by IEEE 754-2008.
- - WebAssembly uses the round-to-nearest ties-to-even rounding attribute, except
-   where otherwise specified. Non-default directed rounding attributes are not
-   supported.
+*   `i32.div_u`: 无符号除法 (结果 [向下求整](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
 
-In the future, these limitations may be lifted, enabling
-[full IEEE 754-2008 support :unicorn:][future ieee 754].
+*   `i32.rem_s`: 有符号求余 (符号与被除数相同)
 
-Note that not all operators required by IEEE 754-2008 are provided directly.
-However, WebAssembly includes enough functionality to support reasonable library
-implementations of the remaining required operators.
+*   `i32.rem_u`: 无符号求余
 
-When the result of any arithmetic operation other than `neg`, `abs`, or
-`copysign` is a NaN, the sign bit and the fraction field (which does not include
-the implicit leading digit of the significand) of the NaN are computed as
-follows:
+*   `i32.and`: 符号不可知的的按位与
 
- - If the fraction fields of all NaN inputs to the instruction all consist
-   of 1 in the most significant bit and 0 in the remaining bits, or if there are
-   no NaN inputs, the result is a NaN with a nondeterministic sign bit, 1 in the
-   most significant bit of the fraction field, and all zeros in the remaining
-   bits of the fraction field.
+*   `i32.or`: 符号不可知的的按位或
 
- - Otherwise the result is a NaN with a nondeterministic sign bit, 1 in the most
-   significant bit of the fraction field, and nondeterminsitic values in the
-   remaining bits of the fraction field.
+*   `i32.xor`: 符号不可知的的按位异或
 
-32-bit floating point operations are as follows:
+*   `i32.shl`: 符号不可知左移
 
-  * `f32.add`: addition
-  * `f32.sub`: subtraction
-  * `f32.mul`: multiplication
-  * `f32.div`: division
-  * `f32.abs`: absolute value
-  * `f32.neg`: negation
-  * `f32.copysign`: copysign
-  * `f32.ceil`: ceiling operator
-  * `f32.floor`: floor operator
-  * `f32.trunc`: round to nearest integer towards zero
-  * `f32.nearest`: round to nearest integer, ties to even
-  * `f32.eq`: compare ordered and equal
-  * `f32.ne`: compare unordered or unequal
-  * `f32.lt`: compare ordered and less than
-  * `f32.le`: compare ordered and less than or equal
-  * `f32.gt`: compare ordered and greater than
-  * `f32.ge`: compare ordered and greater than or equal
-  * `f32.sqrt`: square root
-  * `f32.min`: minimum (binary operator); if either operand is NaN, returns NaN
-  * `f32.max`: maximum (binary operator); if either operand is NaN, returns NaN
+*   `i32.shr_u`: 无符号右移（逻辑右移）
 
-64-bit floating point operators:
+*   `i32.shr_s`: 有符号右移（算术右移）
 
-  * `f64.add`: addition
-  * `f64.sub`: subtraction
-  * `f64.mul`: multiplication
-  * `f64.div`: division
-  * `f64.abs`: absolute value
-  * `f64.neg`: negation
-  * `f64.copysign`: copysign
-  * `f64.ceil`: ceiling operator
-  * `f64.floor`: floor operator
-  * `f64.trunc`: round to nearest integer towards zero
-  * `f64.nearest`: round to nearest integer, ties to even
-  * `f64.eq`: compare ordered and equal
-  * `f64.ne`: compare unordered or unequal
-  * `f64.lt`: compare ordered and less than
-  * `f64.le`: compare ordered and less than or equal
-  * `f64.gt`: compare ordered and greater than
-  * `f64.ge`: compare ordered and greater than or equal
-  * `f64.sqrt`: square root
-  * `f64.min`: minimum (binary operator); if either operand is NaN, returns NaN
-  * `f64.max`: maximum (binary operator); if either operand is NaN, returns NaN
+*   `i32.rotl`: 符号不可知左循环
 
-`min` and `max` operators treat `-0.0` as being effectively less than `0.0`.
+*   `i32.rotr`: 符号不可知右循环
 
-In floating point comparisons, the operands are *unordered* if either operand
-is NaN, and *ordered* otherwise.
+*   `i32.eq`: 符号不可知的相等比较
 
-## Datatype conversions, truncations, reinterpretations, promotions, and demotions
+*   `i32.ne`: 符号不可知的不相等比较
 
-  * `i32.wrap/i64`: wrap a 64-bit integer to a 32-bit integer
-  * `i32.trunc_s/f32`: truncate a 32-bit float to a signed 32-bit integer
-  * `i32.trunc_s/f64`: truncate a 64-bit float to a signed 32-bit integer
-  * `i32.trunc_u/f32`: truncate a 32-bit float to an unsigned 32-bit integer
-  * `i32.trunc_u/f64`: truncate a 64-bit float to an unsigned 32-bit integer
-  * `i32.reinterpret/f32`: reinterpret the bits of a 32-bit float as a 32-bit integer
-  * `i64.extend_s/i32`: extend a signed 32-bit integer to a 64-bit integer
-  * `i64.extend_u/i32`: extend an unsigned 32-bit integer to a 64-bit integer
-  * `i64.trunc_s/f32`: truncate a 32-bit float to a signed 64-bit integer
-  * `i64.trunc_s/f64`: truncate a 64-bit float to a signed 64-bit integer
-  * `i64.trunc_u/f32`: truncate a 32-bit float to an unsigned 64-bit integer
-  * `i64.trunc_u/f64`: truncate a 64-bit float to an unsigned 64-bit integer
-  * `i64.reinterpret/f64`: reinterpret the bits of a 64-bit float as a 64-bit integer
-  * `f32.demote/f64`: demote a 64-bit float to a 32-bit float
-  * `f32.convert_s/i32`: convert a signed 32-bit integer to a 32-bit float
-  * `f32.convert_s/i64`: convert a signed 64-bit integer to a 32-bit float
-  * `f32.convert_u/i32`: convert an unsigned 32-bit integer to a 32-bit float
-  * `f32.convert_u/i64`: convert an unsigned 64-bit integer to a 32-bit float
-  * `f32.reinterpret/i32`: reinterpret the bits of a 32-bit integer as a 32-bit float
-  * `f64.promote/f32`: promote a 32-bit float to a 64-bit float
-  * `f64.convert_s/i32`: convert a signed 32-bit integer to a 64-bit float
-  * `f64.convert_s/i64`: convert a signed 64-bit integer to a 64-bit float
-  * `f64.convert_u/i32`: convert an unsigned 32-bit integer to a 64-bit float
-  * `f64.convert_u/i64`: convert an unsigned 64-bit integer to a 64-bit float
-  * `f64.reinterpret/i64`: reinterpret the bits of a 64-bit integer as a 64-bit float
+*   `i32.lt_s`: 有符号的小于
 
-Wrapping and extension of integer values always succeed.
-Promotion and demotion of floating point values always succeed.
-Demotion of floating point values uses round-to-nearest ties-to-even rounding,
-and may overflow to infinity or negative infinity as specified by IEEE 754-2008.
+*   `i32.le_s`: 有符号的小于等于
 
-If the operand of promotion or demotion is a NaN, the result is a NaN with the
-following sign bit and fraction field (which does not include the implicit
-leading digit of the significand):
+*   `i32.lt_u`: 无符号的小于
 
-- If the fraction fields of the operand consists of 1 in the most significant bit
-  and 0 in the remaining bits, the result is a NaN with a nondeterministic sign
-  bit, 1 in the most significant bit of the fraction field, and all zeros in the
-  remaining bits of the fraction field.
-- Otherwise the result is a NaN with a nondeterministic sign bit, 1 in the most
-  significant bit of the fraction field, and nondeterminsitic values in the
-  remaining bits of the fraction field.
+*   `i32.le_u`: 无符号的小于等于
 
-Reinterpretations always succeed.
+*   `i32.gt_s`: 有符号的大于
 
-Conversions from integer to floating point always succeed, and use
-round-to-nearest ties-to-even rounding.
+*   `i32.ge_s`:有符号的大于等于
 
-Truncation from floating point to integer where IEEE 754-2008 would specify an
-invalid operator exception (e.g. when the floating point value is NaN or
-outside the range which rounds to an integer in range) traps.
+*   `i32.gt_u`: 无符号的大于
 
-## Type-parametric operators
+*   `i32.ge_u`: 无符号的大于等于
 
-  * `drop`: a unary operator that discards the value of its operand.
-  * `select`: a ternary operator with two operands, which have the same type as
-    each other, plus a boolean (i32) condition. `select` returns the first
-    operand if the condition operand is non-zero, or the second otherwise.
+*   `i32.clz`: 符号不可知的前导零位计数（如果值为零，所有零位都被认为是前导）
 
-## Unreachable
+*   `i32.ctz`:符号不可知的拖尾零位计数（如果值为零，所有零位都被认为是的拖尾）
 
-  * `unreachable`: An instruction which always traps.
-    It is intended to be used for example after calls to functions which are known by the producer not to return.
-    This trap is intended to be impossible for user code to catch or handle, even in the future when it may be possible to
-    handle some other kinds of traps or exceptions.
+*   `i32.popcnt`: :符号不可知的一位计数
 
-[future general]: FutureFeatures.md
-[future threads]: FutureFeatures.md#threads
-[future tail calls]: FutureFeatures.md#general-purpose-proper-tail-calls
-[future multiple tables]: FutureFeatures.md#multiple-tables-and-memories
-[future 64-bit]: FutureFeatures.md#linear-memory-bigger-than-4-gib
-[future memory control]: FutureFeatures.md#finer-grained-control-over-memory
-[future types]: FutureFeatures.md#more-table-operators-and-types
-[future large pages]: FutureFeatures.md#large-page-support
-[future ieee 754]: FutureFeatures.md#full-ieee-754-2008-conformance
+*   `i32.eqz`: 零值相等比较（如果操作数是0， 则返回1， 否则均返回0）
 
+移位计数被当作无符号数包装成小于以2为底被右移值位数的对数。 例如，在32位移位中，只有计数的最低位的5位有效位会影响结果。在64位移位中，只有计数的最低位的6位有效位会影响结果。
 
-## Validation
+循环计数被当作无符号的。对计数值大于等于值位数的值进行循环计数，会产生相同的结果 ，就像计数被包装成它的最低N位有效位， 计数值为`i32`类型时N等于5， 计数值为`i64`类型时N为6。
 
-A module binary must be _validated_ before it is compiled.
-Validation ensures that the module is well-defined and that its code cannot exhibit any undefined behavior.
-In particular, along with some runtime checks, this ensures that no program can access or corrupt memory it does not own.
+所有的对比运算符产生32位整数的结果， `1` 代表 `true`， `0`代表 `false`.
 
-Validation of code is mostly defined in terms of type-checking the use of the operand stack.
-It sequentially checks for each instruction that the expected operands can be popped from the stack and tracks which new operands are pushed onto it. At the start of a function the stack is empty; at its end it must match the return type of the function. In addition, instructions inside a `block` (or `loop` or `if`) cannot consume operands pushed outside. At the end of the block the remaining inner operands must match the block signature.
+## 64-位整型运算符
 
-A special case is unconditional control transfers (`br`, `br_table`, `return`, `unreachable`), because execution never proceeds after them.
-The stack after such an instruction is unconstrained, and thus said to be _polymorphic_.
-The following instructions still must type-check,
-but conceptually, values of any type can be popped off a polymorphic stack for the sake of checking consecutive instructions.
-A polymorphic stack also matches any possible signature at the end of a block or function.
-After the end of a block, the stack is determined by the block signature and the stack before the block.
+适用于32位的整型运算符同样适用于64位整数
 
-The details of validation are currently defined by the [spec interpreter](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/valid.ml#L162).
+## 浮点运算符
+
+浮点运算遵循IEEE 754-2008标准，除了：
+
+*   IEEE 754-2008 6.2节建议操作从其操作数扩大NaN位, 允许这种操作，但不是必需的。
+
+*   WebAssembly使用“不间断”模式，浮点异常则不可观察。 特别是，不支持可替代的浮点异常处理属性，也不支持状态标志上的非计算运算符。 静默和信号NaN之间没有明显的差异。 然而，如IEEE 754-2008所规定，当发生总是产生正无穷大，负无穷大和NaN的结果值，以指示溢出，无效和除以零的情况。
+
+*   WebAssembly使用舍入到最接近，在一样接近的情况下偶数优先的舍入属性。除非另有说明。不支持非默认的定向舍入属性。
+
+未来可能会解除这些限制，实现 [完整的IEEE 754-2008支持 :unicorn:](http://webassembly.org/docs/future-features/#full-ieee-754-2008-conformance).
+
+请注意，WebAssembly并没有直接提供IEEE 754-2008要求的所有运算符。 但是，WebAssembly包括足够的功能支持剩余所需运算符的合理库实现。
+
+当除`neg`，`abs`或`copyinvalidsign`之外的任何算术运算的结果是NaN时，NaN的符号位和小数字段 fraction field （不包括尾数significand 的隐含前导位）计算如下：
+
+*   如果指令的所有NaN输入的小数字段最高有效位中为1， 剩余位全为0，或者没有NaN输入，则结果是具有非确定性符号位的NaN，小数字段最高有效位为1，剩余有效位全部为零。
+
+*   否则，结果是具有非确定性符号位的NaN，小数字段的最高有效位为1，剩余有效位为非确定值。
+
+32位浮点运算符包括如下这些：
+
+*   `f32.add`: 加法
+
+*   `f32.sub`: 减法
+
+*   `f32.mul`: 乘法
+
+*   `f32.div`: 除法
+
+*   `f32.abs`: 绝对值
+
+*   `f32.neg`:非
+
+*   `f32.copysign`: `copysign(x, y)`返回的值由x的不带符号的部分和y的符号组成。
+
+*   `f32.ceil`: 向上取整运算符
+
+*   `f32.floor`: 向下取整运算符
+
+*   `f32.trunc`: 朝零方向舍入到最接近的整数
+
+*   `f32.nearest`: 向偶数舍入到最接近的整数
+
+*   `f32.eq`: 有序和相等比较
+
+*   `f32.ne`:无序或不等比较
+
+*   `f32.lt`: 有序和小于比较
+
+*   `f32.le`: 有序和小于等于比较
+
+*   `f32.gt`: 有序和大于比较
+
+*   `f32.ge`: 有序和大于等于比较
+
+*   `f32.sqrt`: 平方根
+
+*   `f32.min`: 最小值（位运算符）; 任何一个操作数是NaN, 则返回NaN
+
+*   `f32.max`: 最大值（位运算符）; 任何一个操作数是NaN, 则返回NaN
+
+64位浮点运算符：
+
+*   `f64.add`: 加法
+
+*   `f64.sub`: 减法
+
+*   `f64.mul`: 乘法
+
+*   `f64.div`: 除法
+
+*   `f64.abs`: 绝对值
+
+*   `f64.neg`:非
+
+*   `f64.copysign`: `copysign(x, y)`返回的值由x的不带符号的部分和y的符号组成。
+
+*   `f64.ceil`: 向上取整运算符
+
+*   `f64.floor`: 向下取整运算符
+
+*   `f64.trunc`: 朝零方向舍入到最接近的整数
+
+*   `f64.nearest`: 向偶数舍入到最接近的整数
+
+*   `f64.eq`: 有序和相等比较
+
+*   `f64.ne`:无序或不等比较
+
+*   `f64.lt`: 有序和小于比较
+
+*   `f64.le`: 有序和小于等于比较
+
+*   `f64.gt`: 有序和大于比较
+
+*   `f64.ge`: 有序和大于等于比较
+
+*   `f64.sqrt`: 平方根
+
+*   `f64.min`: 最小值（位运算符）; 任何一个操作数是NaN, 则返回NaN
+
+*   `f64.max`: 最大值（位运算符）; 任何一个操作数是NaN, 则返回NaN
+
+`min` 和 `max`运算符把t `-0.0` 视为小于 `0.0`.
+
+浮点数比较中，如果任何一个操作数是NaN, 则操作数被当作是_无序的_， 否则就是_有序的_
+
+## 数据类型转换， 截断， 重解释， 提升和降级
+
+*   `i32.wrap/i64`: 将64位整数包装成32位整数
+
+*   `i32.trunc_s/f32`:将32位浮点数截断成有符号32位整数
+
+*   `i32.trunc_s/f64`: 将64位浮点数截断成有符号32位整数
+
+*   `i32.trunc_u/f32`:将32位浮点数截断成无符号32位整数
+
+*   `i32.trunc_u/f64`: 将64位浮点数截断成无符号32位整数
+
+*   `i32.reinterpret/f32`: 将32位浮点数重解释为32位整数
+
+*   `i64.extend_s/i32`: 将有符号32位整数扩展为64位整数
+
+*   `i64.extend_u/i32`: 将无符号32位整数扩展为64位整数
+
+*   `i64.trunc_s/f32`: 将32位浮点数截断为有符号64位整数
+
+*   `i64.trunc_s/f64`: 将64位浮点数截断为有符号64位整数
+
+*   `i64.trunc_u/f32`: 将32位浮点数截断为无符号64位整数
+
+*   `i64.trunc_u/f64`: 将64位浮点数截断为无符号64位整数
+
+*   `i64.reinterpret/f64`: 将64位浮点数重解释为64位整数
+
+*   `f32.demote/f64`: 将64位浮点数降级为32位浮点数
+
+*   `f32.convert_s/i32`: 将有符号32位整数转换为32位浮点数
+
+*   `f32.convert_s/i64`: 将有符号64位整数转换为32位浮点数
+
+*   `f32.convert_u/i32`: 将无符号32位整数转换为32位浮点数
+
+*   `f32.convert_u/i64`: 将无符号64位整数转换为32位浮点数
+
+*   `f32.reinterpret/i32`: 将32位整数重解释为32位浮点数
+
+*   `f64.promote/f32`: 将32位浮点数提升为64位浮点数
+
+*   `f64.convert_s/i32`: 将有符号32位整数转换为64位浮点数
+
+*   `f64.convert_s/i64`: 将有符号64位整数转换为64位浮点数
+
+*   `f64.convert_u/i32`: 将无符号32位整数转换为64位浮点数
+
+*   `f64.convert_u/i64`: 将无符号64位整数转换为64位浮点数
+
+*   `f64.reinterpret/i64`: 将64位整数重解释为64位浮点数
+
+整数值的包装和扩展、浮点值的提升和降级都总会成功。 如IEEE 754-2008所规定，浮点值的降级使用舍入到最近，偶数优先的舍入规则，可能溢出到无穷大或负无穷大。
+
+如果提升或降级的操作数是NaN，结果是具有以下符号位和小数字段（不包括尾数Significand的隐含前导位）的NaN：
+
+*   如果操作数的小数字段的最高有效位是1， 剩余位为0，则结果是具有非确定性符号位的NaN，小数字段最高有效位为1，剩余有效位全部为零。
+
+*   否则，结果是具有非确定性符号位的NaN，小数字段的最高有效位为1，剩余有效位为非确定值。
+
+重解释总是会成功。
+
+使用舍入到最近， 偶数优先的传入规则将整数转换为浮点数时， 转换总是会成功。
+
+从浮点数到整数的截断，IEEE 754-2008期望无效的运行符异常（例如，当浮点值为NaN， 或对超过整数范围值进行舍入操作）产生中断。
+
+## 类型参数运算符
+
+*   `drop`: 一元运算符，放弃操作数的值
+
+*   `select`: 三元运行符，有两个相同类型的操作数，再加上一个布尔（I32）条件判断。如果条件操作数不为零，则返回第一个操作数，否则返回第二个操作数。
+
+## 不可达
+
+*   `unreachable`: 一个用于主动中断的指令。它应该被用在调用者明确知道不会有返回值的函数后面。用户代码无法捕捉 或处理这个中断， 即使未来有可能处理一些其它类别的中断或异常。
+
+> [注]
+>
+> 参考 LLVM Unreachable
+>
+> [UnreachableInst](http://llvm.org/docs/doxygen/html/classllvm_1_1UnreachableInst.html) - This function has undefined behavior.
+>
+> In particular, the presence of this instruction indicates some higher level knowledge that the end of the block cannot be reached.
+>
+> [http://llvm.org/docs/doxygen/html/classllvm_1_1UnreachableInst.html#details](http://llvm.org/docs/doxygen/html/classllvm_1_1UnreachableInst.html#details)
+
+## 校验
+
+模块二进制文件必须在编译之前进行_校验_。 校验可以确保模块定义明确，代码中不能有任何未定义的行为。 特别是，连同一些运行时检查，可以确保任何程序都不能访问或破坏它不拥有的内存。
+
+代码校验大多是根据类型检查、操作数堆栈的使用来定义的。 它依次检查每个指令，从栈中弹出指令预期的操作数，跟踪哪些新的操作数被推进栈中。 在函数开始时，堆栈为空; 末尾处它必须匹配函数的返回类型。 此外，`block`（或者是`look`、`if`）内的指令不能消耗`block`（或者是`look`、`if`）外部推入栈中的操作数。 在块的末尾，剩余的内部操作数必须与块签名相匹配。
+
+一种特殊情况是无条件控制转移(`br`, `br_table`, `return`, `unreachable`)，因为执行后不会继续。 这样的指令之后的堆栈是不受约束的，因此被认为是_多态的_。 后续指令依然必须要进行类型检查，但在概念上，为了检查连续的指令，任何类型的值都可以弹出多态堆栈。 多态堆栈也匹配块或函数末尾的任何可能的签名。 在块结束之后，堆栈由块签名和块之前的堆栈确定。
+
+有关校验的详情在[解释器/规范](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/valid.ml#L162)中定义。
+​                
