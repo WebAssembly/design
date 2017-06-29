@@ -23,17 +23,7 @@ WebAssembly 具有如下两个主要的优点：
   [编译]: https://blog.mozilla.org/luke/2014/01/14/asm-js-aot-compilation-and-startup-performance/
   [针对 asm.js 的特殊优化]: https://blog.mozilla.org/luke/2015/02/18/microsoft-announces-asm-js-optimizations/#asmjs-opts
 
-Of course, every new standard introduces new costs (maintenance, attack surface,
-code size) that must be offset by the benefits. WebAssembly minimizes costs by
-having a design that allows (though not requires) a browser to implement
-WebAssembly inside its *existing* JavaScript engine (thereby reusing the
-JavaScript engine's existing compiler backend, ES6 module loading frontend,
-security sandboxing mechanisms and other supporting VM components). Thus, in
-cost, WebAssembly should be comparable to a big new JavaScript feature, not a
-fundamental extension to the browser model.
-
-Comparing the two, even for engines which already optimize asm.js, the benefits
-outweigh the costs.
+当然，每一个新标准势必都会引入抵消其带来便利之外的新的开销（维护成本、攻击面、代码大小等等）。 WebAssembly 通过在设计上允许（尽管不是必须的）浏览器基于*已有*的 JavaScript 引擎（从而可以重用 JavaScript 引擎现有的编译器后端，ES6 在前端的模块化加载，安全沙箱机制和其他支持的 VM 组件）去实现 WebAssembly，来达到最小化其新引入的开销的目的。因此，从根本上说 WebAssembly 应该被认为是 JavaScript 一个重大的新特性，而不是浏览器模型的基础延伸。比较两者，即使是对已经优化过 asm.js 的引擎来说，也是利大于弊的。
 
 
 ## WebAssembly 都有哪些用途？
@@ -62,20 +52,16 @@ option, for non-performant code, is to use a compiled WebAssembly interpreter
 such as
 [binaryen.js](https://github.com/WebAssembly/binaryen/blob/master/test/binaryen.js/test.js).
 
-However, a WebAssembly polyfill is still an interesting idea and should in
-principle be possible.
-
+然而，WebAssembly polyfill 仍然是一个有趣的想法，而且在原则是可行的。
 
 ## WebAssembly 只服务于 C/C++ 程序员吗？
 
 正如在[长远目标](HighLevelGoals.md)一章中所说，为了实现最小可行性产品，发展之初会主要关注于 [C/C++](CAndC++.md)。
 
-However, by [integrating with JavaScript at the ES6 Module interface](Modules.md#integration-with-es6-modules),
-web developers don't need to write C++ to take advantage of libraries that others have written; 
-reusing a modular C++ library can be as simple as [using a module from JavaScript](http://jsmodules.io).
+然而，通过[使用 ES6 的模块化接口集成到 JavaScript 中](Modules.md#integration-with-es6-modules),
+web 开发者并不需要通过写 C++ 就可以利用这些别人已经实现的库的优势了；重用一个模块化的 C++ 库就像[在 JavaScript 中调用一个模块](http://jsmodules.io)一样简单。
 
-Beyond the MVP, another [high-level goal](HighLevelGoals.md)
-is to improve support for languages other than C/C++.  This includes [allowing WebAssembly code to
+除 MVP 外，另一个[长远目标](HighLevelGoals.md)是提高 WebAssembly 对 除 C/C++ 之外的编程语言的支持。This includes [allowing WebAssembly code to
 allocate and access garbage-collected (JavaScript, DOM, Web API) objects
 :unicorn:][future dom].
 Even before GC support is added to WebAssembly, it is possible to compile a language's VM 
@@ -114,11 +100,7 @@ work with them on ABI matters.
 
 ## WebAssembly 在将来会支持通过 Web 查看其源码吗？
 
-Yes! WebAssembly defines a [text format](TextFormat.md) to be rendered when
-developers view the source of a WebAssembly module in any developer tool. Also,
-a specific goal of the text format is to allow developers to write WebAssembly
-modules by hand for testing, experimenting, optimizing, learning and teaching
-purposes. In fact, by dropping all the
+是的！WebAssembly 定义了一个用于呈现的[文本格式](TextFormat.md)，这允许开发人员在任何开发者工具中查看 WebAssembly 模块的源码。而且，该文本格式的具体目标是允许开发人员编写用于测试，实验，优化，学习和教学目的的 WebAssembly 模块。事实上，by dropping all the
 [coercions required by asm.js validation](http://asmjs.org/spec/latest/#introduction),
 the WebAssembly text format should be much more natural to read and write than
 asm.js. Outside the browser, command-line and online tools that convert between
