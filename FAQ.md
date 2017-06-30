@@ -35,24 +35,14 @@ WebAssembly 在设计的时候就考虑到了[广泛的用途](UseCases.md).
 
 我们是这样认为的。这里有一个早期[原型](https://github.com/WebAssembly/polyfill-prototype-1)附带演示页面
 [[1](https://lukewagner.github.io/AngryBotsPacked), 
-[2](https://lukewagner.github.io/PlatformerGamePacked)], 他们展示了从 WebAssembly-like 的二进制格式解码为 asm.js 可以是高效的。而且随着 WebAssembly 设计的变化，[更多](https://github.com/WebAssembly/polyfill-prototype-2) polyfilling 的[例子](https://github.com/WebAssembly/binaryen/blob/master/src/wasm2asm.h)涌现出来。
+[2](https://lukewagner.github.io/PlatformerGamePacked)], 他们展示了从类似 WebAssembly 的二进制格式解码为 asm.js 可以是高效的。而且随着 WebAssembly 设计的变化，[更多](https://github.com/WebAssembly/polyfill-prototype-2) polyfilling 的[例子](https://github.com/WebAssembly/binaryen/blob/master/src/wasm2asm.h)涌现出来。
 
 总体来说，由于浏览器厂商迅速采纳 WebAssembly 使得人们对其发展保持乐观的态度，但这削减了将它作为一个 polyfill 的工作热情。
 
-It is also the case that polyfilling WebAssembly to asm.js is less urgent
-because of the existence of alternatives, for example, a reverse polyfill -
-compiling
-[asm.js to WebAssembly](https://github.com/WebAssembly/binaryen/blob/master/src/asm2wasm.h) -
-exists, and it allows shipping a single build that can run as either
-asm.js or WebAssembly. It is also possible to build a project into
-two parallel asm.js and WebAssembly builds by just
-[flipping a switch](https://github.com/kripken/emscripten/wiki/WebAssembly)
-in emscripten, which avoids polyfill time on the client entirely. A third
-option, for non-performant code, is to use a compiled WebAssembly interpreter
-such as
-[binaryen.js](https://github.com/WebAssembly/binaryen/blob/master/test/binaryen.js/test.js).
+另一方面也是由于存在替代品，使得将 WebAssembly polyfilling 到 asm.js 变得不是那么紧急，例如，存在一个反向的 polyfill - 能将 [asm.js 编译到 WebAssembly](https://github.com/WebAssembly/binaryen/blob/master/src/asm2wasm.h) -
+而且他允许单独构建的版本在 asm.js 或者 WebAssembly 上运行。通过在 emscripten 中[触发开关]((https://github.com/kripken/emscripten/wiki/WebAssembly))，也有可能建立一个拥有 asm.js 和 WebAssembly 两个并行的构建项目，这可以完全避免在客户端的 polyfill 时间消耗。第三点则是，对于非执行代码，可以使用编译的 WebAssembly 解释器例如 [binaryen.js](https://github.com/WebAssembly/binaryen/blob/master/test/binaryen.js/test.js).
 
-然而，WebAssembly polyfill 仍然是一个有趣的想法，而且在原则是可行的。
+即便如此，WebAssembly polyfill 仍然是一个有趣的想法，而且是原则上可行的。
 
 ## WebAssembly 只服务于 C/C++ 程序员吗？
 
@@ -61,55 +51,34 @@ such as
 然而，通过[使用 ES6 的模块化接口集成到 JavaScript 中](Modules.md#integration-with-es6-modules),
 web 开发者并不需要通过写 C++ 就可以利用这些别人已经实现的库的优势了；重用一个模块化的 C++ 库就像[在 JavaScript 中调用一个模块](http://jsmodules.io)一样简单。
 
-除 MVP 外，另一个[长远目标](HighLevelGoals.md)是提高 WebAssembly 对 除 C/C++ 之外的编程语言的支持。This includes [allowing WebAssembly code to
-allocate and access garbage-collected (JavaScript, DOM, Web API) objects
-:unicorn:][future dom].
-Even before GC support is added to WebAssembly, it is possible to compile a language's VM 
-to WebAssembly (assuming it's written in portable C/C++) and this has already been demonstrated 
-([1](http://ruby.dj), [2](https://kripken.github.io/lua.vm.js/lua.vm.js.html),
-[3](https://syntensity.blogspot.com/2010/12/python-demo.html)).  However, "compile the VM" strategies 
-increase the size of distributed code, lose browser devtools integration, can have cross-language
-cycle-collection problems and miss optimizations that require integration with the browser.
-
+除 MVP 外，另一个[长远目标](HighLevelGoals.md)是提高 WebAssembly 对 除 C/C++ 之外的编程语言的支持。这包括[允许 WebAssembly 代码去分配和访问垃圾回收 (JavaScript, DOM, Web API) 对象
+:unicorn:][future dom]。即使在对垃圾回收对象的支持被添加到 WebAssembly 之前，将一门语言的 VM 编译成 WebAssembly （假设它是由可移植的 C/C++ 编写的）也是可能的，且这已经被证实 ([1](http://ruby.dj), [2](https://kripken.github.io/lua.vm.js/lua.vm.js.html),
+[3](https://syntensity.blogspot.com/2010/12/python-demo.html)). 然而，"编译 VM" 的策略增加了分布式代码的大小，缺失了浏览器开发者工具的集成，可能存在有跨语言的循环收集问题以及错过一些需要浏览器集成的优化。
 
 ## 当我构建 WebAssembly 程序时该用什么编译器？
 
-WebAssembly initially focuses on [C/C++](CAndC++.md), and a new, clean
-WebAssembly backend is being developed in upstream clang/LLVM, which can then be
-used by LLVM-based projects like [Emscripten][] and [PNaCl][].
+WebAssembly 最初关注于 [C/C++](CAndC++.md)，一个新的、干净的 WebAssembly 后端是由 clang/LLVM 开发的，之后可以在基于 LLVM 项目例如 [Emscripten][] 和 [PNaCl][] 中使用。
 
-As WebAssembly evolves it will support more languages than C/C++, and we hope
-that other compilers will support it as well, even for the C/C++ language, for
-example [GCC][]. The WebAssembly working group found it easier to start with
-LLVM support because they had more experience with that toolchain from their
-[Emscripten][] and [PNaCl][] work.
+随着 WebAssembly 的发展，除了 C/C++ 外它会支持越来越多的语言，我们希望其他编译器也能支持它，即使是对 C/C++ 而言，例如 [GCC][]. WebAssembly 工作组发现从支持 LLVM 开始会更加容易，因为他们对来自 [Emscripten][] and [PNaCl][] 工作中的工具链有更多的经验。
 
   [Emscripten]: http://emscripten.org
   [PNaCl]: http://gonacl.com
   [GCC]: https://gcc.gnu.org
 
-We hope that proprietary compilers also gain WebAssembly support, but we'll let
-vendors speak about their own platforms.
+我们希望专有的编译器也可以获得 WebAssembly 的支持，但是对于第三方平台来说，我们让他们自己决定。
 
-The [WebAssembly Community Group][] would be delighted to collaborate with more
-compiler vendors, take their input into consideration in WebAssembly itself, and
-work with them on ABI matters.
+[WebAssembly 社区小组][] 会很高兴和更多的编译器平台合作，将他们的付出考虑结合到 WebAssembly 中，和他们共同致力于 ABI 问题。
 
-  [WebAssembly Community Group]: https://www.w3.org/community/webassembly/
+  [WebAssembly 社区小组]: https://www.w3.org/community/webassembly/
 
 
 ## WebAssembly 在将来会支持通过 Web 查看其源码吗？
 
-是的！WebAssembly 定义了一个用于呈现的[文本格式](TextFormat.md)，这允许开发人员在任何开发者工具中查看 WebAssembly 模块的源码。而且，该文本格式的具体目标是允许开发人员编写用于测试，实验，优化，学习和教学目的的 WebAssembly 模块。事实上，by dropping all the
-[coercions required by asm.js validation](http://asmjs.org/spec/latest/#introduction),
-the WebAssembly text format should be much more natural to read and write than
-asm.js. Outside the browser, command-line and online tools that convert between
-text and binary will also be made readily available.  Lastly, a scalable form of
-source maps is also being considered as part of the WebAssembly
-[tooling story](Tooling.md).
+是的！WebAssembly 定义了一个用于呈现的[文本格式](TextFormat.md)，这允许开发人员在任何开发者工具中查看 WebAssembly 模块的源码。而且，该文本格式的具体目标是允许开发人员编写用于测试，实验，优化，学习和教学目的的 WebAssembly 模块。事实上，通过摈弃所有 [asm.js 验证所需的强制](http://asmjs.org/spec/latest/#introduction)， WebAssembly 文本格式在读写上会比 asm.js 更加自然。 在浏览器之外，用于文本和二进制相互转换的命令行和在线工具也将随时可用。最后，source maps 的可扩展形式也被考虑成为 WebAssembly
+[工具技术](Tooling.md) 之一。
 
 
-## What's the story for Emscripten users?
+## 对 Emscripten 用户来说有什么新鲜事？
 
 Existing Emscripten users will get the option to build their projects to
 WebAssembly, by flipping a flag. Initially, Emscripten's asm.js output would be
@@ -123,8 +92,7 @@ model.
 
 ## WebAssembly 是否尝试要替代 JavaScript?
 
-No! WebAssembly is designed to be a complement to, not replacement of,
-JavaScript. While WebAssembly will, over time, allow many languages to be
+不！WebAssembly 是被设计成 JavaScript 的一个完善补充，而不是它的替代品。 While WebAssembly will, over time, allow many languages to be
 compiled to the Web, JavaScript has an incredible amount of momentum and will
 remain the single, privileged (as described
 [above](FAQ.md#is-webassembly-only-for-cc-programmers)) dynamic language of the
