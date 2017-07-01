@@ -80,66 +80,32 @@ WebAssembly 最初关注于 [C/C++](CAndC++.md)，一个新的、干净的 WebAs
 
 ## 对 Emscripten 用户来说有什么新鲜事？
 
-Existing Emscripten users will get the option to build their projects to
-WebAssembly, by flipping a flag. Initially, Emscripten's asm.js output would be
-converted to WebAssembly, but eventually Emscripten would use WebAssembly
-throughout the pipeline. This painless transition is enabled by the
-[high-level goal](HighLevelGoals.md) that WebAssembly integrate well with the
-Web platform (including allowing synchronous calls into and out of JavaScript)
-which makes WebAssembly compatible with Emscripten's current asm.js compilation
-model.
-
+现有的 Emscripten 用户将可以通过配置将他们的项目构建到 WebAssembly. 最初，Emscripten 的 asm.js 输出结果将会转化为 WebAssembly, 但最终 Emscripten 将会在这个处理流程中使用 WebAssembly. 这个平稳的转变过程是通过在[长远目标](HighLevelGoals.md)中设定的目标，即 WebAssembly 和 Web 平台（包括允许同步的和 JavaScript 相互调用）的友好结合来实现的，这使得 WebAssembly 与 Emscripten 当前的 asm.js 编译模型兼容。
 
 ## WebAssembly 是否尝试要替代 JavaScript?
 
-不！WebAssembly 是被设计成 JavaScript 的一个完善补充，而不是它的替代品。 While WebAssembly will, over time, allow many languages to be
-compiled to the Web, JavaScript has an incredible amount of momentum and will
-remain the single, privileged (as described
-[above](FAQ.md#is-webassembly-only-for-cc-programmers)) dynamic language of the
-Web. Furthermore, it is expected that JavaScript and WebAssembly will be used
-together in a number of configurations:
+不！WebAssembly 是被设计成 JavaScript 的一个完善补充，而不是它的替代品。虽然随着时间的推移，WebAssembly 将能够把很多编程语言都编译到 Web 中，但 JavaScript 不可思议的能力仍将使它保持在 Web 动态语言独一、特有（
+[如上所述](FAQ.md#is-webassembly-only-for-cc-programmers)）的地位。此外通过多种配置， JavaScript 将可以和 WebAssembly 一起使用：
 
-* Whole, compiled C++ apps that leverage JavaScript to glue things together.
-* HTML/CSS/JavaScript UI around a main WebAssembly-controlled center canvas,
-  allowing developers to leverage the power of web frameworks to build
-  accessible, web-native-feeling experiences.
-* Mostly HTML/CSS/JavaScript app with a few high-performance WebAssembly modules
-  (e.g., graphing, simulation, image/sound/video processing, visualization,
-  animation, compression, etc., examples which we can already see in asm.js
-  today) allowing developers to reuse popular WebAssembly libraries just like
-  JavaScript libraries today.
-* When WebAssembly
-  [gains the ability to access garbage-collected objects :unicorn:][future dom],
-  those objects will be shared with JavaScript, and not live in a walled-off
-  world of their own.
+* 完整、通过 C++ 编译的应用将利用 JavaScript 将内容结合在一起。
+* 围绕一个主要受 WebAssembly 控制的中心画布的 HTML/CSS/JavaScript UI，将会允许开发者利用 web 框架的能力来达到一个可被访问、具有 web 原生的体验。
+* 大多数 HTML/CSS/JavaScript 应用结合几个高性能 WebAssembly 模块（例如，绘图，模拟，图像/声音/视频处理，可视化，动画，压缩等等我们今天可以在 asm.js 中看到的例子）能够允许开发者像使用今天我们所用的 JavaScript 库一样去重用流行的 WebAssembly 库。
+* 当 WebAssembly
+  [获得访问垃圾回收对象的能力 :unicorn:][future dom]时，那些对象将会分享给 JavaScript, 而不是活在自己封闭的世界里。
 
 
 ## 为什么不直接使用 LLVM 位码作为二进制格式？
 
-The [LLVM](http://llvm.org/) compiler infrastructure has a lot to recommend it:
-it has an existing intermediate representation (LLVM IR) and binary encoding
-format (bitcode). It has code generation backends targeting many architectures
-is actively developed and maintained by a large community. In fact
-[PNaCl](http://gonacl.com) already uses LLVM as a basis for its binary
-format. However the goals and requirements that LLVM was designed to meet are
-subtly mismatched with those of WebAssembly.
+[LLVM](http://llvm.org/) 的编译器构造有很多地方值得推荐：它具有现成的中间表示 (LLVM IR) 和二进制编码格式 (bitcode). 它有针对许多架构的代码生成后端，并由大型社区积极开发和维护。 事实上，[PNaCl](http://gonacl.com) 已经使用 LLVM 作为二进制格式的基础。然而，LLVM 旨在满足的目标和要求和 WebAssembly 相比会略微不匹配。
 
-WebAssembly has several requirements and goals for its Instruction Set
-Architecture (ISA) and binary encoding:
+WebAssembly 对其指令集架构 (ISA) 和二进制编码有一些要求和目标：
 
-* Portability: The ISA must be the same for every machine architecture.
-* Stability: The ISA and binary encoding must not change over time (or change
-  only in ways that can be kept backward-compatible).
-* Small encoding: The representation of a program should be as small as possible
-  for transmission over the Internet.
-* Fast decoding: The binary format should be fast to decompress and decode for
-  fast startup of programs.
-* Fast compiling: The ISA should be fast to compile (and suitable for either
-  AOT- or JIT-compilation) for fast startup of programs.
-* Minimal [nondeterminism](Nondeterminism.md): The behavior of programs should
-  be as predictable and deterministic as possible (and should be the same on
-  every architecture, a stronger form of the portability requirement stated
-  above).
+* 可移植性：对于每个机器架构，ISA 必须相同。
+* 稳定性：ISA 和二进制编码不能随着时间的推移而改变（或只能以可向后兼容的方式更改）。
+* 小编码：程序的表示应尽可能小，以便通过互联网进行传输。
+* 快速解码：为了快速启动程序，二进制格式应该快速解压缩和解码。
+* 快速编译：ISA 在编译上应该够快（适合于 AOT 或 JIT 编译），以使程序能够快速启动。
+* 最小[非确定性](Nondeterminism.md)：程序的行为应尽可能可以预测和具备确定性（在每个架构上应该是相同的，上述提到的可移植性要求的一种更强的形式）。
 
 LLVM IR is meant to make compiler optimizations easy to implement, and to
 represent the constructs and semantics required by C, C++, and other languages
