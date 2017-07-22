@@ -16,7 +16,7 @@ issues.
 | Fixed-width SIMD              | [1075][]       | in progress |
 | Exception handling            | [1078][]       | in progress |
 | Garbage collection            | [1079][]       | in progress |
-| ECMAScript module integration | [1087][]       | no started  |
+| ECMAScript module integration | [1087][]       | not started  |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
