@@ -37,8 +37,13 @@ We've mapped out features we expect to ship:
 
 Join us:
 
- * in the [W3C Community Group](https://www.w3.org/community/webassembly/)
- * on IRC: `irc://irc.w3.org:6667/#webassembly`
- * by [contributing](Contributing.md)!
+ * In the [W3C Community Group](https://www.w3.org/community/webassembly/)
+ 
+     * Its moderated [announcement mailing list](https://lists.w3.org/Archives/Public/public-webassembly-announce/)
+     * Its [open-ended public discussion mailing list](https://lists.w3.org/Archives/Public/public-webassembly/)
+
+ * On IRC: `irc://irc.w3.org:6667/#webassembly`
+ * On Stack Overflow's [#webassembly tag](https://stackoverflow.com/questions/tagged/webassembly#)
+ * By [contributing](Contributing.md)!
 
 When contributing, please follow our [Code of Ethics and Professional Conduct](CodeOfConduct.md).
