@@ -16,7 +16,8 @@ issues.
 | Fixed-width SIMD              | [1075][]       | in progress |
 | Exception handling            | [1078][]       | in progress |
 | Garbage collection            | [1079][]       | in progress |
-| ECMAScript module integration | [1087][]       | not started  |
+| Bulk memory operations        | [1114][]       | in progress |
+| ECMAScript module integration | [1087][]       | not started |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
@@ -24,6 +25,7 @@ issues.
   [1078]: https://github.com/WebAssembly/design/issues/1078
   [1079]: https://github.com/WebAssembly/design/issues/1079
   [1087]: https://github.com/WebAssembly/design/issues/1087
+  [1114]: https://github.com/WebAssembly/design/issues/1114
 
 
 ## Legacy Future Features
