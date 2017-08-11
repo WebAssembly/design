@@ -17,6 +17,7 @@ issues.
 | Exception handling            | [1078][]       | in progress |
 | Garbage collection            | [1079][]       | in progress |
 | Bulk memory operations        | [1114][]       | in progress |
+| Web Content Security Policy   | [1122][]       | in progress |
 | ECMAScript module integration | [1087][]       | not started |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
@@ -26,6 +27,7 @@ issues.
   [1079]: https://github.com/WebAssembly/design/issues/1079
   [1087]: https://github.com/WebAssembly/design/issues/1087
   [1114]: https://github.com/WebAssembly/design/issues/1114
+  [1122]: https://github.com/WebAssembly/design/issues/1122
 
 
 ## Legacy Future Features
