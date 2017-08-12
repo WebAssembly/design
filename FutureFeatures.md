@@ -445,7 +445,7 @@ of supporting multiple return values from blocks / functions.
 The MVP limits modules to at most one memory and at most one table (the default
 ones) and there are only operators for accessing the default table and memory.
 
-After the MVP and after [GC reference types](GC.md) have been added, the default
+After the MVP and after [GC reference types](https://github.com/WebAssembly/design/issues/1079) have been added, the default
 limitation can be relaxed so that any number of tables and memories could be
 imported or internally defined and memories/tables could be passed around as
 parameters, return values and locals. New variants of `load`, `store`
@@ -466,7 +466,7 @@ see [JavaScript's `WebAssembly.Table` API](JS.md#webassemblytable-objects)).
 It would be useful to be able to do everything from within WebAssembly so, e.g.,
 it was possible to write a WebAssembly dynamic loader in WebAssembly. As a
 prerequisite, WebAssembly would need first-class support for 
-[GC references](GC.md) on the stack and in locals. Given that, the following
+[GC references](https://github.com/WebAssembly/design/issues/1079) on the stack and in locals. Given that, the following
 could be added:
 
 * `get_table`/`set_table`: get or set the table element at a given dynamic
