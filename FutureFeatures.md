@@ -125,7 +125,7 @@ Options under consideration:
 
 ### GC/DOM Integration
 
-See [GC.md](GC.md).
+See issue [1079][].
 
 ### Linear memory bigger than 4 GiB
 
