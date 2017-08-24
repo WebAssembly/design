@@ -363,12 +363,18 @@ Source locations are interpreted as in the source map spec.
 When the generated code is JavaScript, it includes a specially-formatted line
 at the end, which is the URL of the associated source map. For WebAssembly, a custom
 section named `"sourceMappingURL"` contains the URL.
-The URL is defined as in the WHATWG
-[URL spec](https://url.spec.whatwg.org), and is
-resolved according to the source map spec.
+The URL is represented and encoded as defined in the WHATWG
+[URL spec](https://url.spec.whatwg.org).
+If the URL is not absolute, then:
+* If the wasm module is associated with an HTTP response (e.g. the
+compileStreaming or instantiateStreaming
+[APIs](#additional-web-embedding-api) are used), then it is resolved relative to
+the URL of the response.
+* Otherwise it is relative to the page's origin.
+
 For wasm modules with an associated HTTP response (e.g. those using
-the response-based compile or instantiation
-[APIs](#additional-web-embedding-api)) the URL may also be specified
+the compileStreaming or instantiateStreaming
+[APIs](#additional-web-embedding-api)) the source map URL may also be specified
 using the `SourceMap:` HTTP header as with JavaScript source maps.
 
 
