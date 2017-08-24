@@ -219,8 +219,8 @@ When the generated code is JavaScript, it includes a specially-formatted line
 at the end, which is the URL of the associated source map. For WebAssembly, a custom
 section named `"sourceMappingURL"` contains the URL.
 The URL is defined as in the WHATWG
-[URL spec](http://url.spec.whatwg.org), and is
-resolved according to the source map spec,
+[URL spec](https://url.spec.whatwg.org), and is
+resolved according to the source map spec.
 For wasm modules with an associated HTTP response (e.g. those using
 the response-based compile or instantiation
 [APIs](#additional-web-embedding-api)) the URL may also be specified
