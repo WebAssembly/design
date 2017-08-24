@@ -181,7 +181,7 @@ significant changes to their developer tools.
 ### Alternatives
 
 An alternative method is to specify location mapping information in some way
-other than source maps. For example, it could be encoded directly into the wasm
+other than source maps. For example, it could be encoded directly into the WebAssembly
 binary the way function and local names are written in the "name" section. This
 is more convenient if the VM itself uses the information (for example to
 generate a stack trace). However existing developer tools implementations are
@@ -200,23 +200,23 @@ developer tools implementations in browsers.
 
 With few exceptions, most aspects of the source map
 [spec](https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/)
-may be applied directly to wasm.
-Because wasm is a binary format (and thus does not have lines and columns, or
+may be applied directly to WebAssembly.
+Because WebAssembly is a binary format (and thus does not have lines and columns, or
 comments per se), some simple reinterpretation of concepts is needed.
 
 #### Locations
 
 Source maps specify how to map a (zero-based) line and column position in
 generated code to a file, line, and column location in the source. For
-wasm binary locations, the line number is always 1, and the column number
-is interpreted as a byte offset into the wasm binary content (this results
-in a more efficient encoding than using the line number field instead).
+WebAssembly binary locations, the line number is always 1, and the column number
+is interpreted as a byte offset into the WebAssembly binary content (this results
+in a more efficient encoding than using the line number instead).
 Source locations are interpreted as in the source map spec.
 
 #### Linking generated code to source maps
 
 When the generated code is JavaScript, it includes a specially-formatted line
-at the end, which is the URL of the associated source map. For wasm, a custom
+at the end, which is the URL of the associated source map. For WebAssembly, a custom
 section named `"sourceMappingURL"` contains the URL.
 The URL is defined as in the WHATWG
 [URL spec](http://url.spec.whatwg.org), and is
