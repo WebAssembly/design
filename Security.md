@@ -39,8 +39,8 @@ runtime, WebAssembly programs are protected from control flow hijacking attacks.
   * [Indirect function calls](Rationale.md#indirect-calls) are subject to a type
   signature check at runtime; the type signature of the selected indirect
   function must match the type signature specified at the call site.
-  * A shadow stack is used to maintain a trusted call stack that is invulnerable
-  to buffer overflows in the module heap, ensuring safe function returns.
+  * A protected call stack that is invulnerable to buffer overflows in the
+  module heap ensures safe function returns.
   * [Branches](Semantics.md#branches-and-nesting) must point to valid
   destinations within the enclosing function.
 
@@ -48,7 +48,7 @@ Variables in C/C++ can be lowered to two different primitives in WebAssembly,
 depending on their scope. [Local variables](Semantics.md#local-variables)
 with fixed scope and [global variables](Semantics.md#global-variables) are
 represented as fixed-type values stored by index. The former are initialized
-to zero by default and are stored in the protected shadow stack, whereas
+to zero by default and are stored in the protected call stack, whereas
 the latter are located in the [global index space](Modules.md#global-index-space)
 and can be imported from external modules. Local variables with
 [unclear static scope](Rationale.md#locals) (e.g. are used by the address-of
@@ -83,7 +83,7 @@ affect local or global variables stored in index space, they are fixed-size and
 addressed by index. Data stored in linear memory can overwrite adjacent objects,
 since bounds checking is performed at linear memory region granularity and is
 not context-sensitive. However, the presence of control-flow integrity and
-protected shadow call stacks prevents direct code injection attacks. Thus,
+protected call stacks prevents direct code injection attacks. Thus,
 common mitigations such as [data execution prevention][] (DEP) and
 [stack smashing protection][] (SSP) are not needed by WebAssembly programs.
 
@@ -112,13 +112,68 @@ in-order execution and [post-MVP atomic memory primitives
 Similarly, [side channel attacks][] can occur, such as timing attacks against
 modules. In the future, additional protections may be provided by runtimes or
 the toolchain, such as code diversification or memory randomization (similar to
-[address space layout randomization][] (ASLR)), [bounded pointers][] ("fat"
-pointers), or finer-grained control-flow integrity.
+[address space layout randomization][] (ASLR)), or [bounded pointers][] ("fat"
+pointers).
+
+### Control-Flow Integrity
+The effectiveness of control-flow integrity can be measured based on its
+completeness. Generally, there are three types of external control-flow
+transitions that need to be protected, because the callee may not be trusted:
+  1. Direct function calls,
+  2. Indirect function calls,
+  3. Returns.
+
+Together, (1) and (2) are commonly referred to as "forward-edge", since they
+correspond to forward edges in a directed control-flow graph. Likewise (3) is
+commonly referred to as "back-edge", since it corresponds to back edges in a
+directed control-flow graph. More specialized function calls, such as tail
+calls, can be viewed as a combination of (1) and (3).
+
+Typically, this is implemented using runtime instrumentation. During
+compilation, the compiler generates an expected control flow graph of program
+execution, and inserts runtime instrumentation at each call site to verify that
+the transition is safe. Sets of expected call targets are constructed from the
+set of all possible call targets in the program, unique identifiers are assigned
+to each set, and the instrumentation checks whether the current call target is
+a member of the expected call target set. If this check succeeds, then the
+original call is allowed to proceed, otherwise a failure handler is executed,
+which typically terminates the program.
+
+In WebAssembly, the execution semantics implicitly guarantee the safety of (1)
+through usage of explicit function section indexes, and (3) through a protected
+call stack. Additionally, the type signature of indirect function calls is
+already checked at runtime, effectively implementing coarse-grained type-based
+control-flow integrity for (2). All of this is achieved without explicit runtime
+instrumentation in the module. However, as discussed
+[previously](#memory-safety), this protection does not prevent code reuse
+attacks with function-level granularity against indirect calls.
+
+#### Clang/LLVM CFI
+The Clang/LLVM compiler infrastructure includes a [built-in implementation] of
+fine-grained control flow integrity, which has been extended to support the
+WebAssembly target. It is available in Clang/LLVM 3.9+ with the
+[new WebAssembly backend].
+
+Enabling fine-grained control-flow integrity (by passing `-fsanitize=cfi` to
+emscripten) has a number of advantages over the default WebAssembly
+configuration. Not only does this better defend against code reuse attacks that
+leverage indirect function calls (2), but it also enhances the built-in function
+signature checks by operating at the C/C++ type level, which is semantically
+richer that the WebAssembly [type level](Semantics.md#types), which consists
+of only four value types. Currently, enabling this feature has a small
+performance cost for each indirect call, because an integer range check is
+used to verify that the target index is trusted, but this will be eliminated in
+the future by leveraging built-in support for
+[multiple indirect tables](Modules.md#table-index-space) with homogeneous type
+in WebAssembly.
 
   [address space layout randomization]: https://en.wikipedia.org/wiki/Address_space_layout_randomization
   [bounded pointers]: https://en.wikipedia.org/wiki/Bounded_pointer
+  [built-in implementation]: http://clang.llvm.org/docs/ControlFlowIntegrity.html
   [control-flow integrity]: https://research.microsoft.com/apps/pubs/default.aspx?id=64250
   [data execution prevention]: https://en.wikipedia.org/wiki/Executable_space_protection
+  [forward-edge control-flow integrity]: https://www.usenix.org/node/184460
+  [new WebAssembly backend]: https://github.com/WebAssembly/binaryen#cc-source--webassembly-llvm-backend--s2wasm--webassembly
   [return-oriented programming]: https://en.wikipedia.org/wiki/Return-oriented_programming
   [same-origin policy]: https://www.w3.org/Security/wiki/Same_Origin_Policy
   [side channel attacks]: https://en.wikipedia.org/wiki/Side-channel_attack

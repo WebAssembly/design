@@ -31,6 +31,11 @@ Whenever a [stack overflow](Semantics.md#stack-overflow) is happening in
 WebAssembly code, the same exception is thrown as for a stack overflow in
 JavaScript.
 
+## Out of Memory
+
+Whenever validation, compilation or instantiation run out of memory, the
+same exception is thrown as for out of memory conditions in JavaScript.
+
 ## The `WebAssembly` object
 
 The `WebAssembly` object is the initial value of the `WebAssembly` property of
@@ -113,12 +118,19 @@ If neither of the following overloads match, then the returned `Promise` is
 with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 ```
-Promise<{module:WebAssembly.Module, instance:WebAssembly.Instance}>
+dictionary WebAssemblyInstantiatedSource {
+   required WebAssembly.Module module;
+   required WebAssembly.Instance instance;
+};
+
+Promise<WebAssemblyInstantiatedSource>
   instantiate(BufferSource bytes [, importObject])
 ```
 
-This description applies if the first argument is a 
-[`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource).
+If the given `bytes` argument is not a
+[`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
+the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
+with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 This function starts an asynchronous task that first compiles a `WebAssembly.Module`
 from `bytes` as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor)
@@ -283,6 +295,7 @@ internal slot:
 
 * [[Instance]] : an [`Instance.instance`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L17)
   which is the WebAssembly spec definition of an instance
+ * [[Exports]] : the exports object created during instantiation
 
 ### `WebAssembly.Instance` Constructor
 
@@ -309,6 +322,12 @@ is thrown. If the list of
 is not empty and `Type(importObject)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
+Note: Imported JavaScript functions are wrapped as [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9) values in the following algorithm. For the purpose of the algorithm, a _new_ [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9) value is always generated fresh and considered distinct from any other previously created host function value, including those wrapping the same JavaScript function object.
+Consequently, two [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7) values are considered equal if and only if:
+
+* Either they are both WebAssembly functions for the same instance and referring to the same function definition.
+* Or they are the same host function value.
+
 Let `funcs`, `memories` and `tables` be initially-empty lists of callable JavaScript objects, `WebAssembly.Memory` objects and `WebAssembly.Table` objects, respectively.
 
 Let `imports` be an initially-empty list of [`external`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L11) values.
@@ -329,8 +348,8 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
          by `Eval.init` below.)
       1. Let `closure` be `v.[[Closure]]`.
    1. Otherwise:
-      1. Let `closure` be a new [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9)
-         of the given signature:
+      1. Let `closure` be a new [host function](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L9) value
+         of the given signature and the following behavior:
       1. If the signature contains an `i64` (as argument or result), the host
          function immediately throws a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
          when called.
@@ -437,11 +456,6 @@ each [external](https://github.com/WebAssembly/spec/blob/master/interpreter/spec
    1. Assert: There is an element `table` in `tables` whose `table.[[Table]]` is `t`.
    1. Return that `table`.
 
-Note: For the purpose of the above algorithm, two [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7) values are considered equal if and only if:
-
-* Either they are both WebAssembly functions for the same instance and referring to the same function definition.
-* Or they are identical host functions (i.e., each host function value created from a JavaScript function is considered fresh).
-
 Let `exportsObject` be a new [frozen](https://tc39.github.io/ecma262/#sec-object.freeze)
 plain JS object with [[Prototype]] set to Null and with properties defined
 by mapping each export in `exports` to an enumerable, non-writable,
@@ -450,9 +464,8 @@ performed during [module validation](#webassemblymodule-constructor) ensure
 that each property name is valid and no properties are defined twice.
 
 Let `instanceObject` be a new `WebAssembly.Instance` object setting
-the internal `[[Instance]]` slot to `instance`.
-
-Perform [`CreateDataProperty`](https://tc39.github.io/ecma262/#sec-createdataproperty)(`instance`, `"exports"`, `exportsObject`).
+the internal `[[Instance]]` slot to `instance` and the `[[Exports]]` slot to
+`exportsObject`.
 
 Return `instanceObject`.
 
@@ -462,6 +475,16 @@ The initial value of the [`@@toStringTag`](https://tc39.github.io/ecma262/#sec-w
 property is the String value `"WebAssembly.Instance"`.
 
 This property has the attributes { [[Writable]]: `false`, [[Enumerable]]: `false`, [[Configurable]]: `true` }.
+
+### `WebAssembly.Instance.prototype.exports` property
+
+This is an accessor property whose [[Set]] is Undefined and whose [[Get]]
+accessor function performs the following steps:
+
+Let `T` be the `this` value. If `T` is not a `WebAssembly.Instance`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
+is thrown.
+
+Return `T.[[Exports]]`.
 
 ## Exported Function Exotic Objects
 
