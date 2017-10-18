@@ -15,6 +15,9 @@
 | November   7th 2016 | Empire Node: How Webassembly Will Change the Way You Write Javascript | | [video](https://www.youtube.com/watch?v=kq2HBddiyh0) | Seth Samuel |
 | November  12th 2016 | Chrome Dev Summit Advanced JS performance with V8 and WebAssembly | | [video](https://www.youtube.com/watch?v=PvZdTZ1Nl5o) | Seth Thompson |
 | June      26th 2017 | Bringing the Web up to Speed with WebAssembly | [paper](https://github.com/WebAssembly/spec/blob/master/papers/pldi2017.pdf) | [video](https://www.youtube.com/watch?v=AFy5TdrFG9Y) | Andreas Rossberg
+| October      5th 2017 | Node.js Interactive: WebAssembly and the Future of the Web | [paper](https://kgryte.github.io/talks-nodejs-interactive-2017/#/splash) | [video](https://www.youtube.com/watch?v=iJL59lh4IJA) | Athan Reines
+| October      5th 2017 | Node.js Interactive: What's a Wasm? | | [video](https://www.youtube.com/watch?v=gk9ERa7UYPM) | Paul Milham
+
 
 ## Upcoming
 
