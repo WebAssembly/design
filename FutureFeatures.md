@@ -9,16 +9,20 @@ issues.
 
 ## Tracking Issues
 
-| Feature                       | Tracking issue | Status      |
-|-------------------------------|----------------|-------------|
-| Specification                 | [1077][]       | in progress |
-| Threads                       | [1073][]       | in progress |
-| Fixed-width SIMD              | [1075][]       | in progress |
-| Exception handling            | [1078][]       | in progress |
-| Garbage collection            | [1079][]       | in progress |
-| Bulk memory operations        | [1114][]       | in progress |
-| Web Content Security Policy   | [1122][]       | in progress |
-| ECMAScript module integration | [1087][]       | not started |
+The Community Group and Working Group have adopted [a process document for proposal phases](https://github.com/WebAssembly/meetings/blob/master/process/phases.md). The following issues are currently being worked on.
+
+| Feature                               | Tracking issue | Status      | Phase                        |
+|---------------------------------------|----------------|-------------|------------------------------|
+| Specification                         | [1077][]       | in progress | Proposed spec text available |
+| Threads                               | [1073][]       | in progress | Feature proposal             |
+| Fixed-width SIMD                      | [1075][]       | in progress | Feature proposal             |
+| Exception handling                    | [1078][]       | in progress | Feature proposal             |
+| Garbage collection                    | [1079][]       | in progress | Feature proposal             |
+| Bulk memory operations                | [1114][]       | in progress | Feature proposal             |
+| Web Content Security Policy           | [1122][]       | in progress | Pre-proposal                 |
+| ECMAScript module integration         | [1087][]       | not started | Pre-proposal                 |
+| Tail Call                             | [1144][]       | in progress | Feature proposal             |
+| Non-trapping float-to-int conversions | [1143][]       | in progress | Implementation phase         |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
@@ -28,6 +32,8 @@ issues.
   [1087]: https://github.com/WebAssembly/design/issues/1087
   [1114]: https://github.com/WebAssembly/design/issues/1114
   [1122]: https://github.com/WebAssembly/design/issues/1122
+  [1143]: https://github.com/WebAssembly/design/issues/1143
+  [1144]: https://github.com/WebAssembly/design/issues/1144
 
 
 ## Legacy Future Features
