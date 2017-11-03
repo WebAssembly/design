@@ -23,6 +23,7 @@ The Community Group and Working Group have adopted [a process document for propo
 | ECMAScript module integration         | [1087][]       | not started | Pre-proposal                 |
 | Tail Call                             | [1144][]       | in progress | Feature proposal             |
 | Non-trapping float-to-int conversions | [1143][]       | in progress | Implementation phase         |
+| Multi-value                           | [1146][]       | in progress | Implementation phase         |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
@@ -34,6 +35,7 @@ The Community Group and Working Group have adopted [a process document for propo
   [1122]: https://github.com/WebAssembly/design/issues/1122
   [1143]: https://github.com/WebAssembly/design/issues/1143
   [1144]: https://github.com/WebAssembly/design/issues/1144
+  [1146]: https://github.com/WebAssembly/design/issues/1146
 
 
 ## Legacy Future Features
