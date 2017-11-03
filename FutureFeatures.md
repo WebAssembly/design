@@ -24,6 +24,7 @@ The Community Group and Working Group have adopted [a process document for propo
 | Tail Call                             | [1144][]       | in progress | Feature proposal             |
 | Non-trapping float-to-int conversions | [1143][]       | in progress | Implementation phase         |
 | Multi-value                           | [1146][]       | in progress | Implementation phase         |
+| Host bindings                         | [1148][]       | in progress | Feature proposal             |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
@@ -36,6 +37,7 @@ The Community Group and Working Group have adopted [a process document for propo
   [1143]: https://github.com/WebAssembly/design/issues/1143
   [1144]: https://github.com/WebAssembly/design/issues/1144
   [1146]: https://github.com/WebAssembly/design/issues/1146
+  [1148]: https://github.com/WebAssembly/design/issues/1148
 
 
 ## Legacy Future Features
