@@ -352,7 +352,7 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
          of the given signature and the following behavior:
       1. If the signature contains an `i64` (as argument or result), the host
          function immediately throws a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
-         when called.
+         when called, before even trying to coerce arguments.
       1. Otherwise, the host function calls `v` with an `undefined` receiver
          and WebAssembly arguments coerced to JavaScript arguments
          via [`ToJSValue`](#tojsvalue). The result is returned by coercing
@@ -515,7 +515,8 @@ WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined
    of the function's [[Closure]].
 1. If `sig` contains an `i64` (as argument or result), a
    [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
-   is thrown each time the [[Call]] method is invoked.
+   is immediately thrown each time the [[Call]] method is invoked, before even
+   trying to coerce arguments.
 1. Let `args` be an empty list of coerced values.
 1. Let `inArity` be the number of arguments and `outArity` be the number of results in `sig`.
 1. For all values `v` in `argValues`, in the order of their appearance:
