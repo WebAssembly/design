@@ -103,6 +103,6 @@ future feature.
 [future general]: FutureFeatures.md
 [future feature testing]: FutureFeatures.md#feature-testing
 [future integer]: FutureFeatures.md#additional-integer-operators
-[future threads]: FutureFeatures.md#threads
-[future simd]: FutureFeatures.md#fixed-width-simd
+[future threads]: https://github.com/WebAssembly/design/issues/1073
+[future simd]: https://github.com/WebAssembly/design/issues/1075
 [future memory control]: FutureFeatures.md#finer-grained-control-over-memory

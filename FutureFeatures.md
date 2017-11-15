@@ -421,14 +421,12 @@ arithmetic, or optimizing JavaScript Numbers to use int32 operators. Another fam
 includes compiling code that doesn't expect overflow to occur, but which wishes
 to have overflow detected and reported if it does happen. These use cases would
 ideally like to have overflow trap, and to allow them to
-[handle trap specially][]. Following the rule that explicitly signed and
+[handle trap specially][future trapping]. Following the rule that explicitly signed and
 unsigned operators trap whenever the result value can not be represented in the
 result type, it would be possible to add explicitly signed and unsigned versions
 of integer `add`, `sub`, and `mul`, which would trap on overflow. The main
 reason we haven't added these already is that they're not efficient for
 general-purpose use on several of today's popular hardware architectures.
-
-  [handle trap specially]: FutureFeatures.md#trapping-or-non-trapping-strategies
 
 ### Better feature testing support
 
@@ -455,7 +453,7 @@ of supporting multiple return values from blocks / functions.
 The MVP limits modules to at most one memory and at most one table (the default
 ones) and there are only operators for accessing the default table and memory.
 
-After the MVP and after [GC reference types](https://github.com/WebAssembly/design/issues/1079) have been added, the default
+After the MVP and after [GC reference types][future garbage collection] have been added, the default
 limitation can be relaxed so that any number of tables and memories could be
 imported or internally defined and memories/tables could be passed around as
 parameters, return values and locals. New variants of `load`, `store`
@@ -476,7 +474,7 @@ see [JavaScript's `WebAssembly.Table` API](JS.md#webassemblytable-objects)).
 It would be useful to be able to do everything from within WebAssembly so, e.g.,
 it was possible to write a WebAssembly dynamic loader in WebAssembly. As a
 prerequisite, WebAssembly would need first-class support for 
-[GC references](https://github.com/WebAssembly/design/issues/1079) on the stack and in locals. Given that, the following
+[GC references][future garbage collection] on the stack and in locals. Given that, the following
 could be added:
 
 * `get_table`/`set_table`: get or set the table element at a given dynamic
@@ -514,3 +512,6 @@ We expect that WebAssembly producers will use these operations when the region
 size is known to be large, and will use loads/stores otherwise.
 
 TODO: determine how these operations interact w/ shared memory.
+
+[future trapping]: FutureFeatures.md#trapping-or-non-trapping-strategies
+[future garbage collection]: https://github.com/WebAssembly/design/issues/1079

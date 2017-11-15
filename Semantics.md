@@ -86,8 +86,8 @@ operators.
 A *linear memory* is a contiguous, byte-addressable range of memory spanning
 from offset `0` and extending up to a varying *memory size*. This size is always 
 a multiple of the WebAssembly page size, which is fixed to 64KiB (though large
-page support may be added in an opt-in manner in the 
-[future](FutureFeatures.md#large-page-support)). The initial state of a linear
+page support may be added in an opt-in manner in the
+[future][future large pages]). The initial state of a linear
 memory is defined by the module's [linear memory](Modules.md#linear-memory-section) and
 [data](Modules.md#data-section) sections. The memory size can be dynamically
 increased by the [`grow_memory`](Semantics.md#resizing) operator.
@@ -220,7 +220,7 @@ bytes are out of bounds, none of the bytes are modified.
 
 In the MVP, linear memory can be resized by a `grow_memory` operator. The
 operand to this operator is in units of the WebAssembly page size,
-which is defined to be 64KiB (though large page support may be added in 
+which is defined to be 64KiB (though large page support may be added in
 the [future :unicorn:][future large pages]).
 
  * `grow_memory` : grow linear memory by a given unsigned delta of pages.
@@ -679,17 +679,6 @@ outside the range which rounds to an integer in range) traps.
     This trap is intended to be impossible for user code to catch or handle, even in the future when it may be possible to
     handle some other kinds of traps or exceptions.
 
-[future general]: FutureFeatures.md
-[future threads]: FutureFeatures.md#threads
-[future tail calls]: FutureFeatures.md#general-purpose-proper-tail-calls
-[future multiple tables]: FutureFeatures.md#multiple-tables-and-memories
-[future 64-bit]: FutureFeatures.md#linear-memory-bigger-than-4-gib
-[future memory control]: FutureFeatures.md#finer-grained-control-over-memory
-[future types]: FutureFeatures.md#more-table-operators-and-types
-[future large pages]: FutureFeatures.md#large-page-support
-[future ieee 754]: FutureFeatures.md#full-ieee-754-2008-conformance
-
-
 ## Validation
 
 A module binary must be _validated_ before it is compiled.
@@ -707,3 +696,13 @@ A polymorphic stack also matches any possible signature at the end of a block or
 After the end of a block, the stack is determined by the block signature and the stack before the block.
 
 The details of validation are currently defined by the [spec interpreter](https://github.com/WebAssembly/spec/blob/master/interpreter/valid/valid.ml#L178).
+
+[future general]: FutureFeatures.md
+[future threads]: https://github.com/WebAssembly/design/issues/1073
+[future tail calls]: https://github.com/WebAssembly/design/issues/1144
+[future multiple tables]: FutureFeatures.md#multiple-tables-and-memories
+[future 64-bit]: FutureFeatures.md#linear-memory-bigger-than-4-gib
+[future memory control]: FutureFeatures.md#finer-grained-control-over-memory
+[future types]: FutureFeatures.md#more-table-operators-and-types
+[future large pages]: FutureFeatures.md#large-page-support
+[future ieee 754]: FutureFeatures.md#full-ieee-754-2008-conformance

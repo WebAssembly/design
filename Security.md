@@ -58,13 +58,13 @@ compile time. This is an isolated memory region with fixed maximum size that is
 zero initialized by default. References to this memory are computed with
 infinite precision to avoid wrapping and simplify bounds checking. In the future,
 support for [multiple linear memory sections](Modules.md#linear-memory-section) and
-[finer-grained memory operations](FutureFeatures.md#finer-grained-control-over-memory)
+[finer-grained memory operations][future memory control]
 (e.g. shared memory, page protection, large pages, etc.) will be implemented.
 
 [Traps](Semantics.md#traps) are used to immediately terminate execution and
 signal abnormal behavior to the execution environment. In a browser, this is
 represented as a JavaScript exception. Support for
-[module-defined trap handlers](FutureFeatures.md#trappingor-non-trapping-strategies)
+[module-defined trap handlers][future trapping]
 will be implemented in the future. Operations that can trap include:
 
   * specifying an invalid index in any index space,
@@ -180,4 +180,6 @@ in WebAssembly.
   [stack smashing protection]: https://en.wikipedia.org/wiki/Buffer_overflow_protection#Random_canaries
   [time of check to time of use]: https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use
 
-[future threads]: FutureFeatures.md#threads
+[future threads]: https://github.com/WebAssembly/design/issues/1073
+[future memory control]: FutureFeatures.md#finer-grained-control-over-memory
+[future trapping]: FutureFeatures.md#trapping-or-non-trapping-strategies

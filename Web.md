@@ -308,7 +308,7 @@ distribution networks and to implement [dynamic linking](DynamicLinking.md).
 
 ## SIMD
 
-Once [SIMD is supported](FutureFeatures.md#fixed-width-simd) WebAssembly would:
+Once [SIMD is supported][future simd] WebAssembly would:
 
 * Be statically typed analogous to [SIMD.js-in-asm.js][];
 * Reuse specification of operation semantics (with TC39);
@@ -316,10 +316,13 @@ Once [SIMD is supported](FutureFeatures.md#fixed-width-simd) WebAssembly would:
 
 ## GC
 
-Once [GC is supported](GC.md), WebAssembly code would be able to reference
+Once [GC is supported][future garbage collection], WebAssembly code would be able to reference
 and access JavaScript, DOM, and general WebIDL-defined objects.
 
   [same-origin policy]: https://www.w3.org/Security/wiki/Same_Origin_Policy
   [cross-origin resource sharing (CORS)]: https://www.w3.org/TR/cors/
   [subresource integrity]: https://www.w3.org/TR/SRI/
   [SIMD.js-in-asm.js]: http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js
+
+[future simd]: https://github.com/WebAssembly/design/issues/1075
+[future garbage collection]: https://github.com/WebAssembly/design/issues/1079

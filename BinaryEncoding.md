@@ -57,7 +57,7 @@ Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
 
 In the MVP, the opcodes of [instructions](Semantics.md) are all encoded in a
 single byte since there are fewer than 256 opcodes. Future features like
-[SIMD](FutureFeatures.md#fixed-width-simd) and [atomics](FutureFeatures.md#threads)
+[SIMD][future simd] and [atomics][future threads]
 will bring the total count above 256 and so an extension scheme will be
 necessary, designating one or more single-byte values as prefixes for multi-byte
 opcodes.
@@ -811,8 +811,9 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `f64.reinterpret/i64` | `0xbf` | | |
 
 [future general]: FutureFeatures.md
-[future multiple return]: FutureFeatures.md#multiple-return
-[future threads]: FutureFeatures.md#threads
+[future multiple return]: https://github.com/WebAssembly/design/issues/1146
+[future threads]: https://github.com/WebAssembly/design/issues/1073
+[future simd]: https://github.com/WebAssembly/design/issues/1075
 [future types]: FutureFeatures.md#more-table-operators-and-types
 [future multiple tables]: FutureFeatures.md#multiple-tables-and-memories
 [future compression]: https://github.com/WebAssembly/decompressor-prototype/blob/master/CompressionLayer1.md
