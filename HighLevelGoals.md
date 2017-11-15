@@ -10,10 +10,10 @@
     * a [Minimum Viable Product (MVP)](MVP.md) for the standard with
       roughly the same functionality as [asm.js](http://asmjs.org), primarily
       aimed at [C/C++](CAndC++.md);
-    * [additional features :unicorn:][future features],
-      initially focused on key features like threads,
-      zero cost exceptions, and SIMD,
-      follow by additional features
+    * [additional features :unicorn:][future general],
+      initially focused on key features like [threads][future threads],
+      [zero cost exceptions][future exceptions], and [SIMD][future simd],
+      followed by additional features
       prioritized by feedback and experience, including support for languages
       other than C/C++.
 3. Design to execute within and integrate well with the *existing*
@@ -33,4 +33,7 @@
     * promote other compilers and tools targeting WebAssembly; and
     * enable other useful [tooling](Tooling.md).
 
-[future features]: FutureFeatures.md
+[future general]: FutureFeatures.md
+[future threads]: https://github.com/WebAssembly/design/issues/1073
+[future simd]: https://github.com/WebAssembly/design/issues/1075
+[future exceptions]: https://github.com/WebAssembly/design/issues/1078

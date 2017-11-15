@@ -52,5 +52,5 @@ have defined or constrained behavior in WebAssembly itself may nonetheless still
 have undefined behavior
 [at the source code level](CAndC++.md#undefined-behavior).
 
-[future threads]: FutureFeatures.md#threads
-[future simd]: FutureFeatures.md#fixed-width-simd
+[future threads]: https://github.com/WebAssembly/design/issues/1073
+[future simd]: https://github.com/WebAssembly/design/issues/1075

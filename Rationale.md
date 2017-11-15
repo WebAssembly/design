@@ -153,8 +153,8 @@ address a number of competing constraints:
    implementation details.)
 3. Avoid *forcing* every developer using WebAssembly to understand their precise
    maximum heap usage.
-4. When threading and shared memory are added to WebAssembly
-   [post-MVP](FutureFeatures.md#threads), the design should not require memory growth
+4. When [threading and shared memory][future threads] are added to WebAssembly
+   post-MVP, the design should not require memory growth
    to `realloc` since this implies significant implementation complexity,
    security hazards, and optimization challenges.
 
@@ -457,7 +457,7 @@ hardware platforms.
 ## Motivating Scenarios for Feature Testing
 
 1. [Post-MVP :unicorn:][future general],
-[`i32.min_s` :unicorn:][future integers] is introduced. A
+[`i32.min_s` :unicorn:][future integer] is introduced. A
 WebAssembly developer updates their toolkit so that the compiler may leverage
 `i32.min_s`. The developer's WebAssembly module works correctly both on
 execution environments at MVP, as well as those supporting `i32.min_s`.
@@ -470,7 +470,7 @@ possible. The developer has to balance the cost of the test matrix resulting
 from the combinations of possible feature configurations.
 
 2. [Post-MVP :unicorn:][future general], module authors may now use
-[Threading](FutureFeatures.md#threads)
+[Threading][future threads]
 APIs in the browser. A developer wants to leverage multithreading in their
 module.
 
@@ -483,7 +483,7 @@ need MVP support.
   * In another variant, our developer explicitly authors both MVP-only and post-
 MVP (with threads) code.
 
-3. [SIMD](FutureFeatures.md#fixed-width-simd) support is not universally
+3. [SIMD][future simd] support is not universally
 equivalent on all targets. While polyfill variants of SIMD APIs are available,
 a developer prefers writing dedicated SIMD and non-SIMD versions of their
 compression algorithm, because the non-SIMD version performs better in
@@ -563,10 +563,6 @@ Yes:
 * [Existing web standards](https://www.w3.org/TR/PNG/) demonstrate many of
   the advantages of a layered encoding strategy.
 
-[future general]: FutureFeatures.md
-[future flow control]: FutureFeatures.md#more-expressive-control-flow
-[future integers]: FutureFeatures.md#additional-integer-operations
-
 
 ## Why "polymorphic" stack typing after control transfer?
 
@@ -607,3 +603,9 @@ It is worth noting that this kind of type checking, in general, is not unusual.
 For example, the JVM also poses no constraint on the stack type after a jump (however, in its modern form, it recommends type annotations in the form of _stack maps_, which are then required after jumps to make the instantiation of the polymorphic typing rule explicit).
 Moreover, programming languages that allow control transfer _expressions_ usually type them polymorphically as well (e.g., `throw`/`raise`, which is an expression in some languages).
 
+
+[future general]: FutureFeatures.md
+[future flow control]: FutureFeatures.md#more-expressive-control-flow
+[future integer]: FutureFeatures.md#additional-integer-operations
+[future threads]: https://github.com/WebAssembly/design/issues/1073
+[future simd]: https://github.com/WebAssembly/design/issues/1075

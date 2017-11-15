@@ -32,7 +32,7 @@ characteristics:
 * Memory regions which can be efficiently addressed with 32-bit
   pointers or indices.
 * wasm64 additionally supports linear memory bigger than
-  [4 GiB with 64-bit pointers or indices](FutureFeatures.md#linear-memory-bigger-than-4-gib).
+  [4 GiB with 64-bit pointers or indices][future 64-bit].
 * Enforce secure isolation between WebAssembly modules and other modules or
   processes executing on the same machine.
 * An execution environment which offers forward progress guarantees to all
@@ -60,3 +60,5 @@ a standard API (e.g., POSIX) and relying on the compiler and/or libraries to map
 the standard interface to the host environment's available imports either at
 compile-time (via `#ifdef`) or run-time (via [feature detection](FeatureTest.md)
 and dynamic [loading](Modules.md)/[linking](DynamicLinking.md)).
+
+[future 64-bit]: FutureFeatures.md#linear-memory-bigger-than-4-gib

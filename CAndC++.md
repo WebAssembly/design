@@ -41,13 +41,13 @@ compilers need to support high-quality implementations.
 While [the MVP](MVP.md) will be fully functional, additional features enabling
 greater performance will be added soon after, including:
 
- * [Support for multi-threaded execution with shared memory](FutureFeatures.md#threads).
+ * Support for [multi-threaded execution with shared memory][future threads].
 
- * [Zero-cost C++ exception handling](FutureFeatures.md#zero-cost-exception-handling).
+ * [Zero-cost C++ exception handling][future exceptions].
    C++ exceptions can be implemented without this, but this feature will
    enable them to have lower runtime overhead.
 
- * Support for [128-bit SIMD](FutureFeatures.md#fixed-width-simd). SIMD will be
+ * Support for [128-bit SIMD][future simd]. SIMD will be
    exposed to C/C++ though explicit APIs such as [LLVM's vector extensions]
    and [GCC's vector extensions], auto-vectorization, and emulated APIs from
    other platforms such as `<xmmintrin.h>`.
@@ -128,4 +128,7 @@ across different implementations, and across different versions of the same
 implementation.
 
 [future 64-bit]: FutureFeatures.md#linear-memory-bigger-than-4-gib
+[future threads]: https://github.com/WebAssembly/design/issues/1073
+[future simd]: https://github.com/WebAssembly/design/issues/1075
+[future exceptions]: https://github.com/WebAssembly/design/issues/1078
 
