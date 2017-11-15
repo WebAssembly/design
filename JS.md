@@ -106,10 +106,6 @@ The asynchronous compilation is logically performed on a copy of the state of
 the given `BufferSource` captured during the call to `compile`; subsequent mutations
 of the `BufferSource` after `compile` return do not affect ongoing compilations.
 
-In the [future :unicorn:][future streaming], this function can be
-extended to accept a [stream](https://streams.spec.whatwg.org), thereby enabling
-asynchronous, background, streaming compilation.
-
 #### `WebAssembly.instantiate`
 
 The `instantiate` function is overloaded based on types of its arguments.
@@ -838,5 +834,4 @@ fetch('demo.wasm').then(response =>
 ```
 
 [future general]: FutureFeatures.md
-[future streaming]: FutureFeatures.md#streaming-compilation
 [future types]: FutureFeatures.md#more-table-operators-and-types
