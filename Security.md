@@ -24,7 +24,7 @@ include the POSIX security model.
 
 The design of WebAssembly promotes safe programs by eliminating dangerous
 features from its execution semantics, while maintaining compatibility with
-programs written for [C/C++](CandC++.md).
+programs written for [C/C++](CAndC%2B%2B.md).
 
 Modules must declare all accessible functions and their associated types
 at load time, even when [dynamic linking](DynamicLinking.md) is used. This
@@ -88,15 +88,15 @@ common mitigations such as [data execution prevention][] (DEP) and
 [stack smashing protection][] (SSP) are not needed by WebAssembly programs.
 
 Another common class of memory safety errors involves unsafe pointer usage and
-[undefined behavior](CandC++.md#undefined-behavior). This includes dereferencing
-pointers to unallocated memory (e.g. `NULL`), or freed memory allocations. In
-WebAssembly, the semantics of pointers have been eliminated for function calls
-and variables with fixed static scope, allowing references to invalid indexes in
-any index space to trigger a validation error at load time, or at worst a trap
-at runtime. Accesses to linear memory are bounds-checked at the region level,
-potentially resulting in a trap at runtime. These memory region(s) are isolated
-from the internal memory of the runtime, and are set to zero by default unless
-otherwise initialized.
+[undefined behavior](CAndC%2B%2B.md#undefined-behavior). This includes
+dereferencing pointers to unallocated memory (e.g. `NULL`), or freed memory
+allocations. In WebAssembly, the semantics of pointers have been eliminated for
+function calls and variables with fixed static scope, allowing references to
+invalid indexes in any index space to trigger a validation error at load time,
+or at worst a trap at runtime. Accesses to linear memory are bounds-checked at
+the region level, potentially resulting in a trap at runtime. These memory
+region(s) are isolated from the internal memory of the runtime, and are set to
+zero by default unless otherwise initialized.
 
 Nevertheless, other classes of bugs are not obviated by the semantics of
 WebAssembly. Although attackers cannot perform direct code injection attacks,
