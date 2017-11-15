@@ -133,10 +133,6 @@ Options under consideration:
   making it easier to support other languages, especially functional programming
   languages.
 
-### GC/DOM Integration
-
-See issue [1079][].
-
 ### Linear memory bigger than 4 GiB
 
 The WebAssembly MVP will support the wasm32 mode of WebAssembly, with linear
@@ -443,11 +439,6 @@ pass was otherwise necessary.
 
 If globals are allowed array types, significant portions of memory could be moved out of linear memory which could reduce fragmentation issues. Languages like Fortran which limit aliasing would be one use case. C/C++ compilers could also determine that some global variables never have their address taken.
 
-### Multiple Return
-
-The stack based nature of WebAssembly lends itself to the possibility
-of supporting multiple return values from blocks / functions.
-
 ### Multiple Tables and Memories
 
 The MVP limits modules to at most one memory and at most one table (the default
@@ -493,25 +484,6 @@ static signature validation check. This could be improved by allowing:
   check of a call to a heterogeneous table;
 * any other specific GC reference type, effectively allowing WebAssembly code
   to implement a variety of rooting API schemes.
-
-### Memset and Memcpy Operators
-
-Copying and clearing large memory regions is very common, and making these
-operations fast is architecture dependent. Although this can be done in the MVP
-via `i32.load` and `i32.store`, this requires more bytes of code and forces VMs
-to recognize the loops as well. The following operators can be added to improve
-performance:
-
-* `move_memory`: Copy data from a source memory region to destination region;
-   these regions may overlap: the copy is performed as if the source region was 
-   first copied to a temporary buffer, then the temporary buffer is copied to
-   the destination region
-* `set_memory`: Set all bytes in a memory region to a given byte
-
-We expect that WebAssembly producers will use these operations when the region
-size is known to be large, and will use loads/stores otherwise.
-
-TODO: determine how these operations interact w/ shared memory.
 
 [future trapping]: FutureFeatures.md#trapping-or-non-trapping-strategies
 [future garbage collection]: https://github.com/WebAssembly/design/issues/1079
