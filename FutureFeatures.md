@@ -39,15 +39,10 @@ The Community Group and Working Group have adopted [a process document for propo
   [1146]: https://github.com/WebAssembly/design/issues/1146
   [1148]: https://github.com/WebAssembly/design/issues/1148
 
-
-## Legacy Future Features
-
-**Note:** these will soon move to tracking issues.
+## On Deck for Immediate Design
 
 :star: = Essential features we want to prioritize adding shortly after
 the [MVP](MVP.md).
-
-## On Deck for Immediate Design
 
 ### Great tooling support
 #### :star: :star: :star:
@@ -133,10 +128,6 @@ Options under consideration:
   making it easier to support other languages, especially functional programming
   languages.
 
-### GC/DOM Integration
-
-See issue [1079][].
-
 ### Linear memory bigger than 4 GiB
 
 The WebAssembly MVP will support the wasm32 mode of WebAssembly, with linear
@@ -174,34 +165,6 @@ Coroutines will [eventually be part of C++][] and is already popular in other
 programming languages that WebAssembly will support.
 
   [eventually be part of C++]: http://wg21.link/n4499
-
-### Signature-restricted Proper Tail Calls
-
-See the [asm.js RFC][] for a full description of signature-restricted Proper
-Tail Calls (PTC).
-
-Useful properties of signature-restricted PTCs:
-
-* In most cases, can be compiled to a single jump.
-* Can express indirect `goto` via function-pointer calls.
-* Can be used as a compile target for languages with unrestricted PTCs; the code
-  generator can use a stack in the linear memory to effectively implement a custom call
-  ABI on top of signature-restricted PTCs.
-* An engine that wishes to perform aggressive optimization can fuse a graph of
-  PTCs into a single function.
-* To reduce compile time, a code generator can use PTCs to break up ultra-large
-  functions into smaller functions at low overhead using PTCs.
-* A compiler can exert some amount of control over register allocation via the
-  ordering of arguments in the PTC signature.
-
-  [asm.js RFC]: http://discourse.specifiction.org/t/request-for-comments-add-a-restricted-subset-of-proper-tail-calls-to-asm-js
- 
-### General-purpose Proper Tail Calls
-
-General-purpose Proper Tail Calls would have no signature restrictions, and
-therefore be more broadly usable than
-[Signature-restricted Proper Tail Calls](Semantics.md#signature-restricted-proper-tail-calls),
-though there would be some different performance characteristics.
 
 ### Asynchronous Signals
 
@@ -443,11 +406,6 @@ pass was otherwise necessary.
 
 If globals are allowed array types, significant portions of memory could be moved out of linear memory which could reduce fragmentation issues. Languages like Fortran which limit aliasing would be one use case. C/C++ compilers could also determine that some global variables never have their address taken.
 
-### Multiple Return
-
-The stack based nature of WebAssembly lends itself to the possibility
-of supporting multiple return values from blocks / functions.
-
 ### Multiple Tables and Memories
 
 The MVP limits modules to at most one memory and at most one table (the default
@@ -494,24 +452,51 @@ static signature validation check. This could be improved by allowing:
 * any other specific GC reference type, effectively allowing WebAssembly code
   to implement a variety of rooting API schemes.
 
+## Proposals moved to tacking issues
+
+These proposals have now moved to [tracking issues](#tracking-issues). The old
+links are preserved here for backwards compatibility.
+
+### GC/DOM Integration
+
+See issue [1079][].
+
 ### Memset and Memcpy Operators
 
-Copying and clearing large memory regions is very common, and making these
-operations fast is architecture dependent. Although this can be done in the MVP
-via `i32.load` and `i32.store`, this requires more bytes of code and forces VMs
-to recognize the loops as well. The following operators can be added to improve
-performance:
+See issue [1114][].
 
-* `move_memory`: Copy data from a source memory region to destination region;
-   these regions may overlap: the copy is performed as if the source region was 
-   first copied to a temporary buffer, then the temporary buffer is copied to
-   the destination region
-* `set_memory`: Set all bytes in a memory region to a given byte
+### Tail Calls
 
-We expect that WebAssembly producers will use these operations when the region
-size is known to be large, and will use loads/stores otherwise.
+See issue [1144][].
 
-TODO: determine how these operations interact w/ shared memory.
+#### Signature-restricted Proper Tail Calls
+
+See the [asm.js RFC][] for a full description of signature-restricted Proper
+Tail Calls (PTC).
+
+Useful properties of signature-restricted PTCs:
+
+* In most cases, can be compiled to a single jump.
+* Can express indirect `goto` via function-pointer calls.
+* Can be used as a compile target for languages with unrestricted PTCs; the code
+  generator can use a stack in the linear memory to effectively implement a custom call
+  ABI on top of signature-restricted PTCs.
+* An engine that wishes to perform aggressive optimization can fuse a graph of
+  PTCs into a single function.
+* To reduce compile time, a code generator can use PTCs to break up ultra-large
+  functions into smaller functions at low overhead using PTCs.
+* A compiler can exert some amount of control over register allocation via the
+  ordering of arguments in the PTC signature.
+
+  [asm.js RFC]: http://discourse.specifiction.org/t/request-for-comments-add-a-restricted-subset-of-proper-tail-calls-to-asm-js
+ 
+#### General-purpose Proper Tail Calls
+
+General-purpose Proper Tail Calls would have no signature restrictions, and
+therefore be more broadly usable than
+[Signature-restricted Proper Tail Calls](Semantics.md#signature-restricted-proper-tail-calls),
+though there would be some different performance characteristics.
+
 
 [future trapping]: FutureFeatures.md#trapping-or-non-trapping-strategies
 [future garbage collection]: https://github.com/WebAssembly/design/issues/1079
