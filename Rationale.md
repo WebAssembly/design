@@ -297,7 +297,7 @@ of an expression with only one immediate use. Control flow instructions can then
 expressions with result values, thus allowing even more opportunities to further reduce
 `set_local`/`get_local` usage (which constitute 30-40% of total bytes in the
 [polyfill prototype](https://github.com/WebAssembly/polyfill-prototype-1)).
-`br`-with-value and `if` constructs that return values can model also model `phis` which
+`br`-with-value and `if` constructs that return values can also model `phis` which
 appear in SSA representations of programs.
 
 
