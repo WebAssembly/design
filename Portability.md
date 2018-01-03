@@ -1,62 +1,32 @@
-# Portability
+# 可移植性
 
-WebAssembly's [binary format](BinaryEncoding.md) is designed to be executable
-efficiently on a variety of operating systems and instruction set architectures,
-[on the Web](Web.md) and [off the Web](NonWeb.md).
+WebAssembly的[二进制格式](BinaryEncoding.md)是被设计成可在不同操作系统与指令集上高效执行的，无论在[Web](Web.md)或[非Web](NonWeb.md)环境中。
 
-## Assumptions for Efficient Execution
+## 对高效执行的设想
 
-Execution environments which, despite
-[limited, local, nondeterminism](Nondeterminism.md), don't offer
-the following characteristics may be able to execute WebAssembly modules
-nonetheless. In some cases they may have to emulate behavior that the host
-hardware or operating system don't offer so that WebAssembly modules execute
-*as-if* the behavior were supported. This sometimes will lead to poor
-performance.
+尽管执行环境是[有条件的，本地的，不确定的](Nondeterminism.md)，也不要向WebAssembly提供下述特性。有些情况下为了WebAssembly模块执行，也许不得不模拟一些宿主硬件或操作系统不提供的特性，让它们似乎被支持。这种情况将会导致糟糕的性能。
 
-As WebAssembly's standardization goes forward we expect to formalize these
-requirements, and how WebAssembly will adapt to new platforms that didn't
-necessarily exist when WebAssembly was first designed.
+随着WebAssembly的标准化推进，我们期望将这些需求也能被固定下来。WebAssembly在设计之初就应该适配未来的平台。
 
-WebAssembly portability assumes that execution environments offer the following
-characteristics:
+WebAssembly可移植性假定执行环境提供下列特性：
 
-* 8-bit bytes.
-* Addressable at a byte memory granularity.
-* Support unaligned memory accesses or reliable trapping that allows software
-  emulation thereof.
-* Two's complement signed integers in 32 bits and optionally 64 bits.
-* IEEE 754-2008 32-bit and 64-bit floating point, except for
-  [a few exceptions](Semantics.md#floating-point-operators).
-* Little-endian byte ordering.
-* Memory regions which can be efficiently addressed with 32-bit
-  pointers or indices.
-* wasm64 additionally supports linear memory bigger than
-  [4 GiB with 64-bit pointers or indices](FutureFeatures.md#linear-memory-bigger-than-4-gib).
-* Enforce secure isolation between WebAssembly modules and other modules or
-  processes executing on the same machine.
-* An execution environment which offers forward progress guarantees to all
-  threads of execution (even when executing in a non-parallel manner).
-* Availability of lock-free atomic memory operators, when naturally aligned, for
-  8- 16- and 32-bit accesses. At a minimum this must include an atomic
-  compare-and-exchange operator (or equivalent load-linked/store-conditional).
-* wasm64 additionally requires lock-free atomic memory operators, when naturally
-  aligned, for 64-bit accesses.
+* 8位字节。
+* 内存可按字节维度寻址。
+* 支持未对齐的内存访问或因软件仿真导致的已知缺陷。
+* 32位有符号整数有两个补码，64位可选。
+* IEEE 754-2008 32位和64位浮点数，除了[一些例外](Semantics.md#floating-point-operators)。
+* 小端字节序。
+* 可使用32位指针或索引有效处理内存区域。
+* WebAssembly64 使用[64位指针或索引](FutureFeatures.md#linear-memory-bigger-than-4-gib)额外支持大于4GB的线性内存。
+* 执行在同一机器上的WebAssembly模块与其他模块或进程强制安全隔离
+* 提供一个进程担保所有线程的执行的执行环境（即便它们以非并行方式执行）
+* 访问8、16、32位自然对齐内存时，可用无锁原子运算符。至少也要包含一个原子级的比较和交换运算符（或同等的加载连接/条件存储）。
+* WebAssembly64 访问64位自然对齐内存时，额外需要无锁原子运算符。
 
 ## API
 
-WebAssembly does not specify any APIs or syscalls, only an 
-[import mechanism](Modules.md) where the set of available imports is defined
-by the host environment. In a [Web](Web.md) environment, functionality is
-accessed through the Web APIs defined by the
-[Web Platform](https://en.wikipedia.org/wiki/Open_Web_Platform).
-[Non-Web](NonWeb.md) environments can choose to implement standard Web APIs,
-standard non-Web APIs (e.g. POSIX), or invent their own.
+WebAssembly没有指定任何API或系统调用，只有一个[导入机制](Modules.md)，需宿主环境定义一组可导入对象。[Web](Web.md)环境中，方法通过由[开放Web平台](https://zh.wikipedia.org/wiki/%E5%BC%80%E6%94%BEWeb)制定的Web APIs访问。[非Web](NonWeb.md)环境中可以执行一些基础的Web APIs，基础的非Web APIs（例如POSIX），或者自己发明一个。
 
-## Source-level
+## 源码级别
 
-Portability at the C/C++ level can be achieved by programming to
-a standard API (e.g., POSIX) and relying on the compiler and/or libraries to map
-the standard interface to the host environment's available imports either at
-compile-time (via `#ifdef`) or run-time (via [feature detection](FeatureTest.md)
-and dynamic [loading](Modules.md)/[linking](DynamicLinking.md)).
+C/C++级别的可移植性可用过面向一个基础API（例如POSIX）编码达成，也可以依赖编译时（通过`#ifdef`）或运行时（通过 [功能发现](FeatureTest.md)）和动态[加载](Modules.md)/[链接](DynamicLinking.md)）编译器和/或库向宿主环境的可用导入们提供的基础接口达成。
