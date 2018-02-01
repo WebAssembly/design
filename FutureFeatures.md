@@ -25,6 +25,8 @@ The Community Group and Working Group have adopted [a process document for propo
 | Non-trapping float-to-int conversions | [1143][]       | in progress | Implementation phase         |
 | Multi-value                           | [1146][]       | in progress | Implementation phase         |
 | Host bindings                         | [1148][]       | in progress | Feature proposal             |
+| Sign-extension operators              | [1178][]       | in progress | Feature proposal             |
+| Import/Export Mutable Globals         | [1179][]       | in progress | Feature proposal             |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
@@ -38,6 +40,8 @@ The Community Group and Working Group have adopted [a process document for propo
   [1144]: https://github.com/WebAssembly/design/issues/1144
   [1146]: https://github.com/WebAssembly/design/issues/1146
   [1148]: https://github.com/WebAssembly/design/issues/1148
+  [1178]: https://github.com/WebAssembly/design/issues/1178
+  [1179]: https://github.com/WebAssembly/design/issues/1179
 
 ## On Deck for Immediate Design
 
