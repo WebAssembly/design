@@ -4,7 +4,7 @@ In the [MVP](MVP.md), the only way to access WebAssembly on the Web is through
 an explicit JS API which is defined below.
 (In the [future :unicorn:][future general], WebAssembly may also
 be loaded and run directly from an HTML `<script type='module'>` tag—and
-any other Web API that loads ES6 modules via URL—as part of 
+any other Web API that loads ES6 modules via URL—as part of
 [ES6 Module integration](Modules.md#integration-with-es6-modules).)
 
 WebAssembly JS API declaration file for TypeScript can be found [here](https://github.com/01alchemist/webassembly-types/blob/master/webassembly.d.ts) which enable autocompletion and make TypeScript compiler happy.
@@ -98,8 +98,8 @@ with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used
 Otherwise, this function starts an asynchronous task to compile a `WebAssembly.Module`
 as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor).
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
-with the resulting `WebAssembly.Module` object. On failure, the `Promise` is 
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
+with the resulting `WebAssembly.Module` object. On failure, the `Promise` is
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
 `WebAssembly.CompileError`.
 
 The asynchronous compilation is logically performed on a copy of the state of
@@ -135,10 +135,10 @@ and then queue a task to instantiate the resulting `Module` with `importObject` 
 and before any subsequent steps are taken, other unspecified asynchronous tasks may be run.
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with a plain JavaScript object pair `{module, instance}` containing the resulting
-`WebAssembly.Module` and `WebAssembly.Instance`. The 2 properties `module` and `instance` of the returned pair are  configurable, enumerable and writable. 
+`WebAssembly.Module` and `WebAssembly.Instance`. The 2 properties `module` and `instance` of the returned pair are  configurable, enumerable and writable.
 
 On failure, the `Promise` is
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
 `WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
 
 The asynchronous compilation is logically performed on a copy of the state of
@@ -157,7 +157,7 @@ from `moduleObject` and `importObject` as described in the
 and before any subsequent steps are taken, other unspecified asynchronous tasks may be run.
 On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `WebAssembly.Instance` object. On failure, the `Promise` is
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
+[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a
 `WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
 
 ## `WebAssembly.Module` Objects
@@ -186,10 +186,10 @@ exception is thrown.
 
 Otherwise, this function performs synchronous compilation of the `BufferSource`:
 
-1. The byte range delimited by the `BufferSource` is first logically decoded 
+1. The byte range delimited by the `BufferSource` is first logically decoded
    according to [BinaryEncoding.md](BinaryEncoding.md) and then validated
    according to the rules in [spec/valid.ml](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/valid.ml#L415).
-1. The spec `string` values inside `Ast.module` are decoded as UTF8 as described in 
+1. The spec `string` values inside `Ast.module` are decoded as UTF8 as described in
    [Web.md](Web.md#names).
 1. On success, a new `WebAssembly.Module` object is returned with [[Module]] set to
    the validated `Ast.module`.
@@ -284,7 +284,7 @@ sharing.
 
 ## `WebAssembly.Instance` Objects
 
-A `WebAssembly.Instance` object represents the instantiation of a 
+A `WebAssembly.Instance` object represents the instantiation of a
 `WebAssembly.Module` into a
 [realm](http://tc39.github.io/ecma262/#sec-code-realms) and has one
 internal slot:
@@ -313,7 +313,7 @@ Let `module` be the [`Ast.module`](https://github.com/WebAssembly/spec/blob/mast
 
 If the `importObject` parameter is not `undefined` and `Type(importObject)` is
 not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
-is thrown. If the list of 
+is thrown. If the list of
 [`module.imports`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L186)
 is not empty and `Type(importObject)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
@@ -348,7 +348,7 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
          of the given signature and the following behavior:
       1. If the signature contains an `i64` (as argument or result), the host
          function immediately throws a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
-         when called.
+         when called, before even trying to coerce arguments.
       1. Otherwise, the host function calls `v` with an `undefined` receiver
          and WebAssembly arguments coerced to JavaScript arguments
          via [`ToJSValue`](#tojsvalue). The result is returned by coercing
@@ -391,7 +391,7 @@ Among other things, this function performs the following observable steps:
 
 * If, after evaluating the `offset` [initializer expression](Modules.md#initializer-expression)
   of every [Data](Modules.md#data-section) and [Element](Modules.md#elements-section)
-  Segment, any of the segments do not fit in their respective Memory or Table, throw a 
+  Segment, any of the segments do not fit in their respective Memory or Table, throw a
   `WebAssembly.LinkError`.
 
 * Apply all Data and Element segments to their respective Memory or Table in the
@@ -426,7 +426,7 @@ The following steps are performed _before_ the `start` function executes:
 
 (Note: The table and element function objects created by the above steps are only observable for tables that are either imported or exported.)
 
-Let `exports` be a list of (string, JS value) pairs that is mapped from 
+Let `exports` be a list of (string, JS value) pairs that is mapped from
 each [external](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L24) value `e` in `instance.exports` as follows:
 
 1. If `e` is a [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L12) `c`:
@@ -502,7 +502,7 @@ as well as the internal slots required of all builtin functions:
 
 Exported Functions also have the following data properties:
 
-* the `length` property is set to the exported function's signature's arity 
+* the `length` property is set to the exported function's signature's arity
 * the `name` is set to [`ToString`](https://tc39.github.io/ecma262/#sec-tostring)(`index`)
 
 WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined as:
@@ -511,7 +511,8 @@ WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined
    of the function's [[Closure]].
 1. If `sig` contains an `i64` (as argument or result), a
    [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
-   is thrown each time the [[Call]] method is invoked.
+   is immediately thrown each time the [[Call]] method is invoked, before even
+   trying to coerce arguments.
 1. Let `args` be an empty list of coerced values.
 1. Let `inArity` be the number of arguments and `outArity` be the number of results in `sig`.
 1. For all values `v` in `argValues`, in the order of their appearance:
@@ -524,7 +525,7 @@ WebAssembly Exported Functions have a `[[Call]](this, argValues)` method defined
 
 `[[Call]](this, argValues)` executes in the [[Realm]] of the callee Exported Function. This corresponds to [the requirements of builtin function objects in JavaScript](https://tc39.github.io/ecma262/#sec-built-in-function-objects).
 
-Exported Functions do not have a [[Construct]] method and thus it is not possible to 
+Exported Functions do not have a [[Construct]] method and thus it is not possible to
 call one with the `new` operator.
 
 ## `WebAssembly.Memory` Objects
@@ -558,7 +559,7 @@ then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http
 If `maximum` is smaller than `initial`, then throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
 Otherwise, let `maximum` be `None`.
 
-Let `memory` be the result of calling 
+Let `memory` be the result of calling
 [`Memory.create`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/memory.ml#L68)
 given arguments `initial` and `maximum`. Note that `initial` and `maximum` are
 specified in units of WebAssembly pages (64KiB).
@@ -572,12 +573,12 @@ Given a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/interp
 
 Let `buffer` be a new `ArrayBuffer` whose
 [[[ArrayBufferData]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
-aliases `m` and whose 
+aliases `m` and whose
 [[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
 is set to the byte length of `m`.
 
 Any attempts to [`detach`](http://tc39.github.io/ecma262/#sec-detacharraybuffer) `buffer` *other* than
-the detachment performed by [`m.grow`](#webassemblymemoryprototypegrow) shall throw a 
+the detachment performed by [`m.grow`](#webassemblymemoryprototypegrow) shall throw a
 [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 
 Return a new `WebAssembly.Memory` instance with [[Memory]] set to `m` and
@@ -607,7 +608,7 @@ Let `d` be [`ToNonWrappingUint32`](#tononwrappinguint32)(`delta`).
 Let `ret` be the current size of memory in pages (before resizing).
 
 Perform [`Memory.grow`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/memory.mli#L27)
-with delta `d`. On failure, a 
+with delta `d`. On failure, a
 [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror)
 is thrown.
 
@@ -615,7 +616,7 @@ Perform [`DetachArrayBuffer`](http://tc39.github.io/ecma262/#sec-detacharraybuff
 
 Assign to `M.[[BufferObject]]` a new `ArrayBuffer` whose
 [[[ArrayBufferData]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
-aliases `M.[[Memory]]` and whose 
+aliases `M.[[Memory]]` and whose
 [[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
 is set to the new byte length of `M.[[Memory]]`.
 
@@ -665,7 +666,7 @@ then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http
 
 If `maximum` is not None and is smaller than `initial`, then throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
 
-Let `table` be the result of calling 
+Let `table` be the result of calling
 [`Table.create`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/table.ml#L68)
 given arguments `AnyFuncType`, `initial` and `maximum`.
 
@@ -797,7 +798,7 @@ To convert a JavaScript value `v` to an unsigned integer in the range [0, `UINT3
 
 Let `i` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)(`v`).
 
-If `i` is negative or greater than `UINT32_MAX`, 
+If `i` is negative or greater than `UINT32_MAX`,
 [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror)
 is thrown.
 
