@@ -11,24 +11,25 @@ issues.
 
 The Community Group and Working Group have adopted [a process document for proposal phases](https://github.com/WebAssembly/meetings/blob/master/process/phases.md). The following issues are currently being worked on.
 
-| Feature                                        | Tracking issue | Status      | Phase                        |
-|------------------------------------------------|----------------|-------------|------------------------------|
-| Specification                                  | [1077][]       | in progress | Proposed spec text available |
-| Threads                                        | [1073][]       | in progress | Feature proposal             |
-| Fixed-width SIMD                               | [1075][]       | in progress | Feature proposal             |
-| Exception handling                             | [1078][]       | in progress | Feature proposal             |
-| Garbage collection                             | [1079][]       | in progress | Feature proposal             |
-| Bulk memory operations                         | [1114][]       | in progress | Feature proposal             |
-| Web Content Security Policy                    | [1122][]       | in progress | Pre-proposal                 |
-| ECMAScript module integration                  | [1087][]       | not started | Pre-proposal                 |
-| Tail Call                                      | [1144][]       | in progress | Feature proposal             |
-| Non-trapping float-to-int conversions          | [1143][]       | in progress | Implementation phase         |
-| Multi-value                                    | [1146][]       | in progress | Implementation phase         |
-| Host bindings                                  | [1148][]       | in progress | Feature proposal             |
-| Sign-extension operators                       | [1178][]       | in progress | Implementation phase         |
-| Import/Export Mutable Globals                  | [1179][]       | in progress | Implementation phase         |
-| Type Reflection for WebAssembly JavaScript API | [1181][]       | in progress | Feature proposal             |
-| Unmanaged closures                             | [1182][]       | in progress | Feature proposal             |
+| Feature                                          | Tracking issue | Status      | Phase                        |
+|--------------------------------------------------|----------------|-------------|------------------------------|
+| Specification                                    | [1077][]       | in progress | Proposed spec text available |
+| Threads                                          | [1073][]       | in progress | Feature proposal             |
+| Fixed-width SIMD                                 | [1075][]       | in progress | Feature proposal             |
+| Exception handling                               | [1078][]       | in progress | Feature proposal             |
+| Garbage collection                               | [1079][]       | in progress | Feature proposal             |
+| Bulk memory operations                           | [1114][]       | in progress | Feature proposal             |
+| Web Content Security Policy                      | [1122][]       | in progress | Pre-proposal                 |
+| ECMAScript module integration                    | [1087][]       | not started | Pre-proposal                 |
+| Tail Call                                        | [1144][]       | in progress | Feature proposal             |
+| Non-trapping float-to-int conversions            | [1143][]       | in progress | Implementation phase         |
+| Multi-value                                      | [1146][]       | in progress | Implementation phase         |
+| Host bindings                                    | [1148][]       | in progress | Feature proposal             |
+| Sign-extension operators                         | [1178][]       | in progress | Implementation phase         |
+| Import/Export Mutable Globals                    | [1179][]       | in progress | Implementation phase         |
+| Type Reflection for WebAssembly JavaScript API   | [1181][]       | in progress | Feature proposal             |
+| Unmanaged closures                               | [1182][]       | in progress | Feature proposal             |
+| JavaScript BigInt to WebAssembly i64 integration | [1186][]       | in progress | Feature proposal             |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
@@ -46,6 +47,7 @@ The Community Group and Working Group have adopted [a process document for propo
   [1179]: https://github.com/WebAssembly/design/issues/1179
   [1181]: https://github.com/WebAssembly/design/issues/1181
   [1182]: https://github.com/WebAssembly/design/issues/1182
+  [1186]: https://github.com/WebAssembly/design/issues/1186
 
 
 ## On Deck for Immediate Design
