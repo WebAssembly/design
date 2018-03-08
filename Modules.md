@@ -48,7 +48,7 @@ In the future, other kinds of imports may be added. Imports are designed to
 allow modules to share code and data while still allowing separate compilation
 and caching.
 
-All imports include two opaque names: a *module name* and an *export name*,
+All imports include two opaque names: a *module name* and an *import name*,
 which are required to be [valid UTF-8]. The
 interpretation of these names is up to the host environment but designed to
 allow a host environments, like the [Web](Web.md), to support a two-level
