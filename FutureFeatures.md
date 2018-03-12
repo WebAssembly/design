@@ -30,6 +30,7 @@ The Community Group and Working Group have adopted [a process document for propo
 | Type Reflection for WebAssembly JavaScript API   | [1181][]       | in progress | Feature proposal             |
 | Unmanaged closures                               | [1182][]       | in progress | Feature proposal             |
 | JavaScript BigInt to WebAssembly i64 integration | [1186][]       | in progress | Feature proposal             |
+| Custom Annotation Syntax in the Text Format      | [1192][]       | in progress | Feature proposal             |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
   [1075]: https://github.com/WebAssembly/design/issues/1075
@@ -48,6 +49,7 @@ The Community Group and Working Group have adopted [a process document for propo
   [1181]: https://github.com/WebAssembly/design/issues/1181
   [1182]: https://github.com/WebAssembly/design/issues/1182
   [1186]: https://github.com/WebAssembly/design/issues/1186
+  [1192]: https://github.com/WebAssembly/design/issues/1192
 
 
 ## On Deck for Immediate Design
