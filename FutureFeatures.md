@@ -20,7 +20,7 @@ The Community Group and Working Group have adopted [a process document for propo
 | Garbage collection                               | [1079][]       | in progress | Feature proposal             |
 | Bulk memory operations                           | [1114][]       | in progress | Feature proposal             |
 | Web Content Security Policy                      | [1122][]       | in progress | Pre-proposal                 |
-| ECMAScript module integration                    | [1087][]       | not started | Pre-proposal                 |
+| ECMAScript module integration                    | [1087][]       | in progress | Feature proposal             |
 | Tail Call                                        | [1144][]       | in progress | Feature proposal             |
 | Non-trapping float-to-int conversions            | [1143][]       | in progress | Implementation phase         |
 | Multi-value                                      | [1146][]       | in progress | Implementation phase         |
@@ -29,7 +29,7 @@ The Community Group and Working Group have adopted [a process document for propo
 | Import/Export Mutable Globals                    | [1179][]       | in progress | Implementation phase         |
 | Type Reflection for WebAssembly JavaScript API   | [1181][]       | in progress | Feature proposal             |
 | Unmanaged closures                               | [1182][]       | in progress | Feature proposal             |
-| JavaScript BigInt to WebAssembly i64 integration | [1186][]       | in progress | Feature proposal             |
+| JavaScript BigInt to WebAssembly i64 integration | [1186][]       | in progress | Proposed Spec Text Available |
 | Custom Annotation Syntax in the Text Format      | [1192][]       | in progress | Feature proposal             |
 
   [1073]: https://github.com/WebAssembly/design/issues/1073
