@@ -58,11 +58,11 @@ The following intrinsic objects are added:
 * `WebAssembly.Instance` : the [`WebAssembly.Instance` constructor](#webassemblyinstance-constructor)
 * `WebAssembly.Memory` : the [`WebAssembly.Memory` constructor](#webassemblymemory-constructor)
 * `WebAssembly.Table` : the [`WebAssembly.Table` constructor](#webassemblytable-constructor)
-* `WebAssembly.CompileError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
+* `WebAssembly.CompileError` : a [NativeError](https://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
    which indicates an error during WebAssembly decoding or validation
-* `WebAssembly.LinkError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
+* `WebAssembly.LinkError` : a [NativeError](https://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
    which indicates an error during WebAssembly instantiating a module (other than traps from the start function)
-* `WebAssembly.RuntimeError` : a [NativeError](http://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
+* `WebAssembly.RuntimeError` : a [NativeError](https://tc39.github.io/ecma262/#sec-nativeerror-object-structure)
    which is thrown whenever WebAssembly specifies a [trap](#traps).
 
 ### Function Properties of the `WebAssembly` object
@@ -92,14 +92,14 @@ Promise<WebAssembly.Module> compile(BufferSource bytes)
 
 If the given `bytes` argument is not a
 [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
-the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
+the returned `Promise` is [rejected](https://tc39.github.io/ecma262/#sec-rejectpromise)
 with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 Otherwise, this function starts an asynchronous task to compile a `WebAssembly.Module`
 as described in the [`WebAssembly.Module` constructor](#webassemblymodule-constructor).
-On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
+On success, the `Promise` is [fulfilled](https://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `WebAssembly.Module` object. On failure, the `Promise` is 
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
+[rejected](https://tc39.github.io/ecma262/#sec-rejectpromise) with a 
 `WebAssembly.CompileError`.
 
 The asynchronous compilation is logically performed on a copy of the state of
@@ -110,7 +110,7 @@ of the `BufferSource` after `compile` return do not affect ongoing compilations.
 
 The `instantiate` function is overloaded based on types of its arguments.
 If neither of the following overloads match, then the returned `Promise` is
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
+[rejected](https://tc39.github.io/ecma262/#sec-rejectpromise)
 with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 ```
@@ -125,7 +125,7 @@ Promise<WebAssemblyInstantiatedSource>
 
 If the given `bytes` argument is not a
 [`BufferSource`](https://heycam.github.io/webidl/#common-BufferSource),
-the returned `Promise` is [rejected](http://tc39.github.io/ecma262/#sec-rejectpromise)
+the returned `Promise` is [rejected](https://tc39.github.io/ecma262/#sec-rejectpromise)
 with a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
 
 This function starts an asynchronous task that first compiles a `WebAssembly.Module`
@@ -133,12 +133,12 @@ from `bytes` as described in the [`WebAssembly.Module` constructor](#webassembly
 and then queue a task to instantiate the resulting `Module` with `importObject` as described in the
 [`WebAssembly.Instance` constructor](#webassemblyinstance-constructor). After the instantiation task runs
 and before any subsequent steps are taken, other unspecified asynchronous tasks may be run.
-On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
+On success, the `Promise` is [fulfilled](https://tc39.github.io/ecma262/#sec-fulfillpromise)
 with a plain JavaScript object pair `{module, instance}` containing the resulting
 `WebAssembly.Module` and `WebAssembly.Instance`. The 2 properties `module` and `instance` of the returned pair are  configurable, enumerable and writable. 
 
 On failure, the `Promise` is
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
+[rejected](https://tc39.github.io/ecma262/#sec-rejectpromise) with a 
 `WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
 
 The asynchronous compilation is logically performed on a copy of the state of
@@ -155,9 +155,9 @@ This function asynchronously queues a task that instantiates a `WebAssembly.Inst
 from `moduleObject` and `importObject` as described in the
 [`WebAssembly.Instance` constructor](#webassemblyinstance-constructor). After the instantiation task runs
 and before any subsequent steps are taken, other unspecified asynchronous tasks may be run.
-On success, the `Promise` is [fulfilled](http://tc39.github.io/ecma262/#sec-fulfillpromise)
+On success, the `Promise` is [fulfilled](https://tc39.github.io/ecma262/#sec-fulfillpromise)
 with the resulting `WebAssembly.Instance` object. On failure, the `Promise` is
-[rejected](http://tc39.github.io/ecma262/#sec-rejectpromise) with a 
+[rejected](https://tc39.github.io/ecma262/#sec-rejectpromise) with a 
 `WebAssembly.CompileError`, `WebAssembly.LinkError`, or `WebAssembly.RuntimeError`, depending on the cause of failure.
 
 ## `WebAssembly.Module` Objects
@@ -286,7 +286,7 @@ sharing.
 
 A `WebAssembly.Instance` object represents the instantiation of a 
 `WebAssembly.Module` into a
-[realm](http://tc39.github.io/ecma262/#sec-code-realms) and has one
+[realm](https://tc39.github.io/ecma262/#sec-code-realms) and has one
 internal slot:
 
 * [[Instance]] : an [`Instance.instance`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L17)
@@ -332,9 +332,9 @@ For each [`import`](https://github.com/WebAssembly/spec/blob/master/interpreter/
 `i` in `module.imports`:
 
 1. Let `o` be the resultant value of performing
-   [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L170)).
+   [`Get`](https://tc39.github.io/ecma262/#sec-get-o-p)(`importObject`, [`i.module_name`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L170)).
 1. If `Type(o)` is not Object, throw a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror).
-1. Let `v` be the value of performing [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`o`, [`i.item_name`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L171))
+1. Let `v` be the value of performing [`Get`](https://tc39.github.io/ecma262/#sec-get-o-p)(`o`, [`i.item_name`](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/ast.ml#L171))
 1. If `i` is a function import:
    1. If [`IsCallable(v)`](https://tc39.github.io/ecma262/#sec-iscallable) is `false`,
       throw a `WebAssembly.LinkError`.
@@ -486,8 +486,8 @@ Return `T.[[Exports]]`.
 
 A function with [function index](Modules.md#function-index-space) `index`
 from an `Instance` `inst` is reflected to JS via a new kind of *Exported
-Function* [Exotic Object](http://tc39.github.io/ecma262/#sec-built-in-exotic-object-internal-methods-and-slots).
-Like [Bound Function](http://tc39.github.io/ecma262/#sec-bound-function-exotic-objects) Exotic Object,
+Function* [Exotic Object](https://tc39.github.io/ecma262/#sec-built-in-exotic-object-internal-methods-and-slots).
+Like [Bound Function](https://tc39.github.io/ecma262/#sec-bound-function-exotic-objects) Exotic Object,
 Exported Functions do not have the normal function internal slots but instead have:
 
  * [[Closure]] : the [closure](https://github.com/WebAssembly/spec/blob/master/interpreter/spec/instance.ml#L7)
@@ -495,10 +495,10 @@ Exported Functions do not have the normal function internal slots but instead ha
 
 as well as the internal slots required of all builtin functions:
 
- * [[Prototype]] : [%FunctionPrototype%](http://tc39.github.io/ecma262/#sec-well-known-intrinsic-objects)
+ * [[Prototype]] : [%FunctionPrototype%](https://tc39.github.io/ecma262/#sec-well-known-intrinsic-objects)
  * [[Extensible]] : `true`
- * [[Realm]] : the [current Realm Record](http://tc39.github.io/ecma262/#current-realm)
- * [[ScriptOrModule]] : [`GetActiveScriptOrModule`](http://tc39.github.io/ecma262/#sec-getactivescriptormodule)
+ * [[Realm]] : the [current Realm Record](https://tc39.github.io/ecma262/#current-realm)
+ * [[ScriptOrModule]] : [`GetActiveScriptOrModule`](https://tc39.github.io/ecma262/#sec-getactivescriptormodule)
 
 Exported Functions also have the following data properties:
 
@@ -551,10 +551,10 @@ exception is thrown (i.e., this constructor cannot be called as a function witho
 If `Type(memoryDescriptor)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"initial"`)).
+Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](https://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"initial"`)).
 
-If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
-then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"maximum"`)).
+If [`HasProperty`](https://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
+then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](https://tc39.github.io/ecma262/#sec-get-o-p)(`memoryDescriptor`, `"maximum"`)).
 If `maximum` is smaller than `initial`, then throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
 Otherwise, let `maximum` be `None`.
 
@@ -571,12 +571,12 @@ Given a [`Memory.memory`](https://github.com/WebAssembly/spec/blob/master/interp
 `m`, to create a `WebAssembly.Memory`:
 
 Let `buffer` be a new `ArrayBuffer` whose
-[[[ArrayBufferData]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
+[[[ArrayBufferData]]](https://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
 aliases `m` and whose 
-[[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
+[[[ArrayBufferByteLength]]](https://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
 is set to the byte length of `m`.
 
-Any attempts to [`detach`](http://tc39.github.io/ecma262/#sec-detacharraybuffer) `buffer` *other* than
+Any attempts to [`detach`](https://tc39.github.io/ecma262/#sec-detacharraybuffer) `buffer` *other* than
 the detachment performed by [`m.grow`](#webassemblymemoryprototypegrow) shall throw a 
 [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 
@@ -611,12 +611,12 @@ with delta `d`. On failure, a
 [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror)
 is thrown.
 
-Perform [`DetachArrayBuffer`](http://tc39.github.io/ecma262/#sec-detacharraybuffer)(`M.[[BufferObject]]`).
+Perform [`DetachArrayBuffer`](https://tc39.github.io/ecma262/#sec-detacharraybuffer)(`M.[[BufferObject]]`).
 
 Assign to `M.[[BufferObject]]` a new `ArrayBuffer` whose
-[[[ArrayBufferData]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
+[[[ArrayBufferData]]](https://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
 aliases `M.[[Memory]]` and whose 
-[[[ArrayBufferByteLength]]](http://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
+[[[ArrayBufferByteLength]]](https://tc39.github.io/ecma262/#sec-properties-of-the-arraybuffer-prototype-object)
 is set to the new byte length of `M.[[Memory]]`.
 
 Return `ret` as a Number value.
@@ -652,16 +652,16 @@ exception is thrown (i.e., this constructor cannot be called as a function witho
 If `Type(tableDescriptor)` is not Object, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 
-Let `element` be the result of calling [`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"element"`).
+Let `element` be the result of calling [`Get`](https://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"element"`).
 If `element` is not the string `"anyfunc"`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 (Note: this check is intended to be relaxed in the
 [future :unicorn:][future types] to allow different element types.)
 
-Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"initial"`)).
+Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](https://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"initial"`)).
 
-If [`HasProperty`](http://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
-then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](http://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"maximum"`)). Otherwise, let `maximum` be None.
+If [`HasProperty`](https://tc39.github.io/ecma262/#sec-hasproperty)(`"maximum"`),
+then let `maximum` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](https://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"maximum"`)). Otherwise, let `maximum` be None.
 
 If `maximum` is not None and is smaller than `initial`, then throw a [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror).
 
@@ -769,9 +769,9 @@ Assert: the WebAssembly value's type is not `i64`.
 1. given a WebAssembly `i32` is interpreted as a signed integer, converted (losslessly) to an
   IEEE754 double and then returned as a JavaScript Number
 1. given a WebAssembly `f32` (single-precision IEEE754), convert (losslessly) to
-   a IEEE754 double, [possibly canonicalize NaN](http://tc39.github.io/ecma262/#sec-setvalueinbuffer),
+   a IEEE754 double, [possibly canonicalize NaN](https://tc39.github.io/ecma262/#sec-setvalueinbuffer),
    and return as a JavaScript Number
-1. given a WebAssembly `f64`, [possibly canonicalize NaN](http://tc39.github.io/ecma262/#sec-setvalueinbuffer)
+1. given a WebAssembly `f64`, [possibly canonicalize NaN](https://tc39.github.io/ecma262/#sec-setvalueinbuffer)
    and return as a JavaScript Number
 
 If the WebAssembly value is optional, then given `None`, return JavaScript value
@@ -783,10 +783,10 @@ To coerce a JavaScript value to a given WebAssembly [`value type`](https://githu
 
 Assert: the target value type is not `i64`.
 
-1. coerce to `i32` via [`ToInt32(v)`](http://tc39.github.io/ecma262/#sec-toint32)
-1. coerce to `f32` by first applying [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
+1. coerce to `i32` via [`ToInt32(v)`](https://tc39.github.io/ecma262/#sec-toint32)
+1. coerce to `f32` by first applying [`ToNumber(v)`](https://tc39.github.io/ecma262/#sec-tonumber)
    and then converting the resulting IEEE754 64-bit double to a 32-bit float using `roundTiesToEven`
-1. coerce to `f64` via [`ToNumber(v)`](http://tc39.github.io/ecma262/#sec-tonumber)
+1. coerce to `f64` via [`ToNumber(v)`](https://tc39.github.io/ecma262/#sec-tonumber)
 
 If the value type is optional, then given `None`, the JavaScript value is
 ignored.
@@ -795,7 +795,7 @@ ignored.
 
 To convert a JavaScript value `v` to an unsigned integer in the range [0, `UINT32_MAX`]:
 
-Let `i` be [`ToInteger`](http://tc39.github.io/ecma262/#sec-tointeger)(`v`).
+Let `i` be [`ToInteger`](https://tc39.github.io/ecma262/#sec-tointeger)(`v`).
 
 If `i` is negative or greater than `UINT32_MAX`, 
 [`RangeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-rangeerror)

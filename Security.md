@@ -169,7 +169,7 @@ in WebAssembly.
 
   [address space layout randomization]: https://en.wikipedia.org/wiki/Address_space_layout_randomization
   [bounded pointers]: https://en.wikipedia.org/wiki/Bounded_pointer
-  [built-in implementation]: http://clang.llvm.org/docs/ControlFlowIntegrity.html
+  [built-in implementation]: https://clang.llvm.org/docs/ControlFlowIntegrity.html
   [control-flow integrity]: https://research.microsoft.com/apps/pubs/default.aspx?id=64250
   [data execution prevention]: https://en.wikipedia.org/wiki/Executable_space_protection
   [forward-edge control-flow integrity]: https://www.usenix.org/node/184460
