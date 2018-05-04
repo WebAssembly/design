@@ -2,7 +2,7 @@
 
 | Date | Title | Slides | Video | Presenter(s) |
 |-----:|-------|:------:|:-----:|--------------|
-| October   29th 2015 | LLVM Developers' Meeting   | [slides](http://llvm.org/devmtg/2015-10/slides/BastienGohman-WebAssembly-HereBeDragons.pdf) | [video](https://www.youtube.com/watch?v=5W7NkofUtAw) | JF Bastien and Dan Gohman |
+| October   29th 2015 | LLVM Developers' Meeting   | [slides](https://llvm.org/devmtg/2015-10/slides/BastienGohman-WebAssembly-HereBeDragons.pdf) | [video](https://www.youtube.com/watch?v=5W7NkofUtAw) | JF Bastien and Dan Gohman |
 | November  10th 2015 | BlinkOn 5: WebAssembly     | | [video](https://youtu.be/iCSAUHpPbiU) | Nick Bray |
 | December   9th 2015 | Emscripten and WebAssembly | [slides](https://kripken.github.io/talks/wasm.html) | | Alon Zakai |
 | January   31st 2016 | FOSDEM LLVM room           | [slides](https://fosdem.org/2016/schedule/event/llvm_webassembly) | | JF Bastien and Dan Gohman |

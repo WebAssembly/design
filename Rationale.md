@@ -187,7 +187,7 @@ Structured control flow provides simple and size-efficient binary encoding and
 compilation. Any control flow--even irreducible--can be transformed into structured
 control flow with the
 [Relooper](https://github.com/kripken/emscripten/raw/master/docs/paper.pdf)
-[algorithm](http://dl.acm.org/citation.cfm?id=2048224&CFID=670868333&CFTOKEN=46181900),
+[algorithm](https://dl.acm.org/citation.cfm?id=2048224&CFID=670868333&CFTOKEN=46181900),
 with guaranteed low code size overhead, and typically minimal throughput
 overhead (except for pathological cases of irreducible control
 flow). Alternative approaches can generate reducible control flow via node

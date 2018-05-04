@@ -177,7 +177,7 @@ supporting both in the same instance in the future.
 Coroutines will [eventually be part of C++][] and is already popular in other
 programming languages that WebAssembly will support.
 
-  [eventually be part of C++]: http://wg21.link/n4499
+  [eventually be part of C++]: https://wg21.link/n4499
 
 ### Asynchronous Signals
 
@@ -385,7 +385,7 @@ When the application is prepared to handle overflow locally, it would be useful
 to have arithmetic operators which can indicate when overflow occurred. An
 example of this is the checked arithmetic builtins available in compilers such
 as
-[clang](http://clang.llvm.org/docs/LanguageExtensions.html#checked-arithmetic-builtins)
+[clang](https://clang.llvm.org/docs/LanguageExtensions.html#checked-arithmetic-builtins)
 and
 [GCC](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html).
 If WebAssembly is made to support nodes with multiple return values, that could
