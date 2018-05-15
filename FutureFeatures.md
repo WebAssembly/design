@@ -26,7 +26,7 @@ The Community Group and Working Group have adopted [a process document for propo
 | Multi-value                                      | [1146][]       | in progress | Implementation phase         |
 | Host bindings                                    | [1148][]       | in progress | Feature proposal             |
 | Sign-extension operators                         | [1178][]       | in progress | Implementation phase         |
-| Import/Export Mutable Globals                    | [1179][]       | in progress | Implementation phase         |
+| Import/Export Mutable Globals                    | [1179][]       | in progress | Standardize the Feature      |
 | Type Reflection for WebAssembly JavaScript API   | [1181][]       | in progress | Feature proposal             |
 | Unmanaged closures                               | [1182][]       | in progress | Feature proposal             |
 | JavaScript BigInt to WebAssembly i64 integration | [1186][]       | in progress | Proposed Spec Text Available |
