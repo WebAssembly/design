@@ -328,7 +328,7 @@ In the MVP, the primary use case of global variables is to represent
 instantiation-time immutable values as a useful building block for
 [dynamic linking](DynamicLinking.md).
 
-After the MVP, when [reference types](GC.md) are added to the set of [value types](#types),
+After the MVP, when [reference types][future garbage collection] are added to the set of [value types](#types),
 global variables will be necessary to allow sharing reference types between
 [threads :unicorn:][future threads] since shared linear memory cannot load or store
 references.
@@ -708,3 +708,4 @@ The details of validation are currently defined by the [spec interpreter](https:
 [future types]: FutureFeatures.md#more-table-operators-and-types
 [future large pages]: FutureFeatures.md#large-page-support
 [future ieee 754]: FutureFeatures.md#full-ieee-754-2008-conformance
+[future garbage collection]: https://github.com/WebAssembly/design/issues/1079
