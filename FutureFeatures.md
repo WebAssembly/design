@@ -22,10 +22,10 @@ The Community Group and Working Group have adopted [a process document for propo
 | Web Content Security Policy                      | [1122][]       | in progress | Pre-proposal                 |
 | ECMAScript module integration                    | [1087][]       | in progress | Feature proposal             |
 | Tail Call                                        | [1144][]       | in progress | Feature proposal             |
-| Non-trapping float-to-int conversions            | [1143][]       | in progress | Implementation phase         |
+| Non-trapping float-to-int conversions            | [1143][]       | in progress | Standardize the Feature      |
 | Multi-value                                      | [1146][]       | in progress | Implementation phase         |
 | Host bindings                                    | [1148][]       | in progress | Feature proposal             |
-| Sign-extension operators                         | [1178][]       | in progress | Implementation phase         |
+| Sign-extension operators                         | [1178][]       | in progress | Standardize the Feature      |
 | Import/Export Mutable Globals                    | [1179][]       | in progress | Standardize the Feature      |
 | Type Reflection for WebAssembly JavaScript API   | [1181][]       | in progress | Feature proposal             |
 | Unmanaged closures                               | [1182][]       | in progress | Feature proposal             |
