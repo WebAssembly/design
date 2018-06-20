@@ -17,6 +17,7 @@ The Community Group and Working Group have adopted [a process document for propo
 | Threads                                          | [1073][]       | in progress | Feature proposal             |
 | Fixed-width SIMD                                 | [1075][]       | in progress | Feature proposal             |
 | Exception handling                               | [1078][]       | in progress | Feature proposal             |
+| Reference types                                  | [1203][]       | in progress | Implementation phase         |
 | Garbage collection                               | [1079][]       | in progress | Feature proposal             |
 | Bulk memory operations                           | [1114][]       | in progress | Feature proposal             |
 | Web Content Security Policy                      | [1122][]       | in progress | Pre-proposal                 |
@@ -36,6 +37,7 @@ The Community Group and Working Group have adopted [a process document for propo
   [1075]: https://github.com/WebAssembly/design/issues/1075
   [1077]: https://github.com/WebAssembly/design/issues/1077
   [1078]: https://github.com/WebAssembly/design/issues/1078
+  [1203]: https://github.com/WebAssembly/design/issues/1203
   [1079]: https://github.com/WebAssembly/design/issues/1079
   [1087]: https://github.com/WebAssembly/design/issues/1087
   [1114]: https://github.com/WebAssembly/design/issues/1114
