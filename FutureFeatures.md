@@ -28,7 +28,7 @@ The Community Group and Working Group have adopted [a process document for propo
 | Sign-extension operators                         | [1178][]       | in progress | Standardize the Feature      |
 | Import/Export Mutable Globals                    | [1179][]       | in progress | Standardize the Feature      |
 | Type Reflection for WebAssembly JavaScript API   | [1181][]       | in progress | Feature proposal             |
-| Unmanaged closures                               | [1182][]       | in progress | Feature proposal             |
+| Unmanaged closures                               | [1182][]       | in progress | Pre-proposal                 |
 | JavaScript BigInt to WebAssembly i64 integration | [1186][]       | in progress | Proposed Spec Text Available |
 | Custom Annotation Syntax in the Text Format      | [1192][]       | in progress | Feature proposal             |
 
