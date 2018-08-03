@@ -775,7 +775,7 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `f64.max` | `0xa5` | | |
 | `f64.copysign` | `0xa6` | | |
 
-## Conversions ([described here](Semantics.md#datatype-conversions))
+## Conversions ([described here](Semantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
@@ -801,7 +801,7 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `f64.convert_u/i64` | `0xba` | | |
 | `f64.promote/f32` | `0xbb` | | |
 
-## Reinterpretations ([described here](Semantics.md#datatype-conversions))
+## Reinterpretations ([described here](Semantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions))
 
 | Name | Opcode | Immediate | Description |
 | ---- | ---- | ---- | ---- |
