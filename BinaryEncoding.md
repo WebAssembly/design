@@ -548,7 +548,7 @@ It is legal to have several entries with the same type.
 | type | `value_type` | type of the variables |
 
 
-## Control flow operators ([described here](Semantics.md#control-flow-structures))
+## Control flow operators ([described here](Semantics.md#control-constructs-and-instructions))
 
 | Name | Opcode | Immediates | Description |
 | ---- | ---- | ---- | ---- |
