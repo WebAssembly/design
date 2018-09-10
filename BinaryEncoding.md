@@ -182,7 +182,7 @@ The module starts with a preamble of two fields:
 
 | Field | Type | Description |
 | ----- |  ----- | ----- |
-| magic number | `uint32` |  Magic number `0x6d736100` (i.e., '\0asm') |
+| magic number | `uint32` |  Magic number `0x61736d00` (i.e., '\0asm') |
 | version | `uint32` | Version number, `0x1` |
 
 The module preamble is followed by a sequence of sections.
