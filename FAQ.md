@@ -394,3 +394,8 @@ Android / iOS.
 [future garbage collection]: https://github.com/WebAssembly/design/issues/1079
 [future floating point]: FutureFeatures.md#additional-floating-point-operators
 [future memory control]: FutureFeatures.md#finer-grained-control-over-memory
+
+## How is ewasm related to wasm developed by Polkadot?
+As of now, both are the independent implementation of web assembly, like 
+for Ethereum it's ewasm and for polkadot it's [parity-wasm](https://github.com/paritytech/parity-wasm)
+But in future, the implementation may happen very closely, since both are working in similar kind of vision.
