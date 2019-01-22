@@ -1,6 +1,6 @@
 # Binary Encoding
 
-## **Note**: This document is no longer being updated. Please see the normative documentation [here](http://webassembly.github.io/spec/core/binary/index.html).
+## Note: This document is no longer being updated. Please see the normative documentation [here](http://webassembly.github.io/spec/core/binary/index.html).
 
 This document describes the [portable](Portability.md) binary encoding of the WebAssembly modules.
 
