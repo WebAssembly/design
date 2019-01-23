@@ -1,6 +1,6 @@
 # Semantics
 
-## Note: This document is no longer being updated. Please see the normative documentation [here](http://webassembly.github.io/spec/core/exec/index.html).
+## Note: This document is no longer being updated. Please see the [normative documentation](http://webassembly.github.io/spec/core/exec/index.html).
 
 This document explains the high-level design of WebAssembly code: its types, constructs, and
 semantics.

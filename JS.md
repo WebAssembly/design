@@ -1,6 +1,6 @@
 # JavaScript API
 
-## Note: This document is no longer being updated. Please see the normative documentation [here](http://webassembly.github.io/spec/js-api/index.html).
+## Note: This document is no longer being updated. Please see the [normative documentation](http://webassembly.github.io/spec/js-api/index.html).
 
 In the [MVP](MVP.md), the only way to access WebAssembly on the Web is through
 an explicit JS API which is defined below.

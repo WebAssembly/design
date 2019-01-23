@@ -1,6 +1,6 @@
 # Text Format
 
-## Note: This document is no longer being updated. Please see the normative documentation [here](http://webassembly.github.io/spec/core/text/index.html).
+## Note: This document is no longer being updated. Please see the [normative documentation](http://webassembly.github.io/spec/core/text/index.html).
 
 WebAssembly will define a standardized text format
 that encodes a WebAssembly module with all its contained definitions
