@@ -1,5 +1,7 @@
 # Semantics
 
+## Note: This document is no longer being updated. Please see the [normative documentation](http://webassembly.github.io/spec/core/exec/index.html).
+
 This document explains the high-level design of WebAssembly code: its types, constructs, and
 semantics.
 WebAssembly code can be considered a *structured stack machine*; a machine where most computations use a stack

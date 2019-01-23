@@ -1,5 +1,7 @@
 # Text Format
 
+## Note: This document is no longer being updated. Please see the [normative documentation](http://webassembly.github.io/spec/core/text/index.html).
+
 WebAssembly will define a standardized text format
 that encodes a WebAssembly module with all its contained definitions
 in a way that is equivalent to the [binary format](BinaryEncoding.md).
