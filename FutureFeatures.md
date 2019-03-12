@@ -56,17 +56,17 @@ The Community Group and Working Group have adopted [a process document for propo
 
 ## On Deck for Immediate Design
 
-:star: = Essential features we want to prioritize adding shortly after
+⭐ = Essential features we want to prioritize adding shortly after
 the [MVP](MVP.md).
 
 ### Great tooling support
-#### :star: :star: :star:
+#### ⭐ ⭐ ⭐
 
 This is covered in the [tooling](Tooling.md) section.
 
 
 ### Feature Testing
-#### :star:
+#### ⭐
 
 Post-MVP, some form of feature-testing will be required. We don't yet have the
 experience writing polyfills to know whether `has_feature` is the right

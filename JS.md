@@ -4,7 +4,7 @@
 
 In the [MVP](MVP.md), the only way to access WebAssembly on the Web is through
 an explicit JS API which is defined below.
-(In the [future :unicorn:][future general], WebAssembly may also
+(In the [future 🦄][future general], WebAssembly may also
 be loaded and run directly from an HTML `<script type='module'>` tag—and
 any other Web API that loads ES6 modules via URL—as part of 
 [ES6 Module integration](Modules.md#integration-with-es6-modules).)
@@ -658,7 +658,7 @@ Let `element` be the result of calling [`Get`](https://tc39.github.io/ecma262/#s
 If `element` is not the string `"anyfunc"`, a [`TypeError`](https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror)
 is thrown.
 (Note: this check is intended to be relaxed in the
-[future :unicorn:][future types] to allow different element types.)
+[future 🦄][future types] to allow different element types.)
 
 Let `initial` be [`ToNonWrappingUint32`](#tononwrappinguint32)([`Get`](https://tc39.github.io/ecma262/#sec-get-o-p)(`tableDescriptor`, `"initial"`)).
 

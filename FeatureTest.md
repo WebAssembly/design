@@ -2,9 +2,9 @@ See [rationale](Rationale.md#feature-testing---motivating-scenarios) for motivat
 
 # Feature Test
 
-[Post-MVP :unicorn:][future general], applications will be able to query which features are
+[Post-MVP 🦄][future general], applications will be able to query which features are
 supported via
-[`has_feature` or a similar API :unicorn:][future feature testing]. This
+[`has_feature` or a similar API 🦄][future feature testing]. This
 accounts for the pragmatic reality that features are shipped in different orders
 at different times by different engines.
 
@@ -41,15 +41,15 @@ it can be constant-folded by WebAssembly engines.
 
 To illustrate, consider 4 examples:
 
-* [`i32.min_s` :unicorn:][future integer] - Strategy 2
+* [`i32.min_s` 🦄][future integer] - Strategy 2
   could be used to translate `(i32.min_s lhs rhs)` into an equivalent expression
   that stores `lhs` and `rhs` in locals then uses `i32.lt_s` and `select`.
-* [Threads :unicorn:][future threads] - If an application uses `#ifdef` extensively
+* [Threads 🦄][future threads] - If an application uses `#ifdef` extensively
   to produce thread-enabled/disabled builds, Strategy 1 would be appropriate.
   However, if the application was able to abstract use of threading to a few
   primitives, Strategy 2 could be used to patch in the right primitive 
   implementation.
-* [`mprotect` :unicorn:][future memory control] - If engines
+* [`mprotect` 🦄][future memory control] - If engines
   aren't able to use OS signal handling to implement `mprotect` efficiently,
   `mprotect` may become a permanently optional feature. For uses of `mprotect`
   that are not necessary for correctness (but rather just catching bugs),
@@ -97,7 +97,7 @@ polyfill would then replace `foo` with `foo_f64x2` if
 coarser granularity substitution. Since this is all in userspace, the strategy
 can evolve over time.
 
-See also the [better feature testing support :unicorn:][future feature testing]
+See also the [better feature testing support 🦄][future feature testing]
 future feature.
 
 [future general]: FutureFeatures.md

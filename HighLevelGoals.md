@@ -10,7 +10,7 @@
     * a [Minimum Viable Product (MVP)](MVP.md) for the standard with
       roughly the same functionality as [asm.js](http://asmjs.org), primarily
       aimed at [C/C++](CAndC++.md);
-    * [additional features :unicorn:][future general],
+    * [additional features 🦄][future general],
       initially focused on key features like [threads][future threads],
       [zero cost exceptions][future exceptions], and [SIMD][future simd],
       followed by additional features

@@ -108,7 +108,7 @@ valid functions declared at load time. Likewise, race conditions, such as
 [time of check to time of use][] (TOCTOU) vulnerabilities, are possible in
 WebAssembly, since no execution or scheduling guarantees are provided beyond
 in-order execution and [post-MVP atomic memory primitives
-:unicorn:][future threads].
+🦄][future threads].
 Similarly, [side channel attacks][] can occur, such as timing attacks against
 modules. In the future, additional protections may be provided by runtimes or
 the toolchain, such as code diversification or memory randomization (similar to

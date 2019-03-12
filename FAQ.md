@@ -24,7 +24,7 @@ There are two main benefits WebAssembly provides:
 2. By avoiding the simultaneous asm.js constraints of [AOT][]-[compilability][]
    and good performance even on engines without
    [specific asm.js optimizations][], a new standard makes it *much easier* to
-   add the [features :unicorn:][future general] required to reach native
+   add the [features 🦄][future general] required to reach native
    levels of performance.
 
   [experiments]: BinaryEncoding.md#why-a-binary-encoding-instead-of-a-text-only-representation
@@ -96,7 +96,7 @@ reusing a modular C++ library can be as simple as [using a module from JavaScrip
 Beyond the MVP, another [high-level goal](HighLevelGoals.md)
 is to improve support for languages other than C/C++.  This includes [allowing WebAssembly code to
 allocate and access garbage-collected (JavaScript, DOM, Web API) objects
-:unicorn:][future garbage collection].
+🦄][future garbage collection].
 Even before GC support is added to WebAssembly, it is possible to compile a language's VM 
 to WebAssembly (assuming it's written in portable C/C++) and this has already been demonstrated 
 ([1](https://ruby.dj), [2](https://kripken.github.io/lua.vm.js/lua.vm.js.html),
@@ -178,7 +178,7 @@ together in a number of configurations:
   today) allowing developers to reuse popular WebAssembly libraries just like
   JavaScript libraries today.
 * When WebAssembly
-  [gains the ability to access garbage-collected objects :unicorn:][future garbage collection],
+  [gains the ability to access garbage-collected objects 🦄][future garbage collection],
   those objects will be shared with JavaScript, and not live in a walled-off
   world of their own.
 
@@ -284,7 +284,7 @@ it, but fast-math flags are not believed to be important enough:
    would be feature tests allowing WebAssembly code to determine which SIMD
    types to use on a given platform.
  * When WebAssembly
-   [adds an FMA operator :unicorn:][future floating point],
+   [adds an FMA operator 🦄][future floating point],
    folding multiply and add sequences into FMA operators will be possible.
  * WebAssembly doesn't include its own math functions like `sin`, `cos`, `exp`,
    `pow`, and so on. WebAssembly's strategy for such functions is to allow them
@@ -313,7 +313,7 @@ operators:
 * the MVP starts with the ability to grow linear memory via a
   [`grow_memory`](Semantics.md#resizing) operator;
 * proposed
-  [future features :unicorn:][future memory control] would
+  [future features 🦄][future memory control] would
   allow the application to change the protection and mappings for pages in the
   contiguous range `0` to `memory_size`.
 

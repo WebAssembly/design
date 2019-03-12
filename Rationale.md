@@ -194,7 +194,7 @@ flow). Alternative approaches can generate reducible control flow via node
 splitting, which can reduce throughput overhead, at the cost of increasing
 code size (potentially very significantly in pathological cases).
 Also,
-[more expressive control flow constructs :unicorn:][future flow control]
+[more expressive control flow constructs 🦄][future flow control]
 may be added in the future.
 
 ## Nop
@@ -456,8 +456,8 @@ hardware platforms.
 
 ## Motivating Scenarios for Feature Testing
 
-1. [Post-MVP :unicorn:][future general],
-[`i32.min_s` :unicorn:][future integer] is introduced. A
+1. [Post-MVP 🦄][future general],
+[`i32.min_s` 🦄][future integer] is introduced. A
 WebAssembly developer updates their toolkit so that the compiler may leverage
 `i32.min_s`. The developer's WebAssembly module works correctly both on
 execution environments at MVP, as well as those supporting `i32.min_s`.
@@ -469,7 +469,7 @@ possible, while at the same time providing them with the best experience
 possible. The developer has to balance the cost of the test matrix resulting
 from the combinations of possible feature configurations.
 
-2. [Post-MVP :unicorn:][future general], module authors may now use
+2. [Post-MVP 🦄][future general], module authors may now use
 [Threading][future threads]
 APIs in the browser. A developer wants to leverage multithreading in their
 module.

@@ -6,7 +6,7 @@ with a set of import values to produce an **instance**, which is an immutable
 tuple referencing all the state accessible to the running module. Multiple
 module instances can access the same shared state which is the basis for 
 [dynamic linking](DynamicLinking.md) in WebAssembly. WebAssembly modules
-are also meant to integrate with ES6 modules in the [future :unicorn:][future modules].
+are also meant to integrate with ES6 modules in the [future 🦄][future modules].
 
 A module contains the following sections:
 
@@ -42,7 +42,7 @@ instantiation time, by the host environment. There are several kinds of imports:
 * **table imports**, which can be accessed inside the module by 
   [call_indirect](Semantics.md#calls) and other
   table operators in the 
-  [future :unicorn:][future types].
+  [future 🦄][future types].
 
 In the future, other kinds of imports may be added. Imports are designed to
 allow modules to share code and data while still allowing separate compilation
@@ -202,12 +202,12 @@ Each table definition declares an *element type*, *initial length*, and
 optional *maximum length*.
 
 In the MVP, the only valid element type is `"anyfunc"`, but in the
-[future :unicorn:][future types],
+[future 🦄][future types],
 more element types may be added.
 
 In the MVP, tables can only be resized via host-defined APIs (such as
 the JavaScript [`WebAssembly.Table.prototype.grow`](JS.md#webassemblytableprototypegrow)).
-A `grow_table` may be added in the [future :unicorn:][future types].
+A `grow_table` may be added in the [future 🦄][future types].
 In either case, table growth is guaranteed to fail if attempting to grow past
 the declared maximum. As with linear memory, when a maximum is declared,
 implementations *should* (non-normative) attempt to reserve virtual memory up to
@@ -287,7 +287,7 @@ by the memories defined within the module.
 The linear memory index space is only used by the 
 [data section](#data-section). In the MVP, there is at most one linear memory so
 this index space is just a placeholder for when there can be 
-[multiple memories :unicorn:][future multiple tables].
+[multiple memories 🦄][future multiple tables].
 
 ## Table Index Space
 
@@ -300,7 +300,7 @@ by the tables defined within the module.
 The table index space is only used by the [elements section](#elements-section).
 In the MVP, there is at most one table so this index space is just
 a placeholder for when there can be 
-[multiple tables :unicorn:][future multiple tables].
+[multiple tables 🦄][future multiple tables].
 
 ## Initializer Expression
 

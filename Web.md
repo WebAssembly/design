@@ -33,7 +33,7 @@ Note that it is expected that `compileStreaming` and `instantiateStreaming` be e
 
 #### `WebAssembly.compileStreaming`
 
-:cyclone: Added for milestone 2, developers must feature detect.
+🌀 Added for milestone 2, developers must feature detect.
 
 ```
 Promise<WebAssembly.Module> compileStreaming(source)
@@ -63,7 +63,7 @@ compilation fails, the returned promise will be rejected with a `WebAssembly.Com
 
 #### `WebAssembly.instantiateStreaming`
 
-:cyclone: Added for milestone 2, developers must feature detect.
+🌀 Added for milestone 2, developers must feature detect.
 
 ```
 dictionary WebAssemblyInstantiatedSource {

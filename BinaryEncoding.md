@@ -8,19 +8,19 @@ The binary encoding is a dense representation of module information that enables
 small files, fast decoding, and reduced memory usage.
 See the [rationale document](Rationale.md#why-a-binary-encoding) for more detail.
 
-[:unicorn:][future general] = Planned [future][future general] feature
+[🦄][future general] = Planned [future][future general] feature
 
 The encoding is split into three layers:
 
 * **Layer 0** is a simple binary encoding of the bytecode instructions and related data structures.
   The encoding is dense and trivial to interact with, making it suitable for
   scenarios like JIT, instrumentation tools, and debugging.
-* **Layer 1** [:unicorn:][future compression] provides structural compression on top of layer 0, exploiting
+* **Layer 1** [🦄][future compression] provides structural compression on top of layer 0, exploiting
   specific knowledge about the nature of the syntax tree and its nodes.
   The structural compression introduces more efficient encoding of values,
   rearranges values within the module, and prunes structurally identical
   tree nodes.
-* **Layer 2** [:unicorn:][future compression] Layer 2 applies generic compression algorithms, like [gzip](http://www.gzip.org/) and [Brotli](https://datatracker.ietf.org/doc/draft-alakuijala-brotli/), that are already available in browsers and other tooling.
+* **Layer 2** [🦄][future compression] Layer 2 applies generic compression algorithms, like [gzip](http://www.gzip.org/) and [Brotli](https://datatracker.ietf.org/doc/draft-alakuijala-brotli/), that are already available in browsers and other tooling.
 
 Most importantly, the layering approach allows development and standardization to
 occur incrementally. For example, Layer 1 and Layer 2 encoding techniques can be
@@ -29,7 +29,7 @@ compression techniques  stabilize, they can be standardized and moved into nativ
 implementations.
 
 See
-[proposed layer 1 compression :unicorn:][future compression]
+[proposed layer 1 compression 🦄][future compression]
 for a proposal for layer 1 structural compression.
 
 
@@ -80,7 +80,7 @@ All types are distinguished by a negative `varint7` values that is the first byt
 
 Some of these will be followed by additional fields, see below.
 
-Note: Gaps are reserved for [future :unicorn:][future general] extensions. The use of a signed scheme is so that types can coexist in a single space with (positive) indices into the type section, which may be relevant for future extensions of the type system.
+Note: Gaps are reserved for [future 🦄][future general] extensions. The use of a signed scheme is so that types can coexist in a single space with (positive) indices into the type section, which may be relevant for future extensions of the type system.
 
 ### `value_type`
 A `varint7` indicating a [value type](Semantics.md#types). One of:
@@ -105,7 +105,7 @@ In the MVP, only one type is available:
 
 * [`anyfunc`](Semantics.md#table)
 
-Note: In the [future :unicorn:][future general], other element types may be allowed.
+Note: In the [future 🦄][future general], other element types may be allowed.
 
 ### `func_type`
 The description of a function signature. Its type constructor is followed by an additional description:
@@ -118,7 +118,7 @@ The description of a function signature. Its type constructor is followed by an 
 | return_count | `varuint1` | the number of results from the function |
 | return_type | `value_type?` | the result type of the function (if return_count is 1) |
 
-Note: In the [future :unicorn:][future multiple return], `return_count` and `return_type` might be generalised to allow multiple values.
+Note: In the [future 🦄][future multiple return], `return_count` and `return_type` might be generalised to allow multiple values.
 
 ## Other Types
 
@@ -163,7 +163,7 @@ A packed tuple that describes the limits of a
 | initial | `varuint32` | initial length (in units of table elements or wasm pages) |
 | maximum | `varuint32`? | only present if specified by `flags` |
 
-Note: In the [future :unicorn:][future threads], the "flags" field may be changed to `varuint32`, e.g., to include a flag for sharing between threads.
+Note: In the [future 🦄][future threads], the "flags" field may be changed to `varuint32`, e.g., to include a flag for sharing between threads.
 
 ### `init_expr`
 The encoding of an [initializer expression](Modules.md#initializer-expression)
@@ -238,7 +238,7 @@ The type section declares all function signatures that will be used in the modul
 | count | `varuint32` | count of type entries to follow |
 | entries | `func_type*` | repeated type entries as described [above](#func_type) |
 
-Note: In the [future :unicorn:][future types],
+Note: In the [future 🦄][future types],
 this section may contain other forms of type entries as well, which can be distinguished by the `form` field of the type encoding.
 
 ### Import section
@@ -583,7 +583,7 @@ branches to the block or loop at the given offset within the `target_table`. If 
 out of range, `br_table` branches to the default target.
 
 Note: Gaps in the opcode space, here and elsewhere, are reserved for
-[future :unicorn:][future general] extensions.
+[future 🦄][future general] extensions.
 
 ## Call operators ([described here](Semantics.md#calls))
 
@@ -594,7 +594,7 @@ Note: Gaps in the opcode space, here and elsewhere, are reserved for
 
 The `call_indirect` operator takes a list of function arguments and as the last
 operand the index into the table. Its `reserved` immediate is for
-[future :unicorn:][future multiple tables] use and must be `0` in the MVP.
+[future 🦄][future multiple tables] use and must be `0` in the MVP.
 
 ## Parametric operators ([described here](Semantics.md#type-parametric-operators))
 
@@ -654,11 +654,11 @@ As implied by the `log2(alignment)` encoding, the alignment must be a power of 2
 As an additional validation criteria, the alignment must be less or equal to
 natural alignment. The bits after the
 `log(memory-access-size)` least-significant bits must be set to 0. These bits
-are reserved for [future :unicorn:][future threads] use
+are reserved for [future 🦄][future threads] use
 (e.g., for shared memory ordering requirements).
 
 The `reserved` immediate to the `current_memory` and `grow_memory` operators is
-for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
+for [future 🦄][future multiple tables] use and must be 0 in the MVP.
 
 ## Constants ([described here](Semantics.md#constants))
 
