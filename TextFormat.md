@@ -30,7 +30,7 @@ The following tools currently understand this format:
   [specification interpreter]: https://github.com/WebAssembly/spec/tree/master/interpreter/
   [wabt]: https://github.com/WebAssembly/wabt
   [binaryen]: https://github.com/WebAssembly/binaryen
-  [LLVM backend]: https://github.com/llvm/llvm-project/tree/master/test/CodeGen/WebAssembly
+  [LLVM backend]: https://github.com/llvm/llvm-project/tree/master/llvm/test/CodeGen/WebAssembly
   [WAVM backend]: https://github.com/AndrewScheidecker/WAVM/tree/master/Test
 
 The recommended file extension for WebAssembly code in textual format is `.wat`.
