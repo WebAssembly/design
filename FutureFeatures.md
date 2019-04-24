@@ -14,15 +14,15 @@ The Community Group and Working Group have adopted [a process document for propo
 | Feature                                          | Tracking issue | Status      | Phase                        |
 |--------------------------------------------------|----------------|-------------|------------------------------|
 | Specification                                    | [15][]         | in progress | Proposed spec text available |
-| Threads                                          | [14][]         | in progress | Feature proposal             |
+| Threads                                          | [14][]         | in progress | Proposed spec text available |
 | Fixed-width SIMD                                 | [1][]          | in progress | Feature proposal             |
 | Exception handling                               | [4][]          | in progress | Feature proposal             |
 | Reference types                                  | [10][]         | in progress | Implementation phase         |
 | Garbage collection                               | [16][]         | in progress | Feature proposal             |
-| Bulk memory operations                           | [18][]         | in progress | Feature proposal             |
+| Bulk memory operations                           | [18][]         | in progress | Implementation phase         |
 | Web Content Security Policy                      | [3][]          | in progress | Pre-proposal                 |
 | ECMAScript module integration                    | [12][]         | in progress | Feature proposal             |
-| Tail Call                                        | [17][]         | in progress | Feature proposal             |
+| Tail Call                                        | [17][]         | in progress | Implementation phase         |
 | Non-trapping float-to-int conversions            | [11][]         | in progress | Standardize the Feature      |
 | Multi-value                                      | [19][]         | in progress | Implementation phase         |
 | Host bindings                                    | [8][]          | in progress | Feature proposal             |
