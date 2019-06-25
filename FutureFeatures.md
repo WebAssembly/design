@@ -15,7 +15,7 @@ The Community Group and Working Group have adopted [a process document for propo
 |--------------------------------------------------|----------------|-------------|------------------------------|
 | Specification                                    | [15][]         | in progress | Proposed spec text available |
 | Threads                                          | [14][]         | in progress | Proposed spec text available |
-| Fixed-width SIMD                                 | [1][]          | in progress | Feature proposal             |
+| Fixed-width SIMD                                 | [1][]          | in progress | Proposed spec text available |
 | Exception handling                               | [4][]          | in progress | Feature proposal             |
 | Reference types                                  | [10][]         | in progress | Implementation phase         |
 | Garbage collection                               | [16][]         | in progress | Feature proposal             |
