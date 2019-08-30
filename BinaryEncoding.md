@@ -70,7 +70,7 @@ and counting downwards.
 | `0xff` | reserved | Reserved for unknown future language evolution :milky_way: |
 | `0xfe` | threads  | Expected to be used for [atomics :unicorn:][future threads] |
 | `0xfd` | simd     | Expected to be used for [SIMD :unicorn:][future simd] |
-| `0xfc` | numeric  | Numeric operations :bowling: |
+| `0xfc` | misc     | Miscellaneous operations :bowling: |
 
 ## Language Types
 
