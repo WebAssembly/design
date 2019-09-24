@@ -25,7 +25,7 @@ The Community Group and Working Group have adopted [a process document for propo
 | Tail Call                                        | [17][]         | in progress | Implementation phase         |
 | Non-trapping float-to-int conversions            | [11][]         | in progress | Standardize the Feature      |
 | Multi-value                                      | [19][]         | in progress | Implementation phase         |
-| Host bindings                                    | [8][]          | in progress | Feature proposal             |
+| Interface types                                  | [8][]          | in progress | Feature proposal             |
 | Sign-extension operators                         | [9][]          | in progress | Standardize the Feature      |
 | Import/Export Mutable Globals                    | [5][]          | in progress | Standardize the Feature      |
 | Type Reflection for WebAssembly JavaScript API   | [2][]          | in progress | Feature proposal             |
