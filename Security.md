@@ -14,6 +14,7 @@ the host runtime using fault isolation techniques. This implies:
   going through appropriate APIs.
   * Applications generally execute deterministically
   [with limited exceptions](Nondeterminism.md).
+  * Users Data cannot be tampered and the script as well as software wont affect any kind of basic security
 
 Additionally, each module is subject to the security policies of its embedding.
 Within a [web browser](Web.md), this includes restrictions on information flow
@@ -96,7 +97,9 @@ invalid indexes in any index space to trigger a validation error at load time,
 or at worst a trap at runtime. Accesses to linear memory are bounds-checked at
 the region level, potentially resulting in a trap at runtime. These memory
 region(s) are isolated from the internal memory of the runtime, and are set to
-zero by default unless otherwise initialized.
+zero by default unless otherwise initialized.This means that virtual memory 
+plays an important part,saving one's running memory time during any file
+execution as well as non-affecting users machine in performance.   
 
 Nevertheless, other classes of bugs are not obviated by the semantics of
 WebAssembly. Although attackers cannot perform direct code injection attacks,
