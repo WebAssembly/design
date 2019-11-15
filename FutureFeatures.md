@@ -145,24 +145,13 @@ Options under consideration:
 
 ### Linear memory bigger than 4 GiB
 
-The WebAssembly MVP will support the wasm32 mode of WebAssembly, with linear
-memory sizes up to 4 GiB using 32-bit linear memory indices. To support larger
-sizes, the wasm64 mode of WebAssembly will be added in the future, supporting
-much greater linear memory sizes using 64-bit linear memory indices. wasm32
-and wasm64 are both just modes of WebAssembly, to be selected by a flag in
-a module header, and don't imply any semantics differences outside of how
-linear memory is handled. Platforms will also have APIs for querying which of
-wasm32 and wasm64 are supported.
+The WebAssembly MVP supports linear memories with 32-bit indices in the MVP,
+which means it's limited to 4 GiB per memory. To support larger sizes, memories
+that use 64-bit indices will be added in the future, supporting much greater
+linear memory sizes.
 
 Of course, the ability to actually allocate this much memory will always be
 subject to dynamic resource availability.
-
-It is likely that wasm64 will initially support only 64-bit linear memory
-indices, and wasm32 will leave 64-bit linear memory indices unsupported, so
-that implementations don't have to support multiple index sizes in the same
-instance. However, operators with 32-bit indices and operators with 64-bit
-indices will be given separate names to leave open the possibility of
-supporting both in the same instance in the future.
 
 ### Source maps integration
 
