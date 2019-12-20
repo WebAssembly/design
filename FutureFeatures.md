@@ -467,7 +467,7 @@ static signature validation check. This could be improved by allowing:
 * any other specific GC reference type, effectively allowing WebAssembly code
   to implement a variety of rooting API schemes.
 
-## Proposals moved to tacking issues
+## Proposals moved to tracking issues
 
 These proposals have now moved to [tracking issues](#tracking-issues). The old
 links are preserved here for backwards compatibility.
