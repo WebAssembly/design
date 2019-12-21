@@ -325,4 +325,4 @@ and access JavaScript, DOM, and general WebIDL-defined objects.
   [SIMD.js-in-asm.js]: http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js
 
 [future simd]: https://github.com/WebAssembly/design/issues/1075
-[future garbage collection]: https://github.com/WebAssembly/design/issues/1079
+[future garbage collection]: https://github.com/WebAssembly/proposals/issues/16

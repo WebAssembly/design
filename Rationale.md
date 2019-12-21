@@ -609,4 +609,4 @@ Moreover, programming languages that allow control transfer _expressions_ usuall
 [future integer]: FutureFeatures.md#additional-integer-operations
 [future threads]: https://github.com/WebAssembly/design/issues/1073
 [future simd]: https://github.com/WebAssembly/design/issues/1075
-[future garbage collection]: https://github.com/WebAssembly/design/issues/1079
+[future garbage collection]: https://github.com/WebAssembly/proposals/issues/16
