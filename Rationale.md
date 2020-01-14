@@ -63,7 +63,7 @@ WebAssembly only represents [a few types](Semantics.md#Types).
 * More complex object types aren't semantically useful for MVP: WebAssembly
   seeks to provide the primitive building blocks upon which higher-level
   constructs can be built. They may become useful to support other languages,
-  especially when considering [garbage collection](GC.md).
+  especially when considering [garbage collection][future garbage collection].
 
 
 ## Load/Store Addressing
@@ -609,3 +609,4 @@ Moreover, programming languages that allow control transfer _expressions_ usuall
 [future integer]: FutureFeatures.md#additional-integer-operations
 [future threads]: https://github.com/WebAssembly/design/issues/1073
 [future simd]: https://github.com/WebAssembly/design/issues/1075
+[future garbage collection]: https://github.com/WebAssembly/proposals/issues/16

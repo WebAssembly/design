@@ -514,4 +514,4 @@ though there would be some different performance characteristics.
 
 
 [future trapping]: FutureFeatures.md#trapping-or-non-trapping-strategies
-[future garbage collection]: https://github.com/WebAssembly/design/issues/1079
+[future garbage collection]: https://github.com/WebAssembly/proposals/issues/16

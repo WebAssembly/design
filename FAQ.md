@@ -391,6 +391,6 @@ access to [proprietary platform-specific APIs](Portability.md#api) of e.g.
 Android / iOS. 
 
 [future general]: FutureFeatures.md
-[future garbage collection]: https://github.com/WebAssembly/design/issues/1079
+[future garbage collection]: https://github.com/WebAssembly/proposals/issues/16
 [future floating point]: FutureFeatures.md#additional-floating-point-operators
 [future memory control]: FutureFeatures.md#finer-grained-control-over-memory
