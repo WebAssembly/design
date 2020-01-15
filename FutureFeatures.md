@@ -164,16 +164,6 @@ instance. However, operators with 32-bit indices and operators with 64-bit
 indices will be given separate names to leave open the possibility of
 supporting both in the same instance in the future.
 
-### Source maps integration
-
-* Add a new source maps [module section type](MVP.md#module-structure).
-* Either embed the source maps directly or just a URL from which source maps can
-  be downloaded.
-* Text source maps become intractably large for even moderate-sized compiled
-  codes, so probably need to define new binary format for source maps.
-* Gestate ideas and start discussions at the
-  [Source Map RFC repository](https://github.com/source-map/source-map-rfc/issues)
-
 ### Coroutines
 
 Coroutines will [eventually be part of C++][] and is already popular in other
