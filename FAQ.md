@@ -91,7 +91,7 @@ Viable Product, the initial focus is on [C/C++](CAndC++.md).
 
 However, by [integrating with JavaScript at the ES6 Module interface](Modules.md#integration-with-es6-modules),
 web developers don't need to write C++ to take advantage of libraries that others have written; 
-reusing a modular C++ library can be as simple as [using a module from JavaScript](http://jsmodules.io).
+reusing a modular C++ library can be as simple as [using a module from JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
 
 Beyond the MVP, another [high-level goal](HighLevelGoals.md)
 is to improve support for languages other than C/C++.  This includes [allowing WebAssembly code to
