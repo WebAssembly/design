@@ -57,12 +57,20 @@ Note: Currently, the only sizes used are `varint7`, `varint32` and `varint64`.
 
 ## Instruction Opcodes
 
-In the MVP, the opcodes of [instructions](Semantics.md) are all encoded in a
-single byte since there are fewer than 256 opcodes. Future features like
-[SIMD][future simd] and [atomics][future threads]
-will bring the total count above 256 and so an extension scheme will be
-necessary, designating one or more single-byte values as prefixes for multi-byte
-opcodes.
+The opcodes for many common instructions are encoded in a single byte.
+
+The opcodes for some families of instructions are encoded as a *prefix byte*
+followed by an LEB128 value. Prefix byte values are allocated starting at `0xfe`
+and counting downwards.
+
+### Prefix Bytes
+
+| Opcode | Name     | Description |
+| ------ | -------- | ----------- |
+| `0xff` | reserved | Reserved for unknown future language evolution :milky_way: |
+| `0xfe` | threads  | Expected to be used for [atomics :unicorn:][future threads] |
+| `0xfd` | simd     | Expected to be used for [SIMD :unicorn:][future simd] |
+| `0xfc` | misc     | Miscellaneous operations :bowling: |
 
 ## Language Types
 
@@ -802,6 +810,14 @@ for [future :unicorn:][future multiple tables] use and must be 0 in the MVP.
 | `f64.convert_s/i64` | `0xb9` | | |
 | `f64.convert_u/i64` | `0xba` | | |
 | `f64.promote/f32` | `0xbb` | | |
+| `i32.trunc_sat_f32_s` | `0xfc` `0x00` | | :bowling: saturating form of `i32.trunc_f32_s` |
+| `i32.trunc_sat_f32_u` | `0xfc` `0x01` | | :bowling: saturating form of `i32.trunc_f32_u` |
+| `i32.trunc_sat_f64_s` | `0xfc` `0x02` | | :bowling: saturating form of `i32.trunc_f64_s` |
+| `i32.trunc_sat_f64_u` | `0xfc` `0x03` | | :bowling: saturating form of `i32.trunc_f64_u` |
+| `i64.trunc_sat_f32_s` | `0xfc` `0x04` | | :bowling: saturating form of `i64.trunc_f32_s` |
+| `i64.trunc_sat_f32_u` | `0xfc` `0x05` | | :bowling: saturating form of `i64.trunc_f32_u` |
+| `i64.trunc_sat_f64_s` | `0xfc` `0x06` | | :bowling: saturating form of `i64.trunc_f64_s` |
+| `i64.trunc_sat_f64_u` | `0xfc` `0x07` | | :bowling: saturating form of `i64.trunc_f64_u` |
 
 ## Reinterpretations ([described here](Semantics.md#datatype-conversions-truncations-reinterpretations-promotions-and-demotions))
 
