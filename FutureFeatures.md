@@ -273,11 +273,21 @@ use cases:
   * `i32.abs_s`: signed absolute value (traps on `INT32_MIN`)
   * `i32.bswap`: sign-agnostic reverse bytes (endian conversion)
   * `i32.bswap16`: sign-agnostic, `bswap16(x)` is `((x>>8)&255)|((x&255)<<8)`
+  * `i64.min_s`: signed minimum
+  * `i64.max_s`: signed maximum
+  * `i64.min_u`: unsigned minimum
+  * `i64.max_u`: unsigned maximum
+  * `i64.sext`: sign-agnostic `sext(x, y)` is `shr_s(shl(x,y),y)`
+  * `i64.abs_s`: signed absolute value (traps on `INT64_MIN`)
+  * `i64.bswap`: sign-agnostic reverse bytes (endian conversion)
 
 * The following operators are just potentially interesting.
   * `i32.clrs`: sign-agnostic count leading redundant sign bits (defined for
     all values, including 0)
   * `i32.floor_div_s`: signed division (result is [floored](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
+  * `i64.clrs`: sign-agnostic count leading redundant sign bits (defined for
+    all values, including 0)
+  * `i64.floor_div_s`: signed division (result is [floored](https://en.wikipedia.org/wiki/Floor_and_ceiling_functions))
 
 * The following 64-bit-only operators are potentially interesting as well.
   * `i64.mor`: sign-agnostic [8x8 bit-matrix multiply with or](http://mmix.cs.hm.edu/doc/instructions-en.html#MOR)
