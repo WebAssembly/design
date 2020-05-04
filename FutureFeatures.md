@@ -287,13 +287,13 @@ use cases:
 
   * `f32.minnum`: minimum; if exactly one operand is NaN, returns the other operand
   * `f32.maxnum`: maximum; if exactly one operand is NaN, returns the other operand
-  * `f32.fma`: fused multiply-add (results always conforming to IEEE 754-2008)
+  * `f32.fma`: fused multiply-add (results always conforming to IEEE 754-2019)
   * `f64.minnum`: minimum; if exactly one operand is NaN, returns the other operand
   * `f64.maxnum`: maximum; if exactly one operand is NaN, returns the other operand
-  * `f64.fma`: fused multiply-add (results always conforming to IEEE 754-2008)
+  * `f64.fma`: fused multiply-add (results always conforming to IEEE 754-2019)
 
 `minnum` and `maxnum` operators would treat `-0.0` as being effectively less
-than `0.0`. Also, it's advisable to follow the IEEE 754-2018 draft, which has
+than `0.0`. Also, it's advisable to follow the IEEE 754-2019, which has
 removed IEEE 754-2008's `minNum` and `maxNum` (which return qNaN when either
 operand is sNaN) and replaced them with `minimumNumber` and `maximumNumber`,
 which prefer to return a number even when one operand is sNaN.
@@ -325,12 +325,12 @@ so there's nothing preventing WebAssembly applications from linking to an
 appropriate emulation library and getting similarly performant results.
 Emulation libraries would have more flexibility to offer approximation
 techniques such as double-double arithmetic. If we standardize 128-bit
-floating point in WebAssembly, it will probably be standard IEEE 754-2008
+floating point in WebAssembly, it will probably be standard IEEE 754-2019
 quadruple precision.
 
-### Full IEEE 754-2008 conformance
+### Full IEEE 754-2019 conformance
 
-WebAssembly floating point conforms IEEE 754-2008 in most respects, but there
+WebAssembly floating point conforms IEEE 754-2019 in most respects, but there
 are a few areas that are
 [not yet covered](Semantics.md#floating-point-operators).
 
