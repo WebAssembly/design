@@ -36,7 +36,7 @@ design of WebAssembly.
 * Common NPAPI users, within the web's security model and APIs.
 * Fat client for enterprise applications (e.g. databases).
 
-# Outside the browser
+## Outside the browser
 
 * Game distribution service (portable and secure).
 * Server-side compute of untrusted code.
@@ -44,7 +44,7 @@ design of WebAssembly.
 * Hybrid native apps on mobile devices.
 * Symmetric computations across multiple nodes
 
-# How WebAssembly can be used
+## How WebAssembly can be used
 
 * Entire code base in WebAssembly.
 * Main frame in WebAssembly, but the UI is in JavaScript / HTML.
