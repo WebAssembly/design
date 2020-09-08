@@ -4,55 +4,8 @@ These are features that make sense in the context of the
 [high-level goals](HighLevelGoals.md) of WebAssembly but weren't part of the
 initial [Minimum Viable Product](MVP.md) release.
 
-**Note:** we are in the process of migrating all post-MVP features to tracking
-issues.
-
-## Tracking Issues
-
-The Community Group and Working Group have adopted [a process document for proposal phases](https://github.com/WebAssembly/meetings/blob/master/process/phases.md). The following issues are currently being worked on.
-
-| Feature                                          | Tracking issue | Status      | Phase                        |
-|--------------------------------------------------|----------------|-------------|------------------------------|
-| Specification                                    | [15][]         | in progress | Proposed spec text available |
-| Threads                                          | [14][]         | in progress | Proposed spec text available |
-| Fixed-width SIMD                                 | [1][]          | in progress | Proposed spec text available |
-| Exception handling                               | [4][]          | in progress | Feature proposal             |
-| Reference types                                  | [10][]         | in progress | Implementation phase         |
-| Garbage collection                               | [16][]         | in progress | Feature proposal             |
-| Bulk memory operations                           | [18][]         | in progress | Implementation phase         |
-| Web Content Security Policy                      | [3][]          | in progress | Pre-proposal                 |
-| ECMAScript module integration                    | [12][]         | in progress | Feature proposal             |
-| Tail Call                                        | [17][]         | in progress | Implementation phase         |
-| Non-trapping float-to-int conversions            | [11][]         | in progress | Standardize the Feature      |
-| Multi-value                                      | [19][]         | in progress | Implementation phase         |
-| Host bindings                                    | [8][]          | in progress | Feature proposal             |
-| Sign-extension operators                         | [9][]          | in progress | Standardize the Feature      |
-| Import/Export Mutable Globals                    | [5][]          | in progress | Standardize the Feature      |
-| Type Reflection for WebAssembly JavaScript API   | [2][]          | in progress | Feature proposal             |
-| Unmanaged closures                               | [6][]          | in progress | Pre-proposal                 |
-| JavaScript BigInt to WebAssembly i64 integration | [7][]          | in progress | Proposed Spec Text Available |
-| Custom Annotation Syntax in the Text Format      | [13][]         | in progress | Feature proposal             |
-
-  [14]: https://github.com/WebAssembly/proposals/issues/14
-  [1]: https://github.com/WebAssembly/proposals/issues/1
-  [15]: https://github.com/WebAssembly/proposals/issues/15
-  [4]: https://github.com/WebAssembly/proposals/issues/4
-  [10]: https://github.com/WebAssembly/proposals/issues/10
-  [16]: https://github.com/WebAssembly/proposals/issues/16
-  [12]: https://github.com/WebAssembly/proposals/issues/12
-  [18]: https://github.com/WebAssembly/proposals/issues/18
-  [3]: https://github.com/WebAssembly/proposals/issues/3
-  [11]: https://github.com/WebAssembly/proposals/issues/11
-  [17]: https://github.com/WebAssembly/proposals/issues/17
-  [19]: https://github.com/WebAssembly/proposals/issues/19
-  [8]: https://github.com/WebAssembly/proposals/issues/8
-  [9]: https://github.com/WebAssembly/proposals/issues/9
-  [5]: https://github.com/WebAssembly/proposals/issues/5
-  [2]: https://github.com/WebAssembly/proposals/issues/2
-  [6]: https://github.com/WebAssembly/proposals/issues/6
-  [7]: https://github.com/WebAssembly/proposals/issues/7
-  [13]: https://github.com/WebAssembly/proposals/issues/13
-
+See https://github.com/webassembly/proposals for the current set of in-progress
+proposals.
 
 ## On Deck for Immediate Design
 
