@@ -27,7 +27,7 @@ action. The points below outline a series of steps that will be taken in case of
 to ensure a positive work environment in the WebAssembly CG. 
 
  - **Informal warning**   
-   An informal or verbal warning can be issued in any relevant medium of communication callin 
+   An informal or verbal warning can be issued in any relevant medium of communication calling
    out inappropriate behavior as a violation of the CEPC
    (examples: responses to github issues or PRs, discord, email, meetings).
 
