@@ -19,7 +19,7 @@ We hope that our community group act according to these guidelines, and that
 participants hold each other to these high standards. 
 
 If you are worried that the code isn't being followed, or are witness to a violation but are
-uncomfortable speaking up,please contact the Community Group's chairs at
+uncomfortable speaking up, please contact the Community Group's chairs at
 `team-wasm-chairs@w3.org` (note: this list is also visible to W3C staff). 
 
 In cases where there is repeated disregard for the CEPC, it is possible to incur disciplinary
