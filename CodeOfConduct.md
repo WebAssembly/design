@@ -39,7 +39,8 @@ to ensure a positive work environment in the WebAssembly CG.
  - **Formal warning**   
    An explicit warning issued after repeated incidents. While members of the CG can call out
    inappropriate behavior as needed, warnings will be issued by CG chairs, subgroup chairs, or
-   proposal champions depending on the nature of the violation.
+   proposal champions depending on the nature of the violation. Wherever possible,
+   the warning should be issued after consulting team-wasm-chairs@w3.org. 
 
  - **Disciplinary meeting**  
    An optional meeting to discuss constructive action or next steps.
