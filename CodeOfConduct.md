@@ -18,8 +18,8 @@ WebAssembly operates under the W3C's
 We hope that our community group act according to these guidelines, and that
 participants hold each other to these high standards. 
 
-If you are worried that the code isn't being followed, or are witness to a violation but are
-uncomfortable speaking up, please contact the Community Group's chairs at
+If you are worried that the code isn't being followed, or are witness to a violation
+but are uncomfortable speaking up, please contact the Community Group's chairs at
 `team-wasm-chairs@w3.org` (note: this list is also visible to W3C staff). 
 
 In cases where there is repeated disregard for the CEPC, it is possible to incur disciplinary
@@ -42,8 +42,12 @@ to ensure a positive work environment in the WebAssembly CG.
    proposal champions depending on the nature of the violation. The warning should be issued
    with consultation from team-wasm-chairs@w3.org. 
 
- - **Disciplinary meeting**  
-   An optional meeting to discuss constructive action or next steps.
+ - **Optional formal meeting**  
+   An optional meeting with the chairs and/or a W3C representative to discuss next steps.
+   The meeting can be requested by any party, and should serve as a forum for discussion.
+   While this is the reccomended next step, it is not a blocker for further action, i.e.
+   the chairs can request thay a meeting take place, or should be available for a
+   discussion if requested, but further action will not be gated on this meeting. 
    
  - **Temporary suspension**  
    The temporary suspension will be issued based on repeat violations,
