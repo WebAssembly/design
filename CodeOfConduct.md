@@ -47,7 +47,7 @@ to ensure a positive work environment in the WebAssembly CG.
    The meeting can be requested by any party, and should serve as a forum for discussion.
    While this is the recommended next step, it is not a blocker for further action, i.e.
    the chairs can request that a meeting take place, and should be available for a
-   discussion if requested, but further action will not be gated on this meeting. 
+   discussion if requested by others, but further action will not be gated on this meeting. 
    
  - **Temporary suspension**  
    The temporary suspension will be issued based on repeat violations,
