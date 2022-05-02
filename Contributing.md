@@ -1,4 +1,4 @@
-# Contributing to WebAssembly
+# Contributing to WebAssembly for w3c-"web browser" 
 
 WebAssembly is initially designed and implemented by browser vendors who are
 interested in meeting a variety of [use cases](UseCases.md). As design and
@@ -9,7 +9,7 @@ Interested in participating? We suggest you start by:
 
 1. Acquainting yourself with the
    [Code of Ethics and Professional Conduct](CodeOfConduct.md).
-2. Reading the [WebAssembly design][].
+2. Reading the [WebAssembly design][web(].
 3. Joining the IRC channel `irc://irc.w3.org:6667/#webassembly`.
 
 With that background understood and communication set up, feel free to
@@ -23,6 +23,6 @@ will have its own contribution process to the specification.
 
 Happy assembly!
 
-  [WebAssembly design]: https://github.com/WebAssembly/design
-  [file issues]: https://github.com/WebAssembly/design/issues
+  [WebAssembly design]: https://github.com/WebAssembly/design/web-browser 
+  [file issues]: https://github.com/WebAssembly/design/issues-web-beowser
   [W3C Community Group]: https://www.w3.org/community/webassembly/
