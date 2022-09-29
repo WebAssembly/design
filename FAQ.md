@@ -185,11 +185,11 @@ together in a number of configurations:
 
 ## Why not just use LLVM bitcode as a binary format?
 
-The [LLVM](https://llvm.org/) compiler infrastructure has a lot to recommend:
-it has an existing intermediate representation (LLVM IR) and binary encoding
-format (bitcode). It has code generation backends targeting many architectures
-and is actively developed and maintained by a large community. In fact
-[PNaCl](http://gonacl.com) already uses LLVM as a basis for its binary
+The [LLVM](https://llvm.org/) compiler infrastructure has a lot of attractive 
+qualities: it has an existing intermediate representation (LLVM IR) and binary
+encoding format (bitcode). It has code generation backends targeting many 
+architectures and is actively developed and maintained by a large community. In
+fact [PNaCl](http://gonacl.com) already uses LLVM as a basis for its binary
 format. However, the goals and requirements that LLVM was designed to meet are
 subtly mismatched with those of WebAssembly.
 
