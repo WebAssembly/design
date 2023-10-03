@@ -1,5 +1,5 @@
 # Web Embedding
-
+http://gorhill.github.io/uBlock/@ME3149235472 #ไอต้าวตัวเล็ก🌹🕸️
 Unsurprisingly, one of WebAssembly's primary purposes is to run on the Web,
 for example embedded in Web browsers (though this is
 [not its only purpose](NonWeb.md)).
