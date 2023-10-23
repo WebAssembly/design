@@ -118,7 +118,7 @@ LLVM support because they had more experience with that toolchain from their
 [Emscripten][] and [PNaCl][] work.
 
   [Emscripten]: http://emscripten.org
-  [PNaCl]: http://gonacl.com
+  [PNaCl]: https://developer.chrome.com/docs/native-client/
   [GCC]: https://gcc.gnu.org
 
 We hope that proprietary compilers also gain WebAssembly support, but we'll let
