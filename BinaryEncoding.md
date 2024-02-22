@@ -541,7 +541,7 @@ by the tables below. Each function body must end with the `end` opcode.
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| body_size | `varuint32` | size of function body to follow, in bytes |
+| body_size | `varuint32` | size of function body to follow, in bytes, including local fields |
 | local_count | `varuint32` | number of local entries |
 | locals | `local_entry*` | local variables |
 | code | `byte*` | bytecode of the function |
