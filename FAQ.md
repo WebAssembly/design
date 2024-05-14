@@ -70,8 +70,8 @@ polyfill.
 It is also the case that polyfilling WebAssembly to asm.js is less urgent
 because of the existence of alternatives, for example, a reverse polyfill -
 compiling
-[asm.js to WebAssembly](https://github.com/WebAssembly/binaryen/blob/master/src/asm2wasm.h) -
-exists, and it allows shipping a single build that can run as either
+[asm.js to WebAssembly](https://github.com/WebAssembly/binaryen/blob/version_96/src/asm2wasm.h) -
+existed, and it allows shipping a single build that can run as either
 asm.js or WebAssembly. It is also possible to build a project into
 two parallel asm.js and WebAssembly builds by just
 [flipping a switch](https://github.com/kripken/emscripten/wiki/WebAssembly)
