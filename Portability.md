@@ -27,7 +27,7 @@ characteristics:
   emulation thereof.
 * Two's complement signed integers in 32 bits and optionally 64 bits.
 * IEEE 754-2008 32-bit and 64-bit floating point, except for
-  [a few exceptions](Semantics.md#floating-point-operators).
+  [a few exceptions][floating-point operations].
 * Little-endian byte ordering.
 * Memory regions which can be efficiently addressed with 32-bit
   pointers or indices.
@@ -62,3 +62,4 @@ compile-time (via `#ifdef`) or run-time (via [feature detection](FeatureTest.md)
 and dynamic [loading](Modules.md)/[linking](DynamicLinking.md)).
 
 [future 64-bit]: FutureFeatures.md#linear-memory-bigger-than-4-gib
+[floating-point operations](https://webassembly.github.io/spec/core/exec/numerics.html#floating-point-operations).
