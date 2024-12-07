@@ -41,8 +41,8 @@ it can be constant-folded by WebAssembly engines.
 
 To illustrate, consider 4 examples:
 
-* [`i32.min_s` :unicorn:][future integer] - Strategy 2
-  could be used to translate `(i32.min_s lhs rhs)` into an equivalent expression
+* [`i32.bitrev` :unicorn:][future integer] - Strategy 2
+  could be used to translate `(i32.bitrev lhs rhs)` into an equivalent expression
   that stores `lhs` and `rhs` in locals then uses `i32.lt_s` and `select`.
 * [Threads :unicorn:][future threads] - If an application uses `#ifdef` extensively
   to produce thread-enabled/disabled builds, Strategy 1 would be appropriate.
@@ -61,7 +61,7 @@ To illustrate, consider 4 examples:
   the existing `__builtin_cpu_supports`.
 * [SIMD][future simd] - When SIMD operators have a good-enough
   polyfill, e.g., `f32x4.fma` via `f32x4.mul`/`add`, Strategy 2 could be used 
-  (similar to the `i32.min_s` example above). However, when a SIMD feature has no
+  (similar to the `i32.bitrev` example above). However, when a SIMD feature has no
   efficient polyfill (e.g., `f64x2`, which introduces both operators *and*
   types), alternative algorithms need to be provided and selected at load time.
 
@@ -101,8 +101,8 @@ See also the [better feature testing support :unicorn:][future feature testing]
 future feature.
 
 [future general]: FutureFeatures.md
-[future feature testing]: FutureFeatures.md#feature-testing
-[future integer]: FutureFeatures.md#additional-integer-operators
+[future feature testing]: https://github.com/WebAssembly/design/issues/1280
+[future integer]: https://github.com/WebAssembly/design/issues/1382
 [future threads]: https://github.com/WebAssembly/design/issues/1073
 [future simd]: https://github.com/WebAssembly/design/issues/1075
-[future memory control]: FutureFeatures.md#finer-grained-control-over-memory
+[future memory control]: https://github.com/WebAssembly/memory-control

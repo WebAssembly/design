@@ -1,6 +1,6 @@
 # JIT and Optimization Library
 
-WebAssembly's [Just-in-Time compilation (JIT)][future jit control]
+WebAssembly's Just-in-Time compilation (JIT)
 interface will likely be fairly low-level, exposing general-purpose primitives
 rather than higher-level functionality. Still, there is a need for higher-level
 functionality, and for greater flexibility than the WebAssembly spec can provide.
@@ -84,5 +84,3 @@ A significant range of approaches are possible:
     would allow a unique degree of flexibility.
 
   * And many things in between.
-
-[future jit control]: FutureFeatures.md#platform-independent-just-in-time-jit-compilation

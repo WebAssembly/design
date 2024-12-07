@@ -392,5 +392,5 @@ Android / iOS.
 
 [future general]: FutureFeatures.md
 [future garbage collection]: https://github.com/WebAssembly/proposals/issues/16
-[future floating point]: FutureFeatures.md#additional-floating-point-operators
-[future memory control]: FutureFeatures.md#finer-grained-control-over-memory
+[future floating point]: https://github.com/WebAssembly/design/issues/1391
+[future memory control]: https://github.com/WebAssembly/memory-control

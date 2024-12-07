@@ -64,8 +64,8 @@ support for [multiple linear memory sections](Modules.md#linear-memory-section) 
 [Traps](Semantics.md#traps) are used to immediately terminate execution and
 signal abnormal behavior to the execution environment. In a browser, this is
 represented as a JavaScript exception. Support for
-[module-defined trap handlers][future trapping]
-will be implemented in the future. Operations that can trap include:
+module-defined trap handlers
+may be implemented in the future. Operations that can trap include:
 
   * specifying an invalid index in any index space,
   * performing an indirect function call with a mismatched signature,
@@ -181,5 +181,4 @@ in WebAssembly.
   [time of check to time of use]: https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use
 
 [future threads]: https://github.com/WebAssembly/design/issues/1073
-[future memory control]: FutureFeatures.md#finer-grained-control-over-memory
-[future trapping]: FutureFeatures.md#trapping-or-non-trapping-strategies
+[future memory control]: https://github.com/WebAssembly/memory-control

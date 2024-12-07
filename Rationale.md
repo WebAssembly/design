@@ -457,10 +457,10 @@ hardware platforms.
 ## Motivating Scenarios for Feature Testing
 
 1. [Post-MVP :unicorn:][future general],
-[`i32.min_s` :unicorn:][future integer] is introduced. A
+[`i32.bitrev` :unicorn:][future bitrev] is introduced. A
 WebAssembly developer updates their toolkit so that the compiler may leverage
-`i32.min_s`. The developer's WebAssembly module works correctly both on
-execution environments at MVP, as well as those supporting `i32.min_s`.
+`i32.bitrev`. The developer's WebAssembly module works correctly both on
+execution environments at MVP, as well as those supporting `i32.bitrev`.
 
   * A variant of this, where a few more new opcodes are available, the compiler
 is updated to be able to leverage all of them, but not all execution targets
@@ -605,8 +605,8 @@ Moreover, programming languages that allow control transfer _expressions_ usuall
 
 
 [future general]: FutureFeatures.md
-[future flow control]: FutureFeatures.md#more-expressive-control-flow
-[future integer]: FutureFeatures.md#additional-integer-operations
+[future flow control]: https://github.com/WebAssembly/design/issues/796
+[future bitrev]: https://github.com/WebAssembly/design/issues/1382
 [future threads]: https://github.com/WebAssembly/design/issues/1073
 [future simd]: https://github.com/WebAssembly/design/issues/1075
 [future garbage collection]: https://github.com/WebAssembly/proposals/issues/16
