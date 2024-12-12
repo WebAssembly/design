@@ -127,7 +127,7 @@ expected that compiled WebAssembly programs will behave very consistently
 across different implementations, and across different versions of the same
 implementation.
 
-[future 64-bit]: FutureFeatures.md#linear-memory-bigger-than-4-gib
+[future 64-bit]: https://github.com/WebAssembly/memory64
 [future threads]: https://github.com/WebAssembly/design/issues/1073
 [future simd]: https://github.com/WebAssembly/design/issues/1075
 [future exceptions]: https://github.com/WebAssembly/design/issues/1078

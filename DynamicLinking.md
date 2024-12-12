@@ -92,4 +92,4 @@ for specialized purposes.
 
   [ABI]: https://en.wikipedia.org/wiki/Application_binary_interface
 
-[future types]: FutureFeatures.md#more-table-operators-and-types
+[future types]: https://github.com/WebAssembly/reference-types/blob/master/proposals/reference-types/Overview.md#language-extensions
