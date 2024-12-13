@@ -22,7 +22,7 @@ Community Group, if any.
 Happy assembly!
 
 [W3C Community Group]: https://www.w3.org/community/webassembly/
-[Code of Ethics and Professional Conduct]: CODE_OF_CONDUCT.md
+[Code of Ethics and Professional Conduct]: https://github.com/WebAssembly/meetings/blob/main/CODE_OF_CONDUCT.md
 [meetings]: https://github.com/WebAssembly/meetings
 [existing proposals]: https://github.com/WebAssembly/proposals
 [phase-0 proposals]: https://github.com/WebAssembly/design/issues
