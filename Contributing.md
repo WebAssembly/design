@@ -14,7 +14,7 @@ Community Group, if any.
 
 * Then, you may wish to:
   - [ask questions],
-  - discuss [existing proposals] and [phase-0 proposals],
+  - discuss existing [phase-0 proposals] and [phase-1+ proposals],
   - attend [meetings],
   - discuss [tooling conventions],
   - or make [new proposals]!
@@ -24,7 +24,7 @@ Happy assembly!
 [W3C Community Group]: https://www.w3.org/community/webassembly/
 [Code of Ethics and Professional Conduct]: https://github.com/WebAssembly/meetings/blob/main/CODE_OF_CONDUCT.md
 [meetings]: https://github.com/WebAssembly/meetings
-[existing proposals]: https://github.com/WebAssembly/proposals
+[phase-1+ proposals]: https://github.com/WebAssembly/proposals
 [phase-0 proposals]: https://github.com/WebAssembly/design/issues
 [ask questions]: https://github.com/WebAssembly/design/discussions
 [new proposals]: https://github.com/WebAssembly/meetings/blob/main/process/proposal.md
