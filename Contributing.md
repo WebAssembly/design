@@ -1,28 +1,31 @@
 # Contributing to WebAssembly
 
-WebAssembly is initially designed and implemented by browser vendors who are
-interested in meeting a variety of [use cases](UseCases.md). As design and
-implementation progresses they'll need input and contributions from developers
-interested in using WebAssembly.
+Interested in contributing to WebAssembly? We suggest you start by:
 
-Interested in participating? We suggest you start by:
-
-1. Acquainting yourself with the
+* Acquainting yourself with the
    [Code of Ethics and Professional Conduct](CodeOfConduct.md).
-2. Reading the [WebAssembly design][].
-3. Joining the IRC channel `irc://irc.w3.org:6667/#webassembly`.
 
-With that background understood and communication set up, feel free to
-[file issues][] in the WebAssembly design repository. Please join the
-[W3C Community Group][] before sending pull requests: it provides the legal
-framework that protects the work in this repository. Make sure you're affiliated
-with your company or organization in the Community Group, if any.
+* Joining the
+[W3C Community Group]. Please do this before starting new proposals,
+attending meetings, or making significant contributions. It provides the legal
+framework that protects participants and supports standardization. And make
+sure you're registered as affiliated with your company or organization in the
+Community Group, if any.
 
-As WebAssembly moves forward we expect to form an official standards body, which
-will have its own contribution process to the specification.
+* Then, you may wish to:
+  - [ask questions],
+  - discuss existing [phase-0 proposals] and [phase-1+ proposals],
+  - attend [meetings],
+  - discuss [tooling conventions],
+  - or make [new proposals]!
 
 Happy assembly!
 
-  [WebAssembly design]: https://github.com/WebAssembly/design
-  [file issues]: https://github.com/WebAssembly/design/issues
-  [W3C Community Group]: https://www.w3.org/community/webassembly/
+[W3C Community Group]: https://www.w3.org/community/webassembly/
+[Code of Ethics and Professional Conduct]: https://github.com/WebAssembly/meetings/blob/main/CODE_OF_CONDUCT.md
+[meetings]: https://github.com/WebAssembly/meetings
+[phase-1+ proposals]: https://github.com/WebAssembly/proposals
+[phase-0 proposals]: https://github.com/WebAssembly/design/issues
+[ask questions]: https://github.com/WebAssembly/design/discussions
+[new proposals]: https://github.com/WebAssembly/meetings/blob/main/process/proposal.md
+[tooling conventions]: https://github.com/WebAssembly/tool-conventions
