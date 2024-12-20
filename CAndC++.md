@@ -22,8 +22,8 @@ has an LP64 data model, meaning that `long` and pointer types will be
 added in the future to support
 [64-bit address spaces :unicorn:][future 64-bit].
 
-`float` and `double` are the IEEE 754-2008 single- and double-precision types,
-which are native in WebAssembly. `long double` is the IEEE 754-2008
+`float` and `double` are the IEEE 754-2019 single- and double-precision types,
+which are native in WebAssembly. `long double` is the IEEE 754-2019
 quad-precision type, which is a software-emulated type. WebAssembly does
 not have a builtin quad-precision type or associated operators. The long
 double type here is software-emulated in library code linked into WebAssembly
@@ -114,7 +114,7 @@ Most implementation-defined behavior in C and C++ is dependent on the compiler
 rather than on the underlying platform. For those details that are dependent
 on the platform, on WebAssembly they follow naturally from having 8-bit bytes,
 32-bit and 64-bit two's complement integers, and
-[32-bit and 64-bit IEEE-754-2008-style floating point support](Semantics.md#floating-point-operators).
+[32-bit and 64-bit IEEE-754-2019-style floating point support](Semantics.md#floating-point-operators).
 
 ## Portability of compiled code
 
