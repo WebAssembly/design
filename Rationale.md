@@ -362,7 +362,7 @@ observed:
    it then be observed
 
 The motivation for nondeterminism in NaN bit patterns is that popular platforms
-have differing behavior. IEEE 754-2008 makes some recommendations, but has few
+have differing behavior. IEEE 754-2019 makes some recommendations, but has few
 hard requirements in this area, and in practice there is significant divergence,
 for example:
  - When an instruction with no NaN inputs produces a NaN output, x86 produces
@@ -377,13 +377,13 @@ for example:
  - LLVM (used in some WebAssembly implementations) doesn't guarantee that it
    won't commute `fadd`, `fmul` and other instructions, so it's not possible
    to rely on the "first" NaN being preserved as such.
- - IEEE 754-2008 itself recommends architectures use NaN bits to provide
+ - IEEE 754-2019 itself recommends architectures use NaN bits to provide
    architecture-specific debugging facilities.
 
-IEEE 754-2008 6.2 says that instructions returning a NaN *should* return one of
+IEEE 754-2019 6.2 says that instructions returning a NaN *should* return one of
 their input NaNs. In WebAssembly, implementations may do this, however they are
-not required to. Since IEEE 754-2008 states this as a "should" (as opposed to a
-"shall"), it isn't a requirement for IEEE 754-2008 conformance.
+not required to. Since IEEE 754-2019 states this as a "should" (as opposed to a
+"shall"), it isn't a requirement for IEEE 754-2019 conformance.
 
 An alternative design would be to require engines to always "canonicalize"
 NaNs whenever their bits could be observed. This would eliminate the
