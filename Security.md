@@ -56,10 +56,11 @@ operator, or are of type `struct` and returned by value) are stored in a separat
 user-addressable stack in [linear memory](Semantics.md#linear-memory) at
 compile time. This is an isolated memory region with fixed maximum size that is
 zero initialized by default. References to this memory are computed with
-infinite precision to avoid wrapping and simplify bounds checking. In the future,
-support for [multiple linear memory sections](Modules.md#linear-memory-section) and
+infinite precision to avoid wrapping and simplify bounds checking. WebAssembly
+modules may also have [multiple linear memory sections], which are independent
+of each other. In the future,
 [finer-grained memory operations][future memory control]
-(e.g. shared memory, page protection, large pages, etc.) will be implemented.
+(e.g. shared memory, page protection, large pages, etc.) may be implemented.
 
 [Traps](Semantics.md#traps) are used to immediately terminate execution and
 signal abnormal behavior to the execution environment. In a browser, this is
@@ -107,8 +108,7 @@ in WebAssembly, because control-flow integrity ensures that call targets are
 valid functions declared at load time. Likewise, race conditions, such as
 [time of check to time of use][] (TOCTOU) vulnerabilities, are possible in
 WebAssembly, since no execution or scheduling guarantees are provided beyond
-in-order execution and [post-MVP atomic memory primitives
-:unicorn:][future threads].
+in-order execution and [atomic memory primitives][threads].
 Similarly, [side channel attacks][] can occur, such as timing attacks against
 modules. In the future, additional protections may be provided by runtimes or
 the toolchain, such as code diversification or memory randomization (similar to
@@ -151,8 +151,8 @@ attacks with function-level granularity against indirect calls.
 #### Clang/LLVM CFI
 The Clang/LLVM compiler infrastructure includes a [built-in implementation] of
 fine-grained control flow integrity, which has been extended to support the
-WebAssembly target. It is available in Clang/LLVM 3.9+ with the
-[new WebAssembly backend].
+WebAssembly target. It is available in Clang/LLVM with the
+[WebAssembly backend].
 
 Enabling fine-grained control-flow integrity (by passing `-fsanitize=cfi` to
 emscripten) has a number of advantages over the default WebAssembly
@@ -162,9 +162,9 @@ signature checks by operating at the C/C++ type level, which is semantically
 richer that the WebAssembly [type level](Semantics.md#types), which consists
 of only four value types. Currently, enabling this feature has a small
 performance cost for each indirect call, because an integer range check is
-used to verify that the target index is trusted, but this will be eliminated in
+used to verify that the target index is trusted, but this may be eliminated in
 the future by leveraging built-in support for
-[multiple indirect tables](Modules.md#table-index-space) with homogeneous type
+[multiple indirect tables] with homogeneous type
 in WebAssembly.
 
   [address space layout randomization]: https://en.wikipedia.org/wiki/Address_space_layout_randomization
@@ -180,5 +180,7 @@ in WebAssembly.
   [stack smashing protection]: https://en.wikipedia.org/wiki/Buffer_overflow_protection#Random_canaries
   [time of check to time of use]: https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use
 
-[future threads]: https://github.com/WebAssembly/design/issues/1073
+[multiple linear memory sections]: https://github.com/WebAssembly/multi-memory/blob/main/proposals/multi-memory/Overview.md
+[multiple indirect tables]: https://github.com/WebAssembly/reference-types/blob/master/proposals/reference-types/Overview.md
+[threads]: https://github.com/WebAssembly/threads/blob/main/proposals/threads/Overview.md
 [future memory control]: https://github.com/WebAssembly/memory-control
