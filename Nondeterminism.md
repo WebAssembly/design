@@ -17,7 +17,8 @@ currently admits nondeterminism:
 
  * New features will be added to WebAssembly, which means different implementations
    will have different support for each feature.
- * The sequence of call of exported functions from the outside environment is not
+ * The sequence of calls of exported functions, and the values of the incoming
+   arguments and return values from the outside environment, are not
    determined by the Wasm spec.
  * With `shared` memory that can be accessed by multiple threads, the results of
    load, read-modify-write, wait, and awake operators are nondeterministic.
