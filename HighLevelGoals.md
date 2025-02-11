@@ -7,15 +7,13 @@
    [mobile](https://en.wikipedia.org/wiki/Mobile_device) and
    [IoT](https://en.wikipedia.org/wiki/Internet_of_Things).
 2. Specify and implement incrementally:
-    * a [Minimum Viable Product (MVP)](MVP.md) for the standard with
-      roughly the same functionality as [asm.js](http://asmjs.org), primarily
-      aimed at [C/C++](CAndC++.md);
-    * [additional features :unicorn:][future general],
-      initially focused on key features like [threads][future threads],
-      [zero cost exceptions][future exceptions], and [SIMD][future simd],
-      followed by additional features
-      prioritized by feedback and experience, including support for languages
-      other than C/C++.
+    * develop new features as independent [proposals];
+    * maintain [layering], with a core spec focused on pure sandboxed
+      computation, with host interactions factored out into higher
+      specification layers;
+    * preserve backwards compatibility;
+    * prioritize new features according to feedback and experience; and
+    * avoid biasing towards any one programming language family.
 3. Design to execute within and integrate well with the *existing*
    [Web platform](Web.md):
     * maintain the versionless, [feature-tested](FeatureTest.md) and backwards-compatible evolution story of the Web;
@@ -28,12 +26,13 @@
       binary format, supporting View Source functionality.
 4. Design to support [non-browser embeddings](NonWeb.md) as well.
 5. Make a great platform:
-    * build a new LLVM backend for WebAssembly and an accompanying
-      clang port ([why LLVM first?](FAQ.md#which-compilers-can-i-use-to-build-webassembly-programs));
-    * promote other compilers and tools targeting WebAssembly; and
-    * enable other useful [tooling](Tooling.md).
+    * promote [compilers and tools targeting WebAssembly];
+    * enable other useful [tooling](Tooling.md);
+    * maintain a high level of [determinism]; and
+    * specify using [formal semantics].
 
-[future general]: FutureFeatures.md
-[future threads]: https://github.com/WebAssembly/design/issues/1073
-[future simd]: https://github.com/WebAssembly/design/issues/1075
-[future exceptions]: https://github.com/WebAssembly/design/issues/1078
+[compilers and tools targeting WebAssembly]: https://webassembly.org/getting-started/developers-guide/
+[proposals]: https://github.com/WebAssembly/proposals/
+[layering]: https://webassembly.org/specs/
+[determinism]: Nondeterminism.md
+[formal semantics]: https://github.com/WebAssembly/spec

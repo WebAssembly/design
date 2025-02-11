@@ -16,6 +16,7 @@ Some of the design documents in this repository are out of date. We're
 gradually working updating these documents. The following are some documents
 which are fairly up to date:
 
+ - [WebAssembly High-Level Goals](HighLevelGoals.md)
  - [What does Portability mean in Wasm?](Portability.md)
  - [Design Rationale](Rationale.md)
  - [WebAssembly's Security model](Security.md)
