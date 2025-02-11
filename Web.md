@@ -34,58 +34,33 @@ For the current description, see the [normative documentation](https://webassemb
 ## Modules
 
 WebAssembly's [modules](Modules.md) allow for natural [integration with
-the ES6 module system](Modules.md#integration-with-es6-modules).
-
-### Names
-
-A WebAssembly module can have imports and exports, which are identified using
-UTF-8 byte sequences. The most natural Web representation of a mapping of export
-names to exports is a JS object in which each export is a property with a name
-encoded in UTF-16. A WebAssembly module fails validation on the Web if it has
-imports or exports whose names do not transcode cleanly to UTF-16 according to
-the following conversion algorithm, assuming that the WebAssembly name is in a
-`Uint8Array` called `array`:
-
-```
-function convertToJSString(array)
-{
-  var string = "";
-  for (var i = 0; i < array.length; ++i)
-    string += String.fromCharCode(array[i]);
-  return decodeURIComponent(escape(string));
-}
-```
-
-This performs the UTF8 decoding (`decodeURIComponent(escape(string))`) using
-a [common JS idiom](http://monsur.hossa.in/2012/07/20/utf-8-in-javascript.html).
-Transcoding failure is detected by `decodeURIComponent`, which may throw
-`URIError`. If it does, the WebAssembly module will not validate. This validation
-rule is only mandatory for Web embedding.
+the ES6 module system](https://github.com/WebAssembly/esm-integration).
 
 ## Security
 
-WebAssembly's [security](Security.md) model should depend on the
-[same-origin policy][], with [cross-origin resource sharing (CORS)][] and
-[subresource integrity][] to enable distribution through content
+WebAssembly's [security](Security.md) model depend on the
+[same-origin policy], with [cross-origin resource sharing (CORS)] and
+[subresource integrity] to enable distribution through content
 distribution networks and to implement [dynamic linking](DynamicLinking.md).
 
-## SIMD
+## WebIDL
 
-Once [SIMD is supported][future simd] WebAssembly would:
+There are various proposals in flight which may support future work toward
+WebIDL bindings for WebAssembly, including [JS String builtins],
+[source-phase imports], and the [component model].
 
-* Be statically typed analogous to [SIMD.js-in-asm.js][];
-* Reuse specification of operation semantics (with TC39);
-* Reuse backend implementation (same IR nodes).
+There are also tools to provide this functionality today by generating
+JS wrapper code, for example [Emscripten's WebIDL Binder],
+[the wasm-webidl-bindings Rust crate], and
+[jco's experimental WebIDL Imports support].
 
-## GC
+[same-origin policy]: https://www.w3.org/Security/wiki/Same_Origin_Policy
+[cross-origin resource sharing (CORS)]: https://www.w3.org/TR/cors/
+[subresource integrity]: https://www.w3.org/TR/SRI/
+[JS String builtins]: https://github.com/WebAssembly/js-string-builtins/
+[source-phase imports]: https://github.com/tc39/proposal-source-phase-imports
+[component model]: https://github.com/WebAssembly/component-model
 
-Once [GC is supported][future garbage collection], WebAssembly code would be able to reference
-and access JavaScript, DOM, and general WebIDL-defined objects.
-
-  [same-origin policy]: https://www.w3.org/Security/wiki/Same_Origin_Policy
-  [cross-origin resource sharing (CORS)]: https://www.w3.org/TR/cors/
-  [subresource integrity]: https://www.w3.org/TR/SRI/
-  [SIMD.js-in-asm.js]: http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js
-
-[future simd]: https://github.com/WebAssembly/design/issues/1075
-[future garbage collection]: https://github.com/WebAssembly/proposals/issues/16
+[Emscripten's WebIDL Binder]: https://emscripten.org/docs/porting/connecting_cpp_and_javascript/WebIDL-Binder.html
+[the wasm-webidl-bindings Rust crate]: https://github.com/rustwasm/wasm-webidl-bindings
+[jco's experimental WebIDL Imports support]: https://github.com/bytecodealliance/jco/blob/main/docs/src/transpiling.md#experimental-webidl-imports
