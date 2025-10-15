@@ -18,6 +18,9 @@ Community Group, if any.
   - attend [meetings],
   - discuss [tooling conventions],
   - or make [new proposals]!
+ 
+If your issue or PR has not received comments, you can ping the relevant spec
+editor or [champion]. It is polite to ping no more than once a week.
 
 Happy assembly!
 
@@ -29,3 +32,4 @@ Happy assembly!
 [ask questions]: https://github.com/WebAssembly/design/discussions
 [new proposals]: https://github.com/WebAssembly/meetings/blob/main/process/proposal.md
 [tooling conventions]: https://github.com/WebAssembly/tool-conventions
+[champion]: https://github.com/WebAssembly/proposals
