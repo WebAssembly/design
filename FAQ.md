@@ -60,7 +60,7 @@ We think so. There was an early
 that decoding a binary WebAssembly-like format into asm.js can be efficient.
 And as the WebAssembly design has changed there have been
 [more](https://github.com/WebAssembly/polyfill-prototype-2)
-[experiments](https://github.com/WebAssembly/binaryen/blob/master/src/wasm2asm.h)
+[experiments](https://github.com/WebAssembly/binaryen/blob/master/src/wasm2js.h)
 with polyfilling.
 
 Overall, optimism has been increasing for quick adoption of WebAssembly in
@@ -70,8 +70,8 @@ polyfill.
 It is also the case that polyfilling WebAssembly to asm.js is less urgent
 because of the existence of alternatives, for example, a reverse polyfill -
 compiling
-[asm.js to WebAssembly](https://github.com/WebAssembly/binaryen/blob/master/src/asm2wasm.h) -
-exists, and it allows shipping a single build that can run as either
+[asm.js to WebAssembly](https://github.com/WebAssembly/binaryen/blob/version_96/src/asm2wasm.h) -
+existed, and it allows shipping a single build that can run as either
 asm.js or WebAssembly. It is also possible to build a project into
 two parallel asm.js and WebAssembly builds by just
 [flipping a switch](https://github.com/kripken/emscripten/wiki/WebAssembly)
