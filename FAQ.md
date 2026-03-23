@@ -53,35 +53,9 @@ WebAssembly was designed with [a variety of use cases in mind](UseCases.md).
 
 ## Can WebAssembly be polyfilled?
 
-We think so. There was an early
-[prototype](https://github.com/WebAssembly/polyfill-prototype-1) with demos 
-[[1](https://lukewagner.github.io/AngryBotsPacked), 
-[2](https://lukewagner.github.io/PlatformerGamePacked)], which showed
-that decoding a binary WebAssembly-like format into asm.js can be efficient.
-And as the WebAssembly design has changed there have been
-[more](https://github.com/WebAssembly/polyfill-prototype-2)
-[experiments](https://github.com/WebAssembly/binaryen/blob/master/src/wasm2asm.h)
-with polyfilling.
+Yes. Transpiling to ECMAScript is implemented in [wasm2js][], a part of binaryen.
 
-Overall, optimism has been increasing for quick adoption of WebAssembly in
-browsers, which is great, but it has decreased the motivation to work on a
-polyfill.
-
-It is also the case that polyfilling WebAssembly to asm.js is less urgent
-because of the existence of alternatives, for example, a reverse polyfill -
-compiling
-[asm.js to WebAssembly](https://github.com/WebAssembly/binaryen/blob/master/src/asm2wasm.h) -
-exists, and it allows shipping a single build that can run as either
-asm.js or WebAssembly. It is also possible to build a project into
-two parallel asm.js and WebAssembly builds by just
-[flipping a switch](https://github.com/kripken/emscripten/wiki/WebAssembly)
-in emscripten, which avoids polyfill time on the client entirely. A third
-option, for non-performant code, is to use a compiled WebAssembly interpreter
-such as
-[binaryen.js](https://github.com/WebAssembly/binaryen/blob/master/test/binaryen.js/test.js).
-
-However, a WebAssembly polyfill is still an interesting idea and should in
-principle be possible.
+  [wasm2js]: https://github.com/WebAssembly/binaryen/blob/main/src/wasm2js.h
 
 
 ## Is WebAssembly only for C/C++ programmers?
